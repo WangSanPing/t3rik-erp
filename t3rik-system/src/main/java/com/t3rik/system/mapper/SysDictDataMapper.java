@@ -1,6 +1,8 @@
 package com.t3rik.system.mapper;
 
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 import com.t3rik.common.core.domain.entity.SysDictData;
 
@@ -9,7 +11,7 @@ import com.t3rik.common.core.domain.entity.SysDictData;
  * 
  * @author ktg
  */
-public interface SysDictDataMapper
+public interface SysDictDataMapper extends BaseMapper<SysDictData>
 {
     /**
      * 根据条件分页查询字典数据

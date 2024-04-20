@@ -2,6 +2,7 @@ package com.t3rik.system.mapper;
 
 import java.util.List;
 import com.t3rik.system.domain.SysConfig;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 参数配置 数据层
