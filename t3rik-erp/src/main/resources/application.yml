@@ -72,10 +72,10 @@ spring:
     password: root123ewq
     # 连接超时时间
     timeout: 10s
-    lettuce:
+    jedis:
       pool:
         # 连接池中的最小空闲连接
-        min-idle: 0
+        min-idle: 5
         # 连接池中的最大空闲连接
         max-idle: 8
         # 连接池的最大数据库连接数
