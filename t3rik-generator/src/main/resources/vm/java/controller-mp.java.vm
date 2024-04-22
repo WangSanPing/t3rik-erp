@@ -45,7 +45,7 @@ public class ${ClassName}Controller extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:list')")
     @GetMapping("/list")
-    #if($table.crud || $table.sub)
+#if($table.crud || $table.sub)
     public TableDataInfo list(${ClassName} ${className}) {
         // 获取查询条件
         LambdaQueryWrapper<${ClassName}> queryWrapper = getQueryWrapper(${className});
@@ -55,14 +55,14 @@ public class ${ClassName}Controller extends BaseController {
         this.${className}Service.page(page, queryWrapper);
         return getDataTableWithPage(page);
     }
-    #elseif($table.tree)
+#elseif($table.tree)
     public AjaxResult list(${ClassName} ${className}) {
         // 获取查询条件
         LambdaQueryWrapper<${ClassName}> queryWrapper = getQueryWrapper(${className});
         List<${ClassName}> list = this.${className}Service.list(queryWrapper);
         return AjaxResult.success(list);
     }
-    #end
+#end
 
     /**
      * 导出${functionName}列表
