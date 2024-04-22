@@ -32,7 +32,7 @@
         <poi.version>4.1.2</poi.version>
         <velocity.version>1.7</velocity.version>
         <jwt.version>0.9.1</jwt.version>
-        <mybatis.plus.version>3.5.3.2</mybatis.plus.version>
+        <mybatis-plus.version>3.5.3.2</mybatis-plus.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -98,7 +98,7 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis.plus.version}</version>
+                <version>${mybatis-plus.version}</version>
             </dependency>
 
             <!-- Swagger3依赖 -->
