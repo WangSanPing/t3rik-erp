@@ -71,7 +71,7 @@ public class ${ClassName}Controller extends BaseController {
     @Log(title = "${functionName}", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, ${ClassName} ${className}) {
-// 获取查询条件
+        // 获取查询条件
         LambdaQueryWrapper<${ClassName}> queryWrapper = getQueryWrapper(${className});
         List<${ClassName}> list = this.${className}Service.list(queryWrapper);
         ExcelUtil<${ClassName}> util = new ExcelUtil<${ClassName}>(${ClassName}. class);
@@ -113,7 +113,7 @@ public class ${ClassName}Controller extends BaseController {
     @PreAuthorize("@ss.hasPermi('${permissionPrefix}:remove')")
     @Log(title = "${functionName}", businessType = BusinessType.DELETE)
     @DeleteMapping("/{${pkColumn.javaField}s}")
-    public AjaxResult remove(@PathVariable ${pkColumn.javaType}[] ${pkColumn.javaField}s) {
+    public AjaxResult remove(@PathVariable List<${pkColumn.javaType}> ${pkColumn.javaField}s) {
         return toAjax(this.${className}Service.removeByIds(${pkColumn.javaField}s));
     }
 
@@ -144,7 +144,7 @@ public class ${ClassName}Controller extends BaseController {
 #end
         // 默认创建时间倒序
         queryWrapper.orderByDesc(${ClassName}::getCreateTime);
-        Map<String, Object> params = dict.getParams();
+        Map<String, Object> params = ${className}.getParams();
         queryWrapper.between(params.get("beginTime") != null && params.get("endTime") != null,${ClassName}::getCreateTime, params.get("beginTime"), params.get("endTime"));
         return queryWrapper;
     }
