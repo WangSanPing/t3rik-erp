@@ -1,11 +1,10 @@
 import com.alibaba.druid.filter.config.ConfigTools;
 
-import org.junit.runner.RunWith;
+import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * @ClassName Test
+ * @ClassName T3rikTest
  * @Description:
  * @Author: 施子安
  * @CreateDate: 2024/4/29 10:55
@@ -17,8 +16,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 
 @SpringBootTest
-public class Test {
-    @org.junit.Test
+public class T3rikTest {
+    @Test
     public void method2() throws Exception {
         //定义数据库密码，以123456为例
         String password = "root123ewq";
