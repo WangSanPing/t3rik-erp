@@ -45,6 +45,3 @@ nbdist/
 !*/build/*.java
 !*/build/*.html
 !*/build/*.xml
-application-druid.yml
-~$进度甘特图.xlsx
-.DS_Store
