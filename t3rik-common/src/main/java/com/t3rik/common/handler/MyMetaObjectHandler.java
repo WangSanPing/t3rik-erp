@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -37,23 +36,42 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     public static final String UPDATE_TIME = "updateTime";
 
     /**
+     * 创建人id
+     */
+    public static final String CREATE_USER_ID = "createUserId";
+
+    /**
+     * 修改人id
+     */
+    public static final String UPDATE_USER_ID = "updateUserId";
+
+    /**
      * 新增时执行
      */
     @Override
     public void insertFill(MetaObject metaObject) {
         Date now = new Date();
-        String currentUserId = String.valueOf(SecurityUtils.getLoginUser().getUserId());
+        Long currentUserId = SecurityUtils.getLoginUser().getUserId();
+        String currentUsername = SecurityUtils.getLoginUser().getUsername();
         // 创建人id
+        if (ifHasField(metaObject, CREATE_USER_ID)) {
+            metaObject.setValue(CREATE_USER_ID, currentUserId);
+        }
+        // 创建人姓名
         if (ifHasField(metaObject, CREATE_USER)) {
-            metaObject.setValue(CREATE_USER, currentUserId);
+            metaObject.setValue(CREATE_USER, currentUsername);
         }
         // 创建时间
         if (ifHasField(metaObject, CREATE_TIME)) {
             metaObject.setValue(CREATE_TIME, now);
         }
-        // 修改人id
+        // 创建人id
+        if (ifHasField(metaObject, UPDATE_USER_ID)) {
+            metaObject.setValue(UPDATE_USER_ID, currentUserId);
+        }
+        // 修改人姓名
         if (ifHasField(metaObject, UPDATE_USER)) {
-            metaObject.setValue(UPDATE_USER, currentUserId);
+            metaObject.setValue(UPDATE_USER, currentUsername);
         }
         // 修改时间
         if (ifHasField(metaObject, UPDATE_TIME)) {
@@ -68,10 +86,14 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
      */
     @Override
     public void updateFill(MetaObject metaObject) {
-        String currentUserId = String.valueOf(SecurityUtils.getLoginUser().getUserId());
+        String currentUsername = SecurityUtils.getLoginUser().getUsername();
         // 修改人id
+        if (ifHasField(metaObject, UPDATE_USER_ID)) {
+            metaObject.setValue(UPDATE_USER_ID, SecurityUtils.getLoginUser().getUserId());
+        }
+        // 修改人姓名
         if (ifHasField(metaObject, UPDATE_USER)) {
-            metaObject.setValue(UPDATE_USER, currentUserId);
+            metaObject.setValue(UPDATE_USER, currentUsername);
         }
         // 修改时间
         if (ifHasField(metaObject, UPDATE_TIME)) {

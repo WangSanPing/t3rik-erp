@@ -22,6 +22,12 @@ public class BaseEntity implements Serializable {
     private String searchValue;
 
     /**
+     * 创建人id
+     */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Long createUserId;
+
+    /**
      * 创建者
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
@@ -33,6 +39,12 @@ public class BaseEntity implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date createTime;
+
+    /**
+     * 修改人id
+     */
+    @TableField(fill = FieldFill.UPDATE)
+    private Long updateUserId;
 
     /**
      * 更新者
@@ -64,6 +76,22 @@ public class BaseEntity implements Serializable {
             params = new HashMap<>();
         }
         return params;
+    }
+
+    public Long getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Long createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public Long getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Long updateUserId) {
+        this.updateUserId = updateUserId;
     }
 
     public String getCreateBy() {
