@@ -113,7 +113,7 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="${businessName}List" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="${camelBusinessName}List" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
 #foreach($column in $columns)
 #set($javaField=$column.javaField)
@@ -347,7 +347,7 @@
 </template>
 
 <script>
-import { list${BusinessName}, get${BusinessName}, del${BusinessName}, add${BusinessName}, update${BusinessName} } from "@/api/${moduleName}/${businessName}";
+import { list${BusinessName}, get${BusinessName}, del${BusinessName}, add${BusinessName}, update${BusinessName} } from "@/api/${subSystemName}/${moduleName}/${businessName}";
 
 export default {
   name: "${BusinessName}",
@@ -373,7 +373,7 @@ export default {
       // 总条数
       total: 0,
       // ${functionName}表格数据
-      ${businessName}List: [],
+      ${camelBusinessName}List: [],
 #if($table.sub)
       // ${subTable.functionName}表格数据
       ${subclassName}List: [],
@@ -442,7 +442,7 @@ export default {
 #end
 #end
       list${BusinessName}(this.queryParams).then(response => {
-        this.${businessName}List = response.rows;
+        this.${camelBusinessName}List = response.rows;
         this.total = response.total;
         this.loading = false;
       });
