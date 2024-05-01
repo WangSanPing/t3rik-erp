@@ -12,12 +12,13 @@ import com.t3rik.mes.wm.domain.tx.*;
 import com.t3rik.mes.wm.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 
 
-@Component
+@Service
 public class StorageCoreServiceImpl implements IStorageCoreService {
 
     @Autowired

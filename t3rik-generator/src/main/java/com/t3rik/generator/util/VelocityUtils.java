@@ -63,7 +63,9 @@ public class VelocityUtils {
         velocityContext.put("ClassName", genTable.getClassName());
         velocityContext.put("className", StringUtils.uncapitalize(genTable.getClassName()));
         velocityContext.put("moduleName", genTable.getModuleName());
-        velocityContext.put("BusinessName", StringUtils.capitalize(genTable.getBusinessName()));
+        // "-"切割字符,转为驼峰
+        String camelStr = StringUtils.toCamelCaseWithSeparator(genTable.getBusinessName(), '-');
+        velocityContext.put("BusinessName", StringUtils.toUpperFirstChar(camelStr));
         velocityContext.put("businessName", genTable.getBusinessName());
         velocityContext.put("basePackage", getPackagePrefix(packageName));
         velocityContext.put("packageName", packageName);
@@ -71,7 +73,8 @@ public class VelocityUtils {
         velocityContext.put("datetime", DateUtils.getDate());
         velocityContext.put("pkColumn", genTable.getPkColumn());
         velocityContext.put("importList", getImportList(genTable));
-        velocityContext.put("permissionPrefix", getPermissionPrefix(moduleName, businessName));
+        // 权限标签
+        velocityContext.put("permissionPrefix", getPermissionPrefix(moduleName, businessName.replace("-", "")));
         velocityContext.put("columns", genTable.getColumns());
         velocityContext.put("table", genTable);
         velocityContext.put("dicts", getDicts(genTable));
