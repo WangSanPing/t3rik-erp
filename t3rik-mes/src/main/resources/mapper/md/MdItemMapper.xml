@@ -35,9 +35,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from md_item
     </sql>
 	
-	<select id="selectMdItemList" parameterType="MdItem" resultMap="MdItemResult">
+	<select id="selectMdItemList" parameterType="com.t3rik.mes.md.domain.MdItem" resultMap="MdItemResult">
 	    <include refid="selectMdItemVo"/>
 		<where>
+			<if test="itemId != null">
+				AND item_id = #{itemId}
+			</if>
 			<if test="itemCode != null and itemCode != ''">
 				AND item_code like concat('%', #{itemCode}, '%')
 			</if>
@@ -62,17 +65,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where item_id = #{itemId}
 	</select>
 
-	<select id="checkItemCodeUnique" parameterType="MdItem" resultMap="MdItemResult">
+	<select id="checkItemCodeUnique" parameterType="com.t3rik.mes.md.domain.MdItem" resultMap="MdItemResult">
 		<include refid="selectMdItemVo"/>
 		where item_code = #{itemCode} limit 1
 	</select>
 
-	<select id="checkItemNameUnique" parameterType="MdItem" resultMap="MdItemResult">
+	<select id="checkItemNameUnique" parameterType="com.t3rik.mes.md.domain.MdItem" resultMap="MdItemResult">
 		<include refid="selectMdItemVo"/>
 		where item_code = #{itemName} limit 1
 	</select>
 
-	<insert id="insertMdItem" parameterType="MdItem" useGeneratedKeys="true" keyProperty="itemId">
+	<insert id="insertMdItem" parameterType="com.t3rik.mes.md.domain.MdItem" useGeneratedKeys="true" keyProperty="itemId">
 		insert into md_item(
 			item_code,
 			item_name,
@@ -117,7 +120,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		)
 	</insert>
 
-	<update id="updateMdItem" parameterType="MdItem">
+	<update id="updateMdItem" parameterType="com.t3rik.mes.md.domain.MdItem">
 		update md_item
 		<set>
 			<if test="itemName !=null and itemName !=''">item_name = #{itemName},</if>

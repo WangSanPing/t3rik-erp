@@ -2,6 +2,7 @@ package com.t3rik.mes.md.service;
 
 import com.t3rik.common.core.domain.TreeSelect;
 import com.t3rik.common.core.domain.entity.ItemType;
+import com.t3rik.mes.md.domain.MdItem;
 
 import java.util.List;
 
@@ -26,4 +27,5 @@ public interface IItemTypeService {
     public boolean checkHasChild(Long itemTypeId);
 
     public boolean checkHasItem(Long itemTypeId);
+
 }

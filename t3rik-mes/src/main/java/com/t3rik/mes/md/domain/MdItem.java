@@ -1,9 +1,9 @@
 package com.t3rik.mes.md.domain;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.t3rik.common.core.domain.BaseEntity;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class MdItem extends BaseEntity {
@@ -11,6 +11,7 @@ public class MdItem extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
 
+    @TableId
     private Long itemId;
     private String itemCode;
     private String itemName;
@@ -38,7 +39,7 @@ public class MdItem extends BaseEntity {
     }
 
     @NotBlank(message = "物料产品编码不能为空")
-    @Size(min = 0,max = 64,message = "物料产品编码长度不能超过64个字符")
+    @Size(min = 0, max = 64, message = "物料产品编码长度不能超过64个字符")
     public String getItemCode() {
         return itemCode;
     }
@@ -48,7 +49,7 @@ public class MdItem extends BaseEntity {
     }
 
     @NotBlank(message = "物料产品名称不能为空")
-    @Size(min = 0,max = 255,message = "物料产品编码名称不能超过255个字符")
+    @Size(min = 0, max = 255, message = "物料产品编码名称不能超过255个字符")
     public String getItemName() {
         return itemName;
     }
@@ -57,7 +58,7 @@ public class MdItem extends BaseEntity {
         this.itemName = itemName;
     }
 
-    @Size(min = 0,max = 500,message = "规格型号不能超过255个字符")
+    @Size(min = 0, max = 500, message = "规格型号不能超过255个字符")
     public String getSpecification() {
         return specification;
     }
@@ -84,7 +85,6 @@ public class MdItem extends BaseEntity {
         this.itemOrProduct = itemOrProduct;
     }
 
-    @NotNull(message = "物料类型不能为空")
     public Long getItemTypeId() {
         return itemTypeId;
     }

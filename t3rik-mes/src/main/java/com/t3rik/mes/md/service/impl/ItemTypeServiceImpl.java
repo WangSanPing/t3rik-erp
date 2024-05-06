@@ -1,9 +1,12 @@
 package com.t3rik.mes.md.service.impl;
 
+import cn.hutool.core.lang.Assert;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.core.domain.TreeSelect;
 import com.t3rik.common.core.domain.entity.ItemType;
+import com.t3rik.common.enums.DefaultDataEnum;
 import com.t3rik.common.utils.StringUtils;
+import com.t3rik.mes.md.domain.MdItem;
 import com.t3rik.mes.md.mapper.ItemTypeMapper;
 import com.t3rik.mes.md.service.IItemTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,20 +39,20 @@ public class ItemTypeServiceImpl implements IItemTypeService {
         return itemTypes.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
-    private List<ItemType> buildTree(List<ItemType> itemTypes){
+    private List<ItemType> buildTree(List<ItemType> itemTypes) {
         List<ItemType> returnList = new ArrayList<ItemType>();
         List<Long> tempList = new ArrayList<Long>();
-        for(ItemType it : itemTypes){
+        for (ItemType it : itemTypes) {
             tempList.add(it.getItemTypeId());
         }
 
-        for(ItemType it : itemTypes){
-            if(!tempList.contains(it.getParentTypeId())){
-                recursionFn(itemTypes,it);
+        for (ItemType it : itemTypes) {
+            if (!tempList.contains(it.getParentTypeId())) {
+                recursionFn(itemTypes, it);
                 returnList.add(it);
             }
         }
-        if(returnList.isEmpty()){
+        if (returnList.isEmpty()) {
             returnList = itemTypes;
         }
         return returnList;
@@ -58,15 +61,12 @@ public class ItemTypeServiceImpl implements IItemTypeService {
     /**
      * 递归列表
      */
-    private void recursionFn(List<ItemType> list, ItemType t)
-    {
+    private void recursionFn(List<ItemType> list, ItemType t) {
         // 得到子节点列表
         List<ItemType> childList = getChildList(list, t);
         t.setChildren(childList);
-        for (ItemType tChild : childList)
-        {
-            if (hasChild(list, tChild))
-            {
+        for (ItemType tChild : childList) {
+            if (hasChild(list, tChild)) {
                 recursionFn(list, tChild);
             }
         }
@@ -75,15 +75,12 @@ public class ItemTypeServiceImpl implements IItemTypeService {
     /**
      * 得到子节点列表
      */
-    private List<ItemType> getChildList(List<ItemType> list, ItemType t)
-    {
+    private List<ItemType> getChildList(List<ItemType> list, ItemType t) {
         List<ItemType> tlist = new ArrayList<ItemType>();
         Iterator<ItemType> it = list.iterator();
-        while (it.hasNext())
-        {
+        while (it.hasNext()) {
             ItemType n = (ItemType) it.next();
-            if (StringUtils.isNotNull(n.getParentTypeId()) && n.getParentTypeId().longValue() == t.getItemTypeId().longValue())
-            {
+            if (StringUtils.isNotNull(n.getParentTypeId()) && n.getParentTypeId().longValue() == t.getItemTypeId().longValue()) {
                 tlist.add(n);
             }
         }
@@ -93,17 +90,16 @@ public class ItemTypeServiceImpl implements IItemTypeService {
     /**
      * 判断是否有子节点
      */
-    private boolean hasChild(List<ItemType> list, ItemType t)
-    {
+    private boolean hasChild(List<ItemType> list, ItemType t) {
         return getChildList(list, t).size() > 0;
     }
 
 
     @Override
     public String checkItemTypeCodeUnique(ItemType itemType) {
-        ItemType itemType1 =itemTypeMapper.checkItemTypeCodeUnique(itemType.getItemTypeCode(),itemType.getParentTypeId());
-        Long itemTypeId = itemType.getItemTypeId() ==null? -1L:itemType.getItemTypeId();
-        if(StringUtils.isNotNull(itemType1)&& itemTypeId.longValue() != itemType1.getItemTypeId().longValue()){
+        ItemType itemType1 = itemTypeMapper.checkItemTypeCodeUnique(itemType.getItemTypeCode(), itemType.getParentTypeId());
+        Long itemTypeId = itemType.getItemTypeId() == null ? -1L : itemType.getItemTypeId();
+        if (StringUtils.isNotNull(itemType1) && itemTypeId.longValue() != itemType1.getItemTypeId().longValue()) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
@@ -111,9 +107,9 @@ public class ItemTypeServiceImpl implements IItemTypeService {
 
     @Override
     public String checkItemTypeNameUnique(ItemType itemType) {
-        ItemType itemType1 =itemTypeMapper.checkItemTypeNameUnique(itemType.getItemTypeName(),itemType.getParentTypeId());
-        Long itemTypeId = itemType.getItemTypeId() ==null? -1L:itemType.getItemTypeId();
-        if(StringUtils.isNotNull(itemType1)&& itemTypeId.longValue() != itemType1.getItemTypeId().longValue()){
+        ItemType itemType1 = itemTypeMapper.checkItemTypeNameUnique(itemType.getItemTypeName(), itemType.getParentTypeId());
+        Long itemTypeId = itemType.getItemTypeId() == null ? -1L : itemType.getItemTypeId();
+        if (StringUtils.isNotNull(itemType1) && itemTypeId.longValue() != itemType1.getItemTypeId().longValue()) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
@@ -121,10 +117,10 @@ public class ItemTypeServiceImpl implements IItemTypeService {
 
     @Override
     public Integer insertItemType(ItemType itemType) {
-        if(itemType.getParentTypeId()!= null){
+        if (itemType.getParentTypeId() != null) {
             ItemType parent = itemTypeMapper.selectItemTypeById(itemType.getParentTypeId());
-            if(StringUtils.isNotNull(parent)){
-                itemType.setAncestors(parent.getAncestors()+","+parent.getItemTypeId());
+            if (StringUtils.isNotNull(parent)) {
+                itemType.setAncestors(parent.getAncestors() + "," + parent.getItemTypeId());
             }
         }
         return itemTypeMapper.insertItemType(itemType);
@@ -142,13 +138,14 @@ public class ItemTypeServiceImpl implements IItemTypeService {
 
     @Override
     public boolean checkHasChild(Long itemTypeId) {
-        int num =itemTypeMapper.hasChildByItemTypeId(itemTypeId);
-        return num >0 ? true:false;
+        int num = itemTypeMapper.hasChildByItemTypeId(itemTypeId);
+        return num > 0 ? true : false;
     }
 
     @Override
     public boolean checkHasItem(Long itemTypeId) {
-        int num =itemTypeMapper.hasItemByItemTypeId(itemTypeId);
-        return num >0 ? true:false;
+        int num = itemTypeMapper.hasItemByItemTypeId(itemTypeId);
+        return num > 0 ? true : false;
     }
+
 }

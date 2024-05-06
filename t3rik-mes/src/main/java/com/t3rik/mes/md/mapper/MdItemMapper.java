@@ -1,12 +1,16 @@
 package com.t3rik.mes.md.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.t3rik.mes.md.domain.MdItem;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
-public interface MdItemMapper {
+@Mapper
+public interface MdItemMapper extends BaseMapper<MdItem> {
     /**
      * 根据条件查询物料编码
+     *
      * @param mdItem
      * @return
      */
@@ -14,6 +18,7 @@ public interface MdItemMapper {
 
     /**
      * 查询所有物料编码
+     *
      * @return
      */
     public List<MdItem> selectMdItemAll();
@@ -21,6 +26,7 @@ public interface MdItemMapper {
 
     /**
      * 根据物料ID查询物料
+     *
      * @param itemId
      * @return
      */
@@ -28,20 +34,23 @@ public interface MdItemMapper {
 
     /**
      * 检查物料编码是否唯一
+     *
      * @param mdItem
      * @return
      */
-    public MdItem  checkItemCodeUnique(MdItem mdItem);
+    public MdItem checkItemCodeUnique(MdItem mdItem);
 
     /**
      * 检查物料名称是否唯一
+     *
      * @param mdItem
      * @return
      */
-    public MdItem  checkItemNameUnique(MdItem mdItem);
+    public MdItem checkItemNameUnique(MdItem mdItem);
 
     /**
      * 新增物料
+     *
      * @param mdItem
      * @return
      */
@@ -49,6 +58,7 @@ public interface MdItemMapper {
 
     /**
      * 更新物料
+     *
      * @param mdItem
      * @return
      */
@@ -56,6 +66,7 @@ public interface MdItemMapper {
 
     /**
      * 根据ID删除物料
+     *
      * @param itemId
      * @return
      */
@@ -63,6 +74,7 @@ public interface MdItemMapper {
 
     /**
      * 批量删除物料
+     *
      * @param itemIds
      * @return
      */

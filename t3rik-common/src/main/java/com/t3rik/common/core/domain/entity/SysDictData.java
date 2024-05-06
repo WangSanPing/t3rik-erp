@@ -1,5 +1,6 @@
 package com.t3rik.common.core.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.t3rik.common.annotation.Excel;
 import com.t3rik.common.annotation.Excel.ColumnType;
 import com.t3rik.common.constant.UserConstants;
@@ -21,6 +22,7 @@ public class SysDictData extends BaseEntity {
     /**
      * 字典编码
      */
+    @TableId
     @Excel(name = "字典编码", cellType = ColumnType.NUMERIC)
     private Long dictCode;
 

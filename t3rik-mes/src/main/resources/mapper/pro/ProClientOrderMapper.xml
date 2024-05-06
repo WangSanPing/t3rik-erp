@@ -1,38 +1,65 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.t3rik.mes.pro.mapper.ProClientOrderMapper">
-    
     <resultMap type="com.t3rik.mes.pro.domain.ProClientOrder" id="BaseResultMap">
         <!--@Table pro_client_order-->
-        <result property="clientOrderId"    column="client_order_id"    />
-        <result property="clientOrderCode"    column="client_order_code"    />
-        <result property="clientId"    column="client_id"    />
-        <result property="clientCode"    column="client_code"    />
-        <result property="clientName"    column="client_name"    />
-        <result property="orderDate"    column="order_date"    />
-        <result property="deliveryDate"    column="delivery_date"    />
-        <result property="spec"    column="spec"    />
-        <result property="orderQuantity"    column="order_quantity"    />
-        <result property="measureId"    column="measure_id"    />
-        <result property="measureCode"    column="measure_code"    />
-        <result property="measureName"    column="measure_name"    />
-        <result property="qualityRequirement"    column="quality_requirement"    />
-        <result property="attr1"    column="attr1"    />
-        <result property="attr2"    column="attr2"    />
-        <result property="attr3"    column="attr3"    />
-        <result property="attr4"    column="attr4"    />
-        <result property="createUserId"    column="create_user_id"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateUserId"    column="update_user_id"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
+        <result property="clientOrderId" column="client_order_id"/>
+        <result property="clientOrderCode" column="client_order_code"/>
+        <result property="productId" column="product_id"/>
+        <result property="productCode" column="product_code"/>
+        <result property="productName" column="product_name"/>
+        <result property="clientId" column="client_id"/>
+        <result property="clientCode" column="client_code"/>
+        <result property="clientName" column="client_name"/>
+        <result property="orderDate" column="order_date"/>
+        <result property="deliveryDate" column="delivery_date"/>
+        <result property="spec" column="spec"/>
+        <result property="orderQuantity" column="order_quantity"/>
+        <result property="measureId" column="measure_id"/>
+        <result property="measureCode" column="measure_code"/>
+        <result property="measureName" column="measure_name"/>
+        <result property="qualityRequirement" column="quality_requirement"/>
+        <result property="attr1" column="attr1"/>
+        <result property="attr2" column="attr2"/>
+        <result property="attr3" column="attr3"/>
+        <result property="attr4" column="attr4"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateUserId" column="update_user_id"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <sql id="selectProClientOrderVo">
-        select client_order_id, client_order_code, client_id, client_code, client_name, order_date, delivery_date, spec, order_quantity, measure_id, measure_code, measure_name, quality_requirement, attr1, attr2, attr3, attr4, create_user_id, create_by, create_time, update_user_id, update_by, update_time from pro_client_order
+        select client_order_id,
+               client_order_code,
+               product_id,
+               product_code,
+               product_name,
+               client_id,
+               client_code,
+               client_name,
+               order_date,
+               delivery_date,
+               spec,
+               order_quantity,
+               measure_id,
+               measure_code,
+               measure_name,
+               quality_requirement,
+               attr1,
+               attr2,
+               attr3,
+               attr4,
+               create_user_id,
+               create_by,
+               create_time,
+               update_user_id,
+               update_by,
+               update_time
+        from pro_client_order
     </sql>
-
 </mapper>

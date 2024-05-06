@@ -1,13 +1,15 @@
 package com.t3rik.mes.md.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.md.domain.MdItem;
 
 import java.util.List;
 
-public interface IMdItemService {
+public interface IMdItemService extends IService<MdItem> {
 
     /**
      * 根据条件查询物料编码
+     *
      * @param mdItem
      * @return
      */
@@ -15,6 +17,7 @@ public interface IMdItemService {
 
     /**
      * 查询所有物料编码
+     *
      * @return
      */
     public List<MdItem> selectMdItemAll();
@@ -22,6 +25,7 @@ public interface IMdItemService {
 
     /**
      * 根据主键查询物料编码
+     *
      * @param itemId
      * @return
      */
@@ -29,6 +33,7 @@ public interface IMdItemService {
 
     /**
      * 检查物料编码是否唯一
+     *
      * @param mdItem
      * @return
      */
@@ -36,6 +41,7 @@ public interface IMdItemService {
 
     /**
      * 检查物料名称是否唯一
+     *
      * @param mdItem
      * @return
      */
@@ -43,6 +49,7 @@ public interface IMdItemService {
 
     /**
      * 新增物料编码
+     *
      * @param mdItem
      * @return
      */
@@ -50,6 +57,7 @@ public interface IMdItemService {
 
     /**
      * 更新物料编码
+     *
      * @param mdItem
      * @return
      */
@@ -57,6 +65,7 @@ public interface IMdItemService {
 
     /**
      * 批量删除物料编码
+     *
      * @param itemIds
      * @return
      */
@@ -64,10 +73,15 @@ public interface IMdItemService {
 
     /**
      * 根据主键删除物料编码
+     *
      * @param itemId
      * @return
      */
     public int deleteByItemId(Long itemId);
 
+    /**
+     * 添加产品
+     */
+    Boolean addItemProduct(MdItem mdItem);
 }
 
