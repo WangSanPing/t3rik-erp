@@ -10,6 +10,7 @@
         <result property="productId" column="product_id"/>
         <result property="productCode" column="product_code"/>
         <result property="productName" column="product_name"/>
+        <result property="productSpec" column="product_spec"/>
         <result property="clientId" column="client_id"/>
         <result property="clientCode" column="client_code"/>
         <result property="clientName" column="client_name"/>
@@ -17,9 +18,7 @@
         <result property="deliveryDate" column="delivery_date"/>
         <result property="spec" column="spec"/>
         <result property="orderQuantity" column="order_quantity"/>
-        <result property="measureId" column="measure_id"/>
-        <result property="measureCode" column="measure_code"/>
-        <result property="measureName" column="measure_name"/>
+        <result property="unitOfMeasure" column="unit_of_measure"/>
         <result property="qualityRequirement" column="quality_requirement"/>
         <result property="attr1" column="attr1"/>
         <result property="attr2" column="attr2"/>
@@ -46,9 +45,7 @@
                delivery_date,
                spec,
                order_quantity,
-               measure_id,
-               measure_code,
-               measure_name,
+               unit_of_measure,
                quality_requirement,
                attr1,
                attr2,
