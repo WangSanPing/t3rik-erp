@@ -174,9 +174,9 @@ public class BaseController {
         PageDomain pageDomain = TableSupport.buildPageRequest();
         Page<P> page = new Page<>();
         // 当前页
-        page.setCurrent(pageDomain.getPageNum());
+        page.setCurrent(pageDomain.getPageNum() == null ? 1 : pageDomain.getPageNum());
         // 当前页显示多少行
-        page.setSize(pageDomain.getPageSize());
+        page.setSize(pageDomain.getPageSize() == null ? 10 : pageDomain.getPageSize());
         return page;
     }
 
