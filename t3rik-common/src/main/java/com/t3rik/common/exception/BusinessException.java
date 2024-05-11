@@ -4,9 +4,14 @@ import com.t3rik.common.constant.HttpStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * 业务异常
+ *
+ * @author ruoyi
+ */
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class BusinessException extends RuntimeException {
+@EqualsAndHashCode(callSuper = false)
+public final class BusinessException extends RuntimeException {
     private static final long serialVersionUID = -1L;
 
     /**

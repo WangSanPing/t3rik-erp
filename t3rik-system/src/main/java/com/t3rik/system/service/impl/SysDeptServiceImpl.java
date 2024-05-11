@@ -13,7 +13,7 @@ import com.t3rik.common.core.domain.entity.SysDept;
 import com.t3rik.common.core.domain.entity.SysRole;
 import com.t3rik.common.core.domain.entity.SysUser;
 import com.t3rik.common.core.text.Convert;
-import com.t3rik.common.exception.ServiceException;
+import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.SecurityUtils;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.spring.SpringUtils;
@@ -188,7 +188,7 @@ public class SysDeptServiceImpl implements ISysDeptService
             List<SysDept> depts = SpringUtils.getAopProxy(this).selectDeptList(dept);
             if (StringUtils.isEmpty(depts))
             {
-                throw new ServiceException("没有权限访问部门数据！");
+                throw new BusinessException("没有权限访问部门数据！");
             }
         }
     }
@@ -206,7 +206,7 @@ public class SysDeptServiceImpl implements ISysDeptService
         // 如果父节点不为正常状态,则不允许新增子节点
         if (!UserConstants.DEPT_NORMAL.equals(info.getStatus()))
         {
-            throw new ServiceException("部门停用，不允许新增");
+            throw new BusinessException("部门停用，不允许新增");
         }
         dept.setAncestors(info.getAncestors() + "," + dept.getParentId());
         return deptMapper.insertDept(dept);

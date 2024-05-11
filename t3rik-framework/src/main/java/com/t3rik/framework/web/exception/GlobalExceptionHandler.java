@@ -4,7 +4,6 @@ import com.t3rik.common.constant.HttpStatus;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.exception.DemoModeException;
-import com.t3rik.common.exception.ServiceException;
 import com.t3rik.common.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,22 +49,13 @@ public class GlobalExceptionHandler {
     /**
      * 业务异常
      */
-    @ExceptionHandler(ServiceException.class)
-    public AjaxResult handleServiceException(ServiceException e, HttpServletRequest request) {
-        log.error(e.getMessage(), e);
-        Integer code = e.getCode();
-        return StringUtils.isNotNull(code) ? AjaxResult.error(code, e.getMessage()) : AjaxResult.error(e.getMessage());
-    }
-
-    /**
-     * 业务异常
-     */
     @ExceptionHandler(BusinessException.class)
     public AjaxResult handleServiceException(BusinessException e, HttpServletRequest request) {
         log.error(e.getMessage(), e);
         Integer code = e.getCode();
         return StringUtils.isNotNull(code) ? AjaxResult.error(code, e.getMessage()) : AjaxResult.error(e.getMessage());
     }
+
 
     /**
      * 拦截未知的运行时异常

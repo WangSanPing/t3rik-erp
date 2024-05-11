@@ -12,7 +12,7 @@ import com.t3rik.common.exception.BusinessException;
  * @author t3rik
  * @date 2024/5/11 21:21
  */
-public class ItemTypeSupport extends CommonSupport{
+public class ItemTypeSupport extends CommonSupport {
 
     /**
      * 根据传入的类型返回对应的数据默认id
