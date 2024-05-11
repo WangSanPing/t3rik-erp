@@ -2,13 +2,16 @@ package com.t3rik.mes.md.controller;
 
 import cn.hutool.core.lang.Assert;
 import com.t3rik.common.annotation.Log;
+import com.t3rik.common.constant.MsgConstants;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.domain.entity.ItemType;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
-import com.t3rik.common.enums.DefaultDataEnum;
+import com.t3rik.common.enums.YesOrNoEnum;
+import com.t3rik.common.exception.BussinessException;
+import com.t3rik.common.support.ItemTypeSupport;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.mes.aspect.BarcodeGen;
 import com.t3rik.mes.md.domain.MdItem;
@@ -48,20 +51,6 @@ public class MdItemController extends BaseController {
         return getDataTable(list);
     }
 
-    /**
-     * 列表查询-只查询产品列表
-     *
-     * @param mdItem
-     * @return
-     */
-    @GetMapping("/list/product")
-    public TableDataInfo listProduct(MdItem mdItem) {
-        startPage();
-        // 只查询产品
-        mdItem.setItemTypeId(DefaultDataEnum.PRODUCTS.getDataId());
-        List<MdItem> list = mdItemService.selectMdItemList(mdItem);
-        return getDataTable(list);
-    }
 
     /**
      * 主键查询
@@ -106,17 +95,35 @@ public class MdItemController extends BaseController {
     }
 
     /**
+     * 列表查询-只查询产品列表
+     *
+     * @param mdItem
+     * @return
+     */
+    @GetMapping("/list/product/{type}")
+    public TableDataInfo listProduct(MdItem mdItem, @PathVariable("type") String type) {
+        startPage();
+        // 根据类型查询
+        Long itemTypeId = ItemTypeSupport.getDefaultDataIdByItemType(type);
+        Assert.notNull(itemTypeId, () -> new BussinessException(MsgConstants.PARAM_ERROR));
+        mdItem.setItemTypeId(itemTypeId);
+        mdItem.setEnableFlag(YesOrNoEnum.YES.getCode());
+        List<MdItem> list = mdItemService.selectMdItemList(mdItem);
+        return getDataTable(list);
+    }
+
+    /**
      * 新增-只新增产品品类
      */
     @PreAuthorize("@ss.hasPermi('mes:md:mditem:add')")
     @Log(title = "物料管理", businessType = BusinessType.INSERT)
     @BarcodeGen(barcodeType = UserConstants.BARCODE_TYPE_ITEM)
-    @PostMapping("/product")
-    public AjaxResult addProduct(@Validated @RequestBody MdItem mdItem) {
+    @PostMapping("/product/{type}")
+    public AjaxResult addProduct(@Validated @RequestBody MdItem mdItem, @PathVariable("type") String type) {
         if (UserConstants.NOT_UNIQUE.equals(mdItemService.checkItemCodeUnique(mdItem))) {
             return AjaxResult.error("新增物料" + mdItem.getItemCode() + "失败，物料编码已存在");
         }
-        this.mdItemService.addItemProduct(mdItem);
+        this.mdItemService.addItemOrProduct(mdItem, type);
         return AjaxResult.success(mdItem.getItemId());
     }
 
