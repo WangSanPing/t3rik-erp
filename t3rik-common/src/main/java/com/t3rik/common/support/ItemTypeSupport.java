@@ -4,7 +4,7 @@ import cn.hutool.core.lang.Assert;
 import com.t3rik.common.constant.MsgConstants;
 import com.t3rik.common.enums.DefaultDataEnum;
 import com.t3rik.common.enums.ItemTypeEnum;
-import com.t3rik.common.exception.BussinessException;
+import com.t3rik.common.exception.BusinessException;
 
 /**
  * item类型支持类
@@ -19,7 +19,7 @@ public class ItemTypeSupport extends CommonSupport{
      */
     public static Long getDefaultDataIdByItemType(String itemType) {
         ItemTypeEnum itemTypeEnum = ItemTypeEnum.getEnumByCode(itemType);
-        Assert.notNull(itemTypeEnum, () -> new BussinessException(MsgConstants.PARAM_ERROR));
+        Assert.notNull(itemTypeEnum, () -> new BusinessException(MsgConstants.PARAM_ERROR));
         switch (itemTypeEnum) {
             case ITEM:
                 return DefaultDataEnum.MATERIAL.getDataId();

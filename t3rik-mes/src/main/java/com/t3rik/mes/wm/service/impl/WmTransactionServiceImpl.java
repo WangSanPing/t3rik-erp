@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
-import com.t3rik.common.exception.BussinessException;
+import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.DateUtils;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.mes.md.domain.MdItem;
@@ -49,7 +49,7 @@ public class WmTransactionServiceImpl implements IWmTransactionService
             //MS已存在
             BigDecimal resultQuantity =ms.getQuantityOnhand().add(quantity);
             if(wmTransaction.isStorageCheckFlag() && resultQuantity.compareTo(new BigDecimal(0))<0){
-                throw new BussinessException("库存数量不足！");
+                throw new BusinessException("库存数量不足！");
             }
             stock.setQuantityOnhand(resultQuantity);
             stock.setMaterialStockId(ms.getMaterialStockId());
@@ -68,19 +68,19 @@ public class WmTransactionServiceImpl implements IWmTransactionService
 
     private void validate(WmTransaction transaction){
         if(StringUtils.isNull(transaction.getTransactionType())){
-            throw new BussinessException("库存事务不能为空");
+            throw new BusinessException("库存事务不能为空");
         }
 
         if(StringUtils.isNull(transaction.getTransactionQuantity())){
-            throw new BussinessException("事务数量不能为空");
+            throw new BusinessException("事务数量不能为空");
         }
 
         if(StringUtils.isNull(transaction.getSourceDocCode())){
-            throw new BussinessException("来源单据号不能为空");
+            throw new BusinessException("来源单据号不能为空");
         }
 
         if(StringUtils.isNull(transaction.getSourceDocLineId())){
-            throw new BussinessException("来源单据行ID不能为空");
+            throw new BusinessException("来源单据行ID不能为空");
         }
 
         if(StringUtils.isNull(transaction.getTransactionDate())){

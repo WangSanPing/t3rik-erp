@@ -2,7 +2,7 @@ package com.t3rik.mes.wm.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.t3rik.common.constant.UserConstants;
-import com.t3rik.common.exception.BussinessException;
+import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.bean.BeanUtils;
 import com.t3rik.mes.wm.domain.WmStorageArea;
 import com.t3rik.mes.wm.domain.WmStorageLocation;
@@ -11,7 +11,6 @@ import com.t3rik.mes.wm.domain.WmWarehouse;
 import com.t3rik.mes.wm.domain.tx.*;
 import com.t3rik.mes.wm.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -41,7 +40,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
     public void processItemRecpt(List<ItemRecptTxBean> lines) {
         String transactionType = UserConstants.TRANSACTION_TYPE_ITEM_RECPT;
         if(CollUtil.isEmpty(lines)){
-            throw new BussinessException("没有需要处理的入库单行");
+            throw new BusinessException("没有需要处理的入库单行");
         }
 
         for (int i =0;i<lines.size();i++){
@@ -64,7 +63,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
     public void processRtVendor(List<RtVendorTxBean> lines) {
         String transactionType = UserConstants.TRANSACTION_TYPE_ITEM_RTV;
         if(CollUtil.isEmpty(lines)){
-            throw new BussinessException("没有需要处理的退货单行");
+            throw new BusinessException("没有需要处理的退货单行");
         }
 
         for(int i=0;i<lines.size();i++){
@@ -86,7 +85,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
     @Override
     public void processIssue(List<IssueTxBean> lines) {
         if(CollUtil.isEmpty(lines)){
-            throw new BussinessException("没有需要处理的领料单行");
+            throw new BusinessException("没有需要处理的领料单行");
         }
 
         String transactionType_out = UserConstants.TRANSACTION_TYPE_ITEM_ISSUE_OUT;
@@ -138,7 +137,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
     @Override
     public void processOutsourceIssue(List<OutsourceIssueTxBean> lines) {
         if(CollUtil.isEmpty(lines)){
-            throw new BussinessException("没有需要处理的外协发货单行");
+            throw new BusinessException("没有需要处理的外协发货单行");
         }
 
         String transactionType_out = UserConstants.TRANSACTION_TYPE_ITEM_ISSUE_OUT;
@@ -158,7 +157,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
     public void processOutsourceRecpt(List<OutsourceRecptTxBean> lines) {
         String transactionType = UserConstants.TRANSACTION_TYPE_OUTSOURCE_RECPT_IN;
         if(CollUtil.isEmpty(lines)){
-            throw new BussinessException("没有需要处理的外协入库单行");
+            throw new BusinessException("没有需要处理的外协入库单行");
         }
 
         for (int i =0;i<lines.size();i++){
@@ -180,7 +179,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
     @Override
     public void processRtIssue(List<RtIssueTxBean> lines) {
         if(CollUtil.isEmpty(lines)){
-            throw new BussinessException("没有需要处理的退料单行");
+            throw new BusinessException("没有需要处理的退料单行");
         }
 
         String transactionType_out = UserConstants.TRANSACTION_TYPE_ITEM_RT_ISSUE_OUT;
@@ -231,7 +230,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
      */
     public void processItemConsume(List<ItemConsumeTxBean> lines){
         if(CollUtil.isEmpty(lines)){
-            throw new BussinessException("没有需要处理的原料消耗单行");
+            throw new BusinessException("没有需要处理的原料消耗单行");
         }
         String transactionType = UserConstants.TRANSACTION_TYPE_ITEM_CONSUME;
         for(int i=0;i<lines.size();i++){
@@ -266,7 +265,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
      */
     public void processProductProduce(List<ProductProductTxBean> lines){
         if(CollUtil.isEmpty(lines)){
-            throw new BussinessException("没有需要处理的产品产出单行");
+            throw new BusinessException("没有需要处理的产品产出单行");
         }
         String transactionType = UserConstants.TRANSACTION_TYPE_PRODUCT_PRODUCE;
         for(int i=0;i<lines.size();i++){
@@ -302,7 +301,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
     @Override
     public void processProductRecpt(List<ProductRecptTxBean> lines) {
         if(CollUtil.isEmpty(lines)){
-            throw new BussinessException("没有需要处理的产品入库单行");
+            throw new BusinessException("没有需要处理的产品入库单行");
         }
         String transactionType_out = UserConstants.TRANSACTION_TYPE_PRODUCT_RECPT_OUT;
         String transactionType_in = UserConstants.TRANSACTION_TYPE_PRODUCT_RECPT_IN;
@@ -357,7 +356,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
     @Override
     public void processProductSalse(List<ProductSalseTxBean> lines) {
         if(CollUtil.isEmpty(lines)){
-            throw new BussinessException("没有需要处理的产品销售出库单行");
+            throw new BusinessException("没有需要处理的产品销售出库单行");
         }
 
         String transactionType = UserConstants.TRANSACTION_TYPE_PRODUCT_ISSUE;
@@ -375,7 +374,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
     @Override
     public void processRtSalse(List<RtSalseTxBean> lines) {
         if(CollUtil.isEmpty(lines)){
-            throw new BussinessException("没有需要处理的原料消耗单行");
+            throw new BusinessException("没有需要处理的原料消耗单行");
         }
         String transactionType = UserConstants.TRANSACTION_TYPE_PRODUCT_RS;
         for(int i=0;i<lines.size();i++){
@@ -392,7 +391,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
     @Override
     public void processTransfer(List<TransferTxBean> lines) {
         if(CollUtil.isEmpty(lines)){
-            throw new BussinessException("没有需要处理的原料消耗单行");
+            throw new BusinessException("没有需要处理的原料消耗单行");
         }
         String transactionType_out = UserConstants.TRANSACTION_TYPE_WAREHOUSE_TRANS_OUT;
         String transactionType_in = UserConstants.TRANSACTION_TYPE_WAREHOUSE_TRANS_IN;

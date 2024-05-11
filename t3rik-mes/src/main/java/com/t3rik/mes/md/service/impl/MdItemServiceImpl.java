@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.constant.MsgConstants;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.core.domain.entity.ItemType;
-import com.t3rik.common.exception.BussinessException;
+import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.support.ItemTypeSupport;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.mes.md.domain.MdItem;
@@ -93,10 +93,10 @@ public class MdItemServiceImpl extends ServiceImpl<MdItemMapper, MdItem> impleme
     public Boolean addItemOrProduct(MdItem mdItem, String type) {
         // 根据类型查询
         Long itemTypeId = ItemTypeSupport.getDefaultDataIdByItemType(type);
-        Assert.notNull(itemTypeId, () -> new BussinessException(MsgConstants.PARAM_ERROR));
+        Assert.notNull(itemTypeId, () -> new BusinessException(MsgConstants.PARAM_ERROR));
         // 查询类型具体信息
         ItemType itemType = this.iItemTypeService.selectItemTypeById(itemTypeId);
-        Assert.notNull(itemType, () -> new BussinessException(MsgConstants.PARAM_ERROR));
+        Assert.notNull(itemType, () -> new BusinessException(MsgConstants.PARAM_ERROR));
         mdItem.setItemTypeId(itemType.getItemTypeId());
         mdItem.setItemTypeCode(itemType.getItemTypeCode());
         mdItem.setItemTypeName(itemType.getItemTypeName());

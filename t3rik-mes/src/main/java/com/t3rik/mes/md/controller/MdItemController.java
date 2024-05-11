@@ -10,7 +10,7 @@ import com.t3rik.common.core.domain.entity.ItemType;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
 import com.t3rik.common.enums.YesOrNoEnum;
-import com.t3rik.common.exception.BussinessException;
+import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.support.ItemTypeSupport;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.mes.aspect.BarcodeGen;
@@ -105,7 +105,7 @@ public class MdItemController extends BaseController {
         startPage();
         // 根据类型查询
         Long itemTypeId = ItemTypeSupport.getDefaultDataIdByItemType(type);
-        Assert.notNull(itemTypeId, () -> new BussinessException(MsgConstants.PARAM_ERROR));
+        Assert.notNull(itemTypeId, () -> new BusinessException(MsgConstants.PARAM_ERROR));
         mdItem.setItemTypeId(itemTypeId);
         mdItem.setEnableFlag(YesOrNoEnum.YES.getCode());
         List<MdItem> list = mdItemService.selectMdItemList(mdItem);
