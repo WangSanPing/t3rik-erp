@@ -20,12 +20,9 @@ public class ItemTypeSupport extends CommonSupport {
     public static Long getDefaultDataIdByItemType(String itemType) {
         ItemTypeEnum itemTypeEnum = ItemTypeEnum.getEnumByCode(itemType);
         Assert.notNull(itemTypeEnum, () -> new BusinessException(MsgConstants.PARAM_ERROR));
-        switch (itemTypeEnum) {
-            case ITEM:
-                return DefaultDataEnum.MATERIAL.getDataId();
-            case PRODUCT:
-                return DefaultDataEnum.PRODUCTS.getDataId();
-        }
-        return null;
+        return switch (itemTypeEnum) {
+            case ITEM -> DefaultDataEnum.MATERIAL.getDataId();
+            case PRODUCT -> DefaultDataEnum.PRODUCTS.getDataId();
+        };
     }
 }
