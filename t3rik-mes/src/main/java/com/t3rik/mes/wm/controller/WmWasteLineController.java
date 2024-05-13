@@ -4,6 +4,12 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
+import com.t3rik.mes.wm.domain.WmStorageArea;
+import com.t3rik.mes.wm.domain.WmStorageLocation;
+import com.t3rik.mes.wm.domain.WmWarehouse;
+import com.t3rik.mes.wm.service.IWmStorageAreaService;
+import com.t3rik.mes.wm.service.IWmStorageLocationService;
+import com.t3rik.mes.wm.service.IWmWarehouseService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +44,14 @@ public class WmWasteLineController extends BaseController {
     @Autowired
     private IWmWasteLineService wmWasteLineService;
 
+    @Autowired
+    private IWmWarehouseService wmWarehouseService;
+
+    @Autowired
+    private IWmStorageLocationService wmStorageLocationService;
+
+    @Autowired
+    private IWmStorageAreaService wmStorageAreaService;
     /**
      * 查询生产废料单行列表
      */
@@ -83,6 +97,25 @@ public class WmWasteLineController extends BaseController {
     @Log(title = "生产废料单行", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody WmWasteLine wmWasteLine) {
+        if(!StringUtils.isNotNull(wmWasteLine.getMaterialStockId())){
+            return AjaxResult.error("请从库存现有量中选择退料的物资！");
+        }
+
+        if(StringUtils.isNotNull(wmWasteLine.getWarehouseId())){
+            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmWasteLine.getWarehouseId());
+            wmWasteLine.setWarehouseCode(warehouse.getWarehouseCode());
+            wmWasteLine.setWarehouseName(warehouse.getWarehouseName());
+        }
+        if(StringUtils.isNotNull(wmWasteLine.getLocationId())){
+            WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationId(wmWasteLine.getLocationId());
+            wmWasteLine.setLocationCode(location.getLocationCode());
+            wmWasteLine.setLocationName(location.getLocationName());
+        }
+        if(StringUtils.isNotNull(wmWasteLine.getAreaId())){
+            WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaId(wmWasteLine.getAreaId());
+            wmWasteLine.setAreaCode(area.getAreaCode());
+            wmWasteLine.setAreaName(area.getAreaName());
+        }
         return toAjax(this.wmWasteLineService.save(wmWasteLine));
     }
 
@@ -93,6 +126,21 @@ public class WmWasteLineController extends BaseController {
     @Log(title = "生产废料单行", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody WmWasteLine wmWasteLine) {
+        if(StringUtils.isNotNull(wmWasteLine.getWarehouseId())){
+            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmWasteLine.getWarehouseId());
+            wmWasteLine.setWarehouseCode(warehouse.getWarehouseCode());
+            wmWasteLine.setWarehouseName(warehouse.getWarehouseName());
+        }
+        if(StringUtils.isNotNull(wmWasteLine.getLocationId())){
+            WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationId(wmWasteLine.getLocationId());
+            wmWasteLine.setLocationCode(location.getLocationCode());
+            wmWasteLine.setLocationName(location.getLocationName());
+        }
+        if(StringUtils.isNotNull(wmWasteLine.getAreaId())){
+            WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaId(wmWasteLine.getAreaId());
+            wmWasteLine.setAreaCode(area.getAreaCode());
+            wmWasteLine.setAreaName(area.getAreaName());
+        }
         return toAjax(this.wmWasteLineService.updateById(wmWasteLine));
     }
 
@@ -103,7 +151,7 @@ public class WmWasteLineController extends BaseController {
     @Log(title = "生产废料单行", businessType = BusinessType.DELETE)
     @DeleteMapping("/{lineIds}")
     public AjaxResult remove(@PathVariable List<Long> lineIds) {
-        return toAjax(this.wmWasteLineService.removeByIds(lineIds));
+        return toAjax(this.wmWasteLineService.delWmWasteLineIds(lineIds));
     }
 
     /**
