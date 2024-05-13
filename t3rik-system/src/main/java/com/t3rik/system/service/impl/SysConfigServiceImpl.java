@@ -6,7 +6,7 @@ import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.core.redis.RedisCache;
 import com.t3rik.common.core.text.Convert;
 import com.t3rik.common.enums.DataSourceType;
-import com.t3rik.common.exception.ServiceException;
+import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.system.domain.SysConfig;
 import com.t3rik.system.mapper.SysConfigMapper;
@@ -140,7 +140,7 @@ public class SysConfigServiceImpl implements ISysConfigService {
         for (Long configId : configIds) {
             SysConfig config = selectConfigById(configId);
             if (StringUtils.equals(UserConstants.YES, config.getConfigType())) {
-                throw new ServiceException(String.format("内置参数【%1$s】不能删除 ", config.getConfigKey()));
+                throw new BusinessException(String.format("内置参数【%1$s】不能删除 ", config.getConfigKey()));
             }
             configMapper.deleteConfigById(configId);
             redisCache.deleteObject(getCacheKey(config.getConfigKey()));

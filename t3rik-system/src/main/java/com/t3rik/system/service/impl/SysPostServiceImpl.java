@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.t3rik.common.constant.UserConstants;
-import com.t3rik.common.exception.ServiceException;
+import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.system.domain.SysPost;
 import com.t3rik.system.mapper.SysPostMapper;
@@ -146,7 +146,7 @@ public class SysPostServiceImpl implements ISysPostService
             SysPost post = selectPostById(postId);
             if (countUserPostById(postId) > 0)
             {
-                throw new ServiceException(String.format("%1$s已分配,不能删除", post.getPostName()));
+                throw new BusinessException(String.format("%1$s已分配,不能删除", post.getPostName()));
             }
         }
         return postMapper.deletePostByIds(postIds);

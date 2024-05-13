@@ -24,6 +24,4 @@ public enum StatusEnum  {
         this.code = code;
         this.name = name;
     }
-
-
 }

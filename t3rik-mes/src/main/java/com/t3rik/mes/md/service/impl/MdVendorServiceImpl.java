@@ -3,7 +3,7 @@ package com.t3rik.mes.md.service.impl;
 import java.util.List;
 
 import com.t3rik.common.constant.UserConstants;
-import com.t3rik.common.exception.ServiceException;
+import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.DateUtils;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.bean.BeanValidators;
@@ -88,7 +88,7 @@ public class MdVendorServiceImpl implements IMdVendorService
     public String importVendor(List<MdVendor> vendorList, Boolean isUpdateSupport, String operName) {
         if (StringUtils.isNull(vendorList) || vendorList.size() == 0)
         {
-            throw new ServiceException("导入供应商数据不能为空！");
+            throw new BusinessException("导入供应商数据不能为空！");
         }
         int successNum = 0;
         int failureNum = 0;
@@ -122,7 +122,7 @@ public class MdVendorServiceImpl implements IMdVendorService
             if (failureNum > 0)
             {
                 failureMsg.insert(0, "导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
-                throw new ServiceException(failureMsg.toString());
+                throw new BusinessException(failureMsg.toString());
             }
             else
             {

@@ -15,7 +15,7 @@ import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
 import com.t3rik.common.annotation.RateLimiter;
 import com.t3rik.common.enums.LimitType;
-import com.t3rik.common.exception.ServiceException;
+import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.ServletUtils;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.ip.IpUtils;
@@ -61,11 +61,11 @@ public class RateLimiterAspect
             Long number = redisTemplate.execute(limitScript, keys, count, time);
             if (StringUtils.isNull(number) || number.intValue() > count)
             {
-                throw new ServiceException("访问过于频繁，请稍候再试");
+                throw new BusinessException("访问过于频繁，请稍候再试");
             }
             log.info("限制请求'{}',当前请求'{}',缓存key'{}'", count, number.intValue(), key);
         }
-        catch (ServiceException e)
+        catch (BusinessException e)
         {
             throw e;
         }

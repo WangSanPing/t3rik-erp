@@ -42,6 +42,9 @@ logging:
 
 # Spring配置
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   # 资源信息
   messages:
     # 国际化资源文件路径

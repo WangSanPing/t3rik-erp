@@ -2,9 +2,11 @@ package com.t3rik.mes.md.service.impl;
 
 import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.t3rik.common.constant.MsgConstants;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.core.domain.entity.ItemType;
-import com.t3rik.common.enums.DefaultDataEnum;
+import com.t3rik.common.exception.BusinessException;
+import com.t3rik.common.support.ItemTypeSupport;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.mes.md.domain.MdItem;
 import com.t3rik.mes.md.mapper.MdItemMapper;
@@ -88,14 +90,17 @@ public class MdItemServiceImpl extends ServiceImpl<MdItemMapper, MdItem> impleme
     }
 
     @Override
-    public Boolean addItemProduct(MdItem mdItem) {
-        // 查询产品类型
-        ItemType type = this.iItemTypeService.selectItemTypeById(DefaultDataEnum.PRODUCTS.getDataId());
-        Assert.notNull(type, "数据有误,请联系管理员");
-        mdItem.setItemTypeId(type.getItemTypeId());
-        mdItem.setItemTypeCode(type.getItemTypeCode());
-        mdItem.setItemTypeName(type.getItemTypeName());
-        mdItem.setItemOrProduct(type.getItemOrProduct());
+    public Boolean addItemOrProduct(MdItem mdItem, String type) {
+        // 根据类型查询
+        Long itemTypeId = ItemTypeSupport.getDefaultDataIdByItemType(type);
+        Assert.notNull(itemTypeId, () -> new BusinessException(MsgConstants.PARAM_ERROR));
+        // 查询类型具体信息
+        ItemType itemType = this.iItemTypeService.selectItemTypeById(itemTypeId);
+        Assert.notNull(itemType, () -> new BusinessException(MsgConstants.PARAM_ERROR));
+        mdItem.setItemTypeId(itemType.getItemTypeId());
+        mdItem.setItemTypeCode(itemType.getItemTypeCode());
+        mdItem.setItemTypeName(itemType.getItemTypeName());
+        mdItem.setItemOrProduct(itemType.getItemOrProduct());
         boolean save = this.save(mdItem);
         barcodeUtil.generateBarCode(UserConstants.BARCODE_TYPE_ITEM, mdItem.getItemId(), mdItem.getItemCode(), mdItem.getItemName());
         return save;

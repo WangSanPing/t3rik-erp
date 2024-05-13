@@ -5,7 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.t3rik.common.constant.HttpStatus;
 import com.t3rik.common.core.domain.model.LoginUser;
-import com.t3rik.common.exception.ServiceException;
+import com.t3rik.common.exception.BusinessException;
 
 /**
  * 安全服务工具类
@@ -25,7 +25,7 @@ public class SecurityUtils
         }
         catch (Exception e)
         {
-            throw new ServiceException("获取用户ID异常", HttpStatus.UNAUTHORIZED);
+            throw new BusinessException("获取用户ID异常", HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -40,7 +40,7 @@ public class SecurityUtils
         }
         catch (Exception e)
         {
-            throw new ServiceException("获取部门ID异常", HttpStatus.UNAUTHORIZED);
+            throw new BusinessException("获取部门ID异常", HttpStatus.UNAUTHORIZED);
         }
     }
     
@@ -55,7 +55,7 @@ public class SecurityUtils
         }
         catch (Exception e)
         {
-            throw new ServiceException("获取用户账户异常", HttpStatus.UNAUTHORIZED);
+            throw new BusinessException("获取用户账户异常", HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -70,7 +70,7 @@ public class SecurityUtils
         }
         catch (Exception e)
         {
-            throw new ServiceException("获取用户信息异常", HttpStatus.UNAUTHORIZED);
+            throw new BusinessException("获取用户信息异常", HttpStatus.UNAUTHORIZED);
         }
     }
 

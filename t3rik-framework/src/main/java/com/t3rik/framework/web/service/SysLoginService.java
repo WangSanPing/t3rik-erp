@@ -4,7 +4,7 @@ import com.t3rik.common.constant.Constants;
 import com.t3rik.common.core.domain.entity.SysUser;
 import com.t3rik.common.core.domain.model.LoginUser;
 import com.t3rik.common.core.redis.RedisCache;
-import com.t3rik.common.exception.ServiceException;
+import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.exception.user.CaptchaException;
 import com.t3rik.common.exception.user.CaptchaExpireException;
 import com.t3rik.common.exception.user.UserPasswordNotMatchException;
@@ -75,7 +75,7 @@ public class SysLoginService {
                 throw new UserPasswordNotMatchException();
             } else {
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, e.getMessage()));
-                throw new ServiceException(e.getMessage());
+                throw new BusinessException(e.getMessage());
             }
         }
         AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));

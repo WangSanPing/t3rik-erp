@@ -82,6 +82,6 @@ public interface IMdItemService extends IService<MdItem> {
     /**
      * 添加产品
      */
-    Boolean addItemProduct(MdItem mdItem);
+    Boolean addItemOrProduct(MdItem mdItem,String type);
 }
 

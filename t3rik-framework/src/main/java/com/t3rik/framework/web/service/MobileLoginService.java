@@ -6,7 +6,7 @@ import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.domain.entity.SysUser;
 import com.t3rik.common.core.domain.model.LoginUser;
 import com.t3rik.common.core.redis.RedisCache;
-import com.t3rik.common.exception.ServiceException;
+import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.exception.user.UserPasswordNotMatchException;
 import com.t3rik.common.utils.DictUtils;
 import com.t3rik.common.utils.MessageUtils;
@@ -117,7 +117,7 @@ public class MobileLoginService  {
             else
             {
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(loginParams.getUsername(), Constants.LOGIN_FAIL, e.getMessage()));
-                throw new ServiceException(e.getMessage());
+                throw new BusinessException(e.getMessage());
             }
         }
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
@@ -172,7 +172,7 @@ public class MobileLoginService  {
                 return AjaxResult.error(-6,"对不起手机号【"+loginParams.getPhoneNo()+"】发送短信失败：失败原因:");
             }
         }catch (Exception e){
-            throw new ServiceException(e.getMessage());
+            throw new BusinessException(e.getMessage());
         }
         AjaxResult ajax = AjaxResult.success("验证码发送成功");
         return ajax;
@@ -202,7 +202,7 @@ public class MobileLoginService  {
             loginParams.setLoginType("1");
             return  this.login(loginParams);
         }catch (Exception e){
-            throw new ServiceException(e.getMessage());
+            throw new BusinessException(e.getMessage());
         }
     }
 
@@ -214,15 +214,15 @@ public class MobileLoginService  {
     private void setUserDefaultInfo(SysUser registerUser ){
         String registerRoleCode = DictUtils.getDictValue("sys_config","register_role_code","");
         if (StringUtils.isBlank(registerRoleCode)) {
-            throw new ServiceException("请前往数据字典【sys_config】中维护注册用户角色编码【register_role_code】");
+            throw new BusinessException("请前往数据字典【sys_config】中维护注册用户角色编码【register_role_code】");
         }
         String registerDeptCode = DictUtils.getDictValue("sys_config","register_dept_code","");
         if (StringUtils.isBlank(registerDeptCode)) {
-            throw new ServiceException("请前往数据字典【sys_config】中维护注册用户部门编码【register_dept_code】");
+            throw new BusinessException("请前往数据字典【sys_config】中维护注册用户部门编码【register_dept_code】");
         }
         String registerPostCode = DictUtils.getDictValue("sys_config","register_post_code","");
         if (StringUtils.isBlank(registerPostCode)) {
-            throw new ServiceException("请前往数据字典【sys_config】中维护注册用户岗位编码【register_post_code】");
+            throw new BusinessException("请前往数据字典【sys_config】中维护注册用户岗位编码【register_post_code】");
         }
 
     }
