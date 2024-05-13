@@ -19,7 +19,7 @@ import java.util.TimeZone;
 // 表示通过aop框架暴露该代理对象,AopContext能够访问
 @EnableAspectJAutoProxy(exposeProxy = true)
 // 指定要扫描的Mapper类的包的路径
-@MapperScan("com.t3rik.**.mapper")
+@MapperScan({"com.t3rik.**.mapper","com.t3rik.**.**.mapper"})
 // 开启定时任务
 @EnableScheduling
 public class ApplicationConfig {

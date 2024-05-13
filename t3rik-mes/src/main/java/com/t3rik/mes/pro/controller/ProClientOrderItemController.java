@@ -1,22 +1,26 @@
 package com.t3rik.mes.pro.controller;
 
+import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.t3rik.common.annotation.Log;
+import com.t3rik.common.constant.MsgConstants;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
+import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.poi.ExcelUtil;
+import com.t3rik.mes.pro.domain.ProClientOrder;
 import com.t3rik.mes.pro.domain.ProClientOrderItem;
 import com.t3rik.mes.pro.service.IProClientOrderItemService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.t3rik.mes.pro.service.IProClientOrderService;
+import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 客户订单材料
@@ -25,11 +29,15 @@ import java.util.Map;
  * @author t3rik
  * @date 2024-05-07
  */
+@AllArgsConstructor
 @RestController
 @RequestMapping("/pro/client-order-item")
 public class ProClientOrderItemController extends BaseController {
-    @Autowired
-    private IProClientOrderItemService proClientOrderItemService;
+
+    private final IProClientOrderItemService proClientOrderItemService;
+
+    private final IProClientOrderService proClientOrderService;
+
 
     /**
      * 查询客户订单材料
@@ -45,6 +53,18 @@ public class ProClientOrderItemController extends BaseController {
         // 查询
         this.proClientOrderItemService.page(page, queryWrapper);
         return getDataTableWithPage(page);
+    }
+
+    /**
+     * 获取客户订单的级别
+     */
+    @PreAuthorize("@ss.hasPermi('pro:clientorderitem:add')")
+    @GetMapping("/getClientOrderItemLevel/{clientOrderId}")
+    public AjaxResult getClientOrderItemLevel(@PathVariable Long clientOrderId) {
+        ProClientOrder clientOrder = this.proClientOrderService.getById(clientOrderId);
+        Assert.notNull(clientOrder, () -> new BusinessException(MsgConstants.PARAM_ERROR));
+        Integer level = this.proClientOrderItemService.getClientOrderItemLevel(clientOrderId);
+        return AjaxResult.success(level);
     }
 
     /**
@@ -79,6 +99,7 @@ public class ProClientOrderItemController extends BaseController {
     @Log(title = "客户订单材料", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ProClientOrderItem proClientOrderItem) {
+
         return toAjax(this.proClientOrderItemService.save(proClientOrderItem));
     }
 

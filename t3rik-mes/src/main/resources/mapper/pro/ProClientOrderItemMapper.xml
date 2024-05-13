@@ -8,9 +8,7 @@
         <result property="orderItemId" column="order_item_id"/>
         <result property="clientOrderId" column="client_order_id"/>
         <result property="itemId" column="item_id"/>
-        <result property="itemOrProduct" column="item_or_product"/>
         <result property="quantity" column="quantity"/>
-        <result property="unitOfMeasure" column="unit_of_measure"/>
         <result property="level" column="level"/>
         <result property="remark" column="remark"/>
         <result property="attr1" column="attr1"/>
@@ -29,9 +27,7 @@
         select order_item_id,
                client_order_id,
                item_id,
-               item_or_product,
                quantity,
-               unit_of_measure,
                level,
                remark,
                attr1,

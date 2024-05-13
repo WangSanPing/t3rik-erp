@@ -15,4 +15,8 @@ Service接口
  */
 public interface IProClientOrderItemService extends IService<ProClientOrderItem> {
 
+    /**
+     * 获取级别
+     */
+    Integer getClientOrderItemLevel(Long clientOrderId);
 }
