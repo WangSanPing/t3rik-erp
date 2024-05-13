@@ -55,7 +55,7 @@ public class WmWasteLineController extends BaseController {
     /**
      * 查询生产废料单行列表
      */
-    @PreAuthorize("@ss.hasPermi('mes:wmwasteline:list')")
+    @PreAuthorize("@ss.hasPermi('mes:wmwasteheader:list')")
     @GetMapping("/list")
     public TableDataInfo list(WmWasteLine wmWasteLine) {
         // 获取查询条件
@@ -70,7 +70,7 @@ public class WmWasteLineController extends BaseController {
     /**
      * 导出生产废料单行列表
      */
-    @PreAuthorize("@ss.hasPermi('mes:wmwasteline:export')")
+    @PreAuthorize("@ss.hasPermi('mes:wmwasteheader:export')")
     @Log(title = "生产废料单行", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, WmWasteLine wmWasteLine) {
@@ -84,7 +84,7 @@ public class WmWasteLineController extends BaseController {
     /**
      * 获取生产废料单行详细信息
      */
-    @PreAuthorize("@ss.hasPermi('mes:wmwasteline:query')")
+    @PreAuthorize("@ss.hasPermi('mes:wmwasteheader:query')")
     @GetMapping(value = "/{lineId}")
     public AjaxResult getInfo(@PathVariable("lineId") Long lineId) {
         return AjaxResult.success(this.wmWasteLineService.getById(lineId));
@@ -93,7 +93,7 @@ public class WmWasteLineController extends BaseController {
     /**
      * 新增生产废料单行
      */
-    @PreAuthorize("@ss.hasPermi('mes:wmwasteline:add')")
+    @PreAuthorize("@ss.hasPermi('mes:wmwasteheader:add')")
     @Log(title = "生产废料单行", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody WmWasteLine wmWasteLine) {
@@ -122,7 +122,7 @@ public class WmWasteLineController extends BaseController {
     /**
      * 修改生产废料单行
      */
-    @PreAuthorize("@ss.hasPermi('mes:wmwasteline:edit')")
+    @PreAuthorize("@ss.hasPermi('mes:wmwasteheader:edit')")
     @Log(title = "生产废料单行", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody WmWasteLine wmWasteLine) {
@@ -147,7 +147,7 @@ public class WmWasteLineController extends BaseController {
     /**
      * 删除生产废料单行
      */
-    @PreAuthorize("@ss.hasPermi('mes:wmwasteline:remove')")
+    @PreAuthorize("@ss.hasPermi('mes:wmwasteheader:remove')")
     @Log(title = "生产废料单行", businessType = BusinessType.DELETE)
     @DeleteMapping("/{lineIds}")
     public AjaxResult remove(@PathVariable List<Long> lineIds) {

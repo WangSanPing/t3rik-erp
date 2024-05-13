@@ -127,6 +127,7 @@ public class UserConstants {
     public static final String WM_RTVENDOR_CODE = "WM_RTVENDOR_CODE";// 退回供应商
     public static final String ISSUE_CODE = "ISSUE_CODE"; // 生产领料
     public static final String RTISSUE_CODE = "RTISSUE_CODE"; // 生产退料
+    public static final String PWASTE_CODE = "PWASTE_CODE"; // 生产废料
     public static final String PRODUCTRECPT_CODE = "PRODUCTRECPT_CODE"; // 产品入库
     public static final String PRODUCTSALSE_CODE = "PRODUCTSALSE_CODE"; // 销售出库
     public static final String RTSALSE_CODE = "RTSALSE_CODE"; // 销售退货
@@ -137,11 +138,11 @@ public class UserConstants {
     /**
      * 单据的状态类型
      */
-    public static final String ORDER_STATUS_PREPARE = "PREPARE";
-    public static final String ORDER_STATUS_CONFIRMED = "CONFIRMED";
-    public static final String ORDER_STATUS_APPROVING = "APPROVING";
-    public static final String ORDER_STATUS_APPROVED = "APPROVED";
-    public static final String ORDER_STATUS_FINISHED = "FINISHED";
+    public static final String ORDER_STATUS_PREPARE = "PREPARE"; //prepare 准备
+    public static final String ORDER_STATUS_CONFIRMED = "CONFIRMED";//confirmed 证实
+    public static final String ORDER_STATUS_APPROVING = "APPROVING";//approving 执行
+    public static final String ORDER_STATUS_APPROVED = "APPROVED";//approved 批准
+    public static final String ORDER_STATUS_FINISHED = "FINISHED";//finished 完成
 
     /**
      * 维护类型
