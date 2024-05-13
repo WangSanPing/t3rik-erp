@@ -144,11 +144,11 @@ public class WmWasteLine extends BaseEntity
 
     /** 更新人id */
     @Excel(name = "更新人id")
-    private Long updateById;
+    private Long updateUserId;
 
 
     /** 创建人id */
     @Excel(name = "创建人id")
-    private Long createById;
+    private Long createUserId;
 
 }

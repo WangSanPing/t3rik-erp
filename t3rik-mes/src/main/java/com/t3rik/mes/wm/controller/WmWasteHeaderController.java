@@ -13,6 +13,7 @@ import com.t3rik.mes.wm.domain.WmWarehouse;
 import com.t3rik.mes.wm.service.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -103,6 +104,7 @@ public class WmWasteHeaderController extends BaseController {
     @PreAuthorize("@ss.hasPermi('mes:wmwasteheader:add')")
     @Log(title = "生产废料单头", businessType = BusinessType.INSERT)
     @PostMapping
+    @Transactional
     public AjaxResult add(@RequestBody WmWasteHeader wmWasteHeader) {
         //查询退料单号是否已存在
         if(UserConstants.NOT_UNIQUE.equals(wmWasteHeaderService.checkUnique(wmWasteHeader))){
@@ -155,8 +157,8 @@ public class WmWasteHeaderController extends BaseController {
             wmWasteHeader.setAreaName(area.getAreaName());
         }
         //修改人、时间
-        wmWasteHeader.setUpdateBy(getUsername());
-        wmWasteHeader.setUpdateById(getUserId());
+//        wmWasteHeader.setUpdateBy(getUsername());
+//        wmWasteHeader.setUpdateById(getUserId());
         wmWasteHeader.setUpdateTime(DateUtils.getNowDate());
         return toAjax(this.wmWasteHeaderService.updateById(wmWasteHeader));
     }
@@ -193,7 +195,7 @@ public class WmWasteHeaderController extends BaseController {
         queryWrapper.eq(wmWasteHeader.getAreaCode() != null, WmWasteHeader::getAreaCode, wmWasteHeader.getAreaCode());
         queryWrapper.like(StringUtils.isNotEmpty(wmWasteHeader.getAreaName()), WmWasteHeader::getAreaName, wmWasteHeader.getAreaName());
         queryWrapper.eq(wmWasteHeader.getWasteDate() != null, WmWasteHeader::getWasteDate, wmWasteHeader.getWasteDate());
-        Optional.ofNullable(wmWasteHeader.getStatus()).ifPresent(status -> queryWrapper.eq( WmWasteHeader::getStatus, wmWasteHeader.getStatus().getCode()));
+        Optional.ofNullable(wmWasteHeader.getStatus()).ifPresent(status -> queryWrapper.eq( WmWasteHeader::getStatus, wmWasteHeader.getStatus()));
         queryWrapper.eq(wmWasteHeader.getAttr1() != null, WmWasteHeader::getAttr1, wmWasteHeader.getAttr1());
         queryWrapper.eq(wmWasteHeader.getAttr2() != null, WmWasteHeader::getAttr2, wmWasteHeader.getAttr2());
         queryWrapper.eq(wmWasteHeader.getAttr3() != null, WmWasteHeader::getAttr3, wmWasteHeader.getAttr3());
