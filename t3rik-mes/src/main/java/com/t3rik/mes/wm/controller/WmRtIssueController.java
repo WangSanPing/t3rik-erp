@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * 生产退料单头Controller
- * 
+ *
  * @author yinjinlu
  * @date 2022-09-15
  */
@@ -171,20 +171,22 @@ public class WmRtIssueController extends BaseController
     @Transactional
     @PutMapping("/{rtId}")
     public AjaxResult execute(@PathVariable Long rtId){
+        //查询生产退料单头
         WmRtIssue rtIssue = wmRtIssueService.selectWmRtIssueByRtId(rtId);
         WmRtIssueLine param = new WmRtIssueLine();
         param.setRtId(rtId);
+        //查询生产退料行信息
         List<WmRtIssueLine> lines = wmRtIssueLineService.selectWmRtIssueLineList(param);
         if(CollUtil.isEmpty(lines)){
             return AjaxResult.error("请选择要退料的物资");
         }
-
+        //查询退料信息所对应的库存记录信息
         List<RtIssueTxBean> beans = wmRtIssueService.getTxBeans(rtId);
 
         //执行生产退料
         storageCoreService.processRtIssue(beans);
 
-
+        //修改状态成已完成
         rtIssue.setStatus(UserConstants.ORDER_STATUS_FINISHED);
         wmRtIssueService.updateWmRtIssue(rtIssue);
         return AjaxResult.success();

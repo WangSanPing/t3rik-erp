@@ -186,30 +186,37 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
             throw new BusinessException("没有需要处理的退料单行");
         }
 
+        //生产退料-出库事务
         String transactionType_out = UserConstants.TRANSACTION_TYPE_ITEM_RT_ISSUE_OUT;
+        //生产退料-入库事务
         String transactionType_in = UserConstants.TRANSACTION_TYPE_ITEM_RT_ISSUE_IN;
         for (int i = 0; i < lines.size(); i++) {
             RtIssueTxBean line = lines.get(i);
 
             // 构造一条目的库存减少的事务
             WmTransaction transaction_out = new WmTransaction();
+            //设置事务类型为出库
             transaction_out.setTransactionType(transactionType_out);
             BeanUtils.copyBeanProp(transaction_out, line);
 
             // 这里的出库事务默认从线边库出库到实际仓库
+            //查询仓库-虚拟库存
             WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseCode(UserConstants.VIRTUAL_WH);
             transaction_out.setWarehouseId(warehouse.getWarehouseId());
             transaction_out.setWarehouseCode(warehouse.getWarehouseCode());
             transaction_out.setWarehouseName(warehouse.getWarehouseName());
+            //查询虚拟库区
             WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationCode(UserConstants.VIRTUAL_WS);
             transaction_out.setLocationId(location.getLocationId());
             transaction_out.setLocationCode(location.getLocationCode());
             transaction_out.setLocationName(location.getLocationName());
+            //虚拟库位
             WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaCode(UserConstants.VIRTUAL_WA);
             transaction_out.setAreaId(area.getAreaId());
             transaction_out.setAreaCode(area.getAreaCode());
             transaction_out.setAreaName(area.getAreaName());
 
+            /** 库存方向 */
             transaction_out.setTransactionFlag(-1);// 库存减少
             wmTransactionService.processTransaction(transaction_out);
 
