@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.mes.wm.domain.WmRtIssue;
+import com.t3rik.mes.wm.domain.tx.WmWasteTxBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.t3rik.mes.wm.mapper.WmWasteHeaderMapper;
@@ -48,5 +49,15 @@ public class WmWasteHeaderServiceImpl  extends ServiceImpl<WmWasteHeaderMapper, 
     @Override
     public int delWmWasteHeaderIds(List<Long> wasteIds) {
         return wmWasteHeaderMapper.delWmWasteHeaderIds(wasteIds);
+    }
+
+    /**
+     *  关联查询废料信息所对应的库存记录
+     * @param wasteId 废料id
+     * @return
+     */
+    @Override
+    public List<WmWasteTxBean> getTxBeans(Long wasteId) {
+        return wmWasteHeaderMapper.getTxBeans(wasteId);
     }
 }

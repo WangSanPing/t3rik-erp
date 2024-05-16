@@ -448,6 +448,34 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
         }
 
     }
+    /**
+     * 执行废料信息
+     * @param beans
+     */
 
+    @Override
+    public void processWmWaste(List<WmWasteTxBean> beans) {
+        //校验数据是否为空
+        if (CollUtil.isEmpty(beans))
+            throw new BusinessException("没有需要处理废料的单行！");
+
+        //生产退料-入库事务
+        String transactionType_in = UserConstants.TRANSACTION_TYPE_ITEM_ISSUE_IN;
+        beans.stream().forEach(a -> {
+            //构造信息 将信息存入线边库
+            //需要校验数量 查询退料+废料 总和是否超过总量
+            //线边库新增虚拟物料数量
+            //构造一个虚拟入库事务
+            WmTransaction transaction_in = new WmTransaction();
+            //拷贝数据
+            BeanUtils.copyBeanProp(transaction_in,a);
+            transaction_in.setTransactionFlag(1);//新增
+            transaction_in.setTransactionType(transactionType_in);
+            transaction_in.setTransactionDate(new Date());
+            transaction_in.setMaterialStockId(null);
+            wmTransactionService.processTransactionWaste(transaction_in);//添加事务以及虚拟库信息
+        });
+
+    }
 
 }

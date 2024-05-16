@@ -1,5 +1,7 @@
 package com.t3rik.mes.wm.mapper;
 import java.util.Collection;
+
+import com.t3rik.mes.wm.domain.tx.WmWasteTxBean;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -24,8 +26,10 @@ public interface WmWasteHeaderMapper extends BaseMapper<WmWasteHeader> {
      */
     int delWmWasteHeaderIds(@Param("wasteIds")List<Long> wasteIds);
 
-
-
-
-
+    /**
+     *  关联查询废料信息所对应的库存记录
+     * @param wasteId 废料id
+     * @return
+     */
+    List<WmWasteTxBean> getTxBeans(Long wasteId);
 }

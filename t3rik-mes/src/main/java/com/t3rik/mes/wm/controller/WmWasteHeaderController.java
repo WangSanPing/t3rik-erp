@@ -5,11 +5,12 @@ import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Assert;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.utils.DateUtils;
-import com.t3rik.mes.wm.domain.WmStorageArea;
-import com.t3rik.mes.wm.domain.WmStorageLocation;
-import com.t3rik.mes.wm.domain.WmWarehouse;
+import com.t3rik.mes.wm.domain.*;
+import com.t3rik.mes.wm.domain.tx.WmWasteTxBean;
 import com.t3rik.mes.wm.service.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,6 @@ import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.enums.BusinessType;
-import com.t3rik.mes.wm.domain.WmWasteHeader;
 import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.common.core.page.TableDataInfo;
 
@@ -174,6 +174,34 @@ public class WmWasteHeaderController extends BaseController {
         wmWasteLineService.delWmWasteLineIds(wasteIds);
         //删除头数据
         return toAjax(wmWasteHeaderService.delWmWasteHeaderIds(wasteIds));
+    }
+
+    /**
+     * 执行废料
+     * @param wasteId
+     * @return
+     */
+    @PreAuthorize("@ss.hasPermi('mes:wmwasteheader:edit')")
+    @Log(title = "生产废料单头", businessType = BusinessType.UPDATE)
+    @Transactional
+    @PutMapping("/{wasteId}")
+    public AjaxResult execute(@PathVariable Long wasteId){
+        //查询生产退料单头根据id
+        WmWasteHeader wasteHeader = wmWasteHeaderService.lambdaQuery().eq(WmWasteHeader::getWasteId, wasteId).one();
+        //查询生产退料行信息
+        List<WmWasteLine> wmWasteLines = wmWasteLineService.selectWmWasteLineList(wasteHeader.getWasteId());
+        //判断数据石头为空
+        if (CollUtil.isEmpty(wmWasteLines)) {
+            return AjaxResult.error("请选择要废料的物资");
+        }
+        //查询废料信息所对应的库存记录
+        List<WmWasteTxBean> beans = wmWasteHeaderService.getTxBeans(wasteId);
+        //执行废料
+        storageCoreService.processWmWaste(beans);
+        //修改状态已完成
+        wasteHeader.setStatus(UserConstants.ORDER_STATUS_FINISHED);
+        wmWasteHeaderService.updateById(wasteHeader);
+        return AjaxResult.success(1);
     }
 
     /**

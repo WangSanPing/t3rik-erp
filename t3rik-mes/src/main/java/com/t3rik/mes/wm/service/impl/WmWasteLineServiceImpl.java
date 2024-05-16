@@ -29,4 +29,14 @@ public class WmWasteLineServiceImpl  extends ServiceImpl<WmWasteLineMapper, WmWa
     public int delWmWasteLineIds(List<Long> wasteIds) {
         return wmWasteLineMapper.delLineByWasteIds(wasteIds);
     }
+
+    /**
+     * 条件查询 废料行信息
+     * @param wasteId 废料头部id
+     * @return
+     */
+    @Override
+    public List<WmWasteLine> selectWmWasteLineList(Long wasteId) {
+        return this.lambdaQuery().eq(WmWasteLine::getWasteId, wasteId).list();
+    }
 }

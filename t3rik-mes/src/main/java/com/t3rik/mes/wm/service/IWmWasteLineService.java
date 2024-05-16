@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.wm.domain.WmWasteLine;
-import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 生产废料单行Service接口
@@ -20,4 +19,11 @@ public interface IWmWasteLineService extends IService<WmWasteLine> {
      * @return
      */
     int delWmWasteLineIds(List<Long> wasteIds);
+
+    /**
+     * 条件查询 废料行信息
+     * @param wasteId
+     * @return
+     */
+    List<WmWasteLine> selectWmWasteLineList(Long wasteId);
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.wm.domain.WmWasteHeader;
+import com.t3rik.mes.wm.domain.tx.WmWasteTxBean;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -28,4 +29,11 @@ public interface IWmWasteHeaderService extends IService<WmWasteHeader> {
      * @return 结果
      */
     int delWmWasteHeaderIds(List<Long> wasteIds);
+
+    /**
+     * 查询废料信息所对应的库存记录
+     * @param wasteId 废料id
+     * @return
+     */
+    List<WmWasteTxBean> getTxBeans(Long wasteId);
 }

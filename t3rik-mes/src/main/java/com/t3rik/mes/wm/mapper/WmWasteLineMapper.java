@@ -1,4 +1,5 @@
 package com.t3rik.mes.wm.mapper;
+import com.t3rik.mes.wm.domain.WmWasteHeader;
 import org.apache.ibatis.annotations.Param;
 import java.util.Collection;
 

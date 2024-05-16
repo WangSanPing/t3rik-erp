@@ -80,4 +80,9 @@ public interface IStorageCoreService {
      */
     public void processTransfer(List<TransferTxBean> lines);
 
+    /**
+     * 执行废料信息
+     * @param beans
+     */
+    void processWmWaste(List<WmWasteTxBean> beans);
 }
