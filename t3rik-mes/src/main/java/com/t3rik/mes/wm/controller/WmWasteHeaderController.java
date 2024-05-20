@@ -183,7 +183,6 @@ public class WmWasteHeaderController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('mes:wmwasteheader:edit')")
     @Log(title = "生产废料单头", businessType = BusinessType.UPDATE)
-    @Transactional
     @PutMapping("/{wasteId}")
     public AjaxResult execute(@PathVariable Long wasteId){
         //查询生产退料单头根据id
@@ -201,7 +200,7 @@ public class WmWasteHeaderController extends BaseController {
         //修改状态已完成
         wasteHeader.setStatus(UserConstants.ORDER_STATUS_FINISHED);
         wmWasteHeaderService.updateById(wasteHeader);
-        return AjaxResult.success(1);
+        return AjaxResult.success();
     }
 
     /**

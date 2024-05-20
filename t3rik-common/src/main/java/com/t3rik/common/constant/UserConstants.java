@@ -238,6 +238,13 @@ public class UserConstants {
     public static final String VIRTUAL_WA = "XBKKW_VIRTUAL";
 
     /**
+     * 废料线边库对应的仓库、库区、库位编码
+     */
+    public static final String WASTE_VIRTUAL_WH = "WASTE_XBK_VIRTUAL";
+    public static final String WASTE_VIRTUAL_WS = "WASTE_XBKKQ_VIRTUAL";
+    public static final String WASTE_VIRTUAL_WA = "WASTE_XBKKW_VIRTUAL";
+
+    /**
      * 条码格式
      */
     public static final String QR_CODE = "QR_CODE";

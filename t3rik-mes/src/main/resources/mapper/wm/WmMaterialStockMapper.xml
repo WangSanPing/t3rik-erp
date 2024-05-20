@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.t3rik.mes.wm.mapper.WmMaterialStockMapper">
-    
+
     <resultMap type="com.t3rik.mes.wm.domain.WmMaterialStock" id="WmMaterialStockResult">
         <result property="materialStockId"    column="material_stock_id"    />
         <result property="itemTypeId"    column="item_type_id"    />
@@ -47,7 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectWmMaterialStockList" parameterType="WmMaterialStock" resultMap="WmMaterialStockResult">
         <include refid="selectWmMaterialStockVo"/>
-        <where>  
+        <where>
             <if test="itemTypeId != null "> AND (item_type_id = #{itemTypeId} OR item_type_id in (select item_type_id from md_item_type where find_in_set(#{itemTypeId},ancestors)))</if>
             <if test="itemId != null "> and item_id = #{itemId}</if>
             <if test="itemCode != null  and itemCode != ''"> and item_code = #{itemCode}</if>
@@ -78,7 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="attr3 != null "> and attr3 = #{attr3}</if>
             <if test="attr4 != null "> and attr4 = #{attr4}</if>
              and quantity_onhand != 0
-             order by recpt_date asc
+             order by recpt_date desc
         </where>
     </select>
 
@@ -118,7 +118,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             order by recpt_date asc
         </where>
     </select>
-    
+
     <select id="selectWmMaterialStockByMaterialStockId" parameterType="Long" resultMap="WmMaterialStockResult">
         <include refid="selectWmMaterialStockVo"/>
         where material_stock_id = #{materialStockId}
@@ -260,7 +260,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteWmMaterialStockByMaterialStockIds" parameterType="String">
-        delete from wm_material_stock where material_stock_id in 
+        delete from wm_material_stock where material_stock_id in
         <foreach item="materialStockId" collection="array" open="(" separator="," close=")">
             #{materialStockId}
         </foreach>

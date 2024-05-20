@@ -45,7 +45,7 @@ public class WmTransactionServiceImpl implements IWmTransactionService
         //初始化赋值声明库存记录信息
         initStock(wmTransaction,stock);
         //查询库存记录通过构建好的库存记录
-        WmMaterialStock ms =wmMaterialStockMapper.loadMaterialStock(stock);
+        WmMaterialStock ms = wmMaterialStockMapper.loadMaterialStock(stock);
         //扣减或者新增数量 = 事务数量/事务方向
         BigDecimal quantity = wmTransaction.getTransactionQuantity().multiply(new BigDecimal(wmTransaction.getTransactionFlag()));
         if(StringUtils.isNotNull(ms)){
@@ -243,10 +243,9 @@ public class WmTransactionServiceImpl implements IWmTransactionService
         //扣减或者新增数量 = 事务数量/事务方向
         BigDecimal quantity = wmTransaction.getTransactionQuantity().multiply(new BigDecimal(wmTransaction.getTransactionFlag()));
         if(StringUtils.isNotNull(ms)){
-            //在线库数量 + 废料数量
+            //物料数量
             BigDecimal resultQuantity = ms.getQuantityOnhand().add(quantity);
-            //todo 查询原有库存数量
-            //todo 检查库存量是否充足
+            //库存数量是否充足
             if(wmTransaction.isStorageCheckFlag() && resultQuantity.compareTo(new BigDecimal(0))<0){
                 throw new BusinessException("库存数量不足！");
             }
@@ -257,6 +256,7 @@ public class WmTransactionServiceImpl implements IWmTransactionService
         }else {
             //MS不存在
             stock.setQuantityOnhand(quantity);
+            //添加生产工单信息
             wmMaterialStockMapper.insertWmMaterialStock(stock);//新增库存记录
         }
         wmTransaction.setMaterialStockId(stock.getMaterialStockId());

@@ -218,6 +218,8 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
 
             /** 库存方向 */
             transaction_out.setTransactionFlag(-1);// 库存减少
+            //检查库存不能为负数
+            transaction_out.setStorageCheckFlag(true);
             wmTransactionService.processTransaction(transaction_out);
 
             // 构造一条目的库存增加的事务
@@ -228,6 +230,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
             transaction_in.setTransactionDate(new Date());
             // 由于是新增的库存记录所以需要将查询出来的库存记录ID置为空
             transaction_in.setMaterialStockId(null);
+            transaction_in.setStorageCheckFlag(true);
             // 设置入库相关联的出库事务ID
             transaction_in.setRelatedTransactionId(transaction_out.getTransactionId());
 
@@ -461,18 +464,64 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
 
         //生产退料-入库事务
         String transactionType_in = UserConstants.TRANSACTION_TYPE_ITEM_ISSUE_IN;
+        //生产退料-出库事务
+        String transactionType_out = UserConstants.TRANSACTION_TYPE_WAREHOUSE_TRANS_OUT;
         beans.stream().forEach(a -> {
             //构造信息 将信息存入线边库
-            //需要校验数量 查询退料+废料 总和是否超过总量
+            //校验 取出来的数量不超过领料数量
+            //线边库-虚拟库存出库（退料）取出数据放到线边库-废料库存入库（废料）
+            WmTransaction transaction_out = new WmTransaction();
+            transaction_out.setTransactionType(transactionType_out);
+            BeanUtils.copyBeanProp(transaction_out, a);
+            //查询仓库-虚拟库存
+            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseCode(UserConstants.VIRTUAL_WH);
+            transaction_out.setWarehouseId(warehouse.getWarehouseId());
+            transaction_out.setWarehouseCode(warehouse.getWarehouseCode());
+            transaction_out.setWarehouseName(warehouse.getWarehouseName());
+            //查询虚拟库区
+            WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationCode(UserConstants.VIRTUAL_WS);
+            transaction_out.setLocationId(location.getLocationId());
+            transaction_out.setLocationCode(location.getLocationCode());
+            transaction_out.setLocationName(location.getLocationName());
+            //虚拟库位
+            WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaCode(UserConstants.VIRTUAL_WA);
+            transaction_out.setAreaId(area.getAreaId());
+            transaction_out.setAreaCode(area.getAreaCode());
+            transaction_out.setAreaName(area.getAreaName());
+
+            //设置出库事务类型
+            transaction_out.setTransactionFlag(-1);// 库存减少
+            //添加事务
+            wmTransactionService.processTransactionWaste(transaction_out);
+
+            //构造信息 将信息存入线边库-废料库存
             //线边库新增虚拟物料数量
             //构造一个虚拟入库事务
             WmTransaction transaction_in = new WmTransaction();
             //拷贝数据
             BeanUtils.copyBeanProp(transaction_in,a);
+            //查询虚拟废料虚拟线边库
+            //查询仓库-虚拟库存
+            WmWarehouse warehouseWaste = wmWarehouseService.selectWmWarehouseByWarehouseCode(UserConstants.WASTE_VIRTUAL_WH);
+            transaction_in.setWarehouseId(warehouseWaste.getWarehouseId());
+            transaction_in.setWarehouseCode(warehouseWaste.getWarehouseCode());
+            transaction_in.setWarehouseName(warehouseWaste.getWarehouseName());
+            //查询虚拟库区
+            WmStorageLocation locationWaste = wmStorageLocationService.selectWmStorageLocationByLocationCode(UserConstants.WASTE_VIRTUAL_WS);
+            transaction_in.setLocationId(locationWaste.getLocationId());
+            transaction_in.setLocationCode(locationWaste.getLocationCode());
+            transaction_in.setLocationName(locationWaste.getLocationName());
+            //虚拟库位
+            WmStorageArea areaWaste = wmStorageAreaService.selectWmStorageAreaByAreaCode(UserConstants.WASTE_VIRTUAL_WA);
+            transaction_in.setAreaId(areaWaste.getAreaId());
+            transaction_in.setAreaCode(areaWaste.getAreaCode());
+            transaction_in.setAreaName(areaWaste.getAreaName());
+
             transaction_in.setTransactionFlag(1);//新增
             transaction_in.setTransactionType(transactionType_in);
             transaction_in.setTransactionDate(new Date());
             transaction_in.setMaterialStockId(null);
+            transaction_in.setRelatedTransactionId(transaction_out.getTransactionId());
             wmTransactionService.processTransactionWaste(transaction_in);//添加事务以及虚拟库信息
         });
 

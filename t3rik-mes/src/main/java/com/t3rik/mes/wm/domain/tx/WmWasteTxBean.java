@@ -2,6 +2,8 @@ package com.t3rik.mes.wm.domain.tx;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.t3rik.common.core.domain.BaseEntity;
+import lombok.Data;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.util.Date;
