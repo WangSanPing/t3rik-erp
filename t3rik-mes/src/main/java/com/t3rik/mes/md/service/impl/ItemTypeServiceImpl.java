@@ -1,12 +1,10 @@
 package com.t3rik.mes.md.service.impl;
 
-import cn.hutool.core.lang.Assert;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.core.domain.TreeSelect;
 import com.t3rik.common.core.domain.entity.ItemType;
-import com.t3rik.common.enums.DefaultDataEnum;
 import com.t3rik.common.utils.StringUtils;
-import com.t3rik.mes.md.domain.MdItem;
 import com.t3rik.mes.md.mapper.ItemTypeMapper;
 import com.t3rik.mes.md.service.IItemTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ItemTypeServiceImpl implements IItemTypeService {
+public class ItemTypeServiceImpl extends ServiceImpl<ItemTypeMapper, ItemType> implements IItemTypeService {
 
     @Autowired
     private ItemTypeMapper itemTypeMapper;

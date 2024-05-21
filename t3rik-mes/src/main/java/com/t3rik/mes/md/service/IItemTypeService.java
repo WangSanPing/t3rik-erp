@@ -1,12 +1,13 @@
 package com.t3rik.mes.md.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.common.core.domain.TreeSelect;
 import com.t3rik.common.core.domain.entity.ItemType;
 import com.t3rik.mes.md.domain.MdItem;
 
 import java.util.List;
 
-public interface IItemTypeService {
+public interface IItemTypeService extends IService<ItemType> {
 
     public List<ItemType> selectItemTypeList(ItemType itemType);
 

@@ -1,5 +1,6 @@
 package com.t3rik.common.core.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.t3rik.common.core.domain.BaseEntity;
 
 import javax.validation.constraints.NotBlank;
@@ -10,7 +11,7 @@ import java.util.List;
 public class ItemType extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
-
+    @TableId
     private Long itemTypeId;
     private String itemTypeCode;
     private String itemTypeName;
@@ -34,7 +35,7 @@ public class ItemType extends BaseEntity {
         this.itemTypeId = itemTypeId;
     }
 
-    @Size(min = 0,max = 64,message = "物料分类编码长度不能超过64个字符")
+    @Size(min = 0, max = 64, message = "物料分类编码长度不能超过64个字符")
     public String getItemTypeCode() {
         return itemTypeCode;
     }
@@ -44,7 +45,7 @@ public class ItemType extends BaseEntity {
     }
 
     @NotBlank(message = "物料分类名称不能为空")
-    @Size(min = 0,max = 255,message = "物料分类名称长度不能超过255个字符")
+    @Size(min = 0, max = 255, message = "物料分类名称长度不能超过255个字符")
     public String getItemTypeName() {
         return itemTypeName;
     }

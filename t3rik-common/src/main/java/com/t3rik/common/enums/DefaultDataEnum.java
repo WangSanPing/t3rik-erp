@@ -15,20 +15,39 @@ public enum DefaultDataEnum {
     /**
      * 原材料
      */
-    MATERIAL(10000001L, "10000001L", "原材料", "md_item_type"),
+    MATERIAL("10000001L", "原材料", "md_item_type"),
     /**
      * 半成品
      */
-    SEMI_FINISHED_PRODUCTS(10000003L, "10000003L", "半成品", "md_item_type"),
+    SEMI_FINISHED_PRODUCTS("10000003L", "半成品", "md_item_type"),
     /**
      * 产成品
      */
-    PRODUCTS(10000004L, "10000004L", "产成品", "md_item_type");
-
+    PRODUCTS("10000004L", "产成品", "md_item_type"),
     /**
-     * 数据id
+     * 默认线边库-仓库
      */
-    private final Long dataId;
+    VIRTUAL_WH("XBK_VIRTUAL", "默认线边库-仓库", "wm_warehouse"),
+    /**
+     * 默认线边库-库区
+     */
+    VIRTUAL_WS("XBKKQ_VIRTUAL", "默认线边库-库区", "wm_warehouse"),
+    /**
+     * 默认线边库-库位
+     */
+    VIRTUAL_WA("XBKKW_VIRTUAL", "默认线边库-库位", "wm_warehouse"),
+    /**
+     * 废料线边库-库位
+     */
+    WASTE_VIRTUAL_WH("WASTE_XBK_VIRTUAL", "废料线边库-库位", "md_item_type"),
+    /**
+     * 废料线边库-库位
+     */
+    WASTE_VIRTUAL_WS("WASTE_XBKKQ_VIRTUAL", "废料线边库-库位", "md_item_type"),
+    /**
+     * 废料线边库-库位
+     */
+    WASTE_VIRTUAL_WA("WASTE_XBKKW_VIRTUAL", "废料线边库-库位", "md_item_type");
 
     /**
      * 编码
@@ -58,7 +77,7 @@ public enum DefaultDataEnum {
     }
 
     /**
-     *  根据code获取对应的枚举
+     * 根据code获取对应的枚举
      */
     public static DefaultDataEnum getEnumByCode(String code) {
         return DEFAULT_DATA_ENUM_MAP.get(code);

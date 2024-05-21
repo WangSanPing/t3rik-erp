@@ -104,9 +104,9 @@ public class MdItemController extends BaseController {
     public TableDataInfo listProduct(MdItem mdItem, @PathVariable("type") String type) {
         startPage();
         // 根据类型查询
-        Long itemTypeId = ItemTypeSupport.getDefaultDataIdByItemType(type);
-        Assert.notNull(itemTypeId, () -> new BusinessException(MsgConstants.PARAM_ERROR));
-        mdItem.setItemTypeId(itemTypeId);
+        String itemTypeCode = ItemTypeSupport.getDefaultDataIdByItemType(type);
+        Assert.notNull(itemTypeCode, () -> new BusinessException(MsgConstants.PARAM_ERROR));
+        mdItem.setItemTypeCode(itemTypeCode);
         mdItem.setEnableFlag(YesOrNoEnum.YES.getCode());
         List<MdItem> list = mdItemService.selectMdItemList(mdItem);
         return getDataTable(list);

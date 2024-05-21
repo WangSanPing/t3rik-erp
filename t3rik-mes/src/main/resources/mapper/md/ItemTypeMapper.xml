@@ -29,7 +29,7 @@
         from md_item_type d
     </sql>
 
-    <select id="selectItemTypeList" parameterType="ItemType" resultMap="ItemTypeResult">
+    <select id="selectItemTypeList" parameterType="com.t3rik.common.core.domain.entity.ItemType" resultMap="ItemTypeResult">
         <include refid="selectItemTypeVo"/>
         where 1 = 1
         <if test="itemTypeId != null and itemTypeId != 0">
@@ -88,7 +88,7 @@
         where item_type_code=#{itemTypeCode} and parent_type_id = #{parentTypeId} limit 1
     </select>
 
-    <insert id="insertItemType" parameterType="ItemType">
+    <insert id="insertItemType" parameterType="com.t3rik.common.core.domain.entity.ItemType">
         insert into md_item_type(
         <if test="itemTypeId != null and itemTypeId != 0">item_type_id,</if>
         <if test="parentTypeId != null and parentTypeId != 0">parent_type_id,</if>
@@ -123,7 +123,7 @@
         )
     </insert>
 
-    <update id="updateItemType" parameterType="ItemType">
+    <update id="updateItemType" parameterType="com.t3rik.common.core.domain.entity.ItemType">
         update md_item_type
         <set>
             <if test="parentTypeId != null and parentTypeId != 0">parent_type_id = #{parentTypeId},</if>
