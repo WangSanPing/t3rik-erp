@@ -9,17 +9,21 @@ import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
+import com.t3rik.common.enums.DefaultDataEnum;
 import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.mes.pro.domain.ProClientOrder;
 import com.t3rik.mes.pro.domain.ProClientOrderItem;
+import com.t3rik.mes.pro.dto.ClientOrderItemPageDto;
 import com.t3rik.mes.pro.service.IProClientOrderItemService;
 import com.t3rik.mes.pro.service.IProClientOrderService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -40,19 +44,18 @@ public class ProClientOrderItemController extends BaseController {
 
 
     /**
-     * 查询客户订单材料
-     * 列表
+     * 查询客户订单材料列表
      */
     @PreAuthorize("@ss.hasPermi('pro:clientorderitem:list')")
     @GetMapping("/list")
-    public TableDataInfo list(ProClientOrderItem proClientOrderItem) {
-        // 获取查询条件
-        LambdaQueryWrapper<ProClientOrderItem> queryWrapper = getQueryWrapper(proClientOrderItem);
+    public TableDataInfo list(@Validated ProClientOrderItem proClientOrderItem) {
         // 组装分页
-        Page<ProClientOrderItem> page = getMPPage(proClientOrderItem);
+        Page<ClientOrderItemPageDto> page = getMPPage(new ClientOrderItemPageDto());
         // 查询
-        this.proClientOrderItemService.page(page, queryWrapper);
-        return getDataTableWithPage(page);
+        // 默认仓库
+        var defaultWH = Collections.singletonList(DefaultDataEnum.WH01_DEFAULT.getCode());
+        Page<ClientOrderItemPageDto> result = this.proClientOrderItemService.getClientOrderItemPage(page, proClientOrderItem.getClientOrderId(), defaultWH);
+        return getDataTableWithPage(result);
     }
 
     /**
@@ -64,6 +67,9 @@ public class ProClientOrderItemController extends BaseController {
         ProClientOrder clientOrder = this.proClientOrderService.getById(clientOrderId);
         Assert.notNull(clientOrder, () -> new BusinessException(MsgConstants.PARAM_ERROR));
         Integer level = this.proClientOrderItemService.getClientOrderItemLevel(clientOrderId);
+        if (level > 4) {
+            return AjaxResult.error("当前只支持添加数据到四层");
+        }
         return AjaxResult.success(level);
     }
 
@@ -128,10 +134,7 @@ public class ProClientOrderItemController extends BaseController {
     public LambdaQueryWrapper<ProClientOrderItem> getQueryWrapper(ProClientOrderItem proClientOrderItem) {
         LambdaQueryWrapper<ProClientOrderItem> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(proClientOrderItem.getClientOrderId() != null, ProClientOrderItem::getClientOrderId, proClientOrderItem.getClientOrderId());
-
-        // 默认创建时间倒序
         queryWrapper.orderByAsc(ProClientOrderItem::getLevel);
-
         return queryWrapper;
     }
 }

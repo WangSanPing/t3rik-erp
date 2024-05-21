@@ -67,4 +67,38 @@
         from pro_client_order_item
         where client_order_id=#{clientOrderId}
     </select>
+
+    <select id="getClientOrderItemPage" resultType="com.t3rik.mes.pro.dto.ClientOrderItemPageDto">
+        SELECT t.order_item_id,
+               t.client_order_id,
+               t.item_id,
+               t.item_code,
+               t.item_name,
+               t.specification,
+               t.unit_of_measure,
+               t.quantity,
+               wms.warehouse_name,
+               wms.warehouse_code,
+               IF(wms.quantity_onhand is not null, wms.quantity_onhand, 0) as quantityOnhand,
+               t.LEVEL,
+               t.remark,
+               t.attr1,
+               t.attr2,
+               t.attr3,
+               t.attr4,
+               t.create_by,
+               t.create_time,
+               t.update_by,
+               t.update_time,
+               t.create_user_id,
+               t.update_user_id
+        FROM pro_client_order_item t
+                 left join wm_material_stock wms on t.item_id = wms.item_id and wms.warehouse_code in
+        <foreach item="code" collection="whCodes" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+        <where>
+            and client_order_id = #{clientOrderId}
+        </where>
+    </select>
 </mapper>

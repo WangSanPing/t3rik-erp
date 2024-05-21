@@ -25,6 +25,10 @@ public enum DefaultDataEnum {
      */
     PRODUCTS("10000004L", "产成品", "md_item_type"),
     /**
+     * 预置仓库
+     */
+    WH01_DEFAULT("WH000", "预置仓库编码", "wm_warehouse"),
+    /**
      * 默认线边库-仓库
      */
     VIRTUAL_WH("XBK_VIRTUAL", "默认线边库-仓库", "wm_warehouse"),
@@ -39,15 +43,15 @@ public enum DefaultDataEnum {
     /**
      * 废料线边库-库位
      */
-    WASTE_VIRTUAL_WH("WASTE_XBK_VIRTUAL", "废料线边库-库位", "md_item_type"),
+    WASTE_VIRTUAL_WH("WASTE_XBK_VIRTUAL", "废料线边库-库位", "wm_warehouse"),
     /**
      * 废料线边库-库位
      */
-    WASTE_VIRTUAL_WS("WASTE_XBKKQ_VIRTUAL", "废料线边库-库位", "md_item_type"),
+    WASTE_VIRTUAL_WS("WASTE_XBKKQ_VIRTUAL", "废料线边库-库位", "wm_warehouse"),
     /**
      * 废料线边库-库位
      */
-    WASTE_VIRTUAL_WA("WASTE_XBKKW_VIRTUAL", "废料线边库-库位", "md_item_type");
+    WASTE_VIRTUAL_WA("WASTE_XBKKW_VIRTUAL", "废料线边库-库位", "wm_warehouse");
 
     /**
      * 编码

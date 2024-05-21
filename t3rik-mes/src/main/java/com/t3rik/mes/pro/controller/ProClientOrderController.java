@@ -83,7 +83,8 @@ public class ProClientOrderController extends BaseController {
     @Log(title = "客户订单", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ProClientOrder proClientOrder) {
-        return toAjax(this.proClientOrderService.save(proClientOrder));
+        this.proClientOrderService.save(proClientOrder);
+        return AjaxResult.success(proClientOrder.getClientOrderId());
     }
 
     /**

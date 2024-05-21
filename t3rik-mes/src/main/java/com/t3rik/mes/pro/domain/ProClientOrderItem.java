@@ -7,8 +7,6 @@ import com.t3rik.common.core.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.math.BigDecimal;
-
 /**
  * 客户订单材料
  * 对象 pro_client_order_item
@@ -33,6 +31,8 @@ public class ProClientOrderItem extends BaseEntity {
      * 客户订单表id
      */
     @Excel(name = "客户订单表id")
+    // @NotNull(message = MsgConstants.PARAM_ERROR)
+    // @Min(value = 1, message = MsgConstants.PARAM_ERROR)
     private Long clientOrderId;
 
 
@@ -42,12 +42,36 @@ public class ProClientOrderItem extends BaseEntity {
     @Excel(name = "物料产品ID")
     private Long itemId;
 
+    /**
+     * 产品物料编码
+     */
+    @Excel(name = "物料编码")
+    private String itemCode;
+
+    /**
+     * 产品物料名称
+     */
+    @Excel(name = "物料名称")
+    private String itemName;
+
+    /**
+     * 规格型号
+     */
+    @Excel(name = "规格型号")
+    private String specification;
+
+    /**
+     * 单位
+     */
+    @Excel(name = "单位")
+    private String unitOfMeasure;
+
 
     /**
      * 物料使用数量
      */
     @Excel(name = "物料使用数量")
-    private BigDecimal quantity;
+    private Double quantity;
 
 
     /**
