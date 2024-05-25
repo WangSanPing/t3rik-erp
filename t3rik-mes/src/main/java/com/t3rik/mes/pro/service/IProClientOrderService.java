@@ -14,4 +14,8 @@ import org.apache.ibatis.annotations.Mapper;
  */
 public interface IProClientOrderService extends IService<ProClientOrder> {
 
+    /**
+     * 生成生产订单
+     */
+    Long generateWorkOrder(ProClientOrder clientOrder);
 }

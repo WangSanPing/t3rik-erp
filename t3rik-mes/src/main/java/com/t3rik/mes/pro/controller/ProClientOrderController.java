@@ -1,30 +1,26 @@
 package com.t3rik.mes.pro.controller;
 
-import java.util.List;
-import java.util.Map;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.t3rik.common.annotation.Log;
+import com.t3rik.common.constant.MsgConstants;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
-import com.t3rik.common.utils.StringUtils;
+import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
+import com.t3rik.common.exception.BusinessException;
+import com.t3rik.common.utils.StringUtils;
+import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.mes.pro.domain.ProClientOrder;
 import com.t3rik.mes.pro.service.IProClientOrderService;
-import com.t3rik.common.utils.poi.ExcelUtil;
-import com.t3rik.common.core.page.TableDataInfo;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 客户订单Controller
@@ -35,8 +31,23 @@ import com.t3rik.common.core.page.TableDataInfo;
 @RestController
 @RequestMapping("/pro/client-order")
 public class ProClientOrderController extends BaseController {
-    @Autowired
+
+    @Resource
     private IProClientOrderService proClientOrderService;
+
+
+    /**
+     * 生成生产订单
+     */
+    @PreAuthorize("@ss.hasPermi('pro:clientorder:add')")
+    @Log(title = "客户订单", businessType = BusinessType.INSERT)
+    @PostMapping("/generateWorkOrder/{clientOrderId}")
+    public AjaxResult generateWorkOrder(@PathVariable Long clientOrderId) {
+        ProClientOrder clientOrder = this.proClientOrderService.getById(clientOrderId);
+        Assert.notNull(clientOrder, () -> new BusinessException(MsgConstants.PARAM_ERROR));
+        this.proClientOrderService.generateWorkOrder(clientOrder);
+        return AjaxResult.success("");
+    }
 
     /**
      * 查询客户订单列表
@@ -63,7 +74,7 @@ public class ProClientOrderController extends BaseController {
         // 获取查询条件
         LambdaQueryWrapper<ProClientOrder> queryWrapper = getQueryWrapper(proClientOrder);
         List<ProClientOrder> list = this.proClientOrderService.list(queryWrapper);
-        ExcelUtil<ProClientOrder> util = new ExcelUtil<ProClientOrder>(ProClientOrder. class);
+        ExcelUtil<ProClientOrder> util = new ExcelUtil<ProClientOrder>(ProClientOrder.class);
         util.exportExcel(response, list, "客户订单数据");
     }
 
@@ -108,8 +119,8 @@ public class ProClientOrderController extends BaseController {
     }
 
     /**
-    * 获取查询条件
-    */
+     * 获取查询条件
+     */
     public LambdaQueryWrapper<ProClientOrder> getQueryWrapper(ProClientOrder proClientOrder) {
         LambdaQueryWrapper<ProClientOrder> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(proClientOrder.getClientOrderCode() != null, ProClientOrder::getClientOrderCode, proClientOrder.getClientOrderCode());
@@ -119,7 +130,7 @@ public class ProClientOrderController extends BaseController {
         // 默认创建时间倒序
         queryWrapper.orderByDesc(ProClientOrder::getCreateTime);
         Map<String, Object> params = proClientOrder.getParams();
-        queryWrapper.between(params.get("beginTime") != null && params.get("endTime") != null,ProClientOrder::getCreateTime, params.get("beginTime"), params.get("endTime"));
+        queryWrapper.between(params.get("beginTime") != null && params.get("endTime") != null, ProClientOrder::getCreateTime, params.get("beginTime"), params.get("endTime"));
         return queryWrapper;
     }
 }

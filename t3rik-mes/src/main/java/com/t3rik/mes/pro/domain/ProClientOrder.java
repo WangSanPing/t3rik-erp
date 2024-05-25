@@ -8,6 +8,7 @@ import com.t3rik.common.core.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -28,12 +29,28 @@ public class ProClientOrder extends BaseEntity {
     @TableId
     private Long clientOrderId;
 
-
     /**
      * 订单编码
      */
     @Excel(name = "订单编码")
     private String clientOrderCode;
+
+    /**
+     * 工单ID
+     */
+    private Long workorderId;
+
+    /**
+     * 工单编码
+     */
+    @Excel(name = "工单编码")
+    private String workorderCode;
+
+    /**
+     * 工单名称
+     */
+    @Excel(name = "工单名称")
+    private String workorderName;
 
     /**
      * 产品id
@@ -107,7 +124,7 @@ public class ProClientOrder extends BaseEntity {
      * 订货数量
      */
     @Excel(name = "订货数量")
-    private Long orderQuantity;
+    private BigDecimal orderQuantity;
 
     /**
      * 单位
@@ -121,6 +138,12 @@ public class ProClientOrder extends BaseEntity {
      */
     @Excel(name = "质量要求")
     private String qualityRequirement;
+
+    /**
+     * 订单状态
+     */
+    @Excel(name = "订单状态")
+    private String status;
 
 
     /**
@@ -146,15 +169,4 @@ public class ProClientOrder extends BaseEntity {
      */
     private Long attr4;
 
-
-    /**
-     * 创建人id
-     */
-    private Long createUserId;
-
-
-    /**
-     * 更新人id
-     */
-    private Long updateUserId;
 }
