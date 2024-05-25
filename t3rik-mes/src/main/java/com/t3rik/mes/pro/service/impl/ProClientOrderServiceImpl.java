@@ -65,7 +65,7 @@ public class ProClientOrderServiceImpl extends ServiceImpl<ProClientOrderMapper,
     }
 
     /**
-     * 回写客户订单
+     * 构建回写客户订单
      */
     private ProClientOrder buildClientOrder(@NotNull ProClientOrder clientOrder, @NotNull ProWorkorder workorder) {
         ProClientOrder clientOrderUpdate = new ProClientOrder();
@@ -79,6 +79,9 @@ public class ProClientOrderServiceImpl extends ServiceImpl<ProClientOrderMapper,
     }
 
 
+    /**
+     * 构建生产订单
+     */
     private @NotNull ProWorkorder buildWorkOrder(@NotNull ProClientOrder clientOrder) {
         ProWorkorder workorder = new ProWorkorder();
         BeanUtil.copyProperties(clientOrder, workorder);
@@ -97,12 +100,16 @@ public class ProClientOrderServiceImpl extends ServiceImpl<ProClientOrderMapper,
         workorder.setStatus(WorkOrderStatusEnum.PREPARE.getCode());
         // 需求日期
         workorder.setRequestDate(clientOrder.getDeliveryDate());
+        // 默认父订单
+        workorder.setParentId(0L);
         // 默认父节点集合
         workorder.setAncestors("0");
         // 订货数量
         workorder.setQuantity(clientOrder.getOrderQuantity());
         // 规格
         workorder.setProductSpc(clientOrder.getProductSpec());
+        // 质量要求
+        workorder.setRemark(clientOrder.getQualityRequirement());
         return workorder;
     }
 }
