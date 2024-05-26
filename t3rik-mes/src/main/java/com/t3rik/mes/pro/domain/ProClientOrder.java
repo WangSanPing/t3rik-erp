@@ -5,9 +5,12 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.t3rik.common.annotation.Excel;
 import com.t3rik.common.core.domain.BaseEntity;
+import com.t3rik.common.validated.group.UpdateGroup;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -27,35 +30,21 @@ public class ProClientOrder extends BaseEntity {
      * 客户订单id
      */
     @TableId
+    @NotNull(message = "订单id不能为空", groups = UpdateGroup.class)
     private Long clientOrderId;
 
     /**
      * 订单编码
      */
     @Excel(name = "订单编码")
+    @NotBlank(message = "订单编码不能为空")
     private String clientOrderCode;
-
-    /**
-     * 工单ID
-     */
-    private Long workorderId;
-
-    /**
-     * 工单编码
-     */
-    @Excel(name = "工单编码")
-    private String workorderCode;
-
-    /**
-     * 工单名称
-     */
-    @Excel(name = "工单名称")
-    private String workorderName;
 
     /**
      * 产品id
      */
     @Excel(name = "产品id")
+    @NotNull(message = "产品不能为空")
     private Long productId;
 
 
@@ -63,6 +52,7 @@ public class ProClientOrder extends BaseEntity {
      * 产品编码
      */
     @Excel(name = "产品编码")
+    @NotBlank(message = "产品编码不能为空")
     private String productCode;
 
 
@@ -70,6 +60,7 @@ public class ProClientOrder extends BaseEntity {
      * 产品名称
      */
     @Excel(name = "产品名称")
+    @NotBlank(message = "产品名称不能为空")
     private String productName;
 
     /**
@@ -124,12 +115,14 @@ public class ProClientOrder extends BaseEntity {
      * 订货数量
      */
     @Excel(name = "订货数量")
+    @NotNull(message = "订货数量不能为空")
     private BigDecimal orderQuantity;
 
     /**
      * 单位
      */
     @Excel(name = "单位")
+    @NotBlank(message = "单位不能为空")
     private String unitOfMeasure;
 
 
@@ -168,5 +161,22 @@ public class ProClientOrder extends BaseEntity {
      * 预留字段4
      */
     private Long attr4;
+
+    /**
+     * 工单ID
+     */
+    private Long workorderId;
+
+    /**
+     * 工单编码
+     */
+    @Excel(name = "工单编码")
+    private String workorderCode;
+
+    /**
+     * 工单名称
+     */
+    @Excel(name = "工单名称")
+    private String workorderName;
 
 }

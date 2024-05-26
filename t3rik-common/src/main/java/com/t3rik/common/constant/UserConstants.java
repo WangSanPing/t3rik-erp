@@ -134,6 +134,7 @@ public class UserConstants {
     public static final String TRANSFER_CODE = "TRANSFER_CODE"; // 移库
     public static final String STOCKTAKING_CODE = "STOCKTAKING_CODE"; // 盘库单
     public static final String FEEDBACK_CODE = "FEEDBACK_CODE"; // 报工单
+    public static final String WORKORDER_CODE = "WORKORDER_CODE"; // 生产工单
 
     /**
      * 单据的状态类型

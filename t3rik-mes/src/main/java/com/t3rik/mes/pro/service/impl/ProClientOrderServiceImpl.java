@@ -2,6 +2,7 @@ package com.t3rik.mes.pro.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.enums.mes.ClientOrderStatusEnum;
 import com.t3rik.common.enums.mes.WorkOrderSourceTypeEnum;
 import com.t3rik.common.enums.mes.WorkOrderStatusEnum;
@@ -37,15 +38,11 @@ public class ProClientOrderServiceImpl extends ServiceImpl<ProClientOrderMapper,
     private IProWorkorderService proWorkorderService;
     @Resource
     private AutoCodeUtil autoCodeUtil;
-    /**
-     * 生产订单编码规则code
-     */
-    private static final String WORKORDER_RULE_CODE = "WORKORDER_CODE";
 
 
     @Transactional
     @Override
-    public Long generateWorkOrder(ProClientOrder clientOrder) {
+    public ProWorkorder generateWorkOrder(ProClientOrder clientOrder) {
         // 生产订单
         ProWorkorder workorder = buildWorkOrder(clientOrder);
         // 保存生成工单
@@ -61,7 +58,7 @@ public class ProClientOrderServiceImpl extends ServiceImpl<ProClientOrderMapper,
                 .set(ProClientOrderItem::getWorkorderCode, workorder.getWorkorderCode())
                 .set(ProClientOrderItem::getWorkorderName, workorder.getWorkorderName())
                 .update();
-        return workorder.getWorkorderId();
+        return workorder;
     }
 
     /**
@@ -85,7 +82,7 @@ public class ProClientOrderServiceImpl extends ServiceImpl<ProClientOrderMapper,
     private @NotNull ProWorkorder buildWorkOrder(@NotNull ProClientOrder clientOrder) {
         ProWorkorder workorder = new ProWorkorder();
         BeanUtil.copyProperties(clientOrder, workorder);
-        String workorderCode = this.autoCodeUtil.genSerialCode(WORKORDER_RULE_CODE, null);
+        String workorderCode = this.autoCodeUtil.genSerialCode(UserConstants.WORKORDER_CODE, null);
         // 编码code
         workorder.setWorkorderCode(workorderCode);
         // 工单名称

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.pro.domain.ProClientOrder;
+import com.t3rik.mes.pro.domain.ProWorkorder;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -17,5 +18,5 @@ public interface IProClientOrderService extends IService<ProClientOrder> {
     /**
      * 生成生产订单
      */
-    Long generateWorkOrder(ProClientOrder clientOrder);
+    ProWorkorder generateWorkOrder(ProClientOrder clientOrder);
 }

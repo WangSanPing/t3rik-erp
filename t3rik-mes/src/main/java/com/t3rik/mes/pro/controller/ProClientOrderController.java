@@ -15,11 +15,14 @@ import com.t3rik.common.enums.mes.ClientOrderStatusEnum;
 import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.poi.ExcelUtil;
+import com.t3rik.common.validated.group.UpdateGroup;
 import com.t3rik.mes.pro.domain.ProClientOrder;
 import com.t3rik.mes.pro.domain.ProClientOrderItem;
+import com.t3rik.mes.pro.domain.ProWorkorder;
 import com.t3rik.mes.pro.service.IProClientOrderItemService;
 import com.t3rik.mes.pro.service.IProClientOrderService;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -56,8 +59,8 @@ public class ProClientOrderController extends BaseController {
         CheckInfo check = this.check(clientOrder);
         // 未通过校验
         Assert.isTrue(check.getIsCheckPassed(), () -> new BusinessException(check.getMsg()));
-        Long workOrderId = this.proClientOrderService.generateWorkOrder(clientOrder);
-        return AjaxResult.success(workOrderId);
+        ProWorkorder workOrder = this.proClientOrderService.generateWorkOrder(clientOrder);
+        return AjaxResult.success(workOrder);
     }
 
     /**
@@ -72,7 +75,7 @@ public class ProClientOrderController extends BaseController {
             return checkInfo;
         }
         // 查询是否已经添加需求物料数据
-        var itemlist = this.proClientOrderItemService.lambdaQuery()
+        List<ProClientOrderItem> itemlist = this.proClientOrderItemService.lambdaQuery()
                 .eq(ProClientOrderItem::getClientOrderId, clientOrder.getClientOrderId())
                 .list();
         if (CollectionUtil.isEmpty(itemlist)) {
@@ -81,7 +84,7 @@ public class ProClientOrderController extends BaseController {
         }
         // 校验是否已经生成过生产订单
         if (ClientOrderStatusEnum.WORK_ORDER_FINISHED.getCode().equals(clientOrder.getStatus())) {
-            var msg = MessageFormat.format("已经生成过生产订单(生成订单的编号为:{0}),不允许再次生成", clientOrder.getWorkorderCode());
+            String msg = MessageFormat.format("已经生成过生产订单(生成订单的编号为:{0}),不允许再次生成", clientOrder.getWorkorderCode());
             checkInfo.setMsg(msg);
             return checkInfo;
         }
@@ -125,7 +128,10 @@ public class ProClientOrderController extends BaseController {
     @PreAuthorize("@ss.hasPermi('pro:clientorder:query')")
     @GetMapping(value = "/{clientOrderId}")
     public AjaxResult getInfo(@PathVariable("clientOrderId") Long clientOrderId) {
-        return AjaxResult.success(this.proClientOrderService.getById(clientOrderId));
+        ProClientOrder data = this.proClientOrderService.getById(clientOrderId);
+        // 校验数据是否存在
+        Assert.notNull(data, () -> new BusinessException(MsgConstants.PARAM_ERROR));
+        return AjaxResult.success(data);
     }
 
     /**
@@ -134,7 +140,11 @@ public class ProClientOrderController extends BaseController {
     @PreAuthorize("@ss.hasPermi('pro:clientorder:add')")
     @Log(title = "客户订单", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ProClientOrder proClientOrder) {
+    public AjaxResult add(@RequestBody @Validated ProClientOrder proClientOrder) {
+        ProClientOrder data = this.proClientOrderService.lambdaQuery()
+                .eq(ProClientOrder::getClientOrderCode, proClientOrder.getClientOrderCode()).one();
+        // 校验是否存在相同的订单编码
+        Assert.isNull(data, () -> new BusinessException("存在相同的订单编码,请修改订单编码后再重试"));
         this.proClientOrderService.save(proClientOrder);
         return AjaxResult.success(proClientOrder.getClientOrderId());
     }
@@ -145,7 +155,11 @@ public class ProClientOrderController extends BaseController {
     @PreAuthorize("@ss.hasPermi('pro:clientorder:edit')")
     @Log(title = "客户订单", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ProClientOrder proClientOrder) {
+    public AjaxResult edit(@RequestBody @Validated(UpdateGroup.class) ProClientOrder proClientOrder) {
+        ProClientOrder data = this.proClientOrderService.lambdaQuery()
+                .eq(ProClientOrder::getClientOrderId, proClientOrder.getClientOrderId()).one();
+        // 校验数据是否存在
+        Assert.notNull(data, () -> new BusinessException(MsgConstants.PARAM_ERROR));
         return toAjax(this.proClientOrderService.updateById(proClientOrder));
     }
 
