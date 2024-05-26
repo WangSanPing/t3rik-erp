@@ -9,7 +9,7 @@ import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.domain.entity.ItemType;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
-import com.t3rik.common.enums.YesOrNoEnum;
+import com.t3rik.common.enums.EnableFlagEnum;
 import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.support.ItemTypeSupport;
 import com.t3rik.common.utils.StringUtils;
@@ -107,7 +107,7 @@ public class MdItemController extends BaseController {
         String itemTypeCode = ItemTypeSupport.getDefaultDataIdByItemType(type);
         Assert.notNull(itemTypeCode, () -> new BusinessException(MsgConstants.PARAM_ERROR));
         mdItem.setItemTypeCode(itemTypeCode);
-        mdItem.setEnableFlag(YesOrNoEnum.YES.getCode());
+        mdItem.setEnableFlag(EnableFlagEnum.YES.getCode());
         List<MdItem> list = mdItemService.selectMdItemList(mdItem);
         return getDataTable(list);
     }
