@@ -2,8 +2,8 @@ package com.t3rik.common.support;
 
 import cn.hutool.core.lang.Assert;
 import com.t3rik.common.constant.MsgConstants;
-import com.t3rik.common.enums.DefaultDataEnum;
-import com.t3rik.common.enums.ItemTypeEnum;
+import com.t3rik.common.enums.mes.DefaultDataEnum;
+import com.t3rik.common.enums.mes.ItemTypeEnum;
 import com.t3rik.common.exception.BusinessException;
 
 /**

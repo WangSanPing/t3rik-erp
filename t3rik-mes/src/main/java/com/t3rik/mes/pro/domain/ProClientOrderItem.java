@@ -26,6 +26,22 @@ public class ProClientOrderItem extends BaseEntity {
     @TableId
     private Long orderItemId;
 
+    /**
+     * 工单ID
+     */
+    private Long workorderId;
+
+    /**
+     * 工单编码
+     */
+    @Excel(name = "工单编码")
+    private String workorderCode;
+
+    /**
+     * 工单名称
+     */
+    @Excel(name = "工单名称")
+    private String workorderName;
 
     /**
      * 客户订单表id

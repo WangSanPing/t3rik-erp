@@ -6,7 +6,7 @@ import ${import};
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.t3rik.common.annotation.Excel;
-import com.t3rik.common.enums.StatusEnum;
+import com.t3rik.common.enums.EnableFlagEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 #if($table.crud || $table.sub)
@@ -50,13 +50,13 @@ public class ${ClassName} extends ${Entity}
     @Excel(name = "${comment}")
 #end
 #end
-#if($column.javaField != 'status')
+#if($column.javaField != 'enableFlag')
 #if($column.isPk == '1')
     @TableId
 #end
     private $column.javaType $column.javaField;
 #else
-    private StatusEnum $column.javaField;
+    private EnableFlagEnum $column.javaField;
 #end
 
 

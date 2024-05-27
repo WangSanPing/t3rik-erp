@@ -1,4 +1,4 @@
-package com.t3rik.common.enums;
+package com.t3rik.common.enums.mes;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,6 +6,11 @@ import lombok.Getter;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 物料类型
+ *
+ * @author t3rik
+ */
 @Getter
 @AllArgsConstructor
 public enum ItemTypeEnum {
