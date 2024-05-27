@@ -208,6 +208,7 @@ public class WmWasteHeaderController extends BaseController {
     */
     public LambdaQueryWrapper<WmWasteHeader> getQueryWrapper(WmWasteHeader wmWasteHeader) {
         LambdaQueryWrapper<WmWasteHeader> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(wmWasteHeader.getRecordId() != null, WmWasteHeader::getRecordId, wmWasteHeader.getRecordId());
         queryWrapper.eq(wmWasteHeader.getWasteCode() != null, WmWasteHeader::getWasteCode, wmWasteHeader.getWasteCode());
         queryWrapper.like(StringUtils.isNotEmpty(wmWasteHeader.getWasteName()), WmWasteHeader::getWasteName, wmWasteHeader.getWasteName());
         queryWrapper.eq(wmWasteHeader.getWorkorderId() != null, WmWasteHeader::getWorkorderId, wmWasteHeader.getWorkorderId());

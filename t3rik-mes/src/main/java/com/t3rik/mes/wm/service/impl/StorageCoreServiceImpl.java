@@ -219,7 +219,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
             /** 库存方向 */
             transaction_out.setTransactionFlag(-1);// 库存减少
             //检查库存不能为负数
-            transaction_out.setStorageCheckFlag(true);
+            transaction_out.setStorageCheckFlag(Boolean.TRUE);//是否校验库存量
             wmTransactionService.processTransaction(transaction_out);
 
             // 构造一条目的库存增加的事务
@@ -230,7 +230,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
             transaction_in.setTransactionDate(new Date());
             // 由于是新增的库存记录所以需要将查询出来的库存记录ID置为空
             transaction_in.setMaterialStockId(null);
-            transaction_in.setStorageCheckFlag(true);
+            transaction_in.setStorageCheckFlag(Boolean.TRUE);
             // 设置入库相关联的出库事务ID
             transaction_in.setRelatedTransactionId(transaction_out.getTransactionId());
 
@@ -491,6 +491,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
 
             //设置出库事务类型
             transaction_out.setTransactionFlag(-1);// 库存减少
+            transaction_out.setStorageCheckFlag(Boolean.TRUE);//是否校验库存量
             //添加事务
             wmTransactionService.processTransactionWaste(transaction_out);
 
@@ -521,6 +522,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
             transaction_in.setTransactionType(transactionType_in);
             transaction_in.setTransactionDate(new Date());
             transaction_in.setMaterialStockId(null);
+            transaction_in.setStorageCheckFlag(Boolean.TRUE);//是否校验库存量
             transaction_in.setRelatedTransactionId(transaction_out.getTransactionId());
             wmTransactionService.processTransactionWaste(transaction_in);//添加事务以及虚拟库信息
         });

@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.t3rik.mes.wm.mapper.WmRtIssueMapper">
-    
+
     <resultMap type="com.t3rik.mes.wm.domain.WmRtIssue" id="WmRtIssueResult">
         <result property="rtId"    column="rt_id"    />
         <result property="rtCode"    column="rt_code"    />
@@ -11,6 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="workorderId"    column="workorder_id"    />
         <result property="workorderCode"    column="workorder_code"    />
         <result property="warehouseId"    column="warehouse_id"    />
+        <result property="recordId"    column="record_id"    />
         <result property="warehouseCode"    column="warehouse_code"    />
         <result property="warehouseName"    column="warehouse_name"    />
         <result property="locationId"    column="location_id"    />
@@ -58,12 +59,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectWmRtIssueVo">
-        select rt_id, rt_code, rt_name, workorder_id, workorder_code, warehouse_id, warehouse_code, warehouse_name, location_id, location_code, location_name, area_id, area_code, area_name, rt_date, status, remark, attr1, attr2, attr3, attr4, create_by, create_time, update_by, update_time from wm_rt_issue
+        select rt_id, rt_code, rt_name,record_id, workorder_id, workorder_code, warehouse_id, warehouse_code, warehouse_name, location_id, location_code, location_name, area_id, area_code, area_name, rt_date, status, remark, attr1, attr2, attr3, attr4, create_by, create_time, update_by, update_time from wm_rt_issue
     </sql>
 
     <select id="selectWmRtIssueList" parameterType="WmRtIssue" resultMap="WmRtIssueResult">
         <include refid="selectWmRtIssueVo"/>
-        <where>  
+        <where>
+            <if test="recordId != null  and recordId != ''"> and record_id = #{recordId}</if>
             <if test="rtCode != null  and rtCode != ''"> and rt_code = #{rtCode}</if>
             <if test="rtName != null  and rtName != ''"> and rt_name like concat('%', #{rtName}, '%')</if>
             <if test="workorderId != null "> and workorder_id = #{workorderId}</if>
@@ -82,7 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
         order by create_time desc
     </select>
-    
+
     <select id="selectWmRtIssueByRtId" parameterType="Long" resultMap="WmRtIssueResult">
         <include refid="selectWmRtIssueVo"/>
         where rt_id = #{rtId}
@@ -122,6 +124,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into wm_rt_issue
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="rtCode != null and rtCode != ''">rt_code,</if>
+            <if test="recordId != null">record_id,</if>
             <if test="rtName != null">rt_name,</if>
             <if test="workorderId != null">workorder_id,</if>
             <if test="workorderCode != null">workorder_code,</if>
@@ -148,6 +151,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="rtCode != null and rtCode != ''">#{rtCode},</if>
+            <if test="recordId != null">#{recordId},</if>
             <if test="rtName != null">#{rtName},</if>
             <if test="workorderId != null">#{workorderId},</if>
             <if test="workorderCode != null">#{workorderCode},</if>
@@ -178,6 +182,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update wm_rt_issue
         <trim prefix="SET" suffixOverrides=",">
             <if test="rtCode != null and rtCode != ''">rt_code = #{rtCode},</if>
+            <if test="recordId != null">record_id = #{recordId},</if>
             <if test="rtName != null">rt_name = #{rtName},</if>
             <if test="workorderId != null">workorder_id = #{workorderId},</if>
             <if test="workorderCode != null">workorder_code = #{workorderCode},</if>
@@ -210,7 +215,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteWmRtIssueByRtIds" parameterType="String">
-        delete from wm_rt_issue where rt_id in 
+        delete from wm_rt_issue where rt_id in
         <foreach item="rtId" collection="array" open="(" separator="," close=")">
             #{rtId}
         </foreach>

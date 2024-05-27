@@ -1,20 +1,23 @@
 package com.t3rik.mes.wm.mapper;
 
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.t3rik.mes.wm.domain.WmRtIssue;
+import com.t3rik.mes.wm.domain.WmWasteHeader;
 import com.t3rik.mes.wm.domain.tx.RtIssueTxBean;
 
 /**
  * 生产退料单头Mapper接口
- * 
+ *
  * @author yinjinlu
  * @date 2022-09-15
  */
-public interface WmRtIssueMapper 
+public interface WmRtIssueMapper extends BaseMapper<WmRtIssue>
 {
     /**
      * 查询生产退料单头
-     * 
+     *
      * @param rtId 生产退料单头主键
      * @return 生产退料单头
      */
@@ -22,7 +25,7 @@ public interface WmRtIssueMapper
 
     /**
      * 查询生产退料单头列表
-     * 
+     *
      * @param wmRtIssue 生产退料单头
      * @return 生产退料单头集合
      */
@@ -44,7 +47,7 @@ public interface WmRtIssueMapper
 
     /**
      * 新增生产退料单头
-     * 
+     *
      * @param wmRtIssue 生产退料单头
      * @return 结果
      */
@@ -52,7 +55,7 @@ public interface WmRtIssueMapper
 
     /**
      * 修改生产退料单头
-     * 
+     *
      * @param wmRtIssue 生产退料单头
      * @return 结果
      */
@@ -60,7 +63,7 @@ public interface WmRtIssueMapper
 
     /**
      * 删除生产退料单头
-     * 
+     *
      * @param rtId 生产退料单头主键
      * @return 结果
      */
@@ -68,7 +71,7 @@ public interface WmRtIssueMapper
 
     /**
      * 批量删除生产退料单头
-     * 
+     *
      * @param rtIds 需要删除的数据主键集合
      * @return 结果
      */

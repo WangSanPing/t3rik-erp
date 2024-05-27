@@ -2,10 +2,13 @@ package com.t3rik.mes.wm.service.impl;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.utils.DateUtils;
 import com.t3rik.common.utils.StringUtils;
+import com.t3rik.mes.wm.domain.WmWasteHeader;
 import com.t3rik.mes.wm.domain.tx.RtIssueTxBean;
+import com.t3rik.mes.wm.mapper.WmWasteHeaderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.t3rik.mes.wm.mapper.WmRtIssueMapper;
@@ -14,19 +17,19 @@ import com.t3rik.mes.wm.service.IWmRtIssueService;
 
 /**
  * 生产退料单头Service业务层处理
- * 
+ *
  * @author yinjinlu
  * @date 2022-09-15
  */
 @Service
-public class WmRtIssueServiceImpl implements IWmRtIssueService 
+public class WmRtIssueServiceImpl extends ServiceImpl<WmRtIssueMapper, WmRtIssue> implements IWmRtIssueService
 {
     @Autowired
     private WmRtIssueMapper wmRtIssueMapper;
 
     /**
      * 查询生产退料单头
-     * 
+     *
      * @param rtId 生产退料单头主键
      * @return 生产退料单头
      */
@@ -38,7 +41,7 @@ public class WmRtIssueServiceImpl implements IWmRtIssueService
 
     /**
      * 查询生产退料单头列表
-     * 
+     *
      * @param wmRtIssue 生产退料单头
      * @return 生产退料单头
      */
@@ -60,7 +63,7 @@ public class WmRtIssueServiceImpl implements IWmRtIssueService
 
     /**
      * 新增生产退料单头
-     * 
+     *
      * @param wmRtIssue 生产退料单头
      * @return 结果
      */
@@ -73,7 +76,7 @@ public class WmRtIssueServiceImpl implements IWmRtIssueService
 
     /**
      * 修改生产退料单头
-     * 
+     *
      * @param wmRtIssue 生产退料单头
      * @return 结果
      */
@@ -86,7 +89,7 @@ public class WmRtIssueServiceImpl implements IWmRtIssueService
 
     /**
      * 批量删除生产退料单头
-     * 
+     *
      * @param rtIds 需要删除的生产退料单头主键
      * @return 结果
      */
@@ -98,7 +101,7 @@ public class WmRtIssueServiceImpl implements IWmRtIssueService
 
     /**
      * 删除生产退料单头信息
-     * 
+     *
      * @param rtId 生产退料单头主键
      * @return 结果
      */

@@ -45,6 +45,11 @@ public class WmWasteHeader extends BaseEntity
     @TableField("waste_name")
     private String wasteName;
 
+    /** 报工记录ID */
+    @Excel(name = "报工记录ID")
+    @TableField("record_id")
+    private Long recordId;
+
     /** 生产工单ID */
     @Excel(name = "生产工单ID")
     @TableField("workorder_id")
