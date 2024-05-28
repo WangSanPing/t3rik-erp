@@ -59,7 +59,13 @@ public enum DefaultDataEnum {
     /**
      * 生产废料-出库事务
      */
-    TRANSACTION_TYPE_ITEM_WM_WASTE_OUT("ITEM_WM_WASTE_OUT", "生产废料-出库事务", "wm_transaction");
+    TRANSACTION_TYPE_ITEM_WM_WASTE_OUT("ITEM_WM_WASTE_OUT", "生产废料-出库事务", "wm_transaction"),
+    /**
+     * 生产退料-出库事务
+     */
+    TRANSACTION_TYPE_ITEM_RT_ISSUE_OUT("ITEM_RT_ISSUE_OUT", "生产退料-出库事务", "wm_transaction");
+
+
 
     /**
      * 编码

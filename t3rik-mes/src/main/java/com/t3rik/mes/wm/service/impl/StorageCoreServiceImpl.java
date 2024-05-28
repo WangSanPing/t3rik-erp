@@ -5,11 +5,9 @@ import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.enums.mes.DefaultDataEnum;
 import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.bean.BeanUtils;
-import com.t3rik.mes.wm.domain.WmStorageArea;
-import com.t3rik.mes.wm.domain.WmStorageLocation;
-import com.t3rik.mes.wm.domain.WmTransaction;
-import com.t3rik.mes.wm.domain.WmWarehouse;
+import com.t3rik.mes.wm.domain.*;
 import com.t3rik.mes.wm.domain.tx.*;
+import com.t3rik.mes.wm.mapper.WmMaterialStockMapper;
 import com.t3rik.mes.wm.service.*;
 import org.simpleframework.xml.Default;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +100,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
             transaction_out.setTransactionType(transactionType_out);
             BeanUtils.copyBeanProp(transaction_out, line);
             transaction_out.setTransactionFlag(-1);// 库存减少
+            transaction_out.setStorageCheckFlag(Boolean.TRUE);//是否校验库存量
             transaction_out.setTransactionDate(new Date());
             wmTransactionService.processTransaction(transaction_out);
 
@@ -110,6 +109,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
             transaction_in.setTransactionType(transactionType_in);
             BeanUtils.copyBeanProp(transaction_in, line);
             transaction_in.setTransactionFlag(1);// 库存增加
+            transaction_in.setStorageCheckFlag(Boolean.TRUE);//是否校验库存量
 
             // 由于是新增的库存记录所以需要将查询出来的库存记录ID置为空
             transaction_in.setMaterialStockId(null);
@@ -453,6 +453,8 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
         }
 
     }
+    @Autowired
+    private WmMaterialStockMapper wmMaterialStockMapper;
     /**
      * 执行废料信息
      * @param beans
@@ -464,10 +466,10 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
         if (CollUtil.isEmpty(beans))
             throw new BusinessException("没有需要处理废料的单行！");
 
-        //生产退料-入库事务
+        //废料退料-入库事务
         String transactionType_in = DefaultDataEnum.TRANSACTION_TYPE_ITEM_WM_WASTE_IN.getCode();
         //生产退料-出库事务
-        String transactionType_out = DefaultDataEnum.TRANSACTION_TYPE_ITEM_WM_WASTE_OUT.getCode();
+        String transactionType_out = DefaultDataEnum.TRANSACTION_TYPE_ITEM_RT_ISSUE_OUT.getCode();
         beans.stream().forEach(a -> {
             //构造信息 将信息存入线边库
             //校验 取出来的数量不超过领料数量
@@ -475,6 +477,12 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
             WmTransaction transaction_out = new WmTransaction();
             transaction_out.setTransactionType(transactionType_out);
             BeanUtils.copyBeanProp(transaction_out, a);
+            //设置出库事务类型
+            transaction_out.setTransactionFlag(-1);// 库存减少
+            transaction_out.setStorageCheckFlag(Boolean.TRUE);//是否校验库存量
+            transaction_out.setTransactionDate(new Date());
+            //添加生产工单id 以及编号
+
             //查询仓库-虚拟库存
             WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseCode(DefaultDataEnum.VIRTUAL_WH.getCode());
             transaction_out.setWarehouseId(warehouse.getWarehouseId());
@@ -491,9 +499,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
             transaction_out.setAreaCode(area.getAreaCode());
             transaction_out.setAreaName(area.getAreaName());
 
-            //设置出库事务类型
-            transaction_out.setTransactionFlag(-1);// 库存减少
-            transaction_out.setStorageCheckFlag(Boolean.TRUE);//是否校验库存量
+
             //添加事务
             wmTransactionService.processTransactionWaste(transaction_out);
 
@@ -522,10 +528,14 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
 
             transaction_in.setTransactionFlag(1);//新增
             transaction_in.setTransactionType(transactionType_in);
-            transaction_in.setTransactionDate(new Date());
             transaction_in.setMaterialStockId(null);
             transaction_in.setStorageCheckFlag(Boolean.TRUE);//是否校验库存量
             transaction_in.setRelatedTransactionId(transaction_out.getTransactionId());
+            //查询线边库信息
+            WmMaterialStock st = wmMaterialStockMapper.selectWmMaterialStockByMaterialStockId(a.getMaterialStockId());
+
+            transaction_in.setWorkorderId(st.getWorkorderId());//生产单id
+            transaction_in.setWorkorderCode(st.getWorkorderCode());//生产单编号
             wmTransactionService.processTransactionWaste(transaction_in);//添加事务以及虚拟库信息
         });
 
