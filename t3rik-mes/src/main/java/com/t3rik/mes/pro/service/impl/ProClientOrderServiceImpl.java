@@ -15,11 +15,11 @@ import com.t3rik.mes.pro.service.IProClientOrderItemService;
 import com.t3rik.mes.pro.service.IProClientOrderService;
 import com.t3rik.mes.pro.service.IProWorkorderService;
 import com.t3rik.system.strategy.AutoCodeUtil;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.NotNull;
 
 /**
  * 客户订单Service业务层处理

@@ -2,6 +2,7 @@ package com.t3rik.mes.wm.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.t3rik.common.constant.UserConstants;
+import com.t3rik.common.enums.mes.DefaultDataEnum;
 import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.bean.BeanUtils;
 import com.t3rik.mes.wm.domain.WmStorageArea;
@@ -10,6 +11,7 @@ import com.t3rik.mes.wm.domain.WmTransaction;
 import com.t3rik.mes.wm.domain.WmWarehouse;
 import com.t3rik.mes.wm.domain.tx.*;
 import com.t3rik.mes.wm.service.*;
+import org.simpleframework.xml.Default;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -463,9 +465,9 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
             throw new BusinessException("没有需要处理废料的单行！");
 
         //生产退料-入库事务
-        String transactionType_in = UserConstants.TRANSACTION_TYPE_ITEM_ISSUE_IN;
+        String transactionType_in = DefaultDataEnum.TRANSACTION_TYPE_ITEM_WM_WASTE_IN.getCode();
         //生产退料-出库事务
-        String transactionType_out = UserConstants.TRANSACTION_TYPE_WAREHOUSE_TRANS_OUT;
+        String transactionType_out = DefaultDataEnum.TRANSACTION_TYPE_ITEM_WM_WASTE_OUT.getCode();
         beans.stream().forEach(a -> {
             //构造信息 将信息存入线边库
             //校验 取出来的数量不超过领料数量
@@ -474,17 +476,17 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
             transaction_out.setTransactionType(transactionType_out);
             BeanUtils.copyBeanProp(transaction_out, a);
             //查询仓库-虚拟库存
-            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseCode(UserConstants.VIRTUAL_WH);
+            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseCode(DefaultDataEnum.VIRTUAL_WH.getCode());
             transaction_out.setWarehouseId(warehouse.getWarehouseId());
             transaction_out.setWarehouseCode(warehouse.getWarehouseCode());
             transaction_out.setWarehouseName(warehouse.getWarehouseName());
             //查询虚拟库区
-            WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationCode(UserConstants.VIRTUAL_WS);
+            WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationCode(DefaultDataEnum.VIRTUAL_WS.getCode());
             transaction_out.setLocationId(location.getLocationId());
             transaction_out.setLocationCode(location.getLocationCode());
             transaction_out.setLocationName(location.getLocationName());
             //虚拟库位
-            WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaCode(UserConstants.VIRTUAL_WA);
+            WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaCode(DefaultDataEnum.VIRTUAL_WA.getCode());
             transaction_out.setAreaId(area.getAreaId());
             transaction_out.setAreaCode(area.getAreaCode());
             transaction_out.setAreaName(area.getAreaName());
@@ -503,17 +505,17 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
             BeanUtils.copyBeanProp(transaction_in,a);
             //查询虚拟废料虚拟线边库
             //查询仓库-虚拟库存
-            WmWarehouse warehouseWaste = wmWarehouseService.selectWmWarehouseByWarehouseCode(UserConstants.WASTE_VIRTUAL_WH);
+            WmWarehouse warehouseWaste = wmWarehouseService.selectWmWarehouseByWarehouseCode(DefaultDataEnum.WASTE_VIRTUAL_WH.getCode());
             transaction_in.setWarehouseId(warehouseWaste.getWarehouseId());
             transaction_in.setWarehouseCode(warehouseWaste.getWarehouseCode());
             transaction_in.setWarehouseName(warehouseWaste.getWarehouseName());
             //查询虚拟库区
-            WmStorageLocation locationWaste = wmStorageLocationService.selectWmStorageLocationByLocationCode(UserConstants.WASTE_VIRTUAL_WS);
+            WmStorageLocation locationWaste = wmStorageLocationService.selectWmStorageLocationByLocationCode(DefaultDataEnum.WASTE_VIRTUAL_WS.getCode());
             transaction_in.setLocationId(locationWaste.getLocationId());
             transaction_in.setLocationCode(locationWaste.getLocationCode());
             transaction_in.setLocationName(locationWaste.getLocationName());
             //虚拟库位
-            WmStorageArea areaWaste = wmStorageAreaService.selectWmStorageAreaByAreaCode(UserConstants.WASTE_VIRTUAL_WA);
+            WmStorageArea areaWaste = wmStorageAreaService.selectWmStorageAreaByAreaCode(DefaultDataEnum.WASTE_VIRTUAL_WA.getCode());
             transaction_in.setAreaId(areaWaste.getAreaId());
             transaction_in.setAreaCode(areaWaste.getAreaCode());
             transaction_in.setAreaName(areaWaste.getAreaName());
