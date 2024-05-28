@@ -197,9 +197,11 @@ public class WmWasteHeaderController extends BaseController {
         List<WmWasteTxBean> beans = wmWasteHeaderService.getTxBeans(wasteId);
         //执行废料
         storageCoreService.processWmWaste(beans);
+
         //修改状态已完成
         wasteHeader.setStatus(UserConstants.ORDER_STATUS_FINISHED);
         wmWasteHeaderService.updateById(wasteHeader);
+
         return AjaxResult.success();
     }
 
