@@ -117,7 +117,8 @@ public class UserConstants {
      * 各种业务单据的内定自动编码规则标识
      */
     public static final String ITEM_TYPE_CODE = "ITEM_TYPE_CODE";
-    public static final String ITEM_CODE = "ITEM_CODE";
+    public static final String ITEM_CODE = "ITEM_CODE"; // 物料规则
+    public static final String PRODUCE_CODE = "PRODUCE_CODE"; // 物料规则
     public static final String MACHINERY_TYPE_CODE = "MACHINERY_TYPE_CODE";
     public static final String TASK_CODE = "TASK_CODE";
     public static final String DEFECT_CODE = "DEFECT_CODE";

@@ -51,7 +51,7 @@ public class AutoCodeUtil {
         List<SysAutoCodePart> parts = iAutoCodePartService.listPart(partParam);
         List<SysAutoCodePart> collect = parts.stream()
                 .filter(part -> PartTypeEnum.PART_TYPE_SERIALNO.getCode().equals(part.getPartType()))
-                .collect(Collectors.toList());
+                .toList();
 
         Assert.isTrue(collect.size() < 2, "编码规则[{}]流水号方式的组成只能存在一个", ruleCode);
 

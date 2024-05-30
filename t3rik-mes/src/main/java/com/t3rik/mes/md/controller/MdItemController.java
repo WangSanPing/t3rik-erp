@@ -100,6 +100,7 @@ public class MdItemController extends BaseController {
      * @param mdItem
      * @return
      */
+    @Log(title = "物料管理", businessType = BusinessType.SEARCH)
     @GetMapping("/list/product/{type}")
     public TableDataInfo listProduct(MdItem mdItem, @PathVariable("type") String type) {
         startPage();
