@@ -484,7 +484,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
             //添加生产工单id 以及编号
 
             //查询仓库-虚拟库存
-            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseCode(DefaultDataEnum.VIRTUAL_WH.getCode());
+             WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseCode(DefaultDataEnum.VIRTUAL_WH.getCode());
             transaction_out.setWarehouseId(warehouse.getWarehouseId());
             transaction_out.setWarehouseCode(warehouse.getWarehouseCode());
             transaction_out.setWarehouseName(warehouse.getWarehouseName());
@@ -540,5 +540,5 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
         });
 
     }
-
+    
 }

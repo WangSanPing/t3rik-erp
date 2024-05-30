@@ -265,4 +265,55 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{materialStockId}
         </foreach>
     </delete>
+
+    <!--统计库存数量 根据物料id和年月-->
+    <select id="selectMaterielCount" resultType="java.util.Map">
+        -- 废料
+        SELECT wms.item_name,
+               wms.item_code,
+               IF(sum(wms.quantity_onhand),sum(wms.quantity_onhand),0.0)  quantity_onhand,
+               IF(wms.warehouse_name,wms.warehouse_name,'废料') warehouse_name
+        FROM wm_material_stock wms
+                 LEFT JOIN wm_warehouse ww ON wms.warehouse_id = ww.warehouse_id
+        WHERE
+            wms.warehouse_id = 218
+            <if test="itemCode != null and itemCode != ''">
+                and DATE_FORMAT(wms.recpt_date,"%Y-%m") = #{itemCode}
+            </if>
+            <if test="dateTime != null and dateTime != ''">
+                and wms.recpt_date = #{dateTime}
+            </if>
+        union all
+-- 剩余
+        SELECT wms.item_name,
+               wms.item_code,
+               IF(sum(wms.quantity_onhand),sum(wms.quantity_onhand),0.0)  quantity_onhand,
+               IF(wms.warehouse_name,wms.warehouse_name,'剩余') warehouse_name
+        FROM wm_material_stock wms
+                 LEFT JOIN wm_warehouse ww ON wms.warehouse_id = ww.warehouse_id
+        WHERE
+            wms.warehouse_id not in (215, 218)
+        <if test="itemCode != null and itemCode != ''">
+            and DATE_FORMAT(wms.recpt_date,"%Y-%m") = #{itemCode}
+        </if>
+        <if test="dateTime != null and dateTime != ''">
+            and wms.recpt_date = #{dateTime}
+        </if>
+        union all
+-- 用料
+        SELECT wms.item_name,
+               wms.item_code,
+               IF(sum(wms.quantity_onhand),sum(wms.quantity_onhand),0.0)  quantity_onhand,
+               IF(wms.warehouse_name,wms.warehouse_name,'用料') warehouse_name
+        FROM wm_material_stock wms
+                 LEFT JOIN wm_warehouse ww ON wms.warehouse_id = ww.warehouse_id
+        WHERE
+            wms.warehouse_id = 215
+            <if test="itemCode != null and itemCode != ''">
+                and DATE_FORMAT(wms.recpt_date,"%Y-%m") = #{itemCode}
+            </if>
+            <if test="dateTime != null and dateTime != ''">
+                and wms.recpt_date = #{dateTime}
+            </if>
+    </select>
 </mapper>

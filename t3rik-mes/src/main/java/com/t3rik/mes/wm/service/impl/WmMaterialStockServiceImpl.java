@@ -1,6 +1,9 @@
 package com.t3rik.mes.wm.service.impl;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import com.t3rik.common.utils.DateUtils;
 import com.t3rik.mes.wm.domain.WmMaterialStock;
 import com.t3rik.mes.wm.mapper.WmMaterialStockMapper;
@@ -11,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * 库存记录Service业务层处理
- * 
+ *
  * @author yinjinlu
  * @date 2022-05-24
  */
@@ -23,7 +26,7 @@ public class WmMaterialStockServiceImpl implements IWmMaterialStockService
 
     /**
      * 查询库存记录
-     * 
+     *
      * @param materialStockId 库存记录主键
      * @return 库存记录
      */
@@ -36,7 +39,7 @@ public class WmMaterialStockServiceImpl implements IWmMaterialStockService
 
     /**
      * 查询库存记录列表
-     * 
+     *
      * @param wmMaterialStock 库存记录
      * @return 库存记录
      */
@@ -53,7 +56,7 @@ public class WmMaterialStockServiceImpl implements IWmMaterialStockService
 
     /**
      * 新增库存记录
-     * 
+     *
      * @param wmMaterialStock 库存记录
      * @return 结果
      */
@@ -66,7 +69,7 @@ public class WmMaterialStockServiceImpl implements IWmMaterialStockService
 
     /**
      * 修改库存记录
-     * 
+     *
      * @param wmMaterialStock 库存记录
      * @return 结果
      */
@@ -79,7 +82,7 @@ public class WmMaterialStockServiceImpl implements IWmMaterialStockService
 
     /**
      * 批量删除库存记录
-     * 
+     *
      * @param materialStockIds 需要删除的库存记录主键
      * @return 结果
      */
@@ -91,7 +94,7 @@ public class WmMaterialStockServiceImpl implements IWmMaterialStockService
 
     /**
      * 删除库存记录信息
-     * 
+     *
      * @param materialStockId 库存记录主键
      * @return 结果
      */
@@ -100,4 +103,17 @@ public class WmMaterialStockServiceImpl implements IWmMaterialStockService
     {
         return wmMaterialStockMapper.deleteWmMaterialStockByMaterialStockId(materialStockId);
     }
+
+    /**
+     * 统计库存数量 根据物料id和年月
+     * @param itemCode 物资编码
+     * @param dateTime 时间
+     * @return
+     */
+    @Override
+    public Map selectMaterielCount(String itemCode, Date dateTime) {
+        return wmMaterialStockMapper.selectMaterielCount(itemCode, dateTime);
+    }
+
+
 }

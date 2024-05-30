@@ -13,11 +13,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 库存记录Controller
- * 
+ *
  * @author yinjinlu
  * @date 2022-05-30
  */
@@ -94,4 +96,20 @@ public class WmMaterialStockController extends BaseController
     {
         return toAjax(wmMaterialStockService.deleteWmMaterialStockByMaterialStockIds(materialStockIds));
     }
+
+
+    /**
+     * 大屏-统计库存数量 根据物料id和年月
+     *
+     */
+    @PreAuthorize("@ss.hasPermi('mes:wm:wmstock:materielCount')")
+    @DeleteMapping("/{materielCount}")
+    public AjaxResult materielCount(@RequestBody Map map)
+    {
+        String itemCode = (String)map.get("itemCode");
+        Date dateTime = (Date)map.get("dateTime");
+
+        return AjaxResult.success(wmMaterialStockService.selectMaterielCount(itemCode, dateTime));
+    }
+
 }
