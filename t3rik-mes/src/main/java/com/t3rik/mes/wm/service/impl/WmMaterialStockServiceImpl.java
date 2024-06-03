@@ -111,7 +111,7 @@ public class WmMaterialStockServiceImpl implements IWmMaterialStockService
      * @return
      */
     @Override
-    public Map selectMaterielCount(String itemCode, Date dateTime) {
+    public List<Map> selectMaterielCount(String itemCode, Date dateTime) {
         return wmMaterialStockMapper.selectMaterielCount(itemCode, dateTime);
     }
 

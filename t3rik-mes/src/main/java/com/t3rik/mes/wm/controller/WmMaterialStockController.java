@@ -5,6 +5,7 @@ import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
+import com.t3rik.common.utils.DateUtils;
 import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.mes.wm.domain.WmMaterialStock;
 import com.t3rik.mes.wm.service.IWmMaterialStockService;
@@ -100,16 +101,14 @@ public class WmMaterialStockController extends BaseController
 
     /**
      * 大屏-统计库存数量 根据物料id和年月
-     *
+     *+
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:wmstock:materielCount')")
-    @DeleteMapping("/{materielCount}")
-    public AjaxResult materielCount(@RequestBody Map map)
-    {
+    @PostMapping("/materielCount")
+    public AjaxResult materielCount(@RequestBody Map map){
         String itemCode = (String)map.get("itemCode");
-        Date dateTime = (Date)map.get("dateTime");
-
-        return AjaxResult.success(wmMaterialStockService.selectMaterielCount(itemCode, dateTime));
+        String dateTime = (String) map.get("recptDate");
+        return AjaxResult.success(wmMaterialStockService.selectMaterielCount(itemCode, DateUtils.parseDate(dateTime)));
     }
 
 }

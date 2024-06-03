@@ -81,5 +81,5 @@ public interface WmMaterialStockMapper
      * @param dateTime 时间
      * @return
      */
-    Map selectMaterielCount(@Param("itemCode") String itemCode, @Param("dateTime") Date dateTime);
+    List<Map> selectMaterielCount(@Param("itemCode") String itemCode, @Param("recptDate") Date recptDate);
 }

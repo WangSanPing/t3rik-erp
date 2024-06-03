@@ -81,5 +81,5 @@ public interface IWmMaterialStockService
      * @param dateTime 时间
      * @return
      */
-    Map selectMaterielCount(String itemCode, Date dateTime);
+    List<Map> selectMaterielCount(String itemCode, Date dateTime);
 }
