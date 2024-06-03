@@ -92,10 +92,10 @@ public class MdItemServiceImpl extends ServiceImpl<MdItemMapper, MdItem> impleme
     @Override
     public Boolean addItemOrProduct(MdItem mdItem, String type) {
         // 根据类型查询
-        String itemTypeCode = ItemTypeSupport.getDefaultDataIdByItemType(type);
-        Assert.notNull(itemTypeCode, () -> new BusinessException(MsgConstants.PARAM_ERROR));
+        String itemTypeId = ItemTypeSupport.getDefaultDataIdByItemType(type);
+        Assert.notNull(itemTypeId, () -> new BusinessException(MsgConstants.PARAM_ERROR));
         // 查询类型具体信息
-        ItemType itemType = this.iItemTypeService.lambdaQuery().eq(ItemType::getItemTypeCode, itemTypeCode).one();
+        ItemType itemType = this.iItemTypeService.getById(itemTypeId);
         Assert.notNull(itemType, () -> new BusinessException(MsgConstants.PARAM_ERROR));
         mdItem.setItemTypeId(itemType.getItemTypeId());
         mdItem.setItemTypeCode(itemType.getItemTypeCode());

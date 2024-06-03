@@ -1,5 +1,6 @@
 package com.t3rik.common.core.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.t3rik.common.core.domain.BaseEntity;
@@ -26,6 +27,7 @@ public class ItemType extends BaseEntity {
     private String attr2;
     private Integer attr3;
     private Integer attr4;
+    @TableField(exist = false)
     private List<ItemType> children = new ArrayList<ItemType>();
 
 

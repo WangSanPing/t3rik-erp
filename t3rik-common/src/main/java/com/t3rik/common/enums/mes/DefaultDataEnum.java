@@ -14,16 +14,19 @@ import java.util.Map;
 public enum DefaultDataEnum {
     /**
      * 原材料
+     * 使用的是数据id,为了兼容表字段的ancestors字段,保存的是所有节点id,便于查找所有节点
      */
-    MATERIAL("10000001L", "原材料", "md_item_type"),
+    MATERIAL("10000001", "原材料", "md_item_type"),
     /**
      * 半成品
+     * 使用的是数据id,为了兼容表字段的ancestors字段,保存的是所有节点id,便于查找所有节点
      */
-    SEMI_FINISHED_PRODUCTS("10000003L", "半成品", "md_item_type"),
+    SEMI_FINISHED_PRODUCTS("10000003", "半成品", "md_item_type"),
     /**
      * 产成品
+     * 使用的是数据id,为了兼容表字段的ancestors字段,保存的是所有节点id,便于查找所有节点
      */
-    PRODUCTS("10000004L", "产成品", "md_item_type"),
+    PRODUCTS("10000004", "产成品", "md_item_type"),
     /**
      * 预置仓库
      */
