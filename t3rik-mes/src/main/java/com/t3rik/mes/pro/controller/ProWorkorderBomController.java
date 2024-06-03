@@ -17,14 +17,13 @@ import java.util.List;
 
 /**
  * 生产工单BOM组成Controller
- * 
+ *
  * @author yinjinlu
  * @date 2022-05-09
  */
 @RestController
 @RequestMapping("/mes/pro/workorderbom")
-public class ProWorkorderBomController extends BaseController
-{
+public class ProWorkorderBomController extends BaseController {
     @Autowired
     private IProWorkorderBomService proWorkorderBomService;
 
@@ -32,8 +31,7 @@ public class ProWorkorderBomController extends BaseController
      * 查询生产工单BOM组成列表
      */
     @GetMapping("/list")
-    public TableDataInfo list(ProWorkorderBom proWorkorderBom)
-    {
+    public TableDataInfo list(ProWorkorderBom proWorkorderBom) {
         startPage();
         List<ProWorkorderBom> list = proWorkorderBomService.selectProWorkorderBomList(proWorkorderBom);
         return getDataTable(list);
@@ -45,8 +43,7 @@ public class ProWorkorderBomController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:pro:workorder:export')")
     @Log(title = "生产工单BOM组成", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, ProWorkorderBom proWorkorderBom)
-    {
+    public void export(HttpServletResponse response, ProWorkorderBom proWorkorderBom) {
         List<ProWorkorderBom> list = proWorkorderBomService.selectProWorkorderBomList(proWorkorderBom);
         ExcelUtil<ProWorkorderBom> util = new ExcelUtil<ProWorkorderBom>(ProWorkorderBom.class);
         util.exportExcel(response, list, "生产工单BOM组成数据");
@@ -57,8 +54,7 @@ public class ProWorkorderBomController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:pro:workorder:query')")
     @GetMapping(value = "/{lineId}")
-    public AjaxResult getInfo(@PathVariable("lineId") Long lineId)
-    {
+    public AjaxResult getInfo(@PathVariable("lineId") Long lineId) {
         return AjaxResult.success(proWorkorderBomService.selectProWorkorderBomByLineId(lineId));
     }
 
@@ -68,8 +64,7 @@ public class ProWorkorderBomController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:pro:workorder:add')")
     @Log(title = "生产工单BOM组成", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ProWorkorderBom proWorkorderBom)
-    {
+    public AjaxResult add(@RequestBody ProWorkorderBom proWorkorderBom) {
         return toAjax(proWorkorderBomService.insertProWorkorderBom(proWorkorderBom));
     }
 
@@ -79,8 +74,7 @@ public class ProWorkorderBomController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:pro:workorder:edit')")
     @Log(title = "生产工单BOM组成", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ProWorkorderBom proWorkorderBom)
-    {
+    public AjaxResult edit(@RequestBody ProWorkorderBom proWorkorderBom) {
         return toAjax(proWorkorderBomService.updateProWorkorderBom(proWorkorderBom));
     }
 
@@ -89,9 +83,8 @@ public class ProWorkorderBomController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:pro:workorder:remove')")
     @Log(title = "生产工单BOM组成", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{lineIds}")
-    public AjaxResult remove(@PathVariable Long[] lineIds)
-    {
+    @DeleteMapping("/{lineIds}")
+    public AjaxResult remove(@PathVariable Long[] lineIds) {
         return toAjax(proWorkorderBomService.deleteProWorkorderBomByLineIds(lineIds));
     }
 }

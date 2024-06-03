@@ -14,7 +14,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
  *
  * @author ruoyi
  */
-@EnableAsync
 @ImportResource("classpath:ureport-console-context.xml")
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class ERPApplication {

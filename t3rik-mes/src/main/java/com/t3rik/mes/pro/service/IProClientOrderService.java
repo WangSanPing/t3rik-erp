@@ -19,4 +19,6 @@ public interface IProClientOrderService extends IService<ProClientOrder> {
      * 生成生产订单
      */
     ProWorkorder generateWorkOrder(ProClientOrder clientOrder);
+
+    void saveClientOrder(ProClientOrder proClientOrder);
 }

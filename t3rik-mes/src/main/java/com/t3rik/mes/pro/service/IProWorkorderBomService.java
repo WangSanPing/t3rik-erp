@@ -1,6 +1,8 @@
 package com.t3rik.mes.pro.service;
 
 import java.util.List;
+
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.pro.domain.ProWorkorderBom;
 
 /**
@@ -9,7 +11,7 @@ import com.t3rik.mes.pro.domain.ProWorkorderBom;
  * @author yinjinlu
  * @date 2022-05-09
  */
-public interface IProWorkorderBomService 
+public interface IProWorkorderBomService extends IService<ProWorkorderBom>
 {
     /**
      * 查询生产工单BOM组成

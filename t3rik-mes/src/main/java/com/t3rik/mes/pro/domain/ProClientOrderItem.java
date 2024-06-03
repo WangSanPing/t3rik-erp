@@ -7,6 +7,8 @@ import com.t3rik.common.core.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
+
 /**
  * 客户订单材料
  * 对象 pro_client_order_item
@@ -87,7 +89,7 @@ public class ProClientOrderItem extends BaseEntity {
      * 物料使用数量
      */
     @Excel(name = "物料使用数量")
-    private Double quantity;
+    private BigDecimal quantity;
 
 
     /**

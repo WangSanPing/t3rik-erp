@@ -18,7 +18,7 @@ public class ItemTypeSupport extends CommonSupport {
      * 根据传入的类型返回对应的数据默认id
      */
     public static String getDefaultDataIdByItemType(String itemType) {
-        var itemTypeEnum = ItemTypeEnum.getEnumByCode(itemType);
+        var itemTypeEnum = ItemTypeEnum.getEnumByCode(itemType.toUpperCase());
         Assert.notNull(itemTypeEnum, () -> new BusinessException(MsgConstants.PARAM_ERROR));
         return switch (itemTypeEnum) {
             case ITEM -> DefaultDataEnum.MATERIAL.getCode();

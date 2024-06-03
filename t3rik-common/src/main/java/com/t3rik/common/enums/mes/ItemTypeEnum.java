@@ -14,8 +14,8 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor
 public enum ItemTypeEnum {
-    PRODUCT("product", "产品类型"),
-    ITEM("item", "原材料类型");
+    PRODUCT("PRODUCT", "产品类型"),
+    ITEM("ITEM", "原材料类型");
 
     public static final Map<String, ItemTypeEnum> ITEM_TYPE_MAP;
 

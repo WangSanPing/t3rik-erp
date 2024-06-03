@@ -1,6 +1,8 @@
 package com.t3rik.mes.md.service.impl;
 
 import java.util.List;
+
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +17,7 @@ import com.t3rik.mes.md.service.IMdProductBomService;
  * @date 2022-05-09
  */
 @Service
-public class MdProductBomServiceImpl implements IMdProductBomService 
+public class MdProductBomServiceImpl extends ServiceImpl<MdProductBomMapper,MdProductBom> implements IMdProductBomService
 {
     @Autowired
     private MdProductBomMapper mdProductBomMapper;
@@ -92,5 +94,10 @@ public class MdProductBomServiceImpl implements IMdProductBomService
     public int deleteMdProductBomByBomId(Long bomId)
     {
         return mdProductBomMapper.deleteMdProductBomByBomId(bomId);
+    }
+
+    @Override
+    public int updateItemBomAndLevel(List<MdProductBom> productBomList) {
+        return this.mdProductBomMapper.updateLevelByItemIdAndBomItemId(productBomList);
     }
 }

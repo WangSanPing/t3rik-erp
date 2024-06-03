@@ -1,19 +1,20 @@
 package com.t3rik.mes.md.service;
 
-import java.util.List;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.md.domain.MdProductBom;
+
+import java.util.List;
 
 /**
  * 产品BOM关系Service接口
- * 
+ *
  * @author yinjinlu
  * @date 2022-05-09
  */
-public interface IMdProductBomService 
-{
+public interface IMdProductBomService extends IService<MdProductBom> {
     /**
      * 查询产品BOM关系
-     * 
+     *
      * @param bomId 产品BOM关系主键
      * @return 产品BOM关系
      */
@@ -21,7 +22,7 @@ public interface IMdProductBomService
 
     /**
      * 查询产品BOM关系列表
-     * 
+     *
      * @param mdProductBom 产品BOM关系
      * @return 产品BOM关系集合
      */
@@ -29,7 +30,7 @@ public interface IMdProductBomService
 
     /**
      * 新增产品BOM关系
-     * 
+     *
      * @param mdProductBom 产品BOM关系
      * @return 结果
      */
@@ -37,7 +38,7 @@ public interface IMdProductBomService
 
     /**
      * 修改产品BOM关系
-     * 
+     *
      * @param mdProductBom 产品BOM关系
      * @return 结果
      */
@@ -45,7 +46,7 @@ public interface IMdProductBomService
 
     /**
      * 批量删除产品BOM关系
-     * 
+     *
      * @param bomIds 需要删除的产品BOM关系主键集合
      * @return 结果
      */
@@ -53,9 +54,11 @@ public interface IMdProductBomService
 
     /**
      * 删除产品BOM关系信息
-     * 
+     *
      * @param bomId 产品BOM关系主键
      * @return 结果
      */
     public int deleteMdProductBomByBomId(Long bomId);
+
+    int updateItemBomAndLevel(List<MdProductBom> productBomList);
 }

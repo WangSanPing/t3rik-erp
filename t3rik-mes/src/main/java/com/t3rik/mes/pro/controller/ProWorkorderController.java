@@ -30,14 +30,13 @@ import java.util.List;
 
 /**
  * 生产工单Controller
- * 
+ *
  * @author yinjinlu
  * @date 2022-05-09
  */
 @RestController
 @RequestMapping("/mes/pro/workorder")
-public class ProWorkorderController extends BaseController
-{
+public class ProWorkorderController extends BaseController {
     @Autowired
     private IProWorkorderService proWorkorderService;
 
@@ -54,19 +53,18 @@ public class ProWorkorderController extends BaseController
      * 查询生产工单列表
      */
     @GetMapping("/list")
-    public TableDataInfo list(ProWorkorder proWorkorder)
-    {
+    public TableDataInfo list(ProWorkorder proWorkorder) {
         startPage();
         List<ProWorkorder> list = proWorkorderService.selectProWorkorderList(proWorkorder);
         return getDataTable(list);
     }
 
     @GetMapping("/listWithTaskJson")
-    public TableDataInfo listWithTaskJson(ProWorkorder proWorkorder){
+    public TableDataInfo listWithTaskJson(ProWorkorder proWorkorder) {
         startPage();
         List<ProWorkorder> list = proWorkorderService.selectProWorkorderList(proWorkorder);
         Iterator<ProWorkorder> iterator = list.iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             ProWorkorder workorder = iterator.next();
             List<ProTask> tasks = proTaskService.selectProTaskProcessViewByWorkorder(workorder.getWorkorderId());
             workorder.setTasks(tasks);
@@ -80,8 +78,7 @@ public class ProWorkorderController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:pro:workorder:export')")
     @Log(title = "生产工单", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, ProWorkorder proWorkorder)
-    {
+    public void export(HttpServletResponse response, ProWorkorder proWorkorder) {
         List<ProWorkorder> list = proWorkorderService.selectProWorkorderList(proWorkorder);
         ExcelUtil<ProWorkorder> util = new ExcelUtil<ProWorkorder>(ProWorkorder.class);
         util.exportExcel(response, list, "生产工单数据");
@@ -91,8 +88,7 @@ public class ProWorkorderController extends BaseController
      * 获取生产工单详细信息
      */
     @GetMapping(value = "/{workorderId}")
-    public AjaxResult getInfo(@PathVariable("workorderId") Long workorderId)
-    {
+    public AjaxResult getInfo(@PathVariable("workorderId") Long workorderId) {
         return AjaxResult.success(proWorkorderService.selectProWorkorderByWorkorderId(workorderId));
     }
 
@@ -102,13 +98,12 @@ public class ProWorkorderController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:pro:workorder:add')")
     @Log(title = "生产工单", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ProWorkorder proWorkorder)
-    {
-        if(UserConstants.NOT_UNIQUE.equals(proWorkorderService.checkWorkorderCodeUnique(proWorkorder))){
+    public AjaxResult add(@RequestBody ProWorkorder proWorkorder) {
+        if (UserConstants.NOT_UNIQUE.equals(proWorkorderService.checkWorkorderCodeUnique(proWorkorder))) {
             return AjaxResult.error("生产工单编号已存在！");
         }
 
-        if(proWorkorder.getParentId()==null || proWorkorder.getParentId()==0){
+        if (proWorkorder.getParentId() == null || proWorkorder.getParentId() == 0) {
             proWorkorder.setAncestors("0");
         }
         proWorkorderService.insertProWorkorder(proWorkorder);
@@ -125,14 +120,13 @@ public class ProWorkorderController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:pro:workorder:edit')")
     @Log(title = "生产工单", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ProWorkorder proWorkorder)
-    {
+    public AjaxResult edit(@RequestBody ProWorkorder proWorkorder) {
         ProWorkorder workorder = proWorkorderService.selectProWorkorderByWorkorderId(proWorkorder.getWorkorderId());
-        int ret =proWorkorderService.updateProWorkorder(proWorkorder);
-        //如果是产品和数量发生变化则需要重新生成BOM组成
-        if(ret >0){
-            if(workorder.getProductId().longValue() != proWorkorder.getProductId().longValue() ||
-                    workorder.getQuantity().compareTo(proWorkorder.getQuantity())!=0){
+        int ret = proWorkorderService.updateProWorkorder(proWorkorder);
+        // 如果是产品和数量发生变化则需要重新生成BOM组成
+        if (ret > 0) {
+            if (workorder.getProductId().longValue() != proWorkorder.getProductId().longValue() ||
+                    workorder.getQuantity().compareTo(proWorkorder.getQuantity()) != 0) {
                 removeBomLine(proWorkorder.getWorkorderId());
                 generateBomLine(proWorkorder.getWorkorderId());
             }
@@ -145,13 +139,12 @@ public class ProWorkorderController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:pro:workorder:remove')")
     @Log(title = "生产工单", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{workorderIds}")
-    public AjaxResult remove(@PathVariable Long[] workorderIds)
-    {
-        for (Long id:workorderIds
-             ) {
+    @DeleteMapping("/{workorderIds}")
+    public AjaxResult remove(@PathVariable Long[] workorderIds) {
+        for (Long id : workorderIds
+        ) {
             ProWorkorder workorder = proWorkorderService.selectProWorkorderByWorkorderId(id);
-            if(!UserConstants.ORDER_STATUS_PREPARE.equals(workorder.getStatus())){
+            if (!UserConstants.ORDER_STATUS_PREPARE.equals(workorder.getStatus())) {
                 return AjaxResult.error("只能删除草稿状态单据！");
             }
             removeBomLine(id);
@@ -161,23 +154,21 @@ public class ProWorkorderController extends BaseController
 
     /**
      * 根据生产工单中的产品生成BOM物料行
-     * @param workorderId
      */
-    private void generateBomLine(Long workorderId){
-        //先根据ID找到对应的产品
+    private void generateBomLine(Long workorderId) {
+        // 先根据ID找到对应的产品
         ProWorkorder workorder = proWorkorderService.selectProWorkorderByWorkorderId(workorderId);
 
-        //根据产品找到BOM组成
+        // 根据产品找到BOM组成
         MdProductBom param = new MdProductBom();
         param.setItemId(workorder.getProductId());
         List<MdProductBom> boms = mdProductBomService.selectMdProductBomList(param);
 
-        //生成BOM数据
+        // 生成BOM数据
         BigDecimal orderQuantitiy = workorder.getQuantity();
         ProWorkorderBom workorderBom = new ProWorkorderBom();
-        if(CollUtil.isNotEmpty(boms)){
-            for (MdProductBom bom:boms
-                 ) {
+        if (CollUtil.isNotEmpty(boms)) {
+            for (MdProductBom bom : boms) {
                 workorderBom.setWorkorderId(workorderId);
                 workorderBom.setItemId(bom.getBomItemId());
                 workorderBom.setItemCode(bom.getBomItemCode());
@@ -193,9 +184,10 @@ public class ProWorkorderController extends BaseController
 
     /**
      * 删除当前工单下所有BOM组成
+     *
      * @param workorderId
      */
-    private void removeBomLine(Long workorderId){
+    private void removeBomLine(Long workorderId) {
         ProWorkorderBom param = new ProWorkorderBom();
         param.setWorkorderId(workorderId);
         proWorkorderBomService.deleteProWorkorderBomByWorkorderId(workorderId);
@@ -206,40 +198,39 @@ public class ProWorkorderController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:pro:workorder:list')")
     @GetMapping("/listItems")
-    public TableDataInfo listItemss(ProWorkorder proWorkorder)
-    {
+    public TableDataInfo listItemss(ProWorkorder proWorkorder) {
         List<MdProductBom> result = new ArrayList<MdProductBom>();
         ProWorkorderBom param = new ProWorkorderBom();
         param.setWorkorderId(proWorkorder.getWorkorderId());
         List<ProWorkorderBom> boms = proWorkorderBomService.selectProWorkorderBomList(param);
-        if(!CollectionUtils.isEmpty(boms)){
-            for ( ProWorkorderBom bom: boms
-                 ) {
+        if (!CollectionUtils.isEmpty(boms)) {
+            for (ProWorkorderBom bom : boms
+            ) {
                 MdProductBom theBom = new MdProductBom();
                 theBom.setBomItemId(bom.getItemId());
-                result.addAll(getBoms(theBom,bom.getQuantity(),0));
+                result.addAll(getBoms(theBom, bom.getQuantity(), 0));
             }
         }
         return getDataTable(result);
     }
 
-    private List<MdProductBom> getBoms(MdProductBom item,BigDecimal quantity,int count){
+    private List<MdProductBom> getBoms(MdProductBom item, BigDecimal quantity, int count) {
         MdProductBom param = new MdProductBom();
         List<MdProductBom> results = new ArrayList<MdProductBom>();
-        if(count >20){
+        if (count > 20) {
             return results;
         }
         param.setItemId(item.getBomItemId());
         List<MdProductBom> boms = mdProductBomService.selectMdProductBomList(param);
-        if(CollUtil.isNotEmpty(boms)){
-            //最多20层依赖
-            count ++;
-            for (MdProductBom bomItem: boms
-                 ) {
+        if (CollUtil.isNotEmpty(boms)) {
+            // 最多20层依赖
+            count++;
+            for (MdProductBom bomItem : boms
+            ) {
                 bomItem.setQuantity(quantity.multiply(bomItem.getQuantity()));
-                results.addAll(getBoms(bomItem,bomItem.getQuantity(),count));
+                results.addAll(getBoms(bomItem, bomItem.getQuantity(), count));
             }
-        }else{
+        } else {
             results.add(item);
         }
         return results;
@@ -248,6 +239,7 @@ public class ProWorkorderController extends BaseController
 
     /**
      * 完成工单
+     *
      * @param workorderId
      * @return
      */
@@ -255,22 +247,22 @@ public class ProWorkorderController extends BaseController
     @Log(title = "生产工单", businessType = BusinessType.UPDATE)
     @Transactional
     @PutMapping("/{workorderId}")
-    public AjaxResult dofinish(@PathVariable Long workorderId){
+    public AjaxResult dofinish(@PathVariable Long workorderId) {
         ProWorkorder workorder = proWorkorderService.selectProWorkorderByWorkorderId(workorderId);
 
-        //将此工单下所有的生产任务状态设置为已完成
+        // 将此工单下所有的生产任务状态设置为已完成
         ProTask param = new ProTask();
         param.setWorkorderId(workorderId);
         List<ProTask> tasks = proTaskService.selectProTaskList(param);
-        if(!CollectionUtils.isEmpty(tasks)){
-            for (ProTask task:tasks
-                 ) {
+        if (!CollectionUtils.isEmpty(tasks)) {
+            for (ProTask task : tasks
+            ) {
                 task.setStatus(UserConstants.ORDER_STATUS_FINISHED);
                 proTaskService.updateProTask(task);
             }
         }
 
-        workorder.setStatus(UserConstants.ORDER_STATUS_FINISHED); //更新工单的状态
+        workorder.setStatus(UserConstants.ORDER_STATUS_FINISHED); // 更新工单的状态
         proWorkorderService.updateProWorkorder(workorder);
         return AjaxResult.success();
     }

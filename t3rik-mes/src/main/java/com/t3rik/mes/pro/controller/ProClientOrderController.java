@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,21 @@ public class ProClientOrderController extends BaseController {
     @Resource
     private IProClientOrderItemService proClientOrderItemService;
 
+
+    /**
+     * 新增客户订单
+     */
+    @PreAuthorize("@ss.hasPermi('pro:clientorder:add')")
+    @Log(title = "客户订单", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@RequestBody @Validated ProClientOrder proClientOrder) {
+        ProClientOrder data = this.proClientOrderService.lambdaQuery()
+                .eq(ProClientOrder::getClientOrderCode, proClientOrder.getClientOrderCode()).one();
+        // 校验是否存在相同的订单编码
+        Assert.isNull(data, () -> new BusinessException("存在相同的订单编码,请修改订单编码后再重试"));
+        this.proClientOrderService.saveClientOrder(proClientOrder);
+        return AjaxResult.success(proClientOrder.getClientOrderId());
+    }
 
     /**
      * 生成生产订单
@@ -75,13 +91,34 @@ public class ProClientOrderController extends BaseController {
             return checkInfo;
         }
         // 查询是否已经添加需求物料数据
-        List<ProClientOrderItem> itemlist = this.proClientOrderItemService.lambdaQuery()
+        List<ProClientOrderItem> itemList = this.proClientOrderItemService.lambdaQuery()
                 .eq(ProClientOrderItem::getClientOrderId, clientOrder.getClientOrderId())
                 .list();
-        if (CollectionUtil.isEmpty(itemlist)) {
-            checkInfo.setMsg("未添加物料需求数据的客户订单,不允许生产生产订单");
+        if (CollectionUtil.isEmpty(itemList)) {
+            checkInfo.setMsg("未添加物料需求数据的客户订单,不允许生成生产订单");
             return checkInfo;
         }
+
+        // 最多只能添加4条数据,对应4个级别
+        if (itemList.size() > 4) {
+            checkInfo.setMsg("最多只能添加4行数据");
+            return checkInfo;
+        }
+
+        // 校验层级是否为空
+        List<ProClientOrderItem> levelList = itemList.stream().filter(f -> StringUtils.isBlank(f.getLevel())).toList();
+        if (CollectionUtil.isNotEmpty(levelList)) {
+            checkInfo.setMsg("存在层级为空的数据,不允许生成生产订单");
+            return checkInfo;
+        }
+
+        // 校验已经添加的需求物料数据中,数量是否有0的数据,如果有,不允许生成生产订单
+        List<ProClientOrderItem> zeroQuantityList = itemList.stream().filter(f -> f.getQuantity().equals(new BigDecimal(0))).toList();
+        if (CollectionUtil.isNotEmpty(zeroQuantityList)) {
+            checkInfo.setMsg("已添加的物料中,需求数量存在0的数据,不允许生成生产订单");
+            return checkInfo;
+        }
+
         // 校验是否已经生成过生产订单
         if (ClientOrderStatusEnum.WORK_ORDER_FINISHED.getCode().equals(clientOrder.getStatus())) {
             String msg = MessageFormat.format("已经生成过生产订单(生成订单的编号为:{0}),不允许再次生成", clientOrder.getWorkorderCode());
@@ -135,21 +172,6 @@ public class ProClientOrderController extends BaseController {
     }
 
     /**
-     * 新增客户订单
-     */
-    @PreAuthorize("@ss.hasPermi('pro:clientorder:add')")
-    @Log(title = "客户订单", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody @Validated ProClientOrder proClientOrder) {
-        ProClientOrder data = this.proClientOrderService.lambdaQuery()
-                .eq(ProClientOrder::getClientOrderCode, proClientOrder.getClientOrderCode()).one();
-        // 校验是否存在相同的订单编码
-        Assert.isNull(data, () -> new BusinessException("存在相同的订单编码,请修改订单编码后再重试"));
-        this.proClientOrderService.save(proClientOrder);
-        return AjaxResult.success(proClientOrder.getClientOrderId());
-    }
-
-    /**
      * 修改客户订单
      */
     @PreAuthorize("@ss.hasPermi('pro:clientorder:edit')")
@@ -170,6 +192,10 @@ public class ProClientOrderController extends BaseController {
     @Log(title = "客户订单", businessType = BusinessType.DELETE)
     @DeleteMapping("/{clientOrderIds}")
     public AjaxResult remove(@PathVariable List<Long> clientOrderIds) {
+        // 删除子表
+        this.proClientOrderItemService
+                .remove(new LambdaQueryWrapper<ProClientOrderItem>()
+                        .in(ProClientOrderItem::getClientOrderId, clientOrderIds));
         return toAjax(this.proClientOrderService.removeByIds(clientOrderIds));
     }
 
