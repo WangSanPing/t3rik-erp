@@ -97,7 +97,7 @@ public class WmWasteLineController extends BaseController {
     @Log(title = "生产废料单行", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody WmWasteLine wmWasteLine) {
-        if(!StringUtils.isNotNull(wmWasteLine.getMaterialStockId())){
+        if(StringUtils.isNull(wmWasteLine.getMaterialStockId())){
             return AjaxResult.error("请从库存现有量中选择退料的物资！");
         }
 
@@ -151,7 +151,7 @@ public class WmWasteLineController extends BaseController {
     @Log(title = "生产废料单行", businessType = BusinessType.DELETE)
     @DeleteMapping("/{lineIds}")
     public AjaxResult remove(@PathVariable List<Long> lineIds) {
-        return toAjax(this.wmWasteLineService.delWmWasteLineIds(lineIds));
+        return toAjax(this.wmWasteLineService.removeBatchByIds(lineIds));
     }
 
     /**

@@ -1,19 +1,22 @@
 package com.t3rik.mes.wm.mapper;
 
-import java.util.List;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.t3rik.mes.wm.domain.WmStorageLocation;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * 库区设置Mapper接口
- * 
+ *
  * @author yinjinlu
  * @date 2022-05-07
  */
-public interface WmStorageLocationMapper 
-{
+@Mapper
+public interface WmStorageLocationMapper extends BaseMapper<WmStorageLocation> {
     /**
      * 查询库区设置
-     * 
+     *
      * @param locationId 库区设置主键
      * @return 库区设置
      */
@@ -21,6 +24,7 @@ public interface WmStorageLocationMapper
 
     /**
      * 根据库区编码查询库区
+     *
      * @param locationCode
      * @return
      */
@@ -28,7 +32,7 @@ public interface WmStorageLocationMapper
 
     /**
      * 查询库区设置列表
-     * 
+     *
      * @param wmStorageLocation 库区设置
      * @return 库区设置集合
      */
@@ -36,13 +40,13 @@ public interface WmStorageLocationMapper
 
 
     public WmStorageLocation checkLocationCodeUnique(WmStorageLocation wmStorageLocation);
-    public WmStorageLocation checkLocationNameUnique(WmStorageLocation wmStorageLocation);
 
+    public WmStorageLocation checkLocationNameUnique(WmStorageLocation wmStorageLocation);
 
 
     /**
      * 新增库区设置
-     * 
+     *
      * @param wmStorageLocation 库区设置
      * @return 结果
      */
@@ -50,7 +54,7 @@ public interface WmStorageLocationMapper
 
     /**
      * 修改库区设置
-     * 
+     *
      * @param wmStorageLocation 库区设置
      * @return 结果
      */
@@ -58,7 +62,7 @@ public interface WmStorageLocationMapper
 
     /**
      * 删除库区设置
-     * 
+     *
      * @param locationId 库区设置主键
      * @return 结果
      */
@@ -66,7 +70,7 @@ public interface WmStorageLocationMapper
 
     /**
      * 批量删除库区设置
-     * 
+     *
      * @param locationIds 需要删除的数据主键集合
      * @return 结果
      */
@@ -74,6 +78,7 @@ public interface WmStorageLocationMapper
 
     /**
      * 根据仓库删除对应的库区
+     *
      * @param warehouseId
      * @return
      */

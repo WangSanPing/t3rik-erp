@@ -1,19 +1,22 @@
 package com.t3rik.mes.wm.mapper;
 
-import java.util.List;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.t3rik.mes.wm.domain.WmWarehouse;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * 仓库设置Mapper接口
- * 
+ *
  * @author yinjinlu
  * @date 2022-05-07
  */
-public interface WmWarehouseMapper 
-{
+@Mapper
+public interface WmWarehouseMapper extends BaseMapper<WmWarehouse> {
     /**
      * 查询仓库设置
-     * 
+     *
      * @param warehouseId 仓库设置主键
      * @return 仓库设置
      */
@@ -21,6 +24,7 @@ public interface WmWarehouseMapper
 
     /**
      * 根据编码查询仓库
+     *
      * @param warehouseCdoe
      * @return
      */
@@ -29,7 +33,7 @@ public interface WmWarehouseMapper
 
     /**
      * 查询仓库设置列表
-     * 
+     *
      * @param wmWarehouse 仓库设置
      * @return 仓库设置集合
      */
@@ -38,11 +42,12 @@ public interface WmWarehouseMapper
     public List<WmWarehouse> getTreeList();
 
     public WmWarehouse checkWarehouseCodeUnique(WmWarehouse wmWarehouse);
+
     public WmWarehouse checkWarehouseNameUnique(WmWarehouse wmWarehouse);
 
     /**
      * 新增仓库设置
-     * 
+     *
      * @param wmWarehouse 仓库设置
      * @return 结果
      */
@@ -50,7 +55,7 @@ public interface WmWarehouseMapper
 
     /**
      * 修改仓库设置
-     * 
+     *
      * @param wmWarehouse 仓库设置
      * @return 结果
      */
@@ -58,7 +63,7 @@ public interface WmWarehouseMapper
 
     /**
      * 删除仓库设置
-     * 
+     *
      * @param warehouseId 仓库设置主键
      * @return 结果
      */
@@ -66,7 +71,7 @@ public interface WmWarehouseMapper
 
     /**
      * 批量删除仓库设置
-     * 
+     *
      * @param warehouseIds 需要删除的数据主键集合
      * @return 结果
      */

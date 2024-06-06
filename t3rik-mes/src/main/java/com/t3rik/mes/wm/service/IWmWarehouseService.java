@@ -1,19 +1,20 @@
 package com.t3rik.mes.wm.service;
 
-import java.util.List;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.wm.domain.WmWarehouse;
+
+import java.util.List;
 
 /**
  * 仓库设置Service接口
- * 
+ *
  * @author yinjinlu
  * @date 2022-05-07
  */
-public interface IWmWarehouseService 
-{
+public interface IWmWarehouseService extends IService<WmWarehouse> {
     /**
      * 查询仓库设置
-     * 
+     *
      * @param warehouseId 仓库设置主键
      * @return 仓库设置
      */
@@ -21,6 +22,7 @@ public interface IWmWarehouseService
 
     /**
      * 根据编码查询仓库
+     *
      * @param warehouseCdoe
      * @return
      */
@@ -28,7 +30,7 @@ public interface IWmWarehouseService
 
     /**
      * 查询仓库设置列表
-     * 
+     *
      * @param wmWarehouse 仓库设置
      * @return 仓库设置集合
      */
@@ -38,6 +40,7 @@ public interface IWmWarehouseService
 
     /**
      * 检查仓库编码是否重复
+     *
      * @param wmWarehouse
      * @return
      */
@@ -45,6 +48,7 @@ public interface IWmWarehouseService
 
     /**
      * 检查仓库名称是否重复
+     *
      * @param wmWarehouse
      * @return
      */
@@ -52,7 +56,7 @@ public interface IWmWarehouseService
 
     /**
      * 新增仓库设置
-     * 
+     *
      * @param wmWarehouse 仓库设置
      * @return 结果
      */
@@ -60,7 +64,7 @@ public interface IWmWarehouseService
 
     /**
      * 修改仓库设置
-     * 
+     *
      * @param wmWarehouse 仓库设置
      * @return 结果
      */
@@ -68,7 +72,7 @@ public interface IWmWarehouseService
 
     /**
      * 批量删除仓库设置
-     * 
+     *
      * @param warehouseIds 需要删除的仓库设置主键集合
      * @return 结果
      */
@@ -76,7 +80,7 @@ public interface IWmWarehouseService
 
     /**
      * 删除仓库设置信息
-     * 
+     *
      * @param warehouseId 仓库设置主键
      * @return 结果
      */
@@ -84,6 +88,7 @@ public interface IWmWarehouseService
 
     /**
      * 初始化虚拟的线边库
+     *
      * @return
      */
     public WmWarehouse initVirtualWarehouse();
