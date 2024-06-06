@@ -1,36 +1,30 @@
 package com.t3rik.mes.wm.controller;
 
-import java.util.List;
-import java.util.Map;
-import javax.servlet.http.HttpServletResponse;
-
-import com.t3rik.mes.wm.domain.WmStorageArea;
-import com.t3rik.mes.wm.domain.WmStorageLocation;
-import com.t3rik.mes.wm.domain.WmWarehouse;
-import com.t3rik.mes.wm.service.IWmStorageAreaService;
-import com.t3rik.mes.wm.service.IWmStorageLocationService;
-import com.t3rik.mes.wm.service.IWmWarehouseService;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.t3rik.common.annotation.Log;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
-import com.t3rik.common.utils.StringUtils;
-import com.t3rik.common.enums.BusinessType;
-import com.t3rik.mes.wm.domain.WmWasteLine;
-import com.t3rik.mes.wm.service.IWmWasteLineService;
-import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.common.core.page.TableDataInfo;
+import com.t3rik.common.enums.BusinessType;
+import com.t3rik.common.enums.mes.DefaultDataEnum;
+import com.t3rik.common.utils.StringUtils;
+import com.t3rik.common.utils.poi.ExcelUtil;
+import com.t3rik.mes.wm.domain.WmStorageArea;
+import com.t3rik.mes.wm.domain.WmStorageLocation;
+import com.t3rik.mes.wm.domain.WmWarehouse;
+import com.t3rik.mes.wm.domain.WmWasteLine;
+import com.t3rik.mes.wm.service.IWmStorageAreaService;
+import com.t3rik.mes.wm.service.IWmStorageLocationService;
+import com.t3rik.mes.wm.service.IWmWarehouseService;
+import com.t3rik.mes.wm.service.IWmWasteLineService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 生产废料单行Controller
@@ -52,6 +46,7 @@ public class WmWasteLineController extends BaseController {
 
     @Autowired
     private IWmStorageAreaService wmStorageAreaService;
+
     /**
      * 查询生产废料单行列表
      */
@@ -77,7 +72,7 @@ public class WmWasteLineController extends BaseController {
         // 获取查询条件
         LambdaQueryWrapper<WmWasteLine> queryWrapper = getQueryWrapper(wmWasteLine);
         List<WmWasteLine> list = this.wmWasteLineService.list(queryWrapper);
-        ExcelUtil<WmWasteLine> util = new ExcelUtil<WmWasteLine>(WmWasteLine. class);
+        ExcelUtil<WmWasteLine> util = new ExcelUtil<WmWasteLine>(WmWasteLine.class);
         util.exportExcel(response, list, "生产废料单行数据");
     }
 
@@ -97,25 +92,10 @@ public class WmWasteLineController extends BaseController {
     @Log(title = "生产废料单行", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody WmWasteLine wmWasteLine) {
-        if(StringUtils.isNull(wmWasteLine.getMaterialStockId())){
+        if (StringUtils.isNull(wmWasteLine.getMaterialStockId())) {
             return AjaxResult.error("请从库存现有量中选择退料的物资！");
         }
-
-        if(StringUtils.isNotNull(wmWasteLine.getWarehouseId())){
-            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmWasteLine.getWarehouseId());
-            wmWasteLine.setWarehouseCode(warehouse.getWarehouseCode());
-            wmWasteLine.setWarehouseName(warehouse.getWarehouseName());
-        }
-        if(StringUtils.isNotNull(wmWasteLine.getLocationId())){
-            WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationId(wmWasteLine.getLocationId());
-            wmWasteLine.setLocationCode(location.getLocationCode());
-            wmWasteLine.setLocationName(location.getLocationName());
-        }
-        if(StringUtils.isNotNull(wmWasteLine.getAreaId())){
-            WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaId(wmWasteLine.getAreaId());
-            wmWasteLine.setAreaCode(area.getAreaCode());
-            wmWasteLine.setAreaName(area.getAreaName());
-        }
+        setWarehouseInfo(wmWasteLine);
         return toAjax(this.wmWasteLineService.save(wmWasteLine));
     }
 
@@ -126,21 +106,6 @@ public class WmWasteLineController extends BaseController {
     @Log(title = "生产废料单行", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody WmWasteLine wmWasteLine) {
-        if(StringUtils.isNotNull(wmWasteLine.getWarehouseId())){
-            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmWasteLine.getWarehouseId());
-            wmWasteLine.setWarehouseCode(warehouse.getWarehouseCode());
-            wmWasteLine.setWarehouseName(warehouse.getWarehouseName());
-        }
-        if(StringUtils.isNotNull(wmWasteLine.getLocationId())){
-            WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationId(wmWasteLine.getLocationId());
-            wmWasteLine.setLocationCode(location.getLocationCode());
-            wmWasteLine.setLocationName(location.getLocationName());
-        }
-        if(StringUtils.isNotNull(wmWasteLine.getAreaId())){
-            WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaId(wmWasteLine.getAreaId());
-            wmWasteLine.setAreaCode(area.getAreaCode());
-            wmWasteLine.setAreaName(area.getAreaName());
-        }
         return toAjax(this.wmWasteLineService.updateById(wmWasteLine));
     }
 
@@ -155,8 +120,29 @@ public class WmWasteLineController extends BaseController {
     }
 
     /**
-    * 获取查询条件
-    */
+     * 设置默认废料库信息
+     *
+     * @param wmWasteLine
+     */
+    private void setWarehouseInfo(WmWasteLine wmWasteLine) {
+        // 默认库
+        WmWarehouse warehouse = this.wmWarehouseService.lambdaQuery().eq(WmWarehouse::getWarehouseCode, DefaultDataEnum.WASTE_VIRTUAL_WH.getCode()).one();
+        wmWasteLine.setWarehouseCode(warehouse.getWarehouseCode());
+        wmWasteLine.setWarehouseName(warehouse.getWarehouseName());
+        // 默认库区
+        WmStorageLocation location = this.wmStorageLocationService.lambdaQuery().eq(WmStorageLocation::getLocationCode, DefaultDataEnum.WASTE_VIRTUAL_WS.getCode()).one();
+        wmWasteLine.setLocationCode(location.getLocationCode());
+        wmWasteLine.setLocationName(location.getLocationName());
+        // 默认库位
+        WmStorageArea area = this.wmStorageAreaService.lambdaQuery().eq(WmStorageArea::getAreaCode, DefaultDataEnum.WASTE_VIRTUAL_WA.getCode()).one();
+        wmWasteLine.setAreaCode(area.getAreaCode());
+        wmWasteLine.setAreaName(area.getAreaName());
+
+    }
+
+    /**
+     * 获取查询条件
+     */
     public LambdaQueryWrapper<WmWasteLine> getQueryWrapper(WmWasteLine wmWasteLine) {
         LambdaQueryWrapper<WmWasteLine> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(wmWasteLine.getWasteId() != null, WmWasteLine::getWasteId, wmWasteLine.getWasteId());
@@ -184,7 +170,7 @@ public class WmWasteLineController extends BaseController {
         // 默认创建时间倒序
         queryWrapper.orderByDesc(WmWasteLine::getCreateTime);
         Map<String, Object> params = wmWasteLine.getParams();
-        queryWrapper.between(params.get("beginTime") != null && params.get("endTime") != null,WmWasteLine::getCreateTime, params.get("beginTime"), params.get("endTime"));
+        queryWrapper.between(params.get("beginTime") != null && params.get("endTime") != null, WmWasteLine::getCreateTime, params.get("beginTime"), params.get("endTime"));
         return queryWrapper;
     }
 }

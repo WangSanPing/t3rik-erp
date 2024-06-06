@@ -38,23 +38,23 @@ public enum DefaultDataEnum {
     /**
      * 默认线边库-库区
      */
-    VIRTUAL_WS("XBKKQ_VIRTUAL", "线边库库区-虚拟", "wm_warehouse"),
+    VIRTUAL_WS("XBKKQ_VIRTUAL", "线边库库区-虚拟", "wm_storage_location"),
     /**
      * 默认线边库-库位
      */
-    VIRTUAL_WA("XBKKW_VIRTUAL", "线边库库位-虚拟", "wm_warehouse"),
+    VIRTUAL_WA("XBKKW_VIRTUAL", "线边库库位-虚拟", "wm_storage_area"),
     /**
      * 废料线边库-库位
      */
     WASTE_VIRTUAL_WH("WASTE_XBK_VIRTUAL", "废料线边库仓库-虚拟", "wm_warehouse"),
     /**
-     * 废料线边库-库位
+     * 废料线边库-库区
      */
-    WASTE_VIRTUAL_WS("WASTE_XBKKQ_VIRTUAL", "废料线边库库区-虚拟", "wm_warehouse"),
+    WASTE_VIRTUAL_WS("WASTE_XBKKQ_VIRTUAL", "废料线边库库区-虚拟", "wm_storage_location"),
     /**
      * 废料线边库-库位
      */
-    WASTE_VIRTUAL_WA("WASTE_XBKKW_VIRTUAL", "废料线边库库位-虚拟", "wm_warehouse"),
+    WASTE_VIRTUAL_WA("WASTE_XBKKW_VIRTUAL", "废料线边库库位-虚拟", "wm_storage_area"),
      /**
      * 生产废料-入库事务
      */
