@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -172,7 +173,10 @@ public class WmWarehouseServiceImpl extends ServiceImpl<WmWarehouseMapper, WmWar
             area.setLocationId(location.getLocationId());
             area.setAreaCode(dataEnum.getCode());
             area.setAreaName(dataEnum.getDesc());
-            this.storageAreaService.save(area);
+            area.setCreateTime(new Date());
+            area.setCreateBy(UserConstants.SYS_USER);
+            area.setCreateUserId(UserConstants.SYS_USER_ID);
+            this.storageAreaService.insertWmStorageArea(area);
         }
     }
 
@@ -187,7 +191,10 @@ public class WmWarehouseServiceImpl extends ServiceImpl<WmWarehouseMapper, WmWar
             location.setLocationCode(dataEnum.getCode());
             location.setLocationName(dataEnum.getDesc());
             location.setAreaFlag(YesOrNoEnum.YES.getCode());
-            this.storageLocationService.save(location);
+            location.setCreateTime(new Date());
+            location.setCreateBy(UserConstants.SYS_USER);
+            location.setCreateUserId(UserConstants.SYS_USER_ID);
+            this.storageLocationService.insertWmStorageLocation(location);
         }
         return location;
     }
@@ -202,7 +209,10 @@ public class WmWarehouseServiceImpl extends ServiceImpl<WmWarehouseMapper, WmWar
             warehouse = new WmWarehouse();
             warehouse.setWarehouseCode(dataEnum.getCode());
             warehouse.setWarehouseName(dataEnum.getDesc());
-            this.save(warehouse);
+            warehouse.setCreateTime(new Date());
+            warehouse.setCreateBy(UserConstants.SYS_USER);
+            warehouse.setCreateUserId(UserConstants.SYS_USER_ID);
+            this.wmWarehouseMapper.insertWmWarehouse(warehouse);
         }
         return warehouse;
     }

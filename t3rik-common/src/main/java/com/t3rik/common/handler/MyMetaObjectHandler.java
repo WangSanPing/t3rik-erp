@@ -50,6 +50,10 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
      */
     @Override
     public void insertFill(MetaObject metaObject) {
+        // 判断是否未登录,如果未登录,直接返回
+        if (SecurityUtils.getAuthentication() == null) {
+            return;
+        }
         Date now = new Date();
         Long currentUserId = SecurityUtils.getLoginUser().getUserId();
         String currentUsername = SecurityUtils.getLoginUser().getUsername();
@@ -86,6 +90,10 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
      */
     @Override
     public void updateFill(MetaObject metaObject) {
+        // 判断是否未登录,如果未登录,直接返回
+        if (SecurityUtils.getAuthentication() == null) {
+            return;
+        }
         String currentUsername = SecurityUtils.getLoginUser().getUsername();
         // 修改人id
         if (ifHasField(metaObject, UPDATE_USER_ID)) {
