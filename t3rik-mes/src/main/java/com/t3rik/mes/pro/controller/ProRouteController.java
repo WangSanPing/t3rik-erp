@@ -44,6 +44,7 @@ public class ProRouteController extends BaseController
 
     /**
      * 查询工艺路线列表
+     * 这是Java代码
      */
     @GetMapping("/list")
     public TableDataInfo list(ProRoute proRoute)
