@@ -6,7 +6,6 @@ import com.t3rik.common.core.domain.entity.SysUser;
 import com.t3rik.common.core.domain.model.LoginUser;
 import com.t3rik.common.utils.SecurityUtils;
 import com.t3rik.common.utils.StringUtils;
-import com.t3rik.framework.web.service.MobileLoginService;
 import com.t3rik.framework.web.service.TokenService;
 import com.t3rik.system.domain.LoginParams;
 import com.t3rik.system.service.ISysUserService;
@@ -14,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import com.t3rik.mes.service.MobileLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,7 +64,7 @@ public class UserController {
      */
     @ApiOperation("获取用户信息")
     @ApiResponses({
-            @ApiResponse(code = 200,message = "查询成功",response = AjaxResult.class),
+            @ApiResponse(code = 200, message = "查询成功", response = AjaxResult.class),
     })
     @GetMapping("getUserInfo")
     public AjaxResult getUserInfo(HttpServletRequest request) {

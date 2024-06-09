@@ -219,6 +219,13 @@
                 <version>${t3rik.version}</version>
             </dependency>
 
+            <!-- 移动业务模块 -->
+            <dependency>
+                <groupId>com.t3rik</groupId>
+                <artifactId>t3rik-mobile</artifactId>
+                <version>${t3rik.version}</version>
+            </dependency>
+
             <!--kotlin相关-->
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -258,6 +265,7 @@
         <module>t3rik-generator</module>
         <module>t3rik-common</module>
         <module>t3rik-mes</module>
+        <module>t3rik-mobile</module>
     </modules>
     <packaging>pom</packaging>
 

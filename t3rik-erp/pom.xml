@@ -67,6 +67,10 @@
             <artifactId>t3rik-mes</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.t3rik</groupId>
+            <artifactId>t3rik-mobile</artifactId>
+        </dependency>
 
         <!--test-->
         <dependency>
@@ -107,7 +111,6 @@
         </plugins>
         <finalName>${project.artifactId}</finalName>
     </build>
-
 
 
 </project>
