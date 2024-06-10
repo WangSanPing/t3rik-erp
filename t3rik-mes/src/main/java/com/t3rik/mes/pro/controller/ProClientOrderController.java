@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.t3rik.common.annotation.Log;
 import com.t3rik.common.constant.MsgConstants;
+import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.domain.CheckInfo;
@@ -60,6 +61,8 @@ public class ProClientOrderController extends BaseController {
         // 校验是否存在相同的订单编码
         Assert.isNull(data, () -> new BusinessException("存在相同的订单编码,请修改订单编码后再重试"));
         this.proClientOrderService.saveClientOrder(proClientOrder);
+
+
         return AjaxResult.success(proClientOrder.getClientOrderId());
     }
 

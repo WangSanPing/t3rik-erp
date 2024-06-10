@@ -11,6 +11,9 @@ public class UserConstants {
      */
     public static final String SYS_USER = "SYS_USER";
     public static final Long SYS_USER_ID = 999999999L;
+    
+    public static final String MOBILE_PATH = "/mobile";
+    public static final String PAD_PATH = "/pad";
 
     /**
      * 正常状态
