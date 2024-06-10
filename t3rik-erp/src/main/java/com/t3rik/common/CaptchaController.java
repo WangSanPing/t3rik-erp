@@ -42,7 +42,7 @@ public class CaptchaController {
     /**
      * 生成验证码
      */
-    @GetMapping("/captchaImage")
+    @GetMapping(value = {"/captchaImage", "/mobile/captchaImage"})
     public AjaxResult getCode(HttpServletResponse response) throws IOException {
         AjaxResult ajax = AjaxResult.success();
         boolean captchaOnOff = configService.selectCaptchaOnOff();
