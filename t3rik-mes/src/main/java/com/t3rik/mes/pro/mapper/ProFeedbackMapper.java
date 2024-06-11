@@ -1,19 +1,22 @@
 package com.t3rik.mes.pro.mapper;
 
-import java.util.List;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.t3rik.mes.pro.domain.ProFeedback;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * 生产报工记录Mapper接口
- * 
+ *
  * @author yinjinlu
  * @date 2022-07-10
  */
-public interface ProFeedbackMapper 
-{
+@Mapper
+public interface ProFeedbackMapper extends BaseMapper<ProFeedback> {
     /**
      * 查询生产报工记录
-     * 
+     *
      * @param recordId 生产报工记录主键
      * @return 生产报工记录
      */
@@ -21,7 +24,7 @@ public interface ProFeedbackMapper
 
     /**
      * 查询生产报工记录列表
-     * 
+     *
      * @param proFeedback 生产报工记录
      * @return 生产报工记录集合
      */
@@ -29,7 +32,7 @@ public interface ProFeedbackMapper
 
     /**
      * 新增生产报工记录
-     * 
+     *
      * @param proFeedback 生产报工记录
      * @return 结果
      */
@@ -37,7 +40,7 @@ public interface ProFeedbackMapper
 
     /**
      * 修改生产报工记录
-     * 
+     *
      * @param proFeedback 生产报工记录
      * @return 结果
      */
@@ -45,7 +48,7 @@ public interface ProFeedbackMapper
 
     /**
      * 删除生产报工记录
-     * 
+     *
      * @param recordId 生产报工记录主键
      * @return 结果
      */
@@ -53,7 +56,7 @@ public interface ProFeedbackMapper
 
     /**
      * 批量删除生产报工记录
-     * 
+     *
      * @param recordIds 需要删除的数据主键集合
      * @return 结果
      */

@@ -54,7 +54,9 @@ class MobileLoginController {
         val permission = this.permissionService.getMenuPermission(user)
         // 菜单
         val menus =
-            this.menuService.selectMenuTreeByUserIdAndModuleType(user.userId, ModuleTypeEnum.MOBILE).toMutableList()
+            this.menuService
+                .selectMenuTreeByUserIdAndModuleType(user.userId, ModuleTypeEnum.MOBILE)
+                .toMutableList()
         // 移出顶层菜单
         menus.removeIf { it.parentId == 0L }
         return AjaxResult.success().apply {
