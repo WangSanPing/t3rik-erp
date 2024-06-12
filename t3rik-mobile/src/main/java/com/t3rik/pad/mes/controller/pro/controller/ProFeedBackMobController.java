@@ -7,6 +7,7 @@ import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
+import com.t3rik.common.enums.mes.OrderStatusEnum;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.mes.md.domain.MdWorkstation;
 import com.t3rik.mes.md.service.IMdWorkstationService;
@@ -21,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Api("生产报工")
@@ -48,41 +48,40 @@ public class ProFeedBackMobController extends BaseController {
     @PreAuthorize("@ss.hasPermi('mes:pro:feedback:add')")
     @Log(title = "生产报工记录", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ProFeedback proFeedback)
-    {
+    public AjaxResult add(@RequestBody ProFeedback proFeedback) {
         MdWorkstation workstation = mdWorkstationService.selectMdWorkstationByWorkstationId(proFeedback.getWorkstationId());
-        if(StringUtils.isNotNull(workstation)){
+        if (StringUtils.isNotNull(workstation)) {
             proFeedback.setProcessId(workstation.getProcessId());
             proFeedback.setProcessCode(workstation.getProcessCode());
             proFeedback.setProcessName(workstation.getProcessName());
-        }else {
+        } else {
             return AjaxResult.error("当前生产任务对应的工作站不存在！");
         }
 
-        //检查对应的工艺路线和工序配置
-        if(StringUtils.isNotNull(proFeedback.getRouteId())&& StringUtils.isNotNull(proFeedback.getProcessId())){
+        // 检查对应的工艺路线和工序配置
+        if (StringUtils.isNotNull(proFeedback.getRouteId()) && StringUtils.isNotNull(proFeedback.getProcessId())) {
             ProRouteProcess param = new ProRouteProcess();
             param.setRouteId(proFeedback.getRouteId());
             param.setProcessId(proFeedback.getProcessId());
             List<ProRouteProcess> processes = proRouteProcessService.selectProRouteProcessList(param);
-            if(CollectionUtil.isEmpty(processes)){
+            if (CollectionUtil.isEmpty(processes)) {
                 return AjaxResult.error("未找到生产任务对应的工艺工序配置！");
             }
-        }else {
+        } else {
             return AjaxResult.error("当前生产任务对应的工艺工序配置无效！");
         }
 
-        //检查数量
-        if(UserConstants.YES.equals(proFeedback.getIsCheck())){
-            if(!StringUtils.isNotNull(proFeedback.getQuantityUncheck())){
+        // 检查数量
+        if (UserConstants.YES.equals(proFeedback.getIsCheck())) {
+            if (!StringUtils.isNotNull(proFeedback.getQuantityUncheck())) {
                 return AjaxResult.error("当前工作站报工需要经过质检确认，请输入待检测数量!");
             }
-        }else {
-            if(!StringUtils.isNotNull(proFeedback.getQuantityQualified()) || !StringUtils.isNotNull(proFeedback.getQuantityUnquanlified())){
+        } else {
+            if (!StringUtils.isNotNull(proFeedback.getQuantityQualified()) || !StringUtils.isNotNull(proFeedback.getQuantityUnquanlified())) {
                 return AjaxResult.error("请输入合格品和不良品数量！");
             }
         }
-        String feedbackCode = autoCodeUtil.genSerialCode(UserConstants.FEEDBACK_CODE,"");
+        String feedbackCode = autoCodeUtil.genSerialCode(UserConstants.FEEDBACK_CODE, "");
         proFeedback.setFeedbackCode(feedbackCode);
         proFeedback.setCreateBy(getUsername());
         proFeedbackService.insertProFeedback(proFeedback);
@@ -94,8 +93,7 @@ public class ProFeedBackMobController extends BaseController {
      */
     @ApiOperation("查询报工单清单-全部")
     @GetMapping("/list")
-    public TableDataInfo list(ProFeedback proFeedback)
-    {
+    public TableDataInfo list(ProFeedback proFeedback) {
         List<ProFeedback> list = proFeedbackService.selectProFeedbackList(proFeedback);
         return getDataTable(list);
     }
@@ -105,16 +103,12 @@ public class ProFeedBackMobController extends BaseController {
      */
     @ApiOperation("查询报工单清单-未审批通过的")
     @GetMapping("/listUnApproved")
-    public TableDataInfo listUnApproved(ProFeedback proFeedback)
-    {
-        List<ProFeedback> all = new ArrayList<ProFeedback>();
-        proFeedback.setStatus(UserConstants.ORDER_STATUS_PREPARE);
-        List<ProFeedback> list1 = proFeedbackService.selectProFeedbackList(proFeedback);
-        all.addAll(list1);
-        proFeedback.setStatus(UserConstants.ORDER_STATUS_APPROVING);
-        List<ProFeedback> list2 = proFeedbackService.selectProFeedbackList(proFeedback);
-        all.addAll(list2);
-        return getDataTable(all);
+    public TableDataInfo listUnApproved(ProFeedback proFeedback) {
+        // 不确定前端是否传值，避免漏洞，先重置对象 ---- edit by t3rik 2024-06-12
+        proFeedback = new ProFeedback();
+        proFeedback.setStatus(OrderStatusEnum.REFUSE.getCode());
+        List<ProFeedback> list = proFeedbackService.selectProFeedbackList(proFeedback);
+        return getDataTable(list);
     }
 
 
@@ -123,8 +117,9 @@ public class ProFeedBackMobController extends BaseController {
      */
     @ApiOperation("查询报工单清单-已审批通过的")
     @GetMapping("/listApproved")
-    public TableDataInfo listApproved(ProFeedback proFeedback)
-    {
+    public TableDataInfo listApproved(ProFeedback proFeedback) {
+        // 不确定前端是否传值，避免漏洞，先重置对象 ---- edit by t3rik 2024-06-12
+        proFeedback = new ProFeedback();
         proFeedback.setStatus(UserConstants.ORDER_STATUS_FINISHED);
         List<ProFeedback> list = proFeedbackService.selectProFeedbackList(proFeedback);
         return getDataTable(list);
@@ -137,37 +132,36 @@ public class ProFeedBackMobController extends BaseController {
     @PreAuthorize("@ss.hasPermi('mes:pro:feedback:edit')")
     @Log(title = "生产报工记录", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ProFeedback proFeedback)
-    {
+    public AjaxResult edit(@RequestBody ProFeedback proFeedback) {
         MdWorkstation workstation = mdWorkstationService.selectMdWorkstationByWorkstationId(proFeedback.getWorkstationId());
-        if(StringUtils.isNotNull(workstation)){
+        if (StringUtils.isNotNull(workstation)) {
             proFeedback.setProcessId(workstation.getProcessId());
             proFeedback.setProcessCode(workstation.getProcessCode());
             proFeedback.setProcessName(workstation.getProcessName());
-        }else {
+        } else {
             return AjaxResult.error("当前生产任务对应的工作站不存在！");
         }
 
-        //检查对应的工艺路线和工序配置
-        if(StringUtils.isNotNull(proFeedback.getRouteId())&& StringUtils.isNotNull(proFeedback.getProcessId())){
+        // 检查对应的工艺路线和工序配置
+        if (StringUtils.isNotNull(proFeedback.getRouteId()) && StringUtils.isNotNull(proFeedback.getProcessId())) {
             ProRouteProcess param = new ProRouteProcess();
             param.setRouteId(proFeedback.getRouteId());
             param.setProcessId(proFeedback.getProcessId());
             List<ProRouteProcess> processes = proRouteProcessService.selectProRouteProcessList(param);
-            if(CollectionUtil.isEmpty(processes)){
+            if (CollectionUtil.isEmpty(processes)) {
                 return AjaxResult.error("未找到生产任务对应的工艺工序配置！");
             }
-        }else {
+        } else {
             return AjaxResult.error("当前生产任务对应的工艺工序配置无效！");
         }
 
-        //检查数量
-        if(UserConstants.YES.equals(proFeedback.getIsCheck())){
-            if(!StringUtils.isNotNull(proFeedback.getQuantityUncheck())){
+        // 检查数量
+        if (UserConstants.YES.equals(proFeedback.getIsCheck())) {
+            if (!StringUtils.isNotNull(proFeedback.getQuantityUncheck())) {
                 return AjaxResult.error("当前工作站报工需要经过质检确认，请输入待检测数量!");
             }
-        }else {
-            if(!StringUtils.isNotNull(proFeedback.getQuantityQualified()) || !StringUtils.isNotNull(proFeedback.getQuantityUnquanlified())){
+        } else {
+            if (!StringUtils.isNotNull(proFeedback.getQuantityQualified()) || !StringUtils.isNotNull(proFeedback.getQuantityUnquanlified())) {
                 return AjaxResult.error("请输入合格品和不良品数量！");
             }
         }
@@ -182,8 +176,7 @@ public class ProFeedBackMobController extends BaseController {
     @PreAuthorize("@ss.hasPermi('mes:pro:feedback:remove')")
     @Log(title = "生产报工记录", businessType = BusinessType.DELETE)
     @DeleteMapping("/{recordIds}")
-    public AjaxResult remove(@PathVariable Long[] recordIds)
-    {
+    public AjaxResult remove(@PathVariable Long[] recordIds) {
         return toAjax(proFeedbackService.deleteProFeedbackByRecordIds(recordIds));
     }
 }
