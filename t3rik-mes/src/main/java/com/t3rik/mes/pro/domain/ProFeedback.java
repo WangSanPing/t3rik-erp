@@ -1,5 +1,6 @@
 package com.t3rik.mes.pro.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.t3rik.common.annotation.Excel;
 import com.t3rik.common.core.domain.BaseEntity;
@@ -74,6 +75,7 @@ public class ProFeedback extends BaseEntity {
     @Excel(name = "工序名称")
     private String processName;
 
+    @TableField(exist = false)
     private String isCheck;
 
     /**

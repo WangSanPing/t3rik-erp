@@ -1,6 +1,8 @@
 package com.t3rik.mes.pro.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.t3rik.mes.pro.domain.ProFeedback;
+import com.t3rik.mes.pro.domain.ProTask;
 import com.t3rik.mes.pro.domain.ProWorkorder;
 
 import java.util.List;
@@ -62,6 +64,5 @@ public interface IProWorkorderService extends IService<ProWorkorder> {
      * @return 结果
      */
     public int deleteProWorkorderByWorkorderId(Long workorderId);
-
 
 }

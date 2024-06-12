@@ -185,7 +185,7 @@ public class ProClientOrderServiceImpl extends ServiceImpl<ProClientOrderMapper,
         // 来源单据
         workorder.setSourceCode(clientOrder.getClientOrderCode());
         // 订单状态 默认草稿状态
-        workorder.setStatus(WorkOrderStatusEnum.PREPARE.getCode());
+        workorder.setStatus(OrderStatusEnum.PREPARE.getCode());
         // 需求日期
         workorder.setRequestDate(clientOrder.getDeliveryDate());
         // 默认父订单

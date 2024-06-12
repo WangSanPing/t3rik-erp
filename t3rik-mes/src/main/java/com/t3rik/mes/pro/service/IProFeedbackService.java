@@ -2,6 +2,7 @@ package com.t3rik.mes.pro.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.pro.domain.ProFeedback;
+import com.t3rik.mes.pro.domain.ProTask;
 
 import java.util.List;
 
@@ -59,4 +60,10 @@ public interface IProFeedbackService extends IService<ProFeedback> {
      * @return 结果
      */
     public int deleteProFeedbackByRecordId(Long recordId);
+
+
+    /**
+     * 完成报工
+     */
+    void executeFeedback(ProFeedback feedback, ProTask task);
 }

@@ -12,7 +12,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ClientOrderStatusEnum {
     PREPARE("PREPARE", "草稿", 10),
-    WORK_ORDER_FINISHED("WORK_ORDER_FINISHED", "已生成生产订单", 20);
+    WORK_ORDER_FINISHED("WORK_ORDER_FINISHED", "已生成生产工单", 20);
 
     private final String code;
     private final String desc;
