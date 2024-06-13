@@ -1,6 +1,7 @@
 package com.t3rik.mes.pro.domain;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.t3rik.common.annotation.Excel;
 import com.t3rik.common.core.domain.BaseEntity;
@@ -24,7 +25,13 @@ public class ProFeedback extends BaseEntity {
     /**
      * 记录ID
      */
+    @TableId
     private Long recordId;
+
+    /**
+     * 客户订单号
+     */
+    private String clientOrderCode;
 
     /**
      * 报工单编号

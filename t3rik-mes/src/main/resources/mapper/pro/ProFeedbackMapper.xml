@@ -7,6 +7,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="com.t3rik.mes.pro.domain.ProFeedback" id="ProFeedbackResult">
         <!--@Table pro_feedback-->
         <result property="recordId"    column="record_id"    />
+        <result property="clientOrderCode"    column="client_order_code"    />
+        <result property="userName"    column="user_name"    />
         <result property="userId"    column="user_id"    />
         <result property="recordUserId"    column="record_user_id"    />
         <result property="feedbackCode" column="feedback_code" />
@@ -35,7 +37,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="quantityQualified"    column="quantity_qualified"    />
         <result property="quantityUnquanlified"    column="quantity_unquanlified"    />
         <result property="quantityUncheck"    column="quantity_uncheck"    />
-        <result property="userName"    column="user_name"    />
         <result property="nickName"    column="nick_name"    />
         <result property="feedbackChannel"    column="feedback_channel"    />
         <result property="feedbackTime"    column="feedback_time"    />
@@ -54,10 +55,55 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectProFeedbackVo">
-        select f.record_user_id, f.user_id,f.record_id,f.feedback_type, f.workstation_id, f.workstation_code, f.workstation_name,f.route_id,f.route_code, f.process_id, f.process_code, f.process_name,p.is_check, f.workorder_id, f.workorder_code, f.workorder_name, f.task_id, f.task_code,f.item_id,f.item_code,f.item_name,f.specification,f.unit_of_measure, f.quantity, f.quantity_feedback, f.quantity_qualified, f.quantity_unquanlified,f.quantity_uncheck, f.user_name, f.nick_name, f.feedback_channel, f.feedback_time,f.record_user,f.record_nick,f.status, f.remark, f.attr1, f.attr2, f.attr3, f.attr4, f.create_by, f.create_time, f.update_by, f.update_time
+        select f.record_user_id,
+               f.user_name,
+               f.client_order_code,
+               f.feedback_code,
+               f.user_id,
+               f.record_id,
+               f.feedback_type,
+               f.workstation_id,
+               f.workstation_code,
+               f.workstation_name,
+               f.route_id,
+               f.route_code,
+               f.process_id,
+               f.process_code,
+               f.process_name,
+               p.is_check,
+               f.workorder_id,
+               f.workorder_code,
+               f.workorder_name,
+               f.task_id,
+               f.task_code,
+               f.item_id,
+               f.item_code,
+               f.item_name,
+               f.specification,
+               f.unit_of_measure,
+               f.quantity,
+               f.quantity_feedback,
+               f.quantity_qualified,
+               f.quantity_unquanlified,
+               f.quantity_uncheck,
+               f.nick_name,
+               f.feedback_channel,
+               f.feedback_time,
+               f.record_user,
+               f.record_nick,
+               f.status,
+               f.remark,
+               f.attr1,
+               f.attr2,
+               f.attr3,
+               f.attr4,
+               f.create_by,
+               f.create_time,
+               f.update_by,
+               f.update_time
         from pro_feedback f
-            left join pro_route_process p
-                on f.process_id = p.process_id and f.route_id = p.route_id
+                 left join pro_route_process p
+                           on f.process_id = p.process_id and f.route_id = p.route_id
     </sql>
 
     <select id="selectProFeedbackList" parameterType="ProFeedback" resultMap="ProFeedbackResult">
@@ -69,6 +115,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="feedbackCode !=null "> and feedback_code = #{feedbackCode}</if>
             <if test="feedbackType !=null "> and feedback_type = #{feedbackType}</if>
             <if test="workstationCode != null  and workstationCode != ''"> and workstation_code = #{workstationCode}</if>
+            <if test="clientOrderCode != null  and clientOrderCode != ''"> and client_order_code = #{clientOrderCode}</if>
             <if test="workstationName != null  and workstationName != ''"> and workstation_name like concat('%', #{workstationName}, '%')</if>
             <if test="processId != null "> and f.process_id = #{processId}</if>
             <if test="processCode != null  and processCode != ''"> and f.process_code = #{processCode}</if>
@@ -108,6 +155,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into pro_feedback
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="recordUserId != null">record_user_id,</if>
+            <if test="clientOrderCode != null and clientOrderCode != ''">client_order_code,</if>
             <if test="userId != null">user_id,</if>
             <if test="feedbackType !=null ">feedback_type,</if>
             <if test="feedbackCode !=null ">feedback_code,</if>
@@ -153,6 +201,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="recordUserId !=null ">#{recordUserId},</if>
+            <if test="clientOrderCode != null and clientOrderCode != ''">#{clientOrderCode},</if>
             <if test="userId !=null ">#{userId},</if>
             <if test="feedbackType !=null ">#{feedbackType},</if>
             <if test="feedbackCode !=null ">#{feedbackCode},</if>
@@ -202,6 +251,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update pro_feedback
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId !=null ">user_id = #{userId},</if>
+            <if test="clientOrderCode != null and clientOrderCode != ''">client_order_code = #{clientOrderCode},</if>
             <if test="recordUserId !=null ">record_user_id = #{recordUserId},</if>
             <if test="feedbackType !=null ">feedback_type = #{feedbackType},</if>
             <if test="feedbackCode !=null ">feedback_code = #{feedbackCode},</if>
