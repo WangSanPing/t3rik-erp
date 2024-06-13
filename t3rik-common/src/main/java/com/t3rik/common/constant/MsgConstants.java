@@ -9,4 +9,6 @@ package com.t3rik.common.constant;
 public class MsgConstants {
 
     public static final String PARAM_ERROR = "参数有误,请联系管理员";
+
+    public static final String SUCCESS = "操作成功!";
 }

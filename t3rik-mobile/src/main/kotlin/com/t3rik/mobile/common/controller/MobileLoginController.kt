@@ -9,9 +9,11 @@ import com.t3rik.common.enums.ModuleTypeEnum
 import com.t3rik.common.utils.SecurityUtils
 import com.t3rik.framework.web.service.SysLoginService
 import com.t3rik.framework.web.service.SysPermissionService
+import com.t3rik.framework.web.service.TokenService
 import com.t3rik.system.service.ISysMenuService
 import org.springframework.web.bind.annotation.*
 import javax.annotation.Resource
+import javax.servlet.http.HttpServletRequest
 
 
 @RestController
@@ -26,6 +28,9 @@ class MobileLoginController {
 
     @Resource
     lateinit var menuService: ISysMenuService
+
+    @Resource
+    lateinit var tokenService: TokenService
 
     /**
      * 登录
@@ -65,5 +70,13 @@ class MobileLoginController {
             put("permissions", permission)
             put("menus", menus)
         }
+    }
+
+    @PostMapping("/logout")
+    fun logout(request: HttpServletRequest): AjaxResult {
+        this.tokenService.getLoginUser(request)?.let { loginUser ->
+            this.tokenService.delLoginUser(loginUser.token)
+        }
+        return AjaxResult.success(MsgConstants.SUCCESS)
     }
 }

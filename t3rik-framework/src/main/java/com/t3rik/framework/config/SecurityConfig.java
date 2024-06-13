@@ -1,5 +1,6 @@
 package com.t3rik.framework.config;
 
+import com.t3rik.common.constant.UserConstants;
 import com.t3rik.framework.security.filter.JwtAuthenticationTokenFilter;
 import com.t3rik.framework.security.handle.AuthenticationEntryPointImpl;
 import com.t3rik.framework.security.handle.LogoutSuccessHandlerImpl;
@@ -98,8 +99,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 过滤请求
                 .authorizeRequests()
                 // 对于登录login 注册register 验证码captchaImage 允许匿名访问
-                .antMatchers("/login", "/register", "/captchaImage","/mobile/captchaImage").anonymous()
-                .antMatchers("/mobile/login/**").permitAll()
+                .antMatchers("/login", "/register", "/captchaImage","/mobile/captchaImage"
+                        , UserConstants.MOBILE_PATH +"/login"
+                        , UserConstants.MOBILE_PATH +"/logout")
+                .anonymous()
                 .antMatchers(
                         HttpMethod.GET,
                         "/",
