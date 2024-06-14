@@ -10,6 +10,9 @@ import com.t3rik.common.utils.SecurityUtils
 import com.t3rik.framework.web.service.SysLoginService
 import com.t3rik.framework.web.service.SysPermissionService
 import com.t3rik.framework.web.service.TokenService
+import com.t3rik.mobile.common.service.IMobileLoginService
+import com.t3rik.mobile.common.vo.DictVo
+import com.t3rik.system.service.ISysDictDataService
 import com.t3rik.system.service.ISysMenuService
 import org.springframework.web.bind.annotation.*
 import javax.annotation.Resource
@@ -31,6 +34,10 @@ class MobileLoginController {
 
     @Resource
     lateinit var tokenService: TokenService
+
+    @Resource
+    lateinit var mobileLoginService: IMobileLoginService
+
 
     /**
      * 登录
@@ -80,5 +87,10 @@ class MobileLoginController {
             this.tokenService.delLoginUser(loginUser.token)
         }
         return AjaxResult.success(MsgConstants.SUCCESS)
+    }
+
+    @GetMapping("/getDict")
+    fun getDict(request: HttpServletRequest): AjaxResult {
+        return AjaxResult.success(this.mobileLoginService.getDictList())
     }
 }
