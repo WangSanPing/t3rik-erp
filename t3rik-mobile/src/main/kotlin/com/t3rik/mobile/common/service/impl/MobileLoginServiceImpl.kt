@@ -17,11 +17,16 @@ class MobileLoginServiceImpl : IMobileLoginService {
      * 获取移动端需要的字典集合
      */
     override fun getDictList(): MutableList<DictVo> {
+        // 获取字典列表 -> 分组 -> 重组前端需要的格式
         val dictList = this.dictDataService.selectDictDataList(null).groupBy { it.dictType }
-        return dictList.map { (dictKey, data) ->
-            val dataLists =
-                data.map { DictVo.DataItem(label = it.dictLabel, value = it.dictValue, color = "") }.toMutableList()
-            DictVo(dictKey = dictKey, data = dataLists)
-        }.toMutableList()
+            .let {
+                it.map { (dictKey, data) ->
+                    val dataLists =
+                        data.map { DictVo.DataItem(label = it.dictLabel, value = it.dictValue, color = "") }
+                            .toMutableList()
+                    DictVo(dictKey = dictKey, data = dataLists)
+                }.toMutableList()
+            }
+        return dictList
     }
 }
