@@ -8,8 +8,8 @@ t3rik-platform:
   copyrightYear: 2022
   # 实例演示开关
   demoEnabled: true
-  # 文件路径 示例（ Windows配置D:/ktg/uploadPath，Linux配置 /home/ktg/uploadPath）
-  profile: D:/source_code/j2eeworkspace/ktg-mes/upload
+  # 文件路径 示例（ Windows配置D:/t3rik/uploadPath，Linux配置 /home/t3rik/uploadPath）
+  profile: D:/source_code/j2eeworkspace/t3rik-mes/upload
   #profile: /home/www/uploadPath
   # 获取ip地址开关
   addressEnabled: false
