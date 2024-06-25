@@ -158,4 +158,14 @@
         </foreach>
     </delete>
 
+    <insert id="initDefaultItemType" >
+        INSERT INTO
+            `md_item_type`(`item_type_id`, `item_type_code`, `item_type_name`, `parent_type_id`, `ancestors`, `item_or_product`, `order_num`, `enable_flag`, `remark`, `attr1`, `attr2`, `attr3`, `attr4`, `create_by`, `create_time`, `update_by`, `update_time`, `create_user_id`, `update_user_id`)
+        VALUES
+        (10000000, 'WLCPFL_DEFAULT', '物料产品分类', 0, '0', 'PRODUCT', 1, 'Y', '', NULL, NULL, 0, 0, 'admin', sysdate(), 'admin', sysdate(), NULL, NULL)
+             , (10000001, 'YCL_DEFAULT', '原材料', 10000000, '0,10000000', 'ITEM', 1, 'Y', '', NULL, NULL, 0, 0, 'admin', sysdate(), '', NULL, NULL, NULL)
+             , (10000002, 'CP_DEFAULT', '产品', 10000000, '0,10000000', 'PRODUCT', 2, 'Y', '', NULL, NULL, 0, 0, 'admin', sysdate(), '', NULL, NULL, NULL)
+             , (10000003, 'BCP_DEFAULT', '半成品', 10000002, '0,10000000,10000002', 'PRODUCT', 1, 'Y', '', NULL, NULL, 0, 0, 'admin', sysdate(), '', NULL, NULL, NULL)
+             , (10000004, 'CCP_DEFAULT', '产成品', 10000002, '0,10000000,10000002', 'PRODUCT', 2, 'Y', '', NULL, NULL, 0, 0, 'admin', sysdate(), '', NULL, NULL, NULL)
+    </insert>
 </mapper>

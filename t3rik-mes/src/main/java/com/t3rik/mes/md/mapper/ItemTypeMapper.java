@@ -117,4 +117,8 @@ public interface ItemTypeMapper extends BaseMapper<ItemType> {
      */
     public Integer deleteItemTypeByIds(Long[] itemTypeIds);
 
+    /**
+     * 初始化默认数据
+     */
+    void initDefaultItemType();
 }
