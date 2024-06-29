@@ -5,7 +5,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.t3rik.mes.wm.mapper.WmItemRecptLineMapper">
     
     <resultMap type="com.t3rik.mes.wm.domain.WmItemRecptLine" id="WmItemRecptLineResult">
+        <!--@Table wm_item_recpt_line-->
         <result property="lineId"    column="line_id"    />
+        <result property="amount"    column="amount"    />
         <result property="recptId"    column="recpt_id"    />
         <result property="itemId"    column="item_id"    />
         <result property="itemCode"    column="item_code"    />
@@ -39,7 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectWmItemRecptLineVo">
-        select line_id, recpt_id, item_id, item_code, item_name, specification, unit_of_measure, quantity_recived, batch_code, warehouse_id, warehouse_code, warehouse_name, location_id, location_code, location_name, area_id, area_code, area_name, expire_date,iqc_check,iqc_id,iqc_code, remark, attr1, attr2, attr3, attr4, create_by, create_time, update_by, update_time from wm_item_recpt_line
+        select amount,line_id, recpt_id, item_id, item_code, item_name, specification, unit_of_measure, quantity_recived, batch_code, warehouse_id, warehouse_code, warehouse_name, location_id, location_code, location_name, area_id, area_code, area_name, expire_date,iqc_check,iqc_id,iqc_code, remark, attr1, attr2, attr3, attr4, create_by, create_time, update_by, update_time from wm_item_recpt_line
     </sql>
 
     <select id="selectWmItemRecptLineList" parameterType="WmItemRecptLine" resultMap="WmItemRecptLineResult">
@@ -76,6 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into wm_item_recpt_line
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="recptId != null">recpt_id,</if>
+            <if test="amount != null">amount,</if>
             <if test="itemId != null">item_id,</if>
             <if test="itemCode != null">item_code,</if>
             <if test="itemName != null">item_name,</if>
@@ -108,6 +111,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="recptId != null">#{recptId},</if>
+            <if test="amount != null">#{amount},</if>
             <if test="itemId != null">#{itemId},</if>
             <if test="itemCode != null">#{itemCode},</if>
             <if test="itemName != null">#{itemName},</if>
@@ -144,6 +148,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update wm_item_recpt_line
         <trim prefix="SET" suffixOverrides=",">
             <if test="recptId != null">recpt_id = #{recptId},</if>
+            <if test="amount != null">amount = #{amount},</if>
             <if test="itemId != null">item_id = #{itemId},</if>
             <if test="itemCode != null">item_code = #{itemCode},</if>
             <if test="itemName != null">item_name = #{itemName},</if>
