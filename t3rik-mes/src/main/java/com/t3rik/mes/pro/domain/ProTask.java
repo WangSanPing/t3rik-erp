@@ -5,13 +5,11 @@ import java.util.Date;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.t3rik.common.annotation.Excel;
 import com.t3rik.common.core.domain.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * 生产任务对象 pro_task
@@ -19,6 +17,7 @@ import lombok.ToString;
  * @author yinjinlu
  * @date 2022-05-15
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,6 +27,7 @@ public class ProTask extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 任务ID */
+    @TableId
     private Long taskId;
 
     /** 任务编号 */
