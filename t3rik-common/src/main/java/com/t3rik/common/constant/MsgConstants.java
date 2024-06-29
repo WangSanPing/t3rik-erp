@@ -11,4 +11,6 @@ public class MsgConstants {
     public static final String PARAM_ERROR = "参数有误,请联系管理员";
 
     public static final String SUCCESS = "操作成功!";
+
+    public static final String CAN_NOT_BE_DELETE  = "预置数据，不允许删除!";
 }

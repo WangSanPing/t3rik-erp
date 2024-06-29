@@ -4,13 +4,16 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.core.domain.TreeSelect;
 import com.t3rik.common.core.domain.entity.ItemType;
+import com.t3rik.common.enums.mes.DefaultDataEnum;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.mes.md.mapper.ItemTypeMapper;
 import com.t3rik.mes.md.service.IItemTypeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,8 +21,26 @@ import java.util.stream.Collectors;
 @Service
 public class ItemTypeServiceImpl extends ServiceImpl<ItemTypeMapper, ItemType> implements IItemTypeService {
 
-    @Autowired
+    @Resource
     private ItemTypeMapper itemTypeMapper;
+
+    @PostConstruct
+    void initDefaultItemType() {
+        var idList = Arrays.asList(
+                DefaultDataEnum.WLCPFL_DEFAULT.getCode(),
+                DefaultDataEnum.MATERIAL.getCode(),
+                DefaultDataEnum.CP_DEFAULT.getCode(),
+                DefaultDataEnum.SEMI_FINISHED_PRODUCTS.getCode(),
+                DefaultDataEnum.PRODUCTS.getCode());
+        var dataCount = this.lambdaQuery().in(ItemType::getItemTypeId, idList).count();
+        // 如果数据小于内置的5条数据，先删除再新增
+        if (dataCount < idList.size()) {
+            this.removeByIds(idList);
+            // 新增初始化默认数据
+            this.itemTypeMapper.initDefaultItemType();
+        }
+    }
+
 
     @Override
     public List<ItemType> selectItemTypeList(ItemType itemType) {

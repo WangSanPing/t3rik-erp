@@ -13,10 +13,20 @@ import java.util.Map;
 @AllArgsConstructor
 public enum DefaultDataEnum {
     /**
+     * 物料产品分类
+     * 使用的是数据id,为了兼容表字段的ancestors字段,保存的是所有节点id,便于查找所有节点
+     */
+    WLCPFL_DEFAULT("10000000", "物料产品分类", "md_item_type"),
+    /**
      * 原材料
      * 使用的是数据id,为了兼容表字段的ancestors字段,保存的是所有节点id,便于查找所有节点
      */
     MATERIAL("10000001", "原材料", "md_item_type"),
+    /**
+     * 产品
+     * 使用的是数据id,为了兼容表字段的ancestors字段,保存的是所有节点id,便于查找所有节点
+     */
+    CP_DEFAULT("10000002", "产品", "md_item_type"),
     /**
      * 半成品
      * 使用的是数据id,为了兼容表字段的ancestors字段,保存的是所有节点id,便于查找所有节点
