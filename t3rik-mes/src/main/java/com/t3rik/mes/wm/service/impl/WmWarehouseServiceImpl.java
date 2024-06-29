@@ -159,6 +159,11 @@ public class WmWarehouseServiceImpl extends ServiceImpl<WmWarehouseMapper, WmWar
         initStorageArea(location, DefaultDataEnum.VIRTUAL_WA);
         // 初始化  [废料]  虚拟线边库库位
         initStorageArea(wasteLocation, DefaultDataEnum.WASTE_VIRTUAL_WA);
+        // 初始化  预置  仓库
+        initWarehouse(DefaultDataEnum.WH00_DEFAULT);
+
+
+
 
         return warehouse;
     }

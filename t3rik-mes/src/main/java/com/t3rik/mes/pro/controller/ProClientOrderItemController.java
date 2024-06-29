@@ -53,7 +53,7 @@ public class ProClientOrderItemController extends BaseController {
         Page<ClientOrderItemPageDto> page = getMPPage(new ClientOrderItemPageDto());
         // 查询
         // 默认仓库
-        var defaultWH = Collections.singletonList(DefaultDataEnum.WH01_DEFAULT.getCode());
+        var defaultWH = Collections.singletonList(DefaultDataEnum.WH00_DEFAULT.getCode());
         Page<ClientOrderItemPageDto> result = this.proClientOrderItemService.getClientOrderItemPage(page, proClientOrderItem.getClientOrderId(), defaultWH);
         return getDataTableWithPage(result);
     }
