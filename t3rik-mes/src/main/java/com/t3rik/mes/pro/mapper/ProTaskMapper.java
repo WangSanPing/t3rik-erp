@@ -1,19 +1,23 @@
 package com.t3rik.mes.pro.mapper;
 
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.t3rik.mes.pro.domain.ProTask;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 生产任务Mapper接口
- * 
+ *
  * @author yinjinlu
  * @date 2022-05-14
  */
-public interface ProTaskMapper 
+@Mapper
+public interface ProTaskMapper extends BaseMapper<ProTask>
 {
     /**
      * 查询生产任务
-     * 
+     *
      * @param taskId 生产任务主键
      * @return 生产任务
      */
@@ -21,7 +25,7 @@ public interface ProTaskMapper
 
     /**
      * 查询生产任务列表
-     * 
+     *
      * @param proTask 生产任务
      * @return 生产任务集合
      */
@@ -37,7 +41,7 @@ public interface ProTaskMapper
 
     /**
      * 新增生产任务
-     * 
+     *
      * @param proTask 生产任务
      * @return 结果
      */
@@ -45,7 +49,7 @@ public interface ProTaskMapper
 
     /**
      * 修改生产任务
-     * 
+     *
      * @param proTask 生产任务
      * @return 结果
      */
@@ -53,7 +57,7 @@ public interface ProTaskMapper
 
     /**
      * 删除生产任务
-     * 
+     *
      * @param taskId 生产任务主键
      * @return 结果
      */
@@ -61,7 +65,7 @@ public interface ProTaskMapper
 
     /**
      * 批量删除生产任务
-     * 
+     *
      * @param taskIds 需要删除的数据主键集合
      * @return 结果
      */

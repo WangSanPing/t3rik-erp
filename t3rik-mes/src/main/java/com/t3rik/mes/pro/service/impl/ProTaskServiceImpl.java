@@ -1,6 +1,8 @@
 package com.t3rik.mes.pro.service.impl;
 
 import java.util.List;
+
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,19 +12,19 @@ import com.t3rik.mes.pro.service.IProTaskService;
 
 /**
  * 生产任务Service业务层处理
- * 
+ *
  * @author yinjinlu
  * @date 2022-05-14
  */
 @Service
-public class ProTaskServiceImpl implements IProTaskService 
+public class ProTaskServiceImpl extends ServiceImpl<ProTaskMapper, ProTask> implements IProTaskService
 {
     @Autowired
     private ProTaskMapper proTaskMapper;
 
     /**
      * 查询生产任务
-     * 
+     *
      * @param taskId 生产任务主键
      * @return 生产任务
      */
@@ -34,7 +36,7 @@ public class ProTaskServiceImpl implements IProTaskService
 
     /**
      * 查询生产任务列表
-     * 
+     *
      * @param proTask 生产任务
      * @return 生产任务
      */
@@ -56,7 +58,7 @@ public class ProTaskServiceImpl implements IProTaskService
 
     /**
      * 新增生产任务
-     * 
+     *
      * @param proTask 生产任务
      * @return 结果
      */
@@ -69,7 +71,7 @@ public class ProTaskServiceImpl implements IProTaskService
 
     /**
      * 修改生产任务
-     * 
+     *
      * @param proTask 生产任务
      * @return 结果
      */
@@ -82,7 +84,7 @@ public class ProTaskServiceImpl implements IProTaskService
 
     /**
      * 批量删除生产任务
-     * 
+     *
      * @param taskIds 需要删除的生产任务主键
      * @return 结果
      */
@@ -94,7 +96,7 @@ public class ProTaskServiceImpl implements IProTaskService
 
     /**
      * 删除生产任务信息
-     * 
+     *
      * @param taskId 生产任务主键
      * @return 结果
      */
