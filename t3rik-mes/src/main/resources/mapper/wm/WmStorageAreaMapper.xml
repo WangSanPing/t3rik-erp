@@ -140,7 +140,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteByLocationId" parameterType="Long">
-        delete form wm_storage_area where location_id = #{locationId}
+        delete from wm_storage_area where location_id = #{locationId}
     </delete>
 
 </mapper>

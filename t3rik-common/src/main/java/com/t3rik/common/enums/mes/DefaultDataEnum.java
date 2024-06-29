@@ -40,7 +40,7 @@ public enum DefaultDataEnum {
     /**
      * 预置仓库
      */
-    WH01_DEFAULT("WH000", "预置仓库编码", "wm_warehouse"),
+    WH00_DEFAULT("WH000", "预置仓库", "wm_warehouse"),
     /**
      * 默认线边库-仓库
      */

@@ -1,5 +1,6 @@
 package com.t3rik.mes.wm.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.enums.YesOrNoEnum;
@@ -14,9 +15,11 @@ import com.t3rik.mes.wm.service.IWmStorageAreaService;
 import com.t3rik.mes.wm.service.IWmStorageLocationService;
 import com.t3rik.mes.wm.service.IWmWarehouseService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -37,6 +40,11 @@ public class WmWarehouseServiceImpl extends ServiceImpl<WmWarehouseMapper, WmWar
     @Resource
     private IWmStorageAreaService storageAreaService;
 
+    @Resource
+    private IWmStorageLocationService wmStorageLocationService;
+
+    @Resource
+    private IWmStorageAreaService wmStorageAreaService;
 
     /**
      * 项目启动时初始化数据
@@ -128,8 +136,25 @@ public class WmWarehouseServiceImpl extends ServiceImpl<WmWarehouseMapper, WmWar
      * @param warehouseIds 需要删除的仓库设置主键
      * @return 结果
      */
+    @Transactional
     @Override
     public int deleteWmWarehouseByWarehouseIds(Long[] warehouseIds) {
+        // 删除库位
+        List<Long> locationIds = this.wmStorageLocationService
+                .lambdaQuery()
+                .in(WmStorageLocation::getWarehouseId, Arrays.asList(warehouseIds))
+                .list()
+                .stream().map(WmStorageLocation::getLocationId)
+                .toList();
+        this.wmStorageAreaService.remove(
+                new LambdaQueryWrapper<WmStorageArea>()
+                        .in(WmStorageArea::getLocationId, locationIds));
+
+        // 删除库区
+        this.wmStorageLocationService.remove(
+                new LambdaQueryWrapper<WmStorageLocation>()
+                        .in(WmStorageLocation::getWarehouseId, Arrays.asList(warehouseIds)));
+
         return wmWarehouseMapper.deleteWmWarehouseByWarehouseIds(warehouseIds);
     }
 
@@ -159,6 +184,9 @@ public class WmWarehouseServiceImpl extends ServiceImpl<WmWarehouseMapper, WmWar
         initStorageArea(location, DefaultDataEnum.VIRTUAL_WA);
         // 初始化  [废料]  虚拟线边库库位
         initStorageArea(wasteLocation, DefaultDataEnum.WASTE_VIRTUAL_WA);
+        // 初始化  预置  仓库
+        initWarehouse(DefaultDataEnum.WH00_DEFAULT);
+
 
         return warehouse;
     }

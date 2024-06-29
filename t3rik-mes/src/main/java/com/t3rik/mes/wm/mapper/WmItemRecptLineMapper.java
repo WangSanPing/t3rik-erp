@@ -1,19 +1,22 @@
 package com.t3rik.mes.wm.mapper;
 
-import java.util.List;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.t3rik.mes.wm.domain.WmItemRecptLine;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * 物料入库单行Mapper接口
- * 
+ *
  * @author yinjinlu
  * @date 2022-05-22
  */
-public interface WmItemRecptLineMapper 
-{
+@Mapper
+public interface WmItemRecptLineMapper extends BaseMapper<WmItemRecptLine> {
     /**
      * 查询物料入库单行
-     * 
+     *
      * @param lineId 物料入库单行主键
      * @return 物料入库单行
      */
@@ -21,7 +24,7 @@ public interface WmItemRecptLineMapper
 
     /**
      * 查询物料入库单行列表
-     * 
+     *
      * @param wmItemRecptLine 物料入库单行
      * @return 物料入库单行集合
      */
@@ -29,7 +32,7 @@ public interface WmItemRecptLineMapper
 
     /**
      * 新增物料入库单行
-     * 
+     *
      * @param wmItemRecptLine 物料入库单行
      * @return 结果
      */
@@ -37,7 +40,7 @@ public interface WmItemRecptLineMapper
 
     /**
      * 修改物料入库单行
-     * 
+     *
      * @param wmItemRecptLine 物料入库单行
      * @return 结果
      */
@@ -45,7 +48,7 @@ public interface WmItemRecptLineMapper
 
     /**
      * 删除物料入库单行
-     * 
+     *
      * @param lineId 物料入库单行主键
      * @return 结果
      */
@@ -53,7 +56,7 @@ public interface WmItemRecptLineMapper
 
     /**
      * 批量删除物料入库单行
-     * 
+     *
      * @param lineIds 需要删除的数据主键集合
      * @return 结果
      */

@@ -5,7 +5,9 @@
 <mapper namespace="com.t3rik.mes.wm.mapper.WmItemRecptMapper">
 
     <resultMap type="com.t3rik.mes.wm.domain.WmItemRecpt" id="WmItemRecptResult">
+        <!--@Table wm_item_recpt-->
         <result property="recptId"    column="recpt_id"    />
+        <result property="totalAmount"    column="total_amount"    />
         <result property="recptCode"    column="recpt_code"    />
         <result property="recptName"    column="recpt_name"    />
         <result property="iqcId"    column="iqc_id"    />
@@ -72,7 +74,7 @@
 
 
     <sql id="selectWmItemRecptVo">
-        select recpt_id, recpt_code, recpt_name, iqc_id, iqc_code, po_code, vendor_id, vendor_code, vendor_name, vendor_nick, warehouse_id, warehouse_code, warehouse_name, location_id, location_code, location_name, area_id, area_code, area_name, recpt_date, status, remark, attr1, attr2, attr3, attr4, create_by, create_time, update_by, update_time from wm_item_recpt
+        select total_amount,recpt_id, recpt_code, recpt_name, iqc_id, iqc_code, po_code, vendor_id, vendor_code, vendor_name, vendor_nick, warehouse_id, warehouse_code, warehouse_name, location_id, location_code, location_name, area_id, area_code, area_name, recpt_date, status, remark, attr1, attr2, attr3, attr4, create_by, create_time, update_by, update_time from wm_item_recpt
     </sql>
 
     <select id="selectWmItemRecptList" parameterType="WmItemRecpt" resultMap="WmItemRecptResult">
@@ -133,6 +135,7 @@
             <if test="recptCode != null and recptCode != ''">recpt_code,</if>
             <if test="recptName != null and recptName != ''">recpt_name,</if>
             <if test="iqcId != null">iqc_id,</if>
+            <if test="totalAmount != null">total_amount,</if>
             <if test="iqcCode != null">iqc_code,</if>
             <if test="poCode != null">po_code,</if>
             <if test="vendorId != null">vendor_id,</if>
@@ -164,6 +167,7 @@
             <if test="recptCode != null and recptCode != ''">#{recptCode},</if>
             <if test="recptName != null and recptName != ''">#{recptName},</if>
             <if test="iqcId != null">#{iqcId},</if>
+            <if test="totalAmount != null">#{totalAmount},</if>
             <if test="iqcCode != null">#{iqcCode},</if>
             <if test="poCode != null">#{poCode},</if>
             <if test="vendorId != null">#{vendorId},</if>
@@ -199,6 +203,7 @@
             <if test="recptCode != null and recptCode != ''">recpt_code = #{recptCode},</if>
             <if test="recptName != null and recptName != ''">recpt_name = #{recptName},</if>
             <if test="iqcId != null">iqc_id = #{iqcId},</if>
+            <if test="totalAmount != null">total_amount = #{totalAmount},</if>
             <if test="iqcCode != null">iqc_code = #{iqcCode},</if>
             <if test="poCode != null">po_code = #{poCode},</if>
             <if test="vendorId != null">vendor_id = #{vendorId},</if>
