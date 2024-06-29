@@ -15,34 +15,32 @@ import com.t3rik.mes.wm.service.IWmItemRecptLineService;
 import com.t3rik.mes.wm.service.IWmStorageAreaService;
 import com.t3rik.mes.wm.service.IWmStorageLocationService;
 import com.t3rik.mes.wm.service.IWmWarehouseService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
  * 物料入库单行Controller
- * 
+ *
  * @author yinjinlu
  * @date 2022-05-22
  */
 @RestController
 @RequestMapping("/mes/wm/itemrecptline")
-public class WmItemRecptLineController extends BaseController
-{
-    @Autowired
+public class WmItemRecptLineController extends BaseController {
+    @Resource
     private IWmItemRecptLineService wmItemRecptLineService;
 
-
-    @Autowired
+    @Resource
     private IWmWarehouseService wmWarehouseService;
 
-    @Autowired
+    @Resource
     private IWmStorageLocationService wmStorageLocationService;
 
-    @Autowired
+    @Resource
     private IWmStorageAreaService wmStorageAreaService;
 
     /**
@@ -50,8 +48,7 @@ public class WmItemRecptLineController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:itemrecpt:list')")
     @GetMapping("/list")
-    public TableDataInfo list(WmItemRecptLine wmItemRecptLine)
-    {
+    public TableDataInfo list(WmItemRecptLine wmItemRecptLine) {
         startPage();
         List<WmItemRecptLine> list = wmItemRecptLineService.selectWmItemRecptLineList(wmItemRecptLine);
         return getDataTable(list);
@@ -63,8 +60,7 @@ public class WmItemRecptLineController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:itemrecpt:export')")
     @Log(title = "物料入库单行", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, WmItemRecptLine wmItemRecptLine)
-    {
+    public void export(HttpServletResponse response, WmItemRecptLine wmItemRecptLine) {
         List<WmItemRecptLine> list = wmItemRecptLineService.selectWmItemRecptLineList(wmItemRecptLine);
         ExcelUtil<WmItemRecptLine> util = new ExcelUtil<WmItemRecptLine>(WmItemRecptLine.class);
         util.exportExcel(response, list, "物料入库单行数据");
@@ -75,8 +71,7 @@ public class WmItemRecptLineController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:itemrecpt:query')")
     @GetMapping(value = "/{lineId}")
-    public AjaxResult getInfo(@PathVariable("lineId") Long lineId)
-    {
+    public AjaxResult getInfo(@PathVariable("lineId") Long lineId) {
         return AjaxResult.success(wmItemRecptLineService.selectWmItemRecptLineByLineId(lineId));
     }
 
@@ -86,19 +81,18 @@ public class WmItemRecptLineController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:itemrecpt:add')")
     @Log(title = "物料入库单行", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody WmItemRecptLine wmItemRecptLine)
-    {
-        if(StringUtils.isNotNull(wmItemRecptLine.getWarehouseId())){
+    public AjaxResult add(@RequestBody WmItemRecptLine wmItemRecptLine) {
+        if (StringUtils.isNotNull(wmItemRecptLine.getWarehouseId())) {
             WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmItemRecptLine.getWarehouseId());
             wmItemRecptLine.setWarehouseCode(warehouse.getWarehouseCode());
             wmItemRecptLine.setWarehouseName(warehouse.getWarehouseName());
         }
-        if(StringUtils.isNotNull(wmItemRecptLine.getLocationId())){
+        if (StringUtils.isNotNull(wmItemRecptLine.getLocationId())) {
             WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationId(wmItemRecptLine.getLocationId());
             wmItemRecptLine.setLocationCode(location.getLocationCode());
             wmItemRecptLine.setLocationName(location.getLocationName());
         }
-        if(StringUtils.isNotNull(wmItemRecptLine.getAreaId())){
+        if (StringUtils.isNotNull(wmItemRecptLine.getAreaId())) {
             WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaId(wmItemRecptLine.getAreaId());
             wmItemRecptLine.setAreaCode(area.getAreaCode());
             wmItemRecptLine.setAreaName(area.getAreaName());
@@ -113,19 +107,18 @@ public class WmItemRecptLineController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:itemrecpt:edit')")
     @Log(title = "物料入库单行", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody WmItemRecptLine wmItemRecptLine)
-    {
-        if(StringUtils.isNotNull(wmItemRecptLine.getWarehouseId())){
+    public AjaxResult edit(@RequestBody WmItemRecptLine wmItemRecptLine) {
+        if (StringUtils.isNotNull(wmItemRecptLine.getWarehouseId())) {
             WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmItemRecptLine.getWarehouseId());
             wmItemRecptLine.setWarehouseCode(warehouse.getWarehouseCode());
             wmItemRecptLine.setWarehouseName(warehouse.getWarehouseName());
         }
-        if(StringUtils.isNotNull(wmItemRecptLine.getLocationId())){
+        if (StringUtils.isNotNull(wmItemRecptLine.getLocationId())) {
             WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationId(wmItemRecptLine.getLocationId());
             wmItemRecptLine.setLocationCode(location.getLocationCode());
             wmItemRecptLine.setLocationName(location.getLocationName());
         }
-        if(StringUtils.isNotNull(wmItemRecptLine.getAreaId())){
+        if (StringUtils.isNotNull(wmItemRecptLine.getAreaId())) {
             WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaId(wmItemRecptLine.getAreaId());
             wmItemRecptLine.setAreaCode(area.getAreaCode());
             wmItemRecptLine.setAreaName(area.getAreaName());
@@ -138,9 +131,8 @@ public class WmItemRecptLineController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:itemrecpt:remove')")
     @Log(title = "物料入库单行", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{lineIds}")
-    public AjaxResult remove(@PathVariable Long[] lineIds)
-    {
+    @DeleteMapping("/{lineIds}")
+    public AjaxResult remove(@PathVariable Long[] lineIds) {
         return toAjax(wmItemRecptLineService.deleteWmItemRecptLineByLineIds(lineIds));
     }
 }

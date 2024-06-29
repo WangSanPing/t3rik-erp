@@ -1,20 +1,21 @@
 package com.t3rik.mes.wm.service;
 
-import java.util.List;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.wm.domain.WmItemRecpt;
 import com.t3rik.mes.wm.domain.tx.ItemRecptTxBean;
 
+import java.util.List;
+
 /**
  * 物料入库单Service接口
- * 
+ *
  * @author yinjinlu
  * @date 2022-05-22
  */
-public interface IWmItemRecptService 
-{
+public interface IWmItemRecptService extends IService<WmItemRecpt> {
     /**
      * 查询物料入库单
-     * 
+     *
      * @param recptId 物料入库单主键
      * @return 物料入库单
      */
@@ -22,7 +23,7 @@ public interface IWmItemRecptService
 
     /**
      * 查询物料入库单列表
-     * 
+     *
      * @param wmItemRecpt 物料入库单
      * @return 物料入库单集合
      */
@@ -30,6 +31,7 @@ public interface IWmItemRecptService
 
     /**
      * 检查入库单号是否重复
+     *
      * @param wmItemRecpt
      * @return
      */
@@ -37,7 +39,7 @@ public interface IWmItemRecptService
 
     /**
      * 新增物料入库单
-     * 
+     *
      * @param wmItemRecpt 物料入库单
      * @return 结果
      */
@@ -45,7 +47,7 @@ public interface IWmItemRecptService
 
     /**
      * 修改物料入库单
-     * 
+     *
      * @param wmItemRecpt 物料入库单
      * @return 结果
      */
@@ -53,7 +55,7 @@ public interface IWmItemRecptService
 
     /**
      * 批量删除物料入库单
-     * 
+     *
      * @param recptIds 需要删除的物料入库单主键集合
      * @return 结果
      */
@@ -61,7 +63,7 @@ public interface IWmItemRecptService
 
     /**
      * 删除物料入库单信息
-     * 
+     *
      * @param recptId 物料入库单主键
      * @return 结果
      */
@@ -70,6 +72,7 @@ public interface IWmItemRecptService
 
     /**
      * 组装当前入库单对应的库存事务传入bean
+     *
      * @param receptId
      * @return
      */
