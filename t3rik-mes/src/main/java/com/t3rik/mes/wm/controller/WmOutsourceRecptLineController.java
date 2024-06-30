@@ -24,14 +24,13 @@ import java.util.List;
 
 /**
  * 外协入库单行Controller
- * 
+ *
  * @author yinjinlu
  * @date 2023-10-30
  */
 @RestController
 @RequestMapping("/mes/wm/oursourcerecptline")
-public class WmOutsourceRecptLineController extends BaseController
-{
+public class WmOutsourceRecptLineController extends BaseController {
     @Autowired
     private IWmOutsourceRecptLineService wmOutsourceRecptLineService;
 
@@ -50,8 +49,7 @@ public class WmOutsourceRecptLineController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:oursourcerecpt:list')")
     @GetMapping("/list")
-    public TableDataInfo list(WmOutsourceRecptLine wmOutsourceRecptLine)
-    {
+    public TableDataInfo list(WmOutsourceRecptLine wmOutsourceRecptLine) {
         startPage();
         List<WmOutsourceRecptLine> list = wmOutsourceRecptLineService.selectWmOutsourceRecptLineList(wmOutsourceRecptLine);
         return getDataTable(list);
@@ -63,8 +61,7 @@ public class WmOutsourceRecptLineController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:oursourcerecpt:export')")
     @Log(title = "外协入库单行", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, WmOutsourceRecptLine wmOutsourceRecptLine)
-    {
+    public void export(HttpServletResponse response, WmOutsourceRecptLine wmOutsourceRecptLine) {
         List<WmOutsourceRecptLine> list = wmOutsourceRecptLineService.selectWmOutsourceRecptLineList(wmOutsourceRecptLine);
         ExcelUtil<WmOutsourceRecptLine> util = new ExcelUtil<WmOutsourceRecptLine>(WmOutsourceRecptLine.class);
         util.exportExcel(response, list, "外协入库单行数据");
@@ -75,8 +72,7 @@ public class WmOutsourceRecptLineController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:oursourcerecpt:query')")
     @GetMapping(value = "/{lineId}")
-    public AjaxResult getInfo(@PathVariable("lineId") Long lineId)
-    {
+    public AjaxResult getInfo(@PathVariable("lineId") Long lineId) {
         return AjaxResult.success(wmOutsourceRecptLineService.selectWmOutsourceRecptLineByLineId(lineId));
     }
 
@@ -86,26 +82,32 @@ public class WmOutsourceRecptLineController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:oursourcerecpt:add')")
     @Log(title = "外协入库单行", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody WmOutsourceRecptLine wmOutsourceRecptLine)
-    {
-        if(StringUtils.isNotNull(wmOutsourceRecptLine.getWarehouseId())){
+    public AjaxResult add(@RequestBody WmOutsourceRecptLine wmOutsourceRecptLine) {
+        setWarehouseInfo(wmOutsourceRecptLine);
+        wmOutsourceRecptLine.setCreateBy(getUsername());
+        return toAjax(wmOutsourceRecptLineService.insertWmOutsourceRecptLine(wmOutsourceRecptLine));
+    }
+
+    /**
+     * 设置仓库信息
+     *
+     */
+    private void setWarehouseInfo(WmOutsourceRecptLine wmOutsourceRecptLine) {
+        if (StringUtils.isNotNull(wmOutsourceRecptLine.getWarehouseId())) {
             WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmOutsourceRecptLine.getWarehouseId());
             wmOutsourceRecptLine.setWarehouseCode(warehouse.getWarehouseCode());
             wmOutsourceRecptLine.setWarehouseName(warehouse.getWarehouseName());
         }
-        if(StringUtils.isNotNull(wmOutsourceRecptLine.getLocationId())){
+        if (StringUtils.isNotNull(wmOutsourceRecptLine.getLocationId())) {
             WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationId(wmOutsourceRecptLine.getLocationId());
             wmOutsourceRecptLine.setLocationCode(location.getLocationCode());
             wmOutsourceRecptLine.setLocationName(location.getLocationName());
         }
-        if(StringUtils.isNotNull(wmOutsourceRecptLine.getAreaId())){
+        if (StringUtils.isNotNull(wmOutsourceRecptLine.getAreaId())) {
             WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaId(wmOutsourceRecptLine.getAreaId());
             wmOutsourceRecptLine.setAreaCode(area.getAreaCode());
             wmOutsourceRecptLine.setAreaName(area.getAreaName());
         }
-        wmOutsourceRecptLine.setCreateBy(getUsername());
-
-        return toAjax(wmOutsourceRecptLineService.insertWmOutsourceRecptLine(wmOutsourceRecptLine));
     }
 
     /**
@@ -114,23 +116,8 @@ public class WmOutsourceRecptLineController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:oursourcerecpt:edit')")
     @Log(title = "外协入库单行", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody WmOutsourceRecptLine wmOutsourceRecptLine)
-    {
-        if(StringUtils.isNotNull(wmOutsourceRecptLine.getWarehouseId())){
-            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmOutsourceRecptLine.getWarehouseId());
-            wmOutsourceRecptLine.setWarehouseCode(warehouse.getWarehouseCode());
-            wmOutsourceRecptLine.setWarehouseName(warehouse.getWarehouseName());
-        }
-        if(StringUtils.isNotNull(wmOutsourceRecptLine.getLocationId())){
-            WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationId(wmOutsourceRecptLine.getLocationId());
-            wmOutsourceRecptLine.setLocationCode(location.getLocationCode());
-            wmOutsourceRecptLine.setLocationName(location.getLocationName());
-        }
-        if(StringUtils.isNotNull(wmOutsourceRecptLine.getAreaId())){
-            WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaId(wmOutsourceRecptLine.getAreaId());
-            wmOutsourceRecptLine.setAreaCode(area.getAreaCode());
-            wmOutsourceRecptLine.setAreaName(area.getAreaName());
-        }
+    public AjaxResult edit(@RequestBody WmOutsourceRecptLine wmOutsourceRecptLine) {
+        setWarehouseInfo(wmOutsourceRecptLine);
 
         return toAjax(wmOutsourceRecptLineService.updateWmOutsourceRecptLine(wmOutsourceRecptLine));
     }
@@ -140,9 +127,8 @@ public class WmOutsourceRecptLineController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:oursourcerecpt:remove')")
     @Log(title = "外协入库单行", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{lineIds}")
-    public AjaxResult remove(@PathVariable Long[] lineIds)
-    {
+    @DeleteMapping("/{lineIds}")
+    public AjaxResult remove(@PathVariable Long[] lineIds) {
         return toAjax(wmOutsourceRecptLineService.deleteWmOutsourceRecptLineByLineIds(lineIds));
     }
 }
