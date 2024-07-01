@@ -5,6 +5,8 @@ import java.util.List;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.pro.domain.ProTask;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 生产任务Service接口
  *
@@ -68,4 +70,13 @@ public interface IProTaskService  extends IService<ProTask>
      * @return 结果
      */
     public int deleteProTaskByTaskId(Long taskId);
+
+    /**
+     * 批量新增/修改分配用户
+     * @param taskIds 主键id
+     * @param taskUserId 指派用户id
+     * @param taskBy 指派用户名称
+     * @return
+     */
+    public String addAssignUsers( List<String> taskIds,Long taskUserId, String taskBy);
 }
