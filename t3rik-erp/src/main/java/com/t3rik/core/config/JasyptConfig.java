@@ -28,7 +28,7 @@ public class JasyptConfig {
     public StringEncryptor stringEncryptor() {
         StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
         SysConfigJasypt jasypt = this.jasyptService.lambdaQuery().eq(SysConfigJasypt::getConfigKey, UserConstants.JASYPT_SALT_KEY).one();
-        Optional.ofNullable(jasypt).orElseThrow(() -> new BusinessException("未找到加密方式，无法启动"));
+        Optional.ofNullable(jasypt).orElseThrow(() -> new BusinessException("未找到加密方式，无法启动，如不需要加密启动，可以去掉该配置类，把redis的密码改为自己的服务器密码即可"));
         encryptor.setPassword(jasypt.getConfigValue());
         encryptor.setAlgorithm("PBEWithMD5AndDES");
         return encryptor;
