@@ -108,6 +108,11 @@
                     <warName>${project.artifactId}</warName>
                 </configuration>
             </plugin>
+<!--            <plugin>-->
+<!--                <groupId>com.github.ulisesbocchio</groupId>-->
+<!--                <artifactId>jasypt-maven-plugin</artifactId>-->
+<!--                <version>${jasypt.version}</version>-->
+<!--            </plugin>-->
         </plugins>
         <finalName>${project.artifactId}</finalName>
     </build>
