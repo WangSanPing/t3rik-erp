@@ -15,6 +15,8 @@ public class UserConstants {
     public static final String MOBILE_PATH = "/mobile";
     public static final String PAD_PATH = "/pad";
 
+    public static final String JASYPT_SALT_KEY = "jasypt.salt";
+
     /**
      * 正常状态
      */

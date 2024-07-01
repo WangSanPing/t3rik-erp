@@ -66,13 +66,13 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: 1.92.89.102
+    host: ENC(AOD2bJYFhe60850sMqrbVqi5TYhVmU7t)
     # 端口，默认为6379
     port: 6379
     # 数据库索引
     database: 0
     # 密码
-    password: root123ewq
+    password: ENC(TRJqxYw3RYnIX65UHPgBIfruHSYQGaJH)
     # 读写超时
     timeout: 30s
     # 连接超时

@@ -82,21 +82,7 @@ public class WmItemRecptLineController extends BaseController {
     @Log(title = "物料入库单行", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody WmItemRecptLine wmItemRecptLine) {
-        if (StringUtils.isNotNull(wmItemRecptLine.getWarehouseId())) {
-            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmItemRecptLine.getWarehouseId());
-            wmItemRecptLine.setWarehouseCode(warehouse.getWarehouseCode());
-            wmItemRecptLine.setWarehouseName(warehouse.getWarehouseName());
-        }
-        if (StringUtils.isNotNull(wmItemRecptLine.getLocationId())) {
-            WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationId(wmItemRecptLine.getLocationId());
-            wmItemRecptLine.setLocationCode(location.getLocationCode());
-            wmItemRecptLine.setLocationName(location.getLocationName());
-        }
-        if (StringUtils.isNotNull(wmItemRecptLine.getAreaId())) {
-            WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaId(wmItemRecptLine.getAreaId());
-            wmItemRecptLine.setAreaCode(area.getAreaCode());
-            wmItemRecptLine.setAreaName(area.getAreaName());
-        }
+        setWarehouseInfo(wmItemRecptLine);
         wmItemRecptLine.setCreateBy(getUsername());
         return toAjax(wmItemRecptLineService.insertWmItemRecptLine(wmItemRecptLine));
     }
@@ -108,6 +94,11 @@ public class WmItemRecptLineController extends BaseController {
     @Log(title = "物料入库单行", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody WmItemRecptLine wmItemRecptLine) {
+        setWarehouseInfo(wmItemRecptLine);
+        return toAjax(wmItemRecptLineService.updateWmItemRecptLine(wmItemRecptLine));
+    }
+
+    private void setWarehouseInfo(WmItemRecptLine wmItemRecptLine) {
         if (StringUtils.isNotNull(wmItemRecptLine.getWarehouseId())) {
             WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmItemRecptLine.getWarehouseId());
             wmItemRecptLine.setWarehouseCode(warehouse.getWarehouseCode());
@@ -123,7 +114,6 @@ public class WmItemRecptLineController extends BaseController {
             wmItemRecptLine.setAreaCode(area.getAreaCode());
             wmItemRecptLine.setAreaName(area.getAreaName());
         }
-        return toAjax(wmItemRecptLineService.updateWmItemRecptLine(wmItemRecptLine));
     }
 
     /**
