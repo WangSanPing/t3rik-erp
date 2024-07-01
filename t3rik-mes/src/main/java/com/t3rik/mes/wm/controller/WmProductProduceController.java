@@ -19,26 +19,25 @@ import java.util.List;
 
 /**
  * 产品产出记录Controller
- * 
+ *
  * @author yinjinlu
  * @date 2022-09-21
  */
 @RestController
 @RequestMapping("/mes/wm/productproduce")
-public class WmProductProduceController extends BaseController
-{
+public class WmProductProduceController extends BaseController {
     @Autowired
     private IWmProductProduceService wmProductProduceService;
 
     @Autowired
     private IWmProductProduceLineService wmProductProduceLineService;
+
     /**
      * 查询产品产出记录列表
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:productproduce:list')")
     @GetMapping("/list")
-    public TableDataInfo list(WmProductProduce wmProductProduce)
-    {
+    public TableDataInfo list(WmProductProduce wmProductProduce) {
         startPage();
         List<WmProductProduce> list = wmProductProduceService.selectWmProductProduceList(wmProductProduce);
         return getDataTable(list);
@@ -50,8 +49,7 @@ public class WmProductProduceController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:productproduce:export')")
     @Log(title = "产品产出记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, WmProductProduce wmProductProduce)
-    {
+    public void export(HttpServletResponse response, WmProductProduce wmProductProduce) {
         List<WmProductProduce> list = wmProductProduceService.selectWmProductProduceList(wmProductProduce);
         ExcelUtil<WmProductProduce> util = new ExcelUtil<WmProductProduce>(WmProductProduce.class);
         util.exportExcel(response, list, "产品产出记录数据");
@@ -62,8 +60,7 @@ public class WmProductProduceController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:productproduce:query')")
     @GetMapping(value = "/{recordId}")
-    public AjaxResult getInfo(@PathVariable("recordId") Long recordId)
-    {
+    public AjaxResult getInfo(@PathVariable("recordId") Long recordId) {
         return AjaxResult.success(wmProductProduceService.selectWmProductProduceByRecordId(recordId));
     }
 
@@ -73,8 +70,7 @@ public class WmProductProduceController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:productproduce:add')")
     @Log(title = "产品产出记录", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody WmProductProduce wmProductProduce)
-    {
+    public AjaxResult add(@RequestBody WmProductProduce wmProductProduce) {
         return toAjax(wmProductProduceService.insertWmProductProduce(wmProductProduce));
     }
 
@@ -84,8 +80,7 @@ public class WmProductProduceController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:productproduce:edit')")
     @Log(title = "产品产出记录", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody WmProductProduce wmProductProduce)
-    {
+    public AjaxResult edit(@RequestBody WmProductProduce wmProductProduce) {
         return toAjax(wmProductProduceService.updateWmProductProduce(wmProductProduce));
     }
 
@@ -95,11 +90,9 @@ public class WmProductProduceController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:productproduce:remove')")
     @Log(title = "产品产出记录", businessType = BusinessType.DELETE)
     @Transactional
-	@DeleteMapping("/{recordIds}")
-    public AjaxResult remove(@PathVariable Long[] recordIds)
-    {
-        for (Long recordId: recordIds
-             ) {
+    @DeleteMapping("/{recordIds}")
+    public AjaxResult remove(@PathVariable Long[] recordIds) {
+        for (Long recordId : recordIds) {
             wmProductProduceLineService.deleteByRecordId(recordId);
         }
         return toAjax(wmProductProduceService.deleteWmProductProduceByRecordIds(recordIds));

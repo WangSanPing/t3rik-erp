@@ -7,54 +7,49 @@ import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
-import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.poi.ExcelUtil;
-import com.t3rik.mes.wm.domain.*;
+import com.t3rik.mes.wm.domain.WmProductSalse;
+import com.t3rik.mes.wm.domain.WmProductSalseLine;
 import com.t3rik.mes.wm.domain.tx.ProductSalseTxBean;
-import com.t3rik.mes.wm.service.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.t3rik.mes.wm.service.IStorageCoreService;
+import com.t3rik.mes.wm.service.IWmProductSalseLineService;
+import com.t3rik.mes.wm.service.IWmProductSalseService;
+import com.t3rik.mes.wm.utils.WmWarehouseUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
  * 销售出库单Controller
- * 
+ *
  * @author yinjinlu
  * @date 2022-10-04
  */
 @RestController
 @RequestMapping("/mes/wm/productsalse")
-public class WmProductSalseController extends BaseController
-{
-    @Autowired
+public class WmProductSalseController extends BaseController {
+    @Resource
     private IWmProductSalseService wmProductSalseService;
 
-    @Autowired
+    @Resource
     private IWmProductSalseLineService wmProductSalseLineService;
 
-    @Autowired
-    private IWmWarehouseService wmWarehouseService;
-
-    @Autowired
-    private IWmStorageLocationService wmStorageLocationService;
-
-    @Autowired
-    private IWmStorageAreaService wmStorageAreaService;
-
-    @Autowired
+    @Resource
     private IStorageCoreService storageCoreService;
+
+    @Resource
+    private WmWarehouseUtil warehouseUtil;
 
     /**
      * 查询销售出库单列表
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:productsalse:list')")
     @GetMapping("/list")
-    public TableDataInfo list(WmProductSalse wmProductSalse)
-    {
+    public TableDataInfo list(WmProductSalse wmProductSalse) {
         startPage();
         List<WmProductSalse> list = wmProductSalseService.selectWmProductSalseList(wmProductSalse);
         return getDataTable(list);
@@ -66,8 +61,7 @@ public class WmProductSalseController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:productsalse:export')")
     @Log(title = "销售出库单", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, WmProductSalse wmProductSalse)
-    {
+    public void export(HttpServletResponse response, WmProductSalse wmProductSalse) {
         List<WmProductSalse> list = wmProductSalseService.selectWmProductSalseList(wmProductSalse);
         ExcelUtil<WmProductSalse> util = new ExcelUtil<WmProductSalse>(WmProductSalse.class);
         util.exportExcel(response, list, "销售出库单数据");
@@ -78,8 +72,7 @@ public class WmProductSalseController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:productsalse:query')")
     @GetMapping(value = "/{salseId}")
-    public AjaxResult getInfo(@PathVariable("salseId") Long salseId)
-    {
+    public AjaxResult getInfo(@PathVariable("salseId") Long salseId) {
         return AjaxResult.success(wmProductSalseService.selectWmProductSalseBySalseId(salseId));
     }
 
@@ -89,26 +82,12 @@ public class WmProductSalseController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:productsalse:add')")
     @Log(title = "销售出库单", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody WmProductSalse wmProductSalse)
-    {
-        if(UserConstants.NOT_UNIQUE.equals(wmProductSalseService.checkUnique(wmProductSalse))){
+    public AjaxResult add(@RequestBody WmProductSalse wmProductSalse) {
+        if (UserConstants.NOT_UNIQUE.equals(wmProductSalseService.checkUnique(wmProductSalse))) {
             return AjaxResult.error("出库单编号已存在！");
         }
-        if(StringUtils.isNotNull(wmProductSalse.getWarehouseId())){
-            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmProductSalse.getWarehouseId());
-            wmProductSalse.setWarehouseCode(warehouse.getWarehouseCode());
-            wmProductSalse.setWarehouseName(warehouse.getWarehouseName());
-        }
-        if(StringUtils.isNotNull(wmProductSalse.getLocationId())){
-            WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationId(wmProductSalse.getLocationId());
-            wmProductSalse.setLocationCode(location.getLocationCode());
-            wmProductSalse.setLocationName(location.getLocationName());
-        }
-        if(StringUtils.isNotNull(wmProductSalse.getAreaId())){
-            WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaId(wmProductSalse.getAreaId());
-            wmProductSalse.setAreaCode(area.getAreaCode());
-            wmProductSalse.setAreaName(area.getAreaName());
-        }
+        // 设置仓库信息
+        this.warehouseUtil.setWarehouseInfo(wmProductSalse);
         wmProductSalse.setCreateBy(getUsername());
         return toAjax(wmProductSalseService.insertWmProductSalse(wmProductSalse));
     }
@@ -119,26 +98,12 @@ public class WmProductSalseController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:productsalse:edit')")
     @Log(title = "销售出库单", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody WmProductSalse wmProductSalse)
-    {
-        if(UserConstants.NOT_UNIQUE.equals(wmProductSalseService.checkUnique(wmProductSalse))){
+    public AjaxResult edit(@RequestBody WmProductSalse wmProductSalse) {
+        if (UserConstants.NOT_UNIQUE.equals(wmProductSalseService.checkUnique(wmProductSalse))) {
             return AjaxResult.error("出库单编号已存在！");
         }
-        if(StringUtils.isNotNull(wmProductSalse.getWarehouseId())){
-            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmProductSalse.getWarehouseId());
-            wmProductSalse.setWarehouseCode(warehouse.getWarehouseCode());
-            wmProductSalse.setWarehouseName(warehouse.getWarehouseName());
-        }
-        if(StringUtils.isNotNull(wmProductSalse.getLocationId())){
-            WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationId(wmProductSalse.getLocationId());
-            wmProductSalse.setLocationCode(location.getLocationCode());
-            wmProductSalse.setLocationName(location.getLocationName());
-        }
-        if(StringUtils.isNotNull(wmProductSalse.getAreaId())){
-            WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaId(wmProductSalse.getAreaId());
-            wmProductSalse.setAreaCode(area.getAreaCode());
-            wmProductSalse.setAreaName(area.getAreaName());
-        }
+        // 设置仓库信息
+        this.warehouseUtil.setWarehouseInfo(wmProductSalse);
         return toAjax(wmProductSalseService.updateWmProductSalse(wmProductSalse));
     }
 
@@ -148,11 +113,9 @@ public class WmProductSalseController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:productsalse:remove')")
     @Log(title = "销售出库单", businessType = BusinessType.DELETE)
     @Transactional
-	@DeleteMapping("/{salseIds}")
-    public AjaxResult remove(@PathVariable Long[] salseIds)
-    {
-        for (Long salseId: salseIds
-             ) {
+    @DeleteMapping("/{salseIds}")
+    public AjaxResult remove(@PathVariable Long[] salseIds) {
+        for (Long salseId : salseIds) {
             wmProductSalseLineService.deleteBySalseId(salseId);
         }
         return toAjax(wmProductSalseService.deleteWmProductSalseBySalseIds(salseIds));
@@ -160,19 +123,20 @@ public class WmProductSalseController extends BaseController
 
     /**
      * 执行出库
+     *
      * @return
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:productsalse:edit')")
     @Log(title = "销售出库单", businessType = BusinessType.UPDATE)
     @Transactional
     @PutMapping("/{salseId}")
-    public AjaxResult execute(@PathVariable Long salseId){
+    public AjaxResult execute(@PathVariable Long salseId) {
         WmProductSalse salse = wmProductSalseService.selectWmProductSalseBySalseId(salseId);
 
         WmProductSalseLine param = new WmProductSalseLine();
         param.setSalseId(salseId);
         List<WmProductSalseLine> lines = wmProductSalseLineService.selectWmProductSalseLineList(param);
-        if(CollectionUtil.isEmpty(lines)){
+        if (CollectionUtil.isEmpty(lines)) {
             return AjaxResult.error("出库物资不能为空");
         }
 

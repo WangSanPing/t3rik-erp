@@ -12,6 +12,7 @@ import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.mes.wm.domain.*;
 import com.t3rik.mes.wm.domain.tx.ItemRecptTxBean;
 import com.t3rik.mes.wm.service.*;
+import com.t3rik.mes.wm.utils.WmWarehouseUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -36,16 +37,10 @@ public class WmItemRecptController extends BaseController {
     private IWmItemRecptLineService wmItemRecptLineService;
 
     @Resource
-    private IWmWarehouseService wmWarehouseService;
-
-    @Resource
-    private IWmStorageLocationService wmStorageLocationService;
-
-    @Resource
-    private IWmStorageAreaService wmStorageAreaService;
-
-    @Resource
     private IStorageCoreService storageCoreService;
+
+    @Resource
+    private WmWarehouseUtil warehouseUtil;
 
     /**
      * 查询物料入库单列表
@@ -90,21 +85,8 @@ public class WmItemRecptController extends BaseController {
             return AjaxResult.error("单据编号已存在！");
         }
 
-        if (StringUtils.isNotNull(wmItemRecpt.getWarehouseId())) {
-            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmItemRecpt.getWarehouseId());
-            wmItemRecpt.setWarehouseCode(warehouse.getWarehouseCode());
-            wmItemRecpt.setWarehouseName(warehouse.getWarehouseName());
-        }
-        if (StringUtils.isNotNull(wmItemRecpt.getLocationId())) {
-            WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationId(wmItemRecpt.getLocationId());
-            wmItemRecpt.setLocationCode(location.getLocationCode());
-            wmItemRecpt.setLocationName(location.getLocationName());
-        }
-        if (StringUtils.isNotNull(wmItemRecpt.getAreaId())) {
-            WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaId(wmItemRecpt.getAreaId());
-            wmItemRecpt.setAreaCode(area.getAreaCode());
-            wmItemRecpt.setAreaName(area.getAreaName());
-        }
+        // 设置仓库相关信息
+        warehouseUtil.setWarehouseInfo(wmItemRecpt);
 
         wmItemRecpt.setCreateBy(getUsername());
         return toAjax(wmItemRecptService.insertWmItemRecpt(wmItemRecpt));
@@ -126,22 +108,8 @@ public class WmItemRecptController extends BaseController {
         }
 
         wmItemRecpt.setStatus(UserConstants.ORDER_STATUS_CONFIRMED);
-
-        if (StringUtils.isNotNull(wmItemRecpt.getWarehouseId())) {
-            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmItemRecpt.getWarehouseId());
-            wmItemRecpt.setWarehouseCode(warehouse.getWarehouseCode());
-            wmItemRecpt.setWarehouseName(warehouse.getWarehouseName());
-        }
-        if (StringUtils.isNotNull(wmItemRecpt.getLocationId())) {
-            WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationId(wmItemRecpt.getLocationId());
-            wmItemRecpt.setLocationCode(location.getLocationCode());
-            wmItemRecpt.setLocationName(location.getLocationName());
-        }
-        if (StringUtils.isNotNull(wmItemRecpt.getAreaId())) {
-            WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaId(wmItemRecpt.getAreaId());
-            wmItemRecpt.setAreaCode(area.getAreaCode());
-            wmItemRecpt.setAreaName(area.getAreaName());
-        }
+        // 设置仓库相关信息
+        warehouseUtil.setWarehouseInfo(wmItemRecpt);
         return toAjax(wmItemRecptService.updateWmItemRecpt(wmItemRecpt));
     }
 
@@ -153,21 +121,8 @@ public class WmItemRecptController extends BaseController {
     @Log(title = "物料入库单", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody WmItemRecpt wmItemRecpt) {
-        if (StringUtils.isNotNull(wmItemRecpt.getWarehouseId())) {
-            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmItemRecpt.getWarehouseId());
-            wmItemRecpt.setWarehouseCode(warehouse.getWarehouseCode());
-            wmItemRecpt.setWarehouseName(warehouse.getWarehouseName());
-        }
-        if (StringUtils.isNotNull(wmItemRecpt.getLocationId())) {
-            WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationId(wmItemRecpt.getLocationId());
-            wmItemRecpt.setLocationCode(location.getLocationCode());
-            wmItemRecpt.setLocationName(location.getLocationName());
-        }
-        if (StringUtils.isNotNull(wmItemRecpt.getAreaId())) {
-            WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaId(wmItemRecpt.getAreaId());
-            wmItemRecpt.setAreaCode(area.getAreaCode());
-            wmItemRecpt.setAreaName(area.getAreaName());
-        }
+        // 设置仓库相关信息
+        warehouseUtil.setWarehouseInfo(wmItemRecpt);
         return toAjax(wmItemRecptService.updateWmItemRecpt(wmItemRecpt));
     }
 

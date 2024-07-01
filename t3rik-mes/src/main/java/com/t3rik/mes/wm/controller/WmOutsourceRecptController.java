@@ -28,14 +28,13 @@ import java.util.List;
 
 /**
  * 外协入库单Controller
- * 
+ *
  * @author yinjinlu
  * @date 2023-10-30
  */
 @RestController
 @RequestMapping("/mes/wm/outsourcerecpt")
-public class WmOutsourceRecptController extends BaseController
-{
+public class WmOutsourceRecptController extends BaseController {
     @Autowired
     private IWmOutsourceRecptService wmOutsourceRecptService;
 
@@ -54,8 +53,7 @@ public class WmOutsourceRecptController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourcerecpt:list')")
     @GetMapping("/list")
-    public TableDataInfo list(WmOutsourceRecpt wmOutsourceRecpt)
-    {
+    public TableDataInfo list(WmOutsourceRecpt wmOutsourceRecpt) {
         startPage();
         List<WmOutsourceRecpt> list = wmOutsourceRecptService.selectWmOutsourceRecptList(wmOutsourceRecpt);
         return getDataTable(list);
@@ -67,8 +65,7 @@ public class WmOutsourceRecptController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourcerecpt:export')")
     @Log(title = "外协入库单", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, WmOutsourceRecpt wmOutsourceRecpt)
-    {
+    public void export(HttpServletResponse response, WmOutsourceRecpt wmOutsourceRecpt) {
         List<WmOutsourceRecpt> list = wmOutsourceRecptService.selectWmOutsourceRecptList(wmOutsourceRecpt);
         ExcelUtil<WmOutsourceRecpt> util = new ExcelUtil<WmOutsourceRecpt>(WmOutsourceRecpt.class);
         util.exportExcel(response, list, "外协入库单数据");
@@ -79,8 +76,7 @@ public class WmOutsourceRecptController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourcerecpt:query')")
     @GetMapping(value = "/{recptId}")
-    public AjaxResult getInfo(@PathVariable("recptId") Long recptId)
-    {
+    public AjaxResult getInfo(@PathVariable("recptId") Long recptId) {
         return AjaxResult.success(wmOutsourceRecptService.selectWmOutsourceRecptByRecptId(recptId));
     }
 
@@ -90,8 +86,7 @@ public class WmOutsourceRecptController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourcerecpt:add')")
     @Log(title = "外协入库单", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody WmOutsourceRecpt wmOutsourceRecpt)
-    {
+    public AjaxResult add(@RequestBody WmOutsourceRecpt wmOutsourceRecpt) {
         return toAjax(wmOutsourceRecptService.insertWmOutsourceRecpt(wmOutsourceRecpt));
     }
 
@@ -101,8 +96,7 @@ public class WmOutsourceRecptController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourcerecpt:edit')")
     @Log(title = "外协入库单", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody WmOutsourceRecpt wmOutsourceRecpt)
-    {
+    public AjaxResult edit(@RequestBody WmOutsourceRecpt wmOutsourceRecpt) {
         return toAjax(wmOutsourceRecptService.updateWmOutsourceRecpt(wmOutsourceRecpt));
     }
 
@@ -112,11 +106,9 @@ public class WmOutsourceRecptController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourcerecpt:remove')")
     @Log(title = "外协入库单", businessType = BusinessType.DELETE)
     @Transactional
-	@DeleteMapping("/{recptIds}")
-    public AjaxResult remove(@PathVariable Long[] recptIds)
-    {
-        for (Long recptId:recptIds
-             ) {
+    @DeleteMapping("/{recptIds}")
+    public AjaxResult remove(@PathVariable Long[] recptIds) {
+        for (Long recptId : recptIds) {
             wmOutsourceRecptLineService.selectWmOutsourceRecptLineByRecptId(recptId);
         }
         return toAjax(wmOutsourceRecptService.deleteWmOutsourceRecptByRecptIds(recptIds));
@@ -124,45 +116,46 @@ public class WmOutsourceRecptController extends BaseController
 
     /**
      * 执行入库
+     *
      * @return
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourcerecpt:edit')")
     @Log(title = "外协入库单", businessType = BusinessType.UPDATE)
     @Transactional
     @PutMapping("/{recptId}")
-    public AjaxResult execute(@PathVariable Long recptId){
+    public AjaxResult execute(@PathVariable Long recptId) {
 
         WmOutsourceRecpt recpt = wmOutsourceRecptService.selectWmOutsourceRecptByRecptId(recptId);
 
         List<WmOutsourceRecptLine> lines = wmOutsourceRecptLineService.selectWmOutsourceRecptLineByRecptId(recptId);
-        if(CollectionUtils.isEmpty(lines)){
+        if (CollectionUtils.isEmpty(lines)) {
             return AjaxResult.error("请指定入库的物资！");
         }
 
-        //构造Transaction事务，并执行库存更新逻辑
+        // 构造Transaction事务，并执行库存更新逻辑
         List<OutsourceRecptTxBean> beans = wmOutsourceRecptService.getTxBeans(recptId);
 
-        //调用库存核心
+        // 调用库存核心
         storageCoreService.processOutsourceRecpt(beans);
 
-        //根据当前入库的物料更新对应的生产工单/生产任务 已生产数量
+        // 根据当前入库的物料更新对应的生产工单/生产任务 已生产数量
         ProWorkorder workorder = proWorkorderService.selectProWorkorderByWorkorderId(recpt.getWorkorderId());
-        if(!StringUtils.isNotNull(workorder)){
+        if (!StringUtils.isNotNull(workorder)) {
             return AjaxResult.error("未找到对应的外协工单/外协任务！");
         }
 
-        //正常外协入库的产品必须先经过检验，确认合格数量后才能执行入库，并且更新外协工单的进度。此处暂时先直接根据入库数量更新外协工单的生产数量。
-        BigDecimal produced = workorder.getQuantityProduced() == null?new BigDecimal(0):workorder.getQuantityProduced();
+        // 正常外协入库的产品必须先经过检验，确认合格数量后才能执行入库，并且更新外协工单的进度。此处暂时先直接根据入库数量更新外协工单的生产数量。
+        BigDecimal produced = workorder.getQuantityProduced() == null ? new BigDecimal(0) : workorder.getQuantityProduced();
         for (int i = 0; i < lines.size(); i++) {
             WmOutsourceRecptLine line = lines.get(i);
-            //判断入库的物资，如果是生产工单中的产品，则更新已生产数量
-            if(line.getItemCode().equals(workorder.getProductCode())){
-                workorder.setQuantityProduced( produced.add(line.getQuantityRecived()));
+            // 判断入库的物资，如果是生产工单中的产品，则更新已生产数量
+            if (line.getItemCode().equals(workorder.getProductCode())) {
+                workorder.setQuantityProduced(produced.add(line.getQuantityRecived()));
             }
         }
         proWorkorderService.updateProWorkorder(workorder);
 
-        //更新单据状态
+        // 更新单据状态
         recpt.setStatus(UserConstants.ORDER_STATUS_FINISHED);
         wmOutsourceRecptService.updateWmOutsourceRecpt(recpt);
 
