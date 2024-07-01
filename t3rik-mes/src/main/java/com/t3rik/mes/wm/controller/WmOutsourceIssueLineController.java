@@ -17,14 +17,13 @@ import java.util.List;
 
 /**
  * 外协领料单行Controller
- * 
+ *
  * @author yinjinlu
  * @date 2023-10-30
  */
 @RestController
 @RequestMapping("/mes/wm/outsourceissueline")
-public class WmOutsourceIssueLineController extends BaseController
-{
+public class WmOutsourceIssueLineController extends BaseController {
     @Autowired
     private IWmOutsourceIssueLineService wmOutsourceIssueLineService;
 
@@ -33,8 +32,7 @@ public class WmOutsourceIssueLineController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourceissue:list')")
     @GetMapping("/list")
-    public TableDataInfo list(WmOutsourceIssueLine wmOutsourceIssueLine)
-    {
+    public TableDataInfo list(WmOutsourceIssueLine wmOutsourceIssueLine) {
         startPage();
         List<WmOutsourceIssueLine> list = wmOutsourceIssueLineService.selectWmOutsourceIssueLineList(wmOutsourceIssueLine);
         return getDataTable(list);
@@ -46,8 +44,7 @@ public class WmOutsourceIssueLineController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourceissue:export')")
     @Log(title = "外协领料单行", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, WmOutsourceIssueLine wmOutsourceIssueLine)
-    {
+    public void export(HttpServletResponse response, WmOutsourceIssueLine wmOutsourceIssueLine) {
         List<WmOutsourceIssueLine> list = wmOutsourceIssueLineService.selectWmOutsourceIssueLineList(wmOutsourceIssueLine);
         ExcelUtil<WmOutsourceIssueLine> util = new ExcelUtil<WmOutsourceIssueLine>(WmOutsourceIssueLine.class);
         util.exportExcel(response, list, "外协领料单行数据");
@@ -58,8 +55,7 @@ public class WmOutsourceIssueLineController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourceissue:query')")
     @GetMapping(value = "/{lineId}")
-    public AjaxResult getInfo(@PathVariable("lineId") Long lineId)
-    {
+    public AjaxResult getInfo(@PathVariable("lineId") Long lineId) {
         return AjaxResult.success(wmOutsourceIssueLineService.selectWmOutsourceIssueLineByLineId(lineId));
     }
 
@@ -69,8 +65,7 @@ public class WmOutsourceIssueLineController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourceissue:add')")
     @Log(title = "外协领料单行", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody WmOutsourceIssueLine wmOutsourceIssueLine)
-    {
+    public AjaxResult add(@RequestBody WmOutsourceIssueLine wmOutsourceIssueLine) {
         return toAjax(wmOutsourceIssueLineService.insertWmOutsourceIssueLine(wmOutsourceIssueLine));
     }
 
@@ -80,8 +75,7 @@ public class WmOutsourceIssueLineController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourceissue:edit')")
     @Log(title = "外协领料单行", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody WmOutsourceIssueLine wmOutsourceIssueLine)
-    {
+    public AjaxResult edit(@RequestBody WmOutsourceIssueLine wmOutsourceIssueLine) {
         return toAjax(wmOutsourceIssueLineService.updateWmOutsourceIssueLine(wmOutsourceIssueLine));
     }
 
@@ -90,9 +84,8 @@ public class WmOutsourceIssueLineController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourceissue:remove')")
     @Log(title = "外协领料单行", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{lineIds}")
-    public AjaxResult remove(@PathVariable Long[] lineIds)
-    {
+    @DeleteMapping("/{lineIds}")
+    public AjaxResult remove(@PathVariable Long[] lineIds) {
         return toAjax(wmOutsourceIssueLineService.deleteWmOutsourceIssueLineByLineIds(lineIds));
     }
 }

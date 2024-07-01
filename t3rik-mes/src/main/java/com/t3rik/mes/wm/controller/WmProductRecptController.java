@@ -7,54 +7,50 @@ import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
-import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.poi.ExcelUtil;
-import com.t3rik.mes.wm.domain.*;
+import com.t3rik.mes.wm.domain.WmProductRecpt;
+import com.t3rik.mes.wm.domain.WmProductRecptLine;
 import com.t3rik.mes.wm.domain.tx.ProductRecptTxBean;
-import com.t3rik.mes.wm.service.*;
+import com.t3rik.mes.wm.service.IStorageCoreService;
+import com.t3rik.mes.wm.service.IWmProductRecptLineService;
+import com.t3rik.mes.wm.service.IWmProductRecptService;
+import com.t3rik.mes.wm.utils.WmWarehouseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
  * 产品入库录Controller
- * 
+ *
  * @author yinjinlu
  * @date 2022-09-22
  */
 @RestController
 @RequestMapping("/mes/wm/productrecpt")
-public class WmProductRecptController extends BaseController
-{
+public class WmProductRecptController extends BaseController {
     @Autowired
     private IWmProductRecptService wmProductRecptService;
 
-    @Autowired
+    @Resource
     private IWmProductRecptLineService wmProductRecptLineService;
 
-    @Autowired
-    private IWmWarehouseService wmWarehouseService;
-
-    @Autowired
-    private IWmStorageLocationService wmStorageLocationService;
-
-    @Autowired
-    private IWmStorageAreaService wmStorageAreaService;
-
-    @Autowired
+    @Resource
     private IStorageCoreService storageCoreService;
+
+    @Resource
+    private WmWarehouseUtil warehouseUtil;
 
     /**
      * 查询产品入库录列表
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:productrecpt:list')")
     @GetMapping("/list")
-    public TableDataInfo list(WmProductRecpt wmProductRecpt)
-    {
+    public TableDataInfo list(WmProductRecpt wmProductRecpt) {
         startPage();
         List<WmProductRecpt> list = wmProductRecptService.selectWmProductRecptList(wmProductRecpt);
         return getDataTable(list);
@@ -66,8 +62,7 @@ public class WmProductRecptController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:productrecpt:export')")
     @Log(title = "产品入库记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, WmProductRecpt wmProductRecpt)
-    {
+    public void export(HttpServletResponse response, WmProductRecpt wmProductRecpt) {
         List<WmProductRecpt> list = wmProductRecptService.selectWmProductRecptList(wmProductRecpt);
         ExcelUtil<WmProductRecpt> util = new ExcelUtil<WmProductRecpt>(WmProductRecpt.class);
         util.exportExcel(response, list, "产品入库录数据");
@@ -78,8 +73,7 @@ public class WmProductRecptController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:productrecpt:query')")
     @GetMapping(value = "/{recptId}")
-    public AjaxResult getInfo(@PathVariable("recptId") Long recptId)
-    {
+    public AjaxResult getInfo(@PathVariable("recptId") Long recptId) {
         return AjaxResult.success(wmProductRecptService.selectWmProductRecptByRecptId(recptId));
     }
 
@@ -89,27 +83,12 @@ public class WmProductRecptController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:productrecpt:add')")
     @Log(title = "产品入库记录", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody WmProductRecpt wmProductRecpt)
-    {
-        if(UserConstants.NOT_UNIQUE.equals(wmProductRecptService.checkUnique(wmProductRecpt))){
+    public AjaxResult add(@RequestBody WmProductRecpt wmProductRecpt) {
+        if (UserConstants.NOT_UNIQUE.equals(wmProductRecptService.checkUnique(wmProductRecpt))) {
             return AjaxResult.error("入库单编号已存在！");
         }
-
-        if(StringUtils.isNotNull(wmProductRecpt.getWarehouseId())){
-            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmProductRecpt.getWarehouseId());
-            wmProductRecpt.setWarehouseCode(warehouse.getWarehouseCode());
-            wmProductRecpt.setWarehouseName(warehouse.getWarehouseName());
-        }
-        if(StringUtils.isNotNull(wmProductRecpt.getLocationId())){
-            WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationId(wmProductRecpt.getLocationId());
-            wmProductRecpt.setLocationCode(location.getLocationCode());
-            wmProductRecpt.setLocationName(location.getLocationName());
-        }
-        if(StringUtils.isNotNull(wmProductRecpt.getAreaId())){
-            WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaId(wmProductRecpt.getAreaId());
-            wmProductRecpt.setAreaCode(area.getAreaCode());
-            wmProductRecpt.setAreaName(area.getAreaName());
-        }
+        // 设置仓库信息
+        this.warehouseUtil.setWarehouseInfo(wmProductRecpt);
         wmProductRecpt.setCreateBy(getUsername());
         return toAjax(wmProductRecptService.insertWmProductRecpt(wmProductRecpt));
     }
@@ -120,29 +99,12 @@ public class WmProductRecptController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:productrecpt:edit')")
     @Log(title = "产品入库记录", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody WmProductRecpt wmProductRecpt)
-    {
-        if(UserConstants.NOT_UNIQUE.equals(wmProductRecptService.checkUnique(wmProductRecpt))){
+    public AjaxResult edit(@RequestBody WmProductRecpt wmProductRecpt) {
+        if (UserConstants.NOT_UNIQUE.equals(wmProductRecptService.checkUnique(wmProductRecpt))) {
             return AjaxResult.error("入库单编号已存在！");
         }
-
-
-        if(StringUtils.isNotNull(wmProductRecpt.getWarehouseId())){
-            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmProductRecpt.getWarehouseId());
-            wmProductRecpt.setWarehouseCode(warehouse.getWarehouseCode());
-            wmProductRecpt.setWarehouseName(warehouse.getWarehouseName());
-        }
-        if(StringUtils.isNotNull(wmProductRecpt.getLocationId())){
-            WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationId(wmProductRecpt.getLocationId());
-            wmProductRecpt.setLocationCode(location.getLocationCode());
-            wmProductRecpt.setLocationName(location.getLocationName());
-        }
-        if(StringUtils.isNotNull(wmProductRecpt.getAreaId())){
-            WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaId(wmProductRecpt.getAreaId());
-            wmProductRecpt.setAreaCode(area.getAreaCode());
-            wmProductRecpt.setAreaName(area.getAreaName());
-        }
-
+        // 设置仓库信息
+        this.warehouseUtil.setWarehouseInfo(wmProductRecpt);
         return toAjax(wmProductRecptService.updateWmProductRecpt(wmProductRecpt));
     }
 
@@ -152,11 +114,9 @@ public class WmProductRecptController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:productrecpt:remove')")
     @Log(title = "产品入库记录", businessType = BusinessType.DELETE)
     @Transactional
-	@DeleteMapping("/{recptIds}")
-    public AjaxResult remove(@PathVariable Long[] recptIds)
-    {
-        for (Long recptId: recptIds
-             ) {
+    @DeleteMapping("/{recptIds}")
+    public AjaxResult remove(@PathVariable Long[] recptIds) {
+        for (Long recptId : recptIds) {
             wmProductRecptLineService.deleteByRecptId(recptId);
         }
         return toAjax(wmProductRecptService.deleteWmProductRecptByRecptIds(recptIds));
@@ -164,19 +124,20 @@ public class WmProductRecptController extends BaseController
 
     /**
      * 执行入库
+     *
      * @return
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:productrecpt:edit')")
     @Log(title = "产品入库记录", businessType = BusinessType.UPDATE)
     @Transactional
     @PutMapping("/{recptId}")
-    public AjaxResult execute(@PathVariable Long recptId){
+    public AjaxResult execute(@PathVariable Long recptId) {
         WmProductRecpt recpt = wmProductRecptService.selectWmProductRecptByRecptId(recptId);
 
         WmProductRecptLine param = new WmProductRecptLine();
         param.setRecptId(recptId);
         List<WmProductRecptLine> lines = wmProductRecptLineService.selectWmProductRecptLineList(param);
-        if(CollUtil.isEmpty(lines)){
+        if (CollUtil.isEmpty(lines)) {
             return AjaxResult.error("请添加要入库的产品");
         }
 

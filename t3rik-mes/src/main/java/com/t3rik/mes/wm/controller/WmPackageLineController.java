@@ -17,14 +17,13 @@ import java.util.List;
 
 /**
  * 装箱明细Controller
- * 
+ *
  * @author yinjinlu
  * @date 2022-10-11
  */
 @RestController
 @RequestMapping("/mes/wm/packageline")
-public class WmPackageLineController extends BaseController
-{
+public class WmPackageLineController extends BaseController {
     @Autowired
     private IWmPackageLineService wmPackageLineService;
 
@@ -33,8 +32,7 @@ public class WmPackageLineController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:package:list')")
     @GetMapping("/list")
-    public TableDataInfo list(WmPackageLine wmPackageLine)
-    {
+    public TableDataInfo list(WmPackageLine wmPackageLine) {
         startPage();
         List<WmPackageLine> list = wmPackageLineService.selectWmPackageLineList(wmPackageLine);
         return getDataTable(list);
@@ -46,8 +44,7 @@ public class WmPackageLineController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:package:export')")
     @Log(title = "装箱明细", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, WmPackageLine wmPackageLine)
-    {
+    public void export(HttpServletResponse response, WmPackageLine wmPackageLine) {
         List<WmPackageLine> list = wmPackageLineService.selectWmPackageLineList(wmPackageLine);
         ExcelUtil<WmPackageLine> util = new ExcelUtil<WmPackageLine>(WmPackageLine.class);
         util.exportExcel(response, list, "装箱明细数据");
@@ -58,8 +55,7 @@ public class WmPackageLineController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:package:query')")
     @GetMapping(value = "/{lineId}")
-    public AjaxResult getInfo(@PathVariable("lineId") Long lineId)
-    {
+    public AjaxResult getInfo(@PathVariable("lineId") Long lineId) {
         return AjaxResult.success(wmPackageLineService.selectWmPackageLineByLineId(lineId));
     }
 
@@ -69,8 +65,7 @@ public class WmPackageLineController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:package:add')")
     @Log(title = "装箱明细", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody WmPackageLine wmPackageLine)
-    {
+    public AjaxResult add(@RequestBody WmPackageLine wmPackageLine) {
         return toAjax(wmPackageLineService.insertWmPackageLine(wmPackageLine));
     }
 
@@ -80,8 +75,7 @@ public class WmPackageLineController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:package:edit')")
     @Log(title = "装箱明细", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody WmPackageLine wmPackageLine)
-    {
+    public AjaxResult edit(@RequestBody WmPackageLine wmPackageLine) {
         return toAjax(wmPackageLineService.updateWmPackageLine(wmPackageLine));
     }
 
@@ -90,9 +84,8 @@ public class WmPackageLineController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:package:remove')")
     @Log(title = "装箱明细", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{lineIds}")
-    public AjaxResult remove(@PathVariable Long[] lineIds)
-    {
+    @DeleteMapping("/{lineIds}")
+    public AjaxResult remove(@PathVariable Long[] lineIds) {
         return toAjax(wmPackageLineService.deleteWmPackageLineByLineIds(lineIds));
     }
 }

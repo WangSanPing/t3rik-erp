@@ -24,14 +24,13 @@ import java.util.List;
 
 /**
  * 外协领料单头Controller
- * 
+ *
  * @author yinjinlu
  * @date 2023-10-30
  */
 @RestController
 @RequestMapping("/mes/wm/outsourceissue")
-public class WmOutsourceIssueController extends BaseController
-{
+public class WmOutsourceIssueController extends BaseController {
     @Autowired
     private IWmOutsourceIssueService wmOutsourceIssueService;
 
@@ -46,8 +45,7 @@ public class WmOutsourceIssueController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourceissue:list')")
     @GetMapping("/list")
-    public TableDataInfo list(WmOutsourceIssue wmOutsourceIssue)
-    {
+    public TableDataInfo list(WmOutsourceIssue wmOutsourceIssue) {
         startPage();
         List<WmOutsourceIssue> list = wmOutsourceIssueService.selectWmOutsourceIssueList(wmOutsourceIssue);
         return getDataTable(list);
@@ -59,8 +57,7 @@ public class WmOutsourceIssueController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourceissue:export')")
     @Log(title = "外协领料单头", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, WmOutsourceIssue wmOutsourceIssue)
-    {
+    public void export(HttpServletResponse response, WmOutsourceIssue wmOutsourceIssue) {
         List<WmOutsourceIssue> list = wmOutsourceIssueService.selectWmOutsourceIssueList(wmOutsourceIssue);
         ExcelUtil<WmOutsourceIssue> util = new ExcelUtil<WmOutsourceIssue>(WmOutsourceIssue.class);
         util.exportExcel(response, list, "外协领料单头数据");
@@ -71,8 +68,7 @@ public class WmOutsourceIssueController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourceissue:query')")
     @GetMapping(value = "/{issueId}")
-    public AjaxResult getInfo(@PathVariable("issueId") Long issueId)
-    {
+    public AjaxResult getInfo(@PathVariable("issueId") Long issueId) {
         return AjaxResult.success(wmOutsourceIssueService.selectWmOutsourceIssueByIssueId(issueId));
     }
 
@@ -82,8 +78,7 @@ public class WmOutsourceIssueController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourceissue:add')")
     @Log(title = "外协领料单头", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody WmOutsourceIssue wmOutsourceIssue)
-    {
+    public AjaxResult add(@RequestBody WmOutsourceIssue wmOutsourceIssue) {
         return toAjax(wmOutsourceIssueService.insertWmOutsourceIssue(wmOutsourceIssue));
     }
 
@@ -93,8 +88,7 @@ public class WmOutsourceIssueController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourceissue:edit')")
     @Log(title = "外协领料单头", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody WmOutsourceIssue wmOutsourceIssue)
-    {
+    public AjaxResult edit(@RequestBody WmOutsourceIssue wmOutsourceIssue) {
         return toAjax(wmOutsourceIssueService.updateWmOutsourceIssue(wmOutsourceIssue));
     }
 
@@ -104,11 +98,9 @@ public class WmOutsourceIssueController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourceissue:remove')")
     @Log(title = "外协领料单头", businessType = BusinessType.DELETE)
     @Transactional
-	@DeleteMapping("/{issueIds}")
-    public AjaxResult remove(@PathVariable Long[] issueIds)
-    {
-        for (Long issueId:issueIds
-             ) {
+    @DeleteMapping("/{issueIds}")
+    public AjaxResult remove(@PathVariable Long[] issueIds) {
+        for (Long issueId : issueIds) {
             wmOutsourceIssueLineService.deleteWmOutsourceIssueLineByIssueId(issueId);
         }
         return toAjax(wmOutsourceIssueService.deleteWmOutsourceIssueByIssueIds(issueIds));
@@ -116,25 +108,26 @@ public class WmOutsourceIssueController extends BaseController
 
     /**
      * 执行出库
+     *
      * @return
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:outsourceissue:edit')")
     @Log(title = "外协领料单头", businessType = BusinessType.UPDATE)
     @Transactional
     @PutMapping("/{issueId}")
-    public AjaxResult execute(@PathVariable Long issueId){
+    public AjaxResult execute(@PathVariable Long issueId) {
         WmOutsourceIssue header = wmOutsourceIssueService.selectWmOutsourceIssueByIssueId(issueId);
         WmOutsourceIssueLine param = new WmOutsourceIssueLine();
         param.setIssueId(issueId);
         List<WmOutsourceIssueLine> lines = wmOutsourceIssueLineService.selectWmOutsourceIssueLineList(param);
-        if(CollUtil.isEmpty(lines)){
+        if (CollUtil.isEmpty(lines)) {
             return AjaxResult.error("请指定领出的物资");
         }
 
         List<OutsourceIssueTxBean> beans = wmOutsourceIssueService.getTxBeans(issueId);
 
         storageCoreService.processOutsourceIssue(beans);
-        //更新单据状态
+        // 更新单据状态
         header.setStatus(UserConstants.ORDER_STATUS_FINISHED);
         wmOutsourceIssueService.updateWmOutsourceIssue(header);
         return AjaxResult.success();
