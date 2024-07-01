@@ -33,4 +33,14 @@ public class JasyptConfig {
         encryptor.setAlgorithm("PBEWithMD5AndDES");
         return encryptor;
     }
+
+
+    // public static void main(String[] args) {
+    //     StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
+    //     encryptor.setPassword("your-secret-password"); // 加密密钥
+    //     encryptor.setAlgorithm("PBEWithMD5AndDES");
+    //
+    //     String encryptedPassword = encryptor.encrypt("your-redis-password");
+    //     System.out.println("Encrypted password: ENC(" + encryptedPassword + ")");
+    // }
 }
