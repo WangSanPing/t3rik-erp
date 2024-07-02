@@ -1,4 +1,4 @@
-package com.t3rik.common.handler;
+package com.t3rik.common.helper;
 
 import java.util.function.Consumer;
 
