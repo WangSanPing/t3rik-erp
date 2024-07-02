@@ -113,7 +113,7 @@ public class ProTaskServiceImpl extends ServiceImpl<ProTaskMapper, ProTask> impl
      * @return
      */
     @Override
-    public String addAssignUsers(@NotNull List<String> taskIds, @NotNull Long taskUserId, @NotNull String taskBy) {
+    public String addAssignUsers(List<String> taskIds,Long taskUserId,String taskBy) {
 
         //存放编号
         List<String> codeList = new ArrayList<>();
