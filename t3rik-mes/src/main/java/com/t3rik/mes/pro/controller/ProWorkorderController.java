@@ -247,7 +247,7 @@ public class ProWorkorderController extends BaseController {
     @Log(title = "生产工单", businessType = BusinessType.UPDATE)
     @Transactional
     @PutMapping("/{workorderId}")
-    public AjaxResult dofinish(@PathVariable Long workorderId) {
+    public AjaxResult doFinish(@PathVariable Long workorderId) {
         ProWorkorder workorder = proWorkorderService.selectProWorkorderByWorkorderId(workorderId);
 
         // 将此工单下所有的生产任务状态设置为已完成
@@ -255,8 +255,7 @@ public class ProWorkorderController extends BaseController {
         param.setWorkorderId(workorderId);
         List<ProTask> tasks = proTaskService.selectProTaskList(param);
         if (!CollectionUtils.isEmpty(tasks)) {
-            for (ProTask task : tasks
-            ) {
+            for (ProTask task : tasks) {
                 task.setStatus(UserConstants.ORDER_STATUS_FINISHED);
                 proTaskService.updateProTask(task);
             }
