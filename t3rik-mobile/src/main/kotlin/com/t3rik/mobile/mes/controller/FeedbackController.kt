@@ -6,31 +6,37 @@ import com.t3rik.common.core.controller.BaseController
 import com.t3rik.common.core.page.TableDataInfo
 import com.t3rik.common.enums.mes.OrderStatusEnum
 import com.t3rik.common.utils.SecurityUtils
-import com.t3rik.mes.pro.domain.ProFeedback
+import com.t3rik.mes.pro.domain.ProTask
 import com.t3rik.mes.pro.service.IProFeedbackService
+import com.t3rik.mes.pro.service.IProTaskService
 import com.t3rik.mobile.common.enums.CurrentIndexEnum
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import javax.annotation.Resource
 
-
+/**
+ * 报工相关
+ * @author t3rik
+ * @date 2024/6/13
+ */
 @RestController
 @RequestMapping(UserConstants.MOBILE_PATH + "/feedback")
 class FeedbackController : BaseController() {
 
     @Resource
-    lateinit var feedbackService: IProFeedbackService
+    lateinit var taskService: IProTaskService
+
 
     @GetMapping("/list")
-    fun getFeedbackList(feedback: ProFeedback): TableDataInfo {
-        val mpPage = getMPPage(feedback)
-        val paramByCurrentIndex = getParamByCurrentIndex(feedback.currentIndex)
-        val page = this.feedbackService.lambdaQuery()
-            .eq(ProFeedback::getUserId, SecurityUtils.getUserId())
-            .`in`(CollectionUtils.isNotEmpty(paramByCurrentIndex), ProFeedback::getStatus, paramByCurrentIndex)
-            .orderByAsc(ProFeedback::getStatus)
-            .orderByDesc(ProFeedback::getFeedbackTime)
+    fun getTaskList(task: ProTask): TableDataInfo {
+        val mpPage = getMPPage(task)
+        val paramByCurrentIndex = getParamByCurrentIndex(task.currentIndex)
+        val page = this.taskService.lambdaQuery()
+            .eq(ProTask::getTaskUserId, SecurityUtils.getUserId())
+            .`in`(CollectionUtils.isNotEmpty(paramByCurrentIndex), ProTask::getStatus, paramByCurrentIndex)
+            .orderByAsc(ProTask::getStatus)
+            .orderByDesc(ProTask::getRequestDate)
             .page(mpPage)
         return getDataTableWithPage(page)
     }

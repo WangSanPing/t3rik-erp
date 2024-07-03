@@ -30,6 +30,14 @@ public class ProTask extends BaseEntity
     @TableId
     private Long taskId;
 
+
+    /**
+     * 查询页
+     * 0:全部 1:待处理 2:已处理
+     */
+    @TableField(exist = false)
+    private String currentIndex;
+
     /** 任务编号 */
     @Excel(name = "任务编号")
     private String taskCode;
