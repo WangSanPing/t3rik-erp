@@ -1,11 +1,16 @@
 package com.t3rik.mes.pro.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.t3rik.common.core.domain.BaseEntity;
+import com.t3rik.common.enums.mes.OrderStatusEnum;
 import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.DateUtils;
+import com.t3rik.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.t3rik.mes.pro.mapper.ProTaskMapper;
@@ -113,25 +118,35 @@ public class ProTaskServiceImpl extends ServiceImpl<ProTaskMapper, ProTask> impl
      * @return
      */
     @Override
-    public String addAssignUsers(List<String> taskIds,Long taskUserId,String taskBy) {
-
-        //存放编号
-        List<String> codeList = new ArrayList<>();
-        taskIds.forEach(taskId -> {
-            //判断当前是第一次指派还是修改
-            ProTask proTask = this.lambdaQuery().eq(ProTask::getTaskId, taskId).one();
-            if (proTask.getTaskUserId() != null && proTask.getEndTime().compareTo(DateUtils.getNowDate()) < 1) {
-                //任务已超过设定完成生产时间编号
-                codeList.add(proTask.getTaskCode());
-                return;
-            }
+    public String addAssignUsers(List<String> taskIds,Long taskUserId,String taskBy){
+        Date nowDate = DateUtils.getNowDate();
+        //符合条件的任务id
+        List<Long> taskIdList  = this.lambdaQuery()
+                .in(ProTask::getTaskId, taskIds)
+                .list()
+                .stream()
+                .filter(proTask -> !(proTask.getTaskUserId() != null && proTask.getEndTime().compareTo(nowDate) < 1))
+                .map(ProTask::getTaskId)
+                .toList();
+        //更新任务指派用户
+        if(!taskIdList.isEmpty()){
+            ////派单已确认
             this.lambdaUpdate()
-                    .eq(ProTask::getTaskId, taskId)
+                    .in(ProTask::getTaskId, taskIdList)
                     .set(ProTask::getTaskUserId, taskUserId)
                     .set(ProTask::getTaskBy, taskBy)
-                    .set(ProTask::getUpdateTime, DateUtils.getNowDate())
-                    .update();
-        });
+                    .set(ProTask::getStatus, OrderStatusEnum.CONFIRMED.getCode())
+                    .update(new ProTask());
+        }
+        //任务已超过设定完成生产时间编号
+        List<String> codeList  = this.lambdaQuery()
+                .in(ProTask::getTaskId, taskIds)
+                .list()
+                .stream()
+                .filter(proTask -> proTask.getTaskUserId() != null && proTask.getEndTime().compareTo(nowDate) < 1)
+                .map(ProTask::getTaskCode)
+                .toList();
+        //返回提示信息
         StringBuilder sb = new StringBuilder();
         if (!codeList.isEmpty()) {
             sb.append("编号为：").append(String.join(",", codeList)).append("的任务已超过设定完成生产时间，不能再指派！");

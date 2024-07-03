@@ -97,7 +97,7 @@ public class ProTaskDispatchController extends BaseController {
                 .in(ProTask::getTaskId, taskIds)
                 .set(ProTask::getTaskBy, null)
                 .set(ProTask::getTaskUserId, null)
-                .update());
+                .update(new ProTask()));
     }
 
     /**
@@ -107,12 +107,12 @@ public class ProTaskDispatchController extends BaseController {
         LambdaQueryWrapper<ProTask> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(proTask.getTaskCode() != null, ProTask::getTaskCode, proTask.getTaskCode());
         queryWrapper.like(StringUtils.isNotEmpty(proTask.getTaskName()), ProTask::getTaskName, proTask.getTaskName());
-        queryWrapper.eq(proTask.getWorkorderCode() != null, ProTask::getWorkorderCode, proTask.getWorkorderCode());
+        queryWrapper.like(StringUtils.isNotEmpty(proTask.getWorkorderCode()), ProTask::getWorkorderCode, proTask.getWorkorderCode());
         queryWrapper.like(StringUtils.isNotEmpty(proTask.getWorkorderName()), ProTask::getWorkorderName, proTask.getWorkorderName());
         queryWrapper.like(StringUtils.isNotEmpty(proTask.getProcessName()), ProTask::getProcessName, proTask.getProcessName());
         Map<String, Object> params = proTask.getParams();
         queryWrapper.between(params.get("beginTime") != null && params.get("endTime") != null, ProTask::getCreateTime, params.get("beginTime"), params.get("endTime"));
-        queryWrapper.groupBy(ProTask::getTaskId).orderByDesc(BaseEntity::getUpdateTime);
+        queryWrapper.groupBy(ProTask::getTaskId);
         return queryWrapper;
     }
 }

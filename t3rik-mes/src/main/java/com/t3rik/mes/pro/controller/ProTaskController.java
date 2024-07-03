@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import cn.hutool.core.collection.CollUtil;
 import com.t3rik.common.constant.UserConstants;
+import com.t3rik.common.enums.mes.OrderStatusEnum;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.mes.pro.domain.*;
 import com.t3rik.mes.pro.service.*;
@@ -31,7 +32,7 @@ import com.t3rik.common.core.page.TableDataInfo;
 
 /**
  * 生产任务Controller
- * 
+ *
  * @author yinjinlu
  * @date 2022-05-14
  */
@@ -249,8 +250,8 @@ public class ProTaskController extends BaseController
         proTask.setTaskName(new StringBuilder().append(proTask.getItemName()).append("【").append(proTask.getQuantity().toString()).append("】").append(proTask.getUnitOfMeasure()).toString());
 
 
-
-        return toAjax(proTaskService.insertProTask(proTask));
+        proTask.setStatus(OrderStatusEnum.PREPARE.getCode());
+        return toAjax(proTaskService.save(proTask));
     }
 
     /**
