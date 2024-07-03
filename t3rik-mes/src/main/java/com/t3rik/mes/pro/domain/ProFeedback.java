@@ -27,13 +27,6 @@ public class ProFeedback extends BaseEntity {
      */
     @TableId
     private Long recordId;
-
-    /**
-     * 查询页
-     * 0:全部 1:待处理 2:已处理
-     */
-    @TableField(exist = false)
-    private String currentIndex;
     /**
      * 客户订单号
      */
