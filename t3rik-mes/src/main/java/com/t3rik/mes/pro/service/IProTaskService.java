@@ -1,11 +1,9 @@
 package com.t3rik.mes.pro.service;
 
-import java.util.List;
-
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.pro.domain.ProTask;
 
-import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * 生产任务Service接口
@@ -13,8 +11,7 @@ import javax.validation.constraints.NotNull;
  * @author yinjinlu
  * @date 2022-05-14
  */
-public interface IProTaskService  extends IService<ProTask>
-{
+public interface IProTaskService extends IService<ProTask> {
     /**
      * 查询生产任务
      *
@@ -34,10 +31,12 @@ public interface IProTaskService  extends IService<ProTask>
 
     /**
      * 查询某个工单的各个工序生产进度
+     *
      * @param workorderId
      * @return
      */
     public List<ProTask> selectProTaskProcessViewByWorkorder(Long workorderId);
+
 
     /**
      * 新增生产任务
@@ -73,10 +72,11 @@ public interface IProTaskService  extends IService<ProTask>
 
     /**
      * 批量新增/修改分配用户
-     * @param taskIds 主键id
+     *
+     * @param taskIds    主键id
      * @param taskUserId 指派用户id
-     * @param taskBy 指派用户名称
+     * @param taskBy     指派用户名称
      * @return
      */
-    public String addAssignUsers(List<String> taskIds,Long taskUserId, String taskBy);
+    public String addAssignUsers(List<String> taskIds, Long taskUserId, String taskBy);
 }
