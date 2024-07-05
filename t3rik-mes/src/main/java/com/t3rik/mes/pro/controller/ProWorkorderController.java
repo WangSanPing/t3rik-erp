@@ -7,6 +7,7 @@ import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
+import com.t3rik.common.enums.mes.OrderStatusEnum;
 import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.mes.md.domain.MdProductBom;
 import com.t3rik.mes.md.service.IMdProductBomService;
@@ -254,7 +255,7 @@ public class ProWorkorderController extends BaseController {
         ProTask param = new ProTask();
         param.setWorkorderId(workorderId);
         List<ProTask> tasks = proTaskService.selectProTaskList(param);
-        if (!CollectionUtils.isEmpty(tasks)) {
+        if(!CollectionUtils.isEmpty(tasks)) {
             for (ProTask task : tasks) {
                 task.setStatus(UserConstants.ORDER_STATUS_FINISHED);
                 proTaskService.updateProTask(task);
@@ -266,4 +267,15 @@ public class ProWorkorderController extends BaseController {
         return AjaxResult.success();
     }
 
+    /**
+     * 获取生产工单下生产任务信息是否存在未完成状态
+     */
+    @GetMapping(value = "/getWorkTaskStatus/{workorderIds}")
+    public AjaxResult getWorkTaskStatus(@PathVariable Long[] workorderIds) {
+        return AjaxResult.success(proTaskService.lambdaQuery()
+                .in(ProTask::getWorkorderId, workorderIds)
+                .ne(ProTask::getStatus,OrderStatusEnum.FINISHED.getCode())
+                .count()
+        );
+    }
 }
