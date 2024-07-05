@@ -2,6 +2,7 @@ package com.t3rik.mes.pro.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.pagehelper.IPage;
 import com.t3rik.common.annotation.Log;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
@@ -13,14 +14,19 @@ import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.mes.pro.domain.*;
 import com.t3rik.mes.pro.service.*;
 import com.t3rik.mes.pro.dto.AssignUsersDto;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * 生产派单Controller
@@ -45,8 +51,8 @@ public class ProTaskDispatchController extends BaseController {
         LambdaQueryWrapper<ProTask> queryWrapper = getQueryWrapper(proTask);
         // 组装分页
         Page<ProTask> page = getMPPage(proTask);
-        // 查询
-        this.proTaskService.page(page, queryWrapper);
+        //根据工单分组展示
+        proTaskService.listGroupByWorkOrder(queryWrapper, page);
         return getDataTableWithPage(page);
     }
 
@@ -74,14 +80,13 @@ public class ProTaskDispatchController extends BaseController {
     }
 
 
-
     /**
      * 生产派单指派用户-新增/修改
      */
     @PreAuthorize("@ss.hasPermi('pro:taskdispatch:addAssignUsers')")
     @Log(title = "生产派单", businessType = BusinessType.UPDATE)
     @PostMapping("/addAssignUsers")
-    public AjaxResult addAssignUsers(@RequestBody  AssignUsersDto assignUsersDto) {
+    public AjaxResult addAssignUsers(@RequestBody AssignUsersDto assignUsersDto) {
         return AjaxResult.success(proTaskService.addAssignUsers(assignUsersDto.getTaskIds(), assignUsersDto.getTaskUserId(), assignUsersDto.getTaskBy()));
     }
 
