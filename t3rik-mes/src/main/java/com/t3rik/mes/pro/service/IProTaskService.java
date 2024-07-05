@@ -2,10 +2,10 @@ package com.t3rik.mes.pro.service;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.pro.domain.ProTask;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * 生产任务Service接口
@@ -79,4 +79,13 @@ public interface IProTaskService  extends IService<ProTask>
      * @return
      */
     public String addAssignUsers(List<String> taskIds,Long taskUserId, String taskBy);
+
+    /**
+     * 根据工单分组展示
+     *
+     * @param page      分页对象
+     * @param queryWrapper 条件
+     * @return
+     */
+    public void listGroupByWorkOrder(LambdaQueryWrapper<ProTask> queryWrapper, Page<ProTask> page);
 }

@@ -1,23 +1,23 @@
 package com.t3rik.mes.pro.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.t3rik.common.core.domain.BaseEntity;
 import com.t3rik.common.enums.mes.OrderStatusEnum;
-import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.DateUtils;
-import com.t3rik.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.t3rik.mes.pro.mapper.ProTaskMapper;
 import com.t3rik.mes.pro.domain.ProTask;
 import com.t3rik.mes.pro.service.IProTaskService;
 
-import javax.validation.constraints.NotNull;
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * 生产任务Service业务层处理
@@ -152,6 +152,38 @@ public class ProTaskServiceImpl extends ServiceImpl<ProTaskMapper, ProTask> impl
             sb.append("编号为：").append(String.join(",", codeList)).append("的任务已超过设定完成生产时间，不能再指派！");
         }
         return sb.toString();
+    }
+
+    /**
+     * 根据工单分组展示
+     *
+     * @param page      分页对象
+     * @param queryWrapper 条件
+     * @return
+     */
+    @Override
+    public void listGroupByWorkOrder(LambdaQueryWrapper<ProTask> queryWrapper, Page<ProTask> page) {
+        // 查询
+        this.page(page, queryWrapper);
+        //分组
+        Map<Long, List<ProTask>> listMap = page.getRecords().stream().collect(groupingBy(ProTask::getWorkorderId));
+        // 唯一标识 父级使用
+        AtomicLong totalUnique = new AtomicLong(0L);
+        //构建 ProTask返回值列表
+        List<ProTask> proTaskList = listMap.entrySet().stream()
+                .map(entry -> {
+                    ProTask proTask = new ProTask();
+                    proTask.setTaskId(totalUnique.getAndIncrement());
+                    proTask.setWorkorderCode(entry.getValue().get(0).getWorkorderCode());
+                    proTask.setWorkorderName(entry.getValue().get(0).getWorkorderName());
+                    proTask.setChildTasks(entry.getValue());
+                    return proTask;
+                })
+                .collect(Collectors.toList());
+
+        // 更新分页对象的记录为 ProTask 列表
+        page.setRecords(proTaskList);
+        page.setTotal(proTaskList.size());
     }
 
 }

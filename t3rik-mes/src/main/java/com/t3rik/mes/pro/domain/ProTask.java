@@ -2,6 +2,7 @@ package com.t3rik.mes.pro.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -187,4 +188,9 @@ public class ProTask extends BaseEntity
      */
     private String taskBy;
 
+    /**
+     * 用于组装生产工单下所有子任务
+     */
+    @TableField(exist = false)
+    List<ProTask> childTasks;
 }
