@@ -1,5 +1,6 @@
 package com.t3rik.mes.pro.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.t3rik.common.annotation.Excel;
@@ -202,6 +203,7 @@ public class ProWorkorder extends TreeEntity {
      */
     private Long attr4;
 
+    @TableField(exist = false)
     private List<ProTask> tasks;
 
     public String getClientOrderCode() {
