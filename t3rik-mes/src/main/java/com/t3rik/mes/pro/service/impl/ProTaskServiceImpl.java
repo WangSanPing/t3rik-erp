@@ -7,10 +7,12 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.enums.mes.OrderStatusEnum;
 import com.t3rik.common.utils.DateUtils;
+import com.t3rik.common.utils.uuid.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.t3rik.mes.pro.mapper.ProTaskMapper;
@@ -167,16 +169,16 @@ public class ProTaskServiceImpl extends ServiceImpl<ProTaskMapper, ProTask> impl
         this.page(page, queryWrapper);
         //分组
         Map<Long, List<ProTask>> listMap = page.getRecords().stream().collect(groupingBy(ProTask::getWorkorderId));
-        // 唯一标识 父级使用
-        AtomicLong totalUnique = new AtomicLong(0L);
         //构建 ProTask返回值列表
-        List<ProTask> proTaskList = listMap.entrySet().stream()
-                .map(entry -> {
+        List<ProTask> proTaskList = listMap.values().stream()
+                .map(proTasks -> {
+                    long parentId = IdWorker.getId();
                     ProTask proTask = new ProTask();
-                    proTask.setTaskId(totalUnique.getAndIncrement());
-                    proTask.setWorkorderCode(entry.getValue().get(0).getWorkorderCode());
-                    proTask.setWorkorderName(entry.getValue().get(0).getWorkorderName());
-                    proTask.setChildTasks(entry.getValue());
+                    proTask.setTaskId(parentId);
+                    proTask.setWorkorderCode(proTasks.get(0).getWorkorderCode());
+                    proTask.setWorkorderName(proTasks.get(0).getWorkorderName());
+                    proTasks.forEach(task -> task.setParentId(parentId));
+                    proTask.setChildTasks(proTasks);
                     return proTask;
                 })
                 .collect(Collectors.toList());

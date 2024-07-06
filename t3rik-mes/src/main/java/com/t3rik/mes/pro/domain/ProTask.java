@@ -266,4 +266,10 @@ public class ProTask extends BaseEntity {
      */
     @TableField(exist = false)
     List<ProTask> childTasks;
+
+    /**
+     * 用于组装生产工单下所有子任务的父id
+     */
+    @TableField(exist = false)
+    private Long parentId;
 }
