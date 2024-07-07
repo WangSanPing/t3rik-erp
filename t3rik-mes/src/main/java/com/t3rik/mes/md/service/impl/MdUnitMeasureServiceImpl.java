@@ -2,12 +2,17 @@ package com.t3rik.mes.md.service.impl;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.t3rik.mes.common.service.IAsyncService;
 import com.t3rik.mes.md.service.IMdUnitMeasureService;
 import com.t3rik.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.t3rik.mes.md.mapper.MdUnitMeasureMapper;
 import com.t3rik.mes.md.domain.MdUnitMeasure;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
 /**
  * 单位Service业务层处理
@@ -16,9 +21,9 @@ import com.t3rik.mes.md.domain.MdUnitMeasure;
  * @date 2022-04-27
  */
 @Service
-public class MdUnitMeasureServiceImpl implements IMdUnitMeasureService
+public class MdUnitMeasureServiceImpl extends ServiceImpl<MdUnitMeasureMapper,MdUnitMeasure> implements IMdUnitMeasureService
 {
-    @Autowired
+    @Resource
     private MdUnitMeasureMapper mdUnitMeasureMapper;
 
     /**

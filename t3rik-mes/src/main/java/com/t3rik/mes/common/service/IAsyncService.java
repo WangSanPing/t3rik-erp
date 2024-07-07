@@ -19,4 +19,20 @@ public interface IAsyncService {
      * @param clientOrderItemList 对应该产品的bom列表
      */
     void updateItemBomAndLevel(Long itemId, List<ProClientOrderItem> clientOrderItemList);
+
+    /**
+     * 更新单位到redis
+     */
+    void updateUnitMeasuresToRedis();
+
+    /**
+     * 更新单位到redis
+     * 可以选择是否需要先删除
+     */
+    void updateUnitMeasuresToRedis(Boolean delete, List<String> keys);
+
+    /**
+     * 删除redis种的单位
+     */
+    void deleteUnitMeasuresToRedis(List<String> keys);
 }

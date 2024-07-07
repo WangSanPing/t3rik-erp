@@ -1,5 +1,6 @@
 package com.t3rik.mes.md.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.md.domain.MdUnitMeasure;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  * @author ruoyi
  * @date 2022-04-27
  */
-public interface IMdUnitMeasureService 
+public interface IMdUnitMeasureService extends IService<MdUnitMeasure>
 {
     /**
      * 查询单位

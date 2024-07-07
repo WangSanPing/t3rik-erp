@@ -8,6 +8,7 @@ import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.page.TableDataInfo;
+import com.t3rik.common.core.redis.RedisCache;
 import com.t3rik.common.enums.BusinessType;
 import com.t3rik.common.enums.mes.OrderStatusEnum;
 import com.t3rik.common.utils.StringUtils;
@@ -15,11 +16,11 @@ import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.mes.pro.domain.*;
 import com.t3rik.mes.pro.service.*;
 import com.t3rik.system.strategy.AutoCodeUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -34,23 +35,26 @@ import java.util.List;
 @RestController
 @RequestMapping("/mes/pro/protask")
 public class ProTaskController extends BaseController {
-    @Autowired
+    @Resource
     private IProTaskService proTaskService;
 
-    @Autowired
+    @Resource
     private IProWorkorderService proWorkorderService;
 
-    @Autowired
+    @Resource
     private IProRouteProductService proRouteProductService;
 
-    @Autowired
+    @Resource
     private IProProcessService proProcessService;
 
-    @Autowired
+    @Resource
     private IProRouteService proRouteService;
 
-    @Autowired
+    @Resource
     private AutoCodeUtil autoCodeUtil;
+
+    @Resource
+    private RedisCache redisCache;
 
     /**
      * 查询生产任务列表
@@ -306,7 +310,9 @@ public class ProTaskController extends BaseController {
         proTask.setProcessName(process.getProcessName());
         // 自动生成任务编号和名称
         proTask.setTaskCode(autoCodeUtil.genSerialCode(UserConstants.TASK_CODE, null));
-        proTask.setTaskName(proTask.getItemName() + "【" + proTask.getQuantity().toString() + "】" + proTask.getUnitOfMeasure());
+        Object cacheUnitMeasure = this.redisCache.getCacheObject(proTask.getUnitOfMeasure());
+        String unitMeasureName = cacheUnitMeasure == null ? proTask.getUnitOfMeasure() : (String) cacheUnitMeasure;
+        proTask.setTaskName(proTask.getItemName() + "【" + proTask.getQuantity().toString() + "】" + unitMeasureName);
         proTask.setStatus(OrderStatusEnum.PREPARE.getCode());
     }
 
