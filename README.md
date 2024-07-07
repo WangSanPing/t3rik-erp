@@ -71,6 +71,9 @@ http://124.222.107.179/
 ![产品](https://pic.imgdb.cn/item/668a3392d9c307b7e9c920a7.png)
   - 可在信息填写完成后，生成生产工单
 ![产品](https://pic.imgdb.cn/item/668a34e5d9c307b7e9cafa54.png)
+- 生产报工
+  - 重做成产报工功能，在报工的同时可以添加当前任务的退料及废料
+![报工](https://pic.imgdb.cn/item/668a3666d9c307b7e9cd1a69.png)
 - 生产派单
   - 生产任务新建完成后，可选择派单到某责任人，支持按订单分组
 ![派单](https://pic.imgdb.cn/item/668a3533d9c307b7e9cb6795.png)
