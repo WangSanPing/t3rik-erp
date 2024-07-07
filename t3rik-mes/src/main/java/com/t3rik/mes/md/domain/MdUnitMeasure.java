@@ -1,7 +1,10 @@
 package com.t3rik.mes.md.domain;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.t3rik.common.annotation.Excel;
 import com.t3rik.common.core.domain.BaseEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -13,11 +16,14 @@ import java.math.BigDecimal;
  * @author ruoyi
  * @date 2022-04-27
  */
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class MdUnitMeasure extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** 单位ID */
+    @TableId
     private Long measureId;
 
     /** 单位编码 */

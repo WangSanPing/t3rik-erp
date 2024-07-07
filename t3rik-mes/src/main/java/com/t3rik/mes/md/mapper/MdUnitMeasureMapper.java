@@ -1,6 +1,8 @@
 package com.t3rik.mes.md.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.t3rik.mes.md.domain.MdUnitMeasure;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
@@ -10,7 +12,8 @@ import java.util.List;
  * @author ruoyi
  * @date 2022-04-27
  */
-public interface MdUnitMeasureMapper 
+@Mapper
+public interface MdUnitMeasureMapper extends BaseMapper<MdUnitMeasure>
 {
     /**
      * 查询单位
