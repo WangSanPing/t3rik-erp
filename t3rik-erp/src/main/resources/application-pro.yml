@@ -6,7 +6,7 @@ spring:
     druid:
       # 主库数据源
       master:
-        url:  jdbc:mysql://1.92.89.102:3306/mes-pro?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&allowMultiQueries=true
+        url:  jdbc:mysql://124.222.107.179:3306/mes-pro?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&allowMultiQueries=true
         username: root
         password: BswcOs31Dw5ScXSbuILCfWwqAAWrUvWiLF8BNXVzL4/I9WUne76M5Am1fBPY8Nw8tMFV1H/Z00cB9pU5ct6g4g==
         connection-properties: config.decrypt=true;config.decrypt.key=${publicKey}
