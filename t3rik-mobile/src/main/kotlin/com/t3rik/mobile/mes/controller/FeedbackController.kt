@@ -42,7 +42,7 @@ class FeedbackController : BaseController() {
             .eq(ProTask::getTaskUserId, SecurityUtils.getUserId())
             .`in`(CollectionUtils.isNotEmpty(paramByCurrentIndex), ProTask::getStatus, paramByCurrentIndex)
             .orderByAsc(ProTask::getStatus)
-            .orderByDesc(ProTask::getRequestDate)
+            .orderByAsc(ProTask::getEndTime)
             .page(mpPage)
         return getDataTableWithPage(page)
     }
