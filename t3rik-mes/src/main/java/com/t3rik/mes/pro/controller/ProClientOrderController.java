@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.t3rik.common.annotation.Log;
 import com.t3rik.common.constant.MsgConstants;
-import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.domain.CheckInfo;
@@ -48,6 +47,12 @@ public class ProClientOrderController extends BaseController {
     @Resource
     private IProClientOrderItemService proClientOrderItemService;
 
+
+    // @GetMapping("/test/test")
+    // @EnableOnOff
+    // public void test(Boolean onOff){
+    //     System.out.println(onOff);
+    // }
 
     /**
      * 新增客户订单
