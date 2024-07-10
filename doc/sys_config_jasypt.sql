@@ -21,11 +21,5 @@ CREATE TABLE `sys_config_jasypt` (
   PRIMARY KEY (`config_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='加密配置表';
 
--- ----------------------------
--- Records of sys_config_jasypt
--- ----------------------------
-BEGIN;
-INSERT INTO `sys_config_jasypt` (`config_id`, `config_name`, `config_key`, `config_value`, `config_type`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`, `create_user_id`, `update_user_id`) VALUES (6, '加密盐串', 'jasypt.salt', 'rootsza', 'N', '1', '2024-07-01 16:32:58', '1', '2024-07-01 16:33:02', NULL, NULL, NULL);
-COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
