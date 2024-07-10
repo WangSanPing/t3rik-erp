@@ -56,6 +56,7 @@ http://124.222.107.179/
   - 地址：https://gitee.com/wangsanping/t3rik-erp-ui
 - t3rik-erp-pad
   - pad前端
+  - https://gitee.com/wangsanping/t3rik-erp-pad
 - t3rik-app
   - app前端
   - 地址：https://gitee.com/wangsanping/t3rik-app
