@@ -235,6 +235,12 @@
                 <version>${t3rik.version}</version>
             </dependency>
 
+            <!-- HRM业务模块 -->
+            <dependency>
+                <groupId>com.t3rik</groupId>
+                <artifactId>t3rik-hrm</artifactId>
+                <version>${t3rik.version}</version>
+            </dependency>
             <!--kotlin相关-->
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -275,6 +281,7 @@
         <module>t3rik-common</module>
         <module>t3rik-mes</module>
         <module>t3rik-mobile</module>
+        <module>t3rik-hrm</module>
     </modules>
     <packaging>pom</packaging>
 
