@@ -72,6 +72,11 @@
             <artifactId>t3rik-mobile</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.t3rik</groupId>
+            <artifactId>t3rik-hrm</artifactId>
+        </dependency>
+
         <!--test-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
