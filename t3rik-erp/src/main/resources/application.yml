@@ -63,30 +63,6 @@ spring:
     restart:
       # 热部署开关
       enabled: true
-  # redis 配置
-  redis:
-    # 地址
-    host: 124.222.107.179
-    # 端口，默认为6379
-    port: 6379
-    # 数据库索引
-    database: 0
-    # 密码
-    password: ENC(TRJqxYw3RYnIX65UHPgBIfruHSYQGaJH)
-    # 读写超时
-    timeout: 30s
-    # 连接超时
-    jedis:
-      pool:
-        # 连接池中的最小空闲连接
-        min-idle: 8
-        # 连接池中的最大空闲连接
-        max-idle: 20
-        # 连接池的最大数据库连接数
-        max-active: 50
-        # #连接池最大阻塞等待时间（使用负值表示没有限制）
-        max-wait: -1ms
-    connect-timeout: 60s
 
 # token配置
 token:
