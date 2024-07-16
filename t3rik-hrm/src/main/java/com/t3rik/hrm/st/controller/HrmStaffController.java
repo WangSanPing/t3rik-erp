@@ -30,7 +30,7 @@ import java.util.Map;
 public class HrmStaffController extends BaseController {
     @Autowired
     private IHrmStaffService hrmStaffService;
-    
+
     /**
      * 查询员工花名册列表
      */
@@ -125,7 +125,7 @@ public class HrmStaffController extends BaseController {
         queryWrapper.eq(hrmStaff.getLeaveTime() != null, HrmStaff::getLeaveTime, hrmStaff.getLeaveTime());
         queryWrapper.eq(hrmStaff.getCreateUserId() != null, HrmStaff::getCreateUserId, hrmStaff.getCreateUserId());
         queryWrapper.eq(hrmStaff.getUpdateUserId() != null, HrmStaff::getUpdateUserId, hrmStaff.getUpdateUserId());
-        queryWrapper.eq(hrmStaff.getStaffStatus() != null, HrmStaff::getStaffStatus, hrmStaff.getStaffStatus());
+        queryWrapper.eq(hrmStaff.getStatus() != null, HrmStaff::getStatus, hrmStaff.getStatus());
         // 默认创建时间倒序
         queryWrapper.orderByDesc(HrmStaff::getCreateTime);
         Map<String, Object> params = hrmStaff.getParams();

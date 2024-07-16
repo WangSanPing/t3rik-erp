@@ -138,7 +138,7 @@ public class HrmStaff extends BaseEntity
 
     /** 状态（0-备选，1-面试，2-面试通过，3-入职申请，4-入职通过） */
     @Excel(name = "状态", readConverterExp = "0=-备选，1-面试，2-面试通过，3-入职申请，4-入职通过")
-    private Long staffStatus;
+    private Long status;
 
 
 
