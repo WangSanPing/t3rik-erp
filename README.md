@@ -10,7 +10,8 @@ t3rik-erp项目是在苦糖果开源MES系统基础上进行二次开发的ERP�
 
 #### 演示地址
 
-http://1.92.89.102/
+后台管理：http://1.92.89.102/
+移动端：http://1.92.89.102:8000/
 
 #### 主要功能介绍
 
@@ -59,7 +60,7 @@ http://1.92.89.102/
   - https://gitee.com/wangsanping/t3rik-erp-pad
 - t3rik-app
   - app前端
-  - 地址：https://gitee.com/wangsanping/t3rik-app
+  - 如需源码，请在移动端演示地址中，登录下载：http://1.92.89.102:8000/
 
 #### 部分功能截图
 
@@ -79,5 +80,9 @@ http://1.92.89.102/
   - 生产任务新建完成后，可选择派单到某责任人，支持按订单分组
 ![派单](https://pic.imgdb.cn/item/668a3533d9c307b7e9cb6795.png)
 ![派单](https://pic.imgdb.cn/item/668a354fd9c307b7e9cb898f.png)
+- 移动端截图
+![](https://pic.imgdb.cn/item/6697ebf8d9c307b7e9b2e2bf.png)
+![](https://pic.imgdb.cn/item/6697ebf8d9c307b7e9b2e27d.png)
+![](https://pic.imgdb.cn/item/6697ebf7d9c307b7e9b2e238.png)
 
 感谢 苦糖果mes：https://gitee.com/kutangguo/ktg-mes.git，若依：https://gitee.com/y_project/RuoYi-Vue.git
