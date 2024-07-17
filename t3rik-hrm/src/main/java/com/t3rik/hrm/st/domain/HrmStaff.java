@@ -1,6 +1,9 @@
 package com.t3rik.hrm.st.domain;
 
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.Version;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -140,6 +143,22 @@ public class HrmStaff extends BaseEntity
     @Excel(name = "状态", readConverterExp = "0=-备选，1-面试，2-面试通过，3-入职申请，4-入职通过")
     private Long status;
 
+    /**
+     * 逻辑删除字段 0:未删除 1:已删除
+     */
+    private Long deleted;
+
+    /**
+     * 逻辑删除辅助字段
+     */
+    @TableField("deleteAt")
+    private Date deleteAt;
+
+    /**
+     * 乐观锁
+     */
+    @Version
+    private Long version;
 
 
 }

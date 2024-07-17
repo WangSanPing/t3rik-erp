@@ -20,7 +20,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="origin"    column="origin"    />
         <result property="householdAddress"    column="household_address"    />
         <result property="documentNumber"    column="document_number"    />
-        <result property="currentAddress"    column="current_address"    />
         <result property="emergencyContact"    column="emergency_contact"    />
         <result property="relationship"    column="relationship"    />
         <result property="emergencyContactPhone"    column="emergency_contact_phone"    />
@@ -33,11 +32,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
-        <result property="staffStatus"    column="staff_status"    />
+        <result property="status"    column="status"    />
+        <result property="currentAddress"    column="current_address"    />
+        <result property="remark"    column="remark"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="deleteAt"    column="deleteAt"    />
+        <result property="version"    column="version"    />
     </resultMap>
 
     <sql id="selectHrmStaffVo">
-        select staff_id, staff_code, staff_name, contact_phone, sex, ethnicity, birth_date, email, marital_status, political_outlook, id_card, origin, household_address, document_number, current_address, emergency_contact, relationship, emergency_contact_phone, education, joined_time, leave_time, create_user_id, create_by, update_user_id, update_by, create_time, update_time, staff_status from hrm_staff
+        select staff_id, staff_code, staff_name, contact_phone, sex, ethnicity, birth_date, email, marital_status, political_outlook, id_card, origin, household_address, document_number, emergency_contact, relationship, emergency_contact_phone, education, joined_time, leave_time, create_user_id, create_by, update_user_id, update_by, create_time, update_time, status, current_address, remark, deleted, deleteAt, version from hrm_staff
     </sql>
+
 
 </mapper>

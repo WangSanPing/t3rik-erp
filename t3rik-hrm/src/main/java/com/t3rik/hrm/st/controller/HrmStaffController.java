@@ -86,7 +86,7 @@ public class HrmStaffController extends BaseController {
     @Log(title = "员工花名册", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody HrmStaff hrmStaff) {
-        return toAjax(this.hrmStaffService.updateById(hrmStaff));
+        return toAjax(this.hrmStaffService.lambdaUpdate().in(HrmStaff::getStaffId,hrmStaff).set(HrmStaff::getDeleteAt,Boolean.TRUE).update());
     }
 
     /**
@@ -104,9 +104,9 @@ public class HrmStaffController extends BaseController {
     */
     public LambdaQueryWrapper<HrmStaff> getQueryWrapper(HrmStaff hrmStaff) {
         LambdaQueryWrapper<HrmStaff> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(hrmStaff.getStaffCode() != null, HrmStaff::getStaffCode, hrmStaff.getStaffCode());
+        queryWrapper.like(StringUtils.isNotEmpty(hrmStaff.getStaffCode()), HrmStaff::getStaffCode, hrmStaff.getStaffCode());
         queryWrapper.like(StringUtils.isNotEmpty(hrmStaff.getStaffName()), HrmStaff::getStaffName, hrmStaff.getStaffName());
-        queryWrapper.eq(hrmStaff.getContactPhone() != null, HrmStaff::getContactPhone, hrmStaff.getContactPhone());
+/*        queryWrapper.eq(hrmStaff.getContactPhone() != null, HrmStaff::getContactPhone, hrmStaff.getContactPhone());
         queryWrapper.eq(hrmStaff.getSex() != null, HrmStaff::getSex, hrmStaff.getSex());
         queryWrapper.eq(hrmStaff.getEthnicity() != null, HrmStaff::getEthnicity, hrmStaff.getEthnicity());
         queryWrapper.eq(hrmStaff.getBirthDate() != null, HrmStaff::getBirthDate, hrmStaff.getBirthDate());
@@ -119,12 +119,10 @@ public class HrmStaffController extends BaseController {
         queryWrapper.eq(hrmStaff.getCurrentAddress() != null, HrmStaff::getCurrentAddress, hrmStaff.getCurrentAddress());
         queryWrapper.eq(hrmStaff.getEmergencyContact() != null, HrmStaff::getEmergencyContact, hrmStaff.getEmergencyContact());
         queryWrapper.eq(hrmStaff.getRelationship() != null, HrmStaff::getRelationship, hrmStaff.getRelationship());
-        queryWrapper.eq(hrmStaff.getEmergencyContactPhone() != null, HrmStaff::getEmergencyContactPhone, hrmStaff.getEmergencyContactPhone());
+        queryWrapper.eq(hrmStaff.getEmergencyContactPhone() != null, HrmStaff::getEmergencyContactPhone, hrmStaff.getEmergencyContactPhone());*/
         queryWrapper.eq(hrmStaff.getEducation() != null, HrmStaff::getEducation, hrmStaff.getEducation());
-        queryWrapper.eq(hrmStaff.getJoinedTime() != null, HrmStaff::getJoinedTime, hrmStaff.getJoinedTime());
-        queryWrapper.eq(hrmStaff.getLeaveTime() != null, HrmStaff::getLeaveTime, hrmStaff.getLeaveTime());
-        queryWrapper.eq(hrmStaff.getCreateUserId() != null, HrmStaff::getCreateUserId, hrmStaff.getCreateUserId());
-        queryWrapper.eq(hrmStaff.getUpdateUserId() != null, HrmStaff::getUpdateUserId, hrmStaff.getUpdateUserId());
+/*        queryWrapper.eq(hrmStaff.getJoinedTime() != null, HrmStaff::getJoinedTime, hrmStaff.getJoinedTime());
+        queryWrapper.eq(hrmStaff.getLeaveTime() != null, HrmStaff::getLeaveTime, hrmStaff.getLeaveTime());*/
         queryWrapper.eq(hrmStaff.getStatus() != null, HrmStaff::getStatus, hrmStaff.getStatus());
         // 默认创建时间倒序
         queryWrapper.orderByDesc(HrmStaff::getCreateTime);
