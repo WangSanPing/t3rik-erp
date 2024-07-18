@@ -19,7 +19,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="idCard"    column="id_card"    />
         <result property="origin"    column="origin"    />
         <result property="householdAddress"    column="household_address"    />
-        <result property="documentNumber"    column="document_number"    />
         <result property="emergencyContact"    column="emergency_contact"    />
         <result property="relationship"    column="relationship"    />
         <result property="emergencyContactPhone"    column="emergency_contact_phone"    />
@@ -41,7 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectHrmStaffVo">
-        select staff_id, staff_code, staff_name, contact_phone, sex, ethnicity, birth_date, email, marital_status, political_outlook, id_card, origin, household_address, document_number, emergency_contact, relationship, emergency_contact_phone, education, joined_time, leave_time, create_user_id, create_by, update_user_id, update_by, create_time, update_time, status, current_address, remark, deleted, deleteAt, version from hrm_staff
+        select staff_id, staff_code, staff_name, contact_phone, sex, ethnicity, birth_date, email, marital_status, political_outlook, id_card, origin, household_address,emergency_contact, relationship, emergency_contact_phone, education, joined_time, leave_time, create_user_id, create_by, update_user_id, update_by, create_time, update_time, status, current_address, remark, deleted, deleteAt, version from hrm_staff
     </sql>
 
 
