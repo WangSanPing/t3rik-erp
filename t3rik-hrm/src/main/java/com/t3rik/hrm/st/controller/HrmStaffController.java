@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -86,7 +87,7 @@ public class HrmStaffController extends BaseController {
     @Log(title = "员工花名册", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody HrmStaff hrmStaff) {
-        return toAjax(this.hrmStaffService.lambdaUpdate().in(HrmStaff::getStaffId,hrmStaff).set(HrmStaff::getDeleteAt,Boolean.TRUE).update());
+        return toAjax(this.hrmStaffService.updateById(hrmStaff));
     }
 
     /**
@@ -96,7 +97,7 @@ public class HrmStaffController extends BaseController {
     @Log(title = "员工花名册", businessType = BusinessType.DELETE)
     @DeleteMapping("/{staffIds}")
     public AjaxResult remove(@PathVariable List<Long> staffIds) {
-        return toAjax(this.hrmStaffService.removeByIds(staffIds));
+        return toAjax(this.hrmStaffService.lambdaUpdate().in(HrmStaff::getStaffId,staffIds).set(HrmStaff::getDeleted,Boolean.TRUE).set(HrmStaff::getDeleteAt,new Date()).update());
     }
 
     /**
