@@ -13,6 +13,7 @@ t3rik-erp项目是在苦糖果开源MES系统基础上进行二次开发的ERP�
 - 后台管理：http://1.92.89.102/
 
 - 移动端：http://1.92.89.102:8000/
+  - 当前是h5模式，请打开浏览器的调试工具选择移动设备模式查看
 
 #### 主要功能介绍
 
@@ -83,6 +84,7 @@ t3rik-erp项目是在苦糖果开源MES系统基础上进行二次开发的ERP�
 ![派单](https://pic.imgdb.cn/item/668a3533d9c307b7e9cb6795.png)
 ![派单](https://pic.imgdb.cn/item/668a354fd9c307b7e9cb898f.png)
 - 移动端截图
+![](https://pic.imgdb.cn/item/669b6c90d9c307b7e9386293.png)
 
 ![](https://pic.imgdb.cn/item/6697ebf7d9c307b7e9b2e238.png)
 
