@@ -1,15 +1,12 @@
-package com.t3rik.hrm.st.domain;
+package com.t3rik.hrm.sm.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.Version;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.t3rik.common.annotation.Excel;
 import com.t3rik.common.core.domain.BaseEntity;
-import com.t3rik.common.enums.EnableFlagEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -113,7 +110,7 @@ public class HrmStaff extends BaseEntity
 
 
     /** 学历（0-初中，1-高中，2-专科，4-本科，5-研究生，6-博士） */
-    @Excel(name = "学历", readConverterExp = "0=-初中，1-高中，2-专科，4-本科，5-研究生，6-博士")
+    @Excel(name = "学历", readConverterExp = "0-初中，1-高中，2-专科，4-本科，5-研究生，6-博士")
     private Long education;
 
 
@@ -140,12 +137,13 @@ public class HrmStaff extends BaseEntity
 
 
     /** 状态（0-备选，1-面试，2-面试通过，3-入职申请，4-入职通过） */
-    @Excel(name = "状态", readConverterExp = "0=-备选，1-面试，2-面试通过，3-入职申请，4-入职通过")
+    @Excel(name = "状态", readConverterExp = "0-备选，1-面试，2-面试通过，3-入职申请，4-入职通过")
     private Long status;
 
     /**
      * 逻辑删除字段 0:未删除 1:已删除
      */
+    @TableLogic
     private Long deleted;
 
     /**
@@ -160,5 +158,23 @@ public class HrmStaff extends BaseEntity
     @Version
     private Long version;
 
+    /** 实际薪资 */
+    @Excel(name = "实际薪资")
+    private BigDecimal actualSalary;
+
+
+    /** 职级主键id */
+    @Excel(name = "职级主键id")
+    private Long rankId;
+
+
+    /** 职级编码 */
+    @Excel(name = "职级编码")
+    private String rankCode;
+
+
+    /** 职级层次名称 */
+    @Excel(name = "职级层次名称")
+    private String rankName;
 
 }

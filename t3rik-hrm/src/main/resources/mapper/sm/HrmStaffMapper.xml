@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.t3rik.hrm.st.mapper.HrmStaffMapper">
+<mapper namespace="com.t3rik.hrm.sm.mapper.HrmStaffMapper">
 
-    <resultMap type="com.t3rik.hrm.st.domain.HrmStaff" id="BaseResultMap">
+    <resultMap type="com.t3rik.hrm.sm.domain.HrmStaff" id="BaseResultMap">
         <!--@Table hrm_staff-->
         <result property="staffId"    column="staff_id"    />
         <result property="staffCode"    column="staff_code"    />
@@ -37,10 +37,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="deleted"    column="deleted"    />
         <result property="deleteAt"    column="deleteAt"    />
         <result property="version"    column="version"    />
+        <result property="actualSalary"    column="actual_salary"    />
+        <result property="rankId"    column="rank_id"    />
+        <result property="rankCode"    column="rank_code"    />
+        <result property="rankName"    column="rank_name"    />
     </resultMap>
 
     <sql id="selectHrmStaffVo">
-        select staff_id, staff_code, staff_name, contact_phone, sex, ethnicity, birth_date, email, marital_status, political_outlook, id_card, origin, household_address,emergency_contact, relationship, emergency_contact_phone, education, joined_time, leave_time, create_user_id, create_by, update_user_id, update_by, create_time, update_time, status, current_address, remark, deleted, deleteAt, version from hrm_staff
+        select staff_id, staff_code, staff_name, contact_phone, sex, ethnicity, birth_date, email, marital_status, political_outlook, id_card, origin, household_address, emergency_contact, relationship, emergency_contact_phone, education, joined_time, leave_time, create_user_id, create_by, update_user_id, update_by, create_time, update_time, status, current_address, remark, deleted, deleteAt, version, actual_salary, rank_id, rank_code, rank_name from hrm_staff
     </sql>
 
 

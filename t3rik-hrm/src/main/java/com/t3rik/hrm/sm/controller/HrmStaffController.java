@@ -1,4 +1,4 @@
-package com.t3rik.hrm.st.controller;
+package com.t3rik.hrm.sm.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -9,8 +9,8 @@ import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.poi.ExcelUtil;
-import com.t3rik.hrm.st.domain.HrmStaff;
-import com.t3rik.hrm.st.service.IHrmStaffService;
+import com.t3rik.hrm.sm.domain.HrmStaff;
+import com.t3rik.hrm.sm.service.IHrmStaffService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +27,7 @@ import java.util.Map;
  * @date 2024-07-11
  */
 @RestController
-@RequestMapping("/hrm/st/hrm-staff")
+@RequestMapping("/hrm/sm/hrm-staff")
 public class HrmStaffController extends BaseController {
     @Autowired
     private IHrmStaffService hrmStaffService;
@@ -35,7 +35,7 @@ public class HrmStaffController extends BaseController {
     /**
      * 查询员工花名册列表
      */
-    @PreAuthorize("@ss.hasPermi('st:hrmstaff:list')")
+    @PreAuthorize("@ss.hasPermi('sm:hrmstaff:list')")
     @GetMapping("/list")
     public TableDataInfo list(HrmStaff hrmStaff) {
         // 获取查询条件
@@ -50,7 +50,7 @@ public class HrmStaffController extends BaseController {
     /**
      * 导出员工花名册列表
      */
-    @PreAuthorize("@ss.hasPermi('st:hrmstaff:export')")
+    @PreAuthorize("@ss.hasPermi('sm:hrmstaff:export')")
     @Log(title = "员工花名册", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, HrmStaff hrmStaff) {
@@ -64,7 +64,7 @@ public class HrmStaffController extends BaseController {
     /**
      * 获取员工花名册详细信息
      */
-    @PreAuthorize("@ss.hasPermi('st:hrmstaff:query')")
+    @PreAuthorize("@ss.hasPermi('sm:hrmstaff:query')")
     @GetMapping(value = "/{staffId}")
     public AjaxResult getInfo(@PathVariable("staffId") Long staffId) {
         return AjaxResult.success(this.hrmStaffService.getById(staffId));
@@ -73,7 +73,7 @@ public class HrmStaffController extends BaseController {
     /**
      * 新增员工花名册
      */
-    @PreAuthorize("@ss.hasPermi('st:hrmstaff:add')")
+    @PreAuthorize("@ss.hasPermi('sm:hrmstaff:add')")
     @Log(title = "员工花名册", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody HrmStaff hrmStaff) {
@@ -83,17 +83,30 @@ public class HrmStaffController extends BaseController {
     /**
      * 修改员工花名册
      */
-    @PreAuthorize("@ss.hasPermi('st:hrmstaff:edit')")
+    @PreAuthorize("@ss.hasPermi('sm:hrmstaff:edit')")
     @Log(title = "员工花名册", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody HrmStaff hrmStaff) {
         return toAjax(this.hrmStaffService.updateById(hrmStaff));
     }
 
+
+    /**
+     * 员工流程审批
+     *
+     */
+    @PreAuthorize("@ss.hasPermi('sm:hrmstaff:edit')")
+    @Log(title = "员工花名册", businessType = BusinessType.UPDATE)
+    @PostMapping("/process")
+    public AjaxResult process(@RequestBody HrmStaff hrmStaff) {
+        this.hrmStaffService.process(hrmStaff);
+        return toAjax(this.hrmStaffService.updateById(hrmStaff));
+    }
+
     /**
      * 删除员工花名册
      */
-    @PreAuthorize("@ss.hasPermi('st:hrmstaff:remove')")
+    @PreAuthorize("@ss.hasPermi('sm:hrmstaff:remove')")
     @Log(title = "员工花名册", businessType = BusinessType.DELETE)
     @DeleteMapping("/{staffIds}")
     public AjaxResult remove(@PathVariable List<Long> staffIds) {

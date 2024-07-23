@@ -1,8 +1,6 @@
-package com.t3rik.hrm.st.mapper;
+package com.t3rik.hrm.sm.mapper;
 
-import java.util.List;
-
-import com.t3rik.hrm.st.domain.HrmStaff;
+import com.t3rik.hrm.sm.domain.HrmStaff;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
