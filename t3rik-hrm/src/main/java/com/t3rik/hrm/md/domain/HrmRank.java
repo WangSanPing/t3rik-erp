@@ -53,16 +53,6 @@ public class HrmRank extends BaseEntity
     private BigDecimal salaryRangeMax;
 
 
-    /** 创建者id */
-    @Excel(name = "创建者id")
-    private Long createUserId;
-
-
-    /** 修改者id */
-    @Excel(name = "修改者id")
-    private Long updateUserId;
-
-
     /** 逻辑删除字段 0:未删除 1:已删除 */
     @Excel(name = "逻辑删除字段 0:未删除 1:已删除")
     @TableLogic
