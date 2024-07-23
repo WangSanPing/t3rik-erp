@@ -1,10 +1,7 @@
-package com.t3rik.hrm.st.service;
-
-import java.util.List;
+package com.t3rik.hrm.sm.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.t3rik.hrm.st.domain.HrmStaff;
-import org.apache.ibatis.annotations.Mapper;
+import com.t3rik.hrm.sm.domain.HrmStaff;
 
 /**
  * 员工花名册Service接口
@@ -14,4 +11,9 @@ import org.apache.ibatis.annotations.Mapper;
  */
 public interface IHrmStaffService extends IService<HrmStaff> {
 
+    /**
+     * 员工审批流程
+     * @param hrmStaff
+     */
+    void process(HrmStaff hrmStaff);
 }
