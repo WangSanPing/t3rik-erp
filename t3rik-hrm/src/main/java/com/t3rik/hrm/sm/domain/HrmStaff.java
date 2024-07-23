@@ -126,14 +126,6 @@ public class HrmStaff extends BaseEntity
     private Date leaveTime;
 
 
-    /** 创建者id */
-    @Excel(name = "创建者id")
-    private Long createUserId;
-
-
-    /** 修改者id */
-    @Excel(name = "修改者id")
-    private Long updateUserId;
 
 
     /** 状态（0-备选，1-面试，2-面试通过，3-入职申请，4-入职通过） */
