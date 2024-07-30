@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.t3rik.hrm.sm.mapper.HrmStaffMapper;
 import com.t3rik.hrm.sm.domain.HrmStaff;
+import com.t3rik.hrm.sm.vo.HrmStaffVo;
 import com.t3rik.hrm.sm.service.IHrmStaffService;
+
+import java.util.List;
 
 /**
  * 员工花名册Service业务层处理
@@ -49,5 +52,22 @@ public class HrmStaffServiceImpl  extends ServiceImpl<HrmStaffMapper, HrmStaff> 
             SysUser sysUser = new SysUser();
             sysUserService.insertUser(sysUser);
         }
+    }
+    /**
+     * 人才登记列表查询
+     * @param hrmStaff
+     * @return
+     */
+    @Override
+    public List<HrmStaffVo> listTalents(HrmStaff hrmStaff) {
+        return hrmStaffMapper.listTalents(hrmStaff);
+    }
+
+    /**
+     * 获取人才详情信息
+     */
+    @Override
+    public HrmStaffVo getTalents(Long staffId) {
+        return hrmStaffMapper.getTalents(staffId);
     }
 }

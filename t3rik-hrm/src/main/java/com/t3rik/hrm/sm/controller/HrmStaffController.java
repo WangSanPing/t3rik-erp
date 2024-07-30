@@ -11,6 +11,7 @@ import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.hrm.sm.domain.HrmStaff;
 import com.t3rik.hrm.sm.service.IHrmStaffService;
+import com.t3rik.hrm.sm.vo.HrmStaffVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,16 @@ import java.util.Map;
 public class HrmStaffController extends BaseController {
     @Autowired
     private IHrmStaffService hrmStaffService;
+    /**
+     * 查询人才花名册列表
+     */
+    @PreAuthorize("@ss.hasPermi('sm:hrmstaff:listTalents')")
+    @GetMapping("/listTalents")
+    public TableDataInfo listTalents(HrmStaff hrmStaff) {
+        startPage();
+        List<HrmStaffVo> list =  hrmStaffService.listTalents(hrmStaff);
+        return getDataTable(list);
+    }
 
     /**
      * 查询员工花名册列表
@@ -61,6 +72,7 @@ public class HrmStaffController extends BaseController {
         util.exportExcel(response, list, "员工花名册数据");
     }
 
+
     /**
      * 获取员工花名册详细信息
      */
@@ -68,6 +80,15 @@ public class HrmStaffController extends BaseController {
     @GetMapping(value = "/{staffId}")
     public AjaxResult getInfo(@PathVariable("staffId") Long staffId) {
         return AjaxResult.success(this.hrmStaffService.getById(staffId));
+    }
+
+    /**
+     * 获取人才详情信息
+     */
+    @PreAuthorize("@ss.hasPermi('sm:hrmstaff:getTalent')")
+    @GetMapping(value = "/getTalent/{staffId}")
+    public AjaxResult getTalents(@PathVariable("staffId") Long staffId) {
+        return AjaxResult.success(this.hrmStaffService.getTalents(staffId));
     }
 
     /**
