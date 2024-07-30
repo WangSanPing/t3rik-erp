@@ -11,8 +11,6 @@ import com.t3rik.framework.web.service.SysLoginService
 import com.t3rik.framework.web.service.SysPermissionService
 import com.t3rik.framework.web.service.TokenService
 import com.t3rik.mobile.common.service.IMobileLoginService
-import com.t3rik.mobile.common.vo.DictVo
-import com.t3rik.system.service.ISysDictDataService
 import com.t3rik.system.service.ISysMenuService
 import org.springframework.web.bind.annotation.*
 import javax.annotation.Resource
