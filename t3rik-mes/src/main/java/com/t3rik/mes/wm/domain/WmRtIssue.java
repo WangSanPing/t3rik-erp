@@ -2,8 +2,7 @@ package com.t3rik.mes.wm.domain;
 
 import java.util.Date;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +26,7 @@ public class WmRtIssue extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
+    @TableId
     /** 退料单ID */
     private Long rtId;
 

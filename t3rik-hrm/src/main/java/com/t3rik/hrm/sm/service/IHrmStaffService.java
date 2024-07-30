@@ -2,6 +2,9 @@ package com.t3rik.hrm.sm.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.hrm.sm.domain.HrmStaff;
+import com.t3rik.hrm.sm.vo.HrmStaffVo;
+
+import java.util.List;
 
 /**
  * 员工花名册Service接口
@@ -16,4 +19,16 @@ public interface IHrmStaffService extends IService<HrmStaff> {
      * @param hrmStaff
      */
     void process(HrmStaff hrmStaff);
+
+    /**
+     * 人才登记列表查询
+     * @param hrmStaff
+     * @return
+     */
+    List<HrmStaffVo> listTalents(HrmStaff hrmStaff);
+
+    /**
+     * 获取人才详情信息
+     */
+    HrmStaffVo getTalents(Long staffId);
 }
