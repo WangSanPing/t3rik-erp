@@ -1,19 +1,20 @@
 package com.t3rik.mes.md.service;
 
-import java.util.List;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.md.domain.MdWorkstation;
+
+import java.util.List;
 
 /**
  * 工作站Service接口
- * 
+ *
  * @author yinjinlu
  * @date 2022-05-10
  */
-public interface IMdWorkstationService 
-{
+public interface IMdWorkstationService extends IService<MdWorkstation> {
     /**
      * 查询工作站
-     * 
+     *
      * @param workstationId 工作站主键
      * @return 工作站
      */
@@ -21,7 +22,7 @@ public interface IMdWorkstationService
 
     /**
      * 查询工作站列表
-     * 
+     *
      * @param mdWorkstation 工作站
      * @return 工作站集合
      */
@@ -29,6 +30,7 @@ public interface IMdWorkstationService
 
     /**
      * 检查编码是否存在
+     *
      * @param mdWorkstation
      * @return
      */
@@ -36,6 +38,7 @@ public interface IMdWorkstationService
 
     /**
      * 检查名称是否存在
+     *
      * @param mdWorkstation
      * @return
      */
@@ -43,7 +46,7 @@ public interface IMdWorkstationService
 
     /**
      * 新增工作站
-     * 
+     *
      * @param mdWorkstation 工作站
      * @return 结果
      */
@@ -51,7 +54,7 @@ public interface IMdWorkstationService
 
     /**
      * 修改工作站
-     * 
+     *
      * @param mdWorkstation 工作站
      * @return 结果
      */
@@ -59,7 +62,7 @@ public interface IMdWorkstationService
 
     /**
      * 批量删除工作站
-     * 
+     *
      * @param workstationIds 需要删除的工作站主键集合
      * @return 结果
      */
@@ -67,7 +70,7 @@ public interface IMdWorkstationService
 
     /**
      * 删除工作站信息
-     * 
+     *
      * @param workstationId 工作站主键
      * @return 结果
      */

@@ -1,6 +1,5 @@
 package com.t3rik.mobile.mes.controller
 
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils
 import com.t3rik.common.constant.MsgConstants
 import com.t3rik.common.constant.UserConstants
 import com.t3rik.common.core.controller.BaseController
@@ -8,14 +7,13 @@ import com.t3rik.common.core.domain.AjaxResult
 import com.t3rik.common.core.page.TableDataInfo
 import com.t3rik.common.exception.BusinessException
 import com.t3rik.common.utils.SecurityUtils
+import com.t3rik.mes.pro.domain.ProFeedback
 import com.t3rik.mes.pro.domain.ProTask
 import com.t3rik.mes.pro.service.IProTaskService
 import com.t3rik.mobile.mes.service.IFeedbackService
 import io.swagger.annotations.ApiOperation
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import isZero
+import org.springframework.web.bind.annotation.*
 import javax.annotation.Resource
 
 /**
@@ -33,21 +31,14 @@ class FeedbackController : BaseController() {
     @Resource
     lateinit var feedbackService: IFeedbackService;
 
+
     /**
      * 查询任务列表
      */
     @ApiOperation("查询报工列表")
     @GetMapping("/list")
     fun getTaskList(task: ProTask): TableDataInfo {
-        val mpPage = getMPPage(task)
-        val paramByCurrentIndex = feedbackService.getParamByCurrentIndex(task.currentIndex)
-        val page = this.taskService.lambdaQuery()
-            .eq(ProTask::getTaskUserId, SecurityUtils.getUserId())
-            .`in`(CollectionUtils.isNotEmpty(paramByCurrentIndex), ProTask::getStatus, paramByCurrentIndex)
-            .orderByAsc(ProTask::getStatus)
-            .orderByAsc(ProTask::getEndTime)
-            .page(mpPage)
-        return getDataTableWithPage(page)
+        return getDataTableWithPage(feedbackService.getPageByCurrentIndex(task.currentIndex, getMPPage(task)))
     }
 
     /**
@@ -61,5 +52,15 @@ class FeedbackController : BaseController() {
             .eq(ProTask::getTaskUserId, SecurityUtils.getUserId())
             .one() ?: throw BusinessException(MsgConstants.PARAM_ERROR)
         return AjaxResult.success(task)
+    }
+
+    @ApiOperation("报工")
+    @PostMapping
+    fun feedback(@RequestBody feedback: ProFeedback): AjaxResult {
+        this.taskService.getById(feedback.taskId) ?: return AjaxResult.error(MsgConstants.PARAM_ERROR)
+        if (feedback.quantityQualified == null || feedback.quantityQualified.isZero()) {
+            return AjaxResult.error(MsgConstants.CAN_NOT_BE_ZERO)
+        }
+        return AjaxResult.success(this.feedbackService.addFeedback(feedback))
     }
 }

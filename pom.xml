@@ -276,7 +276,7 @@
         <module>t3rik-erp</module>
         <module>t3rik-framework</module>
         <module>t3rik-system</module>
-        <module>t3rik-quartz</module>
+<!--        <module>t3rik-quartz</module>-->
         <module>t3rik-generator</module>
         <module>t3rik-common</module>
         <module>t3rik-mes</module>
