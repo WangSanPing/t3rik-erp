@@ -24,6 +24,7 @@ import com.t3rik.mobile.common.enums.CurrentIndexEnum
 import com.t3rik.mobile.mes.service.IFeedbackService
 import com.t3rik.system.strategy.AutoCodeUtil
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 import javax.annotation.Resource
 
 
@@ -114,6 +115,8 @@ class FeedbackServiceImpl : IFeedbackService {
         // 如果需要检测，写入待检测数量
         if (YesOrNoEnum.YES.code.equals(routeProcess.isCheck)) {
             proFeedback.quantityUncheck = proFeedback.quantityQualified
+        } else {
+            proFeedback.quantityUncheck = BigDecimal.ZERO
         }
 
     }
