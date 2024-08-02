@@ -3,6 +3,9 @@ package com.t3rik.common.enums.mes;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 生产订单来源类型
  *
@@ -18,12 +21,16 @@ public enum WorkOrderSourceTypeEnum {
     private final String code;
     private final String desc;
 
-    public static WorkOrderSourceTypeEnum getEnumByCode(String code) {
-        for (WorkOrderSourceTypeEnum e : WorkOrderSourceTypeEnum.values()) {
-            if (e.code.equals(code)) {
-                return e;
-            }
+    public static final Map<String, WorkOrderSourceTypeEnum> WORK_ORDER_SOURCE_TYPE_ENUM_MAP;
+
+    static {
+        WORK_ORDER_SOURCE_TYPE_ENUM_MAP = new HashMap<>();
+        for (WorkOrderSourceTypeEnum value : WorkOrderSourceTypeEnum.values()) {
+            WORK_ORDER_SOURCE_TYPE_ENUM_MAP.put(value.getCode(), value);
         }
-        return null;
+    }
+
+    public static WorkOrderSourceTypeEnum getEnumByCode(String code) {
+        return WORK_ORDER_SOURCE_TYPE_ENUM_MAP.get(code);
     }
 }

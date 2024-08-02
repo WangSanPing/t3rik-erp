@@ -23,6 +23,10 @@ public enum OrderStatusEnum {
     REFUSE("REFUSE", "审批拒绝", 50),
     FINISHED("FINISHED", "已完成", 60);
 
+    private final String code;
+    private final String desc;
+    private final Integer sort;
+
     public static final Map<String, OrderStatusEnum> WORK_ORDER_STATUS_ENUM_MAP;
 
     static {
@@ -31,10 +35,6 @@ public enum OrderStatusEnum {
             WORK_ORDER_STATUS_ENUM_MAP.put(value.getCode(), value);
         }
     }
-
-    private final String code;
-    private final String desc;
-    private final Integer sort;
 
     public static OrderStatusEnum getEnumByCode(String code) {
         return WORK_ORDER_STATUS_ENUM_MAP.get(code);

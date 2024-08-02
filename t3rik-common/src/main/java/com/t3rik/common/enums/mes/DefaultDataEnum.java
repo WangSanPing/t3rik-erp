@@ -12,6 +12,12 @@ import java.util.Map;
 @Getter
 @AllArgsConstructor
 public enum DefaultDataEnum {
+
+    /**
+     * 系统管理员
+     * 使用的是数据id,
+     */
+    ADMIN("1", "admin", "sys_user"),
     /**
      * 物料产品分类
      * 使用的是数据id,为了兼容表字段的ancestors字段,保存的是所有节点id,便于查找所有节点
