@@ -89,6 +89,32 @@ class FeedbackServiceImpl : IFeedbackService {
         return proFeedback.recordId
     }
 
+
+    /**
+     * 校验数据，如果通过返回工作站和流程信息
+     */
+    fun validateWorkstationAndProcess(proFeedback: ProFeedback): Pair<MdWorkstation, ProRouteProcess> {
+        // 校验工作站是否存在
+        val workstation = this.mdWorkstationService.getById(proFeedback.workstationId)
+            ?: throw BusinessException(MsgConstants.NOT_EXIST_WORKSTATION)
+
+        // 校验工作站是否配置相关工艺流程
+        if (workstation.processId == null || proFeedback.routeId == null) {
+            throw BusinessException(MsgConstants.ERROR_ROUTE)
+        }
+
+        // 校验工艺流程
+        val routeProcesses = this.proRouteProcessService.lambdaQuery()
+            .eq(ProRouteProcess::getRouteId, proFeedback.routeId)
+            .eq(ProRouteProcess::getProcessId, workstation.processId)
+            .one() ?: throw BusinessException(MsgConstants.ERROR_ROUTE)
+
+        return Pair(workstation, routeProcesses)
+    }
+
+    /**
+     * 构建报工数据
+     */
     private fun buildFeedback(proFeedback: ProFeedback, workstation: MdWorkstation, routeProcess: ProRouteProcess) {
         proFeedback.processId = workstation.processId
         proFeedback.processCode = workstation.processCode
@@ -119,28 +145,6 @@ class FeedbackServiceImpl : IFeedbackService {
             proFeedback.quantityUncheck = BigDecimal.ZERO
         }
 
-    }
-
-    /**
-     * 校验数据，如果通过返回工作站和流程信息
-     */
-    fun validateWorkstationAndProcess(proFeedback: ProFeedback): Pair<MdWorkstation, ProRouteProcess> {
-        // 校验工作站是否存在
-        val workstation = this.mdWorkstationService.getById(proFeedback.workstationId)
-            ?: throw BusinessException(MsgConstants.NOT_EXIST_WORKSTATION)
-
-        // 校验工作站是否配置相关工艺流程
-        if (workstation.processId == null || proFeedback.routeId == null) {
-            throw BusinessException(MsgConstants.ERROR_ROUTE)
-        }
-
-        // 校验工艺流程
-        val routeProcesses = this.proRouteProcessService.lambdaQuery()
-            .eq(ProRouteProcess::getRouteId, proFeedback.routeId)
-            .eq(ProRouteProcess::getProcessId, workstation.processId)
-            .one() ?: throw BusinessException(MsgConstants.ERROR_ROUTE)
-
-        return Pair(workstation, routeProcesses)
     }
 
     /**
