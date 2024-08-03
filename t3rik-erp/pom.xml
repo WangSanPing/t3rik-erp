@@ -50,10 +50,10 @@
         </dependency>
 
         <!-- 定时任务-->
-        <dependency>
-            <groupId>com.t3rik</groupId>
-            <artifactId>t3rik-quartz</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.t3rik</groupId>-->
+<!--            <artifactId>t3rik-quartz</artifactId>-->
+<!--        </dependency>-->
 
         <!-- 代码生成-->
         <dependency>
