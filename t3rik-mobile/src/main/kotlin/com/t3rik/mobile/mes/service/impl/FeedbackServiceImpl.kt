@@ -12,6 +12,7 @@ import com.t3rik.common.enums.mes.OrderStatusEnum
 import com.t3rik.common.exception.BusinessException
 import com.t3rik.common.utils.DateUtils
 import com.t3rik.common.utils.SecurityUtils
+import com.t3rik.common.utils.StringUtils
 import com.t3rik.mes.md.domain.MdWorkstation
 import com.t3rik.mes.md.service.IMdWorkstationService
 import com.t3rik.mes.pro.domain.ProFeedback
@@ -23,7 +24,10 @@ import com.t3rik.mes.pro.service.IProTaskService
 import com.t3rik.mobile.common.enums.CurrentIndexEnum
 import com.t3rik.mobile.mes.service.IFeedbackService
 import com.t3rik.system.strategy.AutoCodeUtil
+import isGreaterOrEqual
+import orZero
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
 import javax.annotation.Resource
 
@@ -67,10 +71,11 @@ class FeedbackServiceImpl : IFeedbackService {
     /**
      * 根据传入的前端页码，返回数据
      */
-    override fun getPageByCurrentIndex(currentIndex: String?, page: Page<ProTask>): Page<ProTask> {
-        val paramByCurrentIndex = this.getParamByCurrentIndex(currentIndex)
+    override fun getPageByCurrentIndex(task: ProTask, page: Page<ProTask>): Page<ProTask> {
+        val paramByCurrentIndex = this.getParamByCurrentIndex(task.currentIndex)
         return this.taskService.lambdaQuery()
             .eq(ProTask::getTaskUserId, SecurityUtils.getUserId())
+            .like(StringUtils.isNotBlank(task.taskName), ProTask::getTaskName, task.taskName)
             .`in`(CollectionUtils.isNotEmpty(paramByCurrentIndex), ProTask::getStatus, paramByCurrentIndex)
             .orderByAsc(ProTask::getStatus)
             .orderByAsc(ProTask::getEndTime)
@@ -80,13 +85,38 @@ class FeedbackServiceImpl : IFeedbackService {
     /**
      * 新增报工
      */
-    override fun addFeedback(proFeedback: ProFeedback): Long {
+    @Transactional
+    override fun addFeedback(proFeedback: ProFeedback): String {
         // 工作站信息
         val (workstation, routeProcess) = this.validateWorkstationAndProcess(proFeedback)
         // 构建报工数据
         buildFeedback(proFeedback, workstation, routeProcess)
+        // 保存更新
         this.proFeedbackService.save(proFeedback)
-        return proFeedback.recordId
+        // 判断更新后当前报工数量是否大于任务计划数量
+        // 计算已报工数量
+        val quantityFeedback = this.proFeedbackService.lambdaQuery()
+            .select(ProFeedback::getQuantityFeedback)
+            .eq(ProFeedback::getTaskId, proFeedback.taskId)
+            .list()
+            .sumOf { it.quantityFeedback }
+        // 报工数量-计划数量
+        val subtract = quantityFeedback.subtract(proFeedback.quantity)
+        val msg: String
+        // 如果报工大于排产，更新任务已完成
+        if (subtract.isGreaterOrEqual(BigDecimal.ZERO)) {
+            msg = "当前任务报工总数量：「$quantityFeedback」 已大于排产数量 「${proFeedback.quantity}」，任务自动完成"
+            val proTask = ProTask().apply {
+                status = OrderStatusEnum.FINISHED.code
+                taskId = proFeedback.taskId
+            }
+            // 更新任务已完成
+            this.taskService.updateById(proTask)
+        } else {
+            msg =
+                "当前任务报工总数量：「$quantityFeedback」 , 排产数量 「${proFeedback.quantity}」, 距完成任务，还缺少数量: 「$subtract」"
+        }
+        return msg
     }
 
 
@@ -121,7 +151,7 @@ class FeedbackServiceImpl : IFeedbackService {
         proFeedback.processName = workstation.processName
         proFeedback.feedbackCode = autoCodeUtil.genSerialCode(UserConstants.FEEDBACK_CODE, "")
         // 报工数量 = 合格数量+不合格数量
-        proFeedback.quantityFeedback = proFeedback.quantityQualified + proFeedback.quantityUnquanlified
+        proFeedback.quantityFeedback = proFeedback.quantityQualified + proFeedback.quantityUnquanlified.orZero()
         // 自行报工
         proFeedback.feedbackType = FeedbackTypeEnum.SELF.code
         // 报工人
@@ -167,6 +197,7 @@ class FeedbackServiceImpl : IFeedbackService {
                     add(OrderStatusEnum.APPROVING.code)
                     add(OrderStatusEnum.APPROVED.code)
                     add(OrderStatusEnum.REFUSE.code)
+                    add(OrderStatusEnum.FINISHED.code)
                 }
             }
             // 已完成的单据

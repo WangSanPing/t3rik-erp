@@ -1,5 +1,6 @@
 package com.t3rik.mobile.mes.controller
 
+import com.t3rik.common.annotation.RepeatSubmit
 import com.t3rik.common.constant.MsgConstants
 import com.t3rik.common.constant.UserConstants
 import com.t3rik.common.core.controller.BaseController
@@ -38,7 +39,7 @@ class FeedbackController : BaseController() {
     @ApiOperation("查询报工列表")
     @GetMapping("/list")
     fun getTaskList(task: ProTask): TableDataInfo {
-        return getDataTableWithPage(feedbackService.getPageByCurrentIndex(task.currentIndex, getMPPage(task)))
+        return getDataTableWithPage(feedbackService.getPageByCurrentIndex(task, getMPPage(task)))
     }
 
     /**
@@ -55,12 +56,15 @@ class FeedbackController : BaseController() {
     }
 
     @ApiOperation("报工")
+    @RepeatSubmit
     @PostMapping
     fun feedback(@RequestBody feedback: ProFeedback): AjaxResult {
-        this.taskService.getById(feedback.taskId) ?: return AjaxResult.error(MsgConstants.PARAM_ERROR)
+        val task = this.taskService.getById(feedback.taskId) ?: return AjaxResult.error(MsgConstants.PARAM_ERROR)
         if (feedback.quantityQualified == null || feedback.quantityQualified.isZero()) {
             return AjaxResult.error(MsgConstants.CAN_NOT_BE_ZERO)
         }
+        // 确认排产数量
+        feedback.quantity = task.quantity
         return AjaxResult.success(this.feedbackService.addFeedback(feedback))
     }
 }

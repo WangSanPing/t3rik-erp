@@ -20,10 +20,10 @@ interface IFeedbackService {
     /**
      * 根据传入的前端页码，返回数据
      */
-    fun getPageByCurrentIndex(currentIndex: String?,page: Page<ProTask>): Page<ProTask>
+    fun getPageByCurrentIndex(task: ProTask,page: Page<ProTask>): Page<ProTask>
 
     /**
      * 新增报工
      */
-    fun addFeedback(proFeedback: ProFeedback): Long
+    fun addFeedback(proFeedback: ProFeedback): String
 }
