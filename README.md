@@ -1,6 +1,9 @@
 # t3rik-erp-opensource
 
-#### 介绍
+### 项目介绍
+
+#### 技术架构: springboot3+jdk17+mybatis-plus+mysql8+kotlin+vue+uniapp+elementui等
+#### 项目包括后台管理系统、手机端及pad端，手机端采用uniapp架构，可以随时编译为小程序
 
 t3rik-erp项目是在苦糖果开源MES系统基础上进行二次开发的ERP系统，旨在解决中小企业在人力、物料及生产制造等方面的信息化建设需求。该系统为中小企业提供了全面的信息化解决方案，帮助企业优化资源配置、提升生产效率，从而实现更高效、更智能的运营。
 
@@ -18,6 +21,21 @@ t3rik-erp项目是在苦糖果开源MES系统基础上进行二次开发的ERP�
 #### 项目介绍视频陆续录制中...
 
  - 01-项目介绍：https://www.bilibili.com/video/BV1ZZ8meeE7U
+
+#### 软件架构
+
+沿用若依vue的架构，并在若依vue的架构上进行了部分改造
+
+- jdk版本升级为jdk17
+- springboot版本升级为3.0.6
+- 集成了mybatis-plus框架及其提供的，如自动填充等功能
+- 代码生成可以选择生成mybatis-plus风格的代码
+- 可以和kotlin进行混编
+- fastjson升级为fastjson2
+- druid升级springboot3版本
+- mybatis-plus升级为springboot3版本
+- jjwt升级为0.12.3,替换过期方法
+- kotlin可以使用协程
 
 #### 主要功能介绍
 
@@ -37,16 +55,6 @@ t3rik-erp项目是在苦糖果开源MES系统基础上进行二次开发的ERP�
 - 操作易用性修改
 - 功能调整及代码重构
 
-#### 软件架构
-
-沿用若依vue的架构，并在若依vue的架构上进行了部分改造
-
-- jdk版本升级为jdk17
-- springboot版本升级为2.7.18
-- 集成了mybatis-plus框架及其提供的，如自动填充等功能
-- 代码生成可以选择生成mybatis-plus风格的代码
-- 可以和kotlin进行混编
-- 部分功能修改
 
 
 #### 安装教程
