@@ -1,28 +1,25 @@
 package com.t3rik.framework.config;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.sql.DataSource;
+import com.alibaba.druid.pool.DruidDataSource;
+import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceBuilder;
+import com.alibaba.druid.spring.boot3.autoconfigure.properties.DruidStatProperties;
+import com.alibaba.druid.util.Utils;
+import com.t3rik.common.enums.DataSourceType;
+import com.t3rik.common.utils.spring.SpringUtils;
+import com.t3rik.framework.config.properties.DruidProperties;
+import com.t3rik.framework.datasource.DynamicDataSource;
+import jakarta.servlet.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
-import com.alibaba.druid.spring.boot.autoconfigure.properties.DruidStatProperties;
-import com.alibaba.druid.util.Utils;
-import com.t3rik.common.enums.DataSourceType;
-import com.t3rik.common.utils.spring.SpringUtils;
-import com.t3rik.framework.config.properties.DruidProperties;
-import com.t3rik.framework.datasource.DynamicDataSource;
+
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * druid 配置多数据源
@@ -96,7 +93,7 @@ public class DruidConfig
         Filter filter = new Filter()
         {
             @Override
-            public void init(javax.servlet.FilterConfig filterConfig) throws ServletException
+            public void init(jakarta.servlet.FilterConfig filterConfig) throws ServletException
             {
             }
             @Override

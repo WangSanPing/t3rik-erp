@@ -6,7 +6,7 @@ import com.t3rik.system.mapper.SysConfigJasyptMapper;
 import com.t3rik.system.service.ISysConfigJasyptService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * 加密配置Service业务层处理

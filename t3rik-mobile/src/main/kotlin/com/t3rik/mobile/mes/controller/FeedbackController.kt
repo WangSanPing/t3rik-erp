@@ -11,11 +11,13 @@ import com.t3rik.common.utils.SecurityUtils
 import com.t3rik.mes.pro.domain.ProFeedback
 import com.t3rik.mes.pro.domain.ProTask
 import com.t3rik.mes.pro.service.IProTaskService
+import com.t3rik.mobile.common.ktextend.isNonPositive
 import com.t3rik.mobile.mes.service.IFeedbackService
 import io.swagger.annotations.ApiOperation
 import isZero
+import jakarta.annotation.Resource
+import kotlinx.coroutines.runBlocking
 import org.springframework.web.bind.annotation.*
-import javax.annotation.Resource
 
 /**
  * 报工相关
@@ -48,11 +50,25 @@ class FeedbackController : BaseController() {
     @ApiOperation("查询报工详细信息")
     @GetMapping("/{taskId}")
     fun getTaskInfo(@PathVariable taskId: Long): AjaxResult {
+        // 小于等于0 抛异常
+        taskId.isNonPositive { MsgConstants.PARAM_ERROR }
         val task = this.taskService.lambdaQuery()
             .eq(ProTask::getTaskId, taskId)
             .eq(ProTask::getTaskUserId, SecurityUtils.getUserId())
             .one() ?: throw BusinessException(MsgConstants.PARAM_ERROR)
         return AjaxResult.success(task)
+    }
+
+    /**
+     * 查询任务和报工信息
+     */
+    @ApiOperation("查询报工详细信息")
+    @GetMapping("/getTaskAndFeedback/{taskId}")
+    fun getTaskAndFeedback(@PathVariable taskId: Long): AjaxResult {
+        // 小于等于0 抛异常
+        taskId.isNonPositive { MsgConstants.PARAM_ERROR }
+        val taskAndFeedback = runBlocking { feedbackService.getTaskAndFeedback(taskId) }
+        return AjaxResult.success(taskAndFeedback)
     }
 
     @ApiOperation("报工")

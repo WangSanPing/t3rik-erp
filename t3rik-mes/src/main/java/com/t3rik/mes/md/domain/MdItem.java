@@ -3,8 +3,8 @@ package com.t3rik.mes.md.domain;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.t3rik.common.core.domain.BaseEntity;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class MdItem extends BaseEntity {
 

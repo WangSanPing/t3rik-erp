@@ -1,22 +1,17 @@
 package com.t3rik.common.utils.file;
 
-import java.io.*;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import com.t3rik.common.config.PlatformConfig;
 import com.t3rik.common.utils.DateUtils;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.uuid.IdUtils;
-import org.springframework.http.MediaType;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.io.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 文件处理工具类
@@ -273,19 +268,20 @@ public class FileUtils
         return fileName.substring(index + 1);
     }
 
-    public static MultipartFile getMultipartFile(File file) {
-        FileItem item = new DiskFileItemFactory().createItem("file"
-                , MediaType.MULTIPART_FORM_DATA_VALUE
-                , true
-                , file.getName());
-        try (InputStream input = new FileInputStream(file);
-             OutputStream os = item.getOutputStream()) {
-            // 流转移
-            IOUtils.copy(input, os);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid file: " + e, e);
-        }
-
-        return new CommonsMultipartFile(item);
-    }
+    // 升级到springboot3.0后弃用
+    // public static MultipartFile getMultipartFile(File file) {
+    //     FileItem item = new DiskFileItemFactory().createItem("file"
+    //             , MediaType.MULTIPART_FORM_DATA_VALUE
+    //             , true
+    //             , file.getName());
+    //     try (InputStream input = new FileInputStream(file);
+    //          OutputStream os = item.getOutputStream()) {
+    //         // 流转移
+    //         IOUtils.copy(input, os);
+    //     } catch (Exception e) {
+    //         throw new IllegalArgumentException("Invalid file: " + e, e);
+    //     }
+    //
+    //     return new CommonsMultipartFile(item);
+    // }
 }

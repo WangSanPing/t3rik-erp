@@ -1,6 +1,6 @@
 package com.t3rik.framework.aspectj;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.t3rik.common.annotation.Log;
 import com.t3rik.common.core.domain.model.LoginUser;
 import com.t3rik.common.enums.BusinessStatus;
@@ -21,8 +21,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.HandlerMapping;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Collection;
 import java.util.Map;
 

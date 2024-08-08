@@ -3,7 +3,7 @@ package com.t3rik.hrm.md.controller;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import com.t3rik.hrm.sm.domain.HrmStaff;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -1,6 +1,6 @@
 package com.t3rik.framework.config;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 import com.t3rik.common.utils.ServletUtils;
 

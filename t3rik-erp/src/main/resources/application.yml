@@ -69,7 +69,7 @@ token:
   # 令牌自定义标识
   header: Authorization
   # 令牌密钥
-  secret: abcdefghijklmnopqrstuvwxyz
+  secret: abcdefghijklmnopqrstuvwxyz1233214566789
   # 令牌有效期（默认30分钟）
   expireTime: 300
 
@@ -82,13 +82,13 @@ mybatis-plus:
   config-location: classpath:mybatis/mybatis-config.xml
   # 全局配置
   global-config:
-      db-config:
-        # 全局逻辑删除的字段名
-        logic-delete-field: deleted
-        # 逻辑已删除值(默认为 1)
-        logic-delete-value: 1
-        # 逻辑未删除值(默认为 0)
-        logic-not-delete-value: 0
+    db-config:
+      # 全局逻辑删除的字段名
+      logic-delete-field: deleted
+      # 逻辑已删除值(默认为 1)
+      logic-delete-value: 1
+      # 逻辑未删除值(默认为 0)
+      logic-not-delete-value: 0
 
 # PageHelper分页插件
 pagehelper:
@@ -119,3 +119,4 @@ minio:
   accessKey: your_key
   secretKey: your_secret
   bucketName: ktg-mes
+

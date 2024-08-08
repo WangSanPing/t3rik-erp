@@ -2,7 +2,7 @@ package com.t3rik.common.utils.ip;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import com.t3rik.common.utils.StringUtils;
 
 /**

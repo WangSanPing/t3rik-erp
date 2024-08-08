@@ -48,3 +48,4 @@ nbdist/
 
 ~$进度甘特图.xlsx
 .DS_Store
+t3rik-erp/src/main/resources/application-local.yml
