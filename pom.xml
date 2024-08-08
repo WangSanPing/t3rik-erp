@@ -18,13 +18,13 @@
         <java.version>17</java.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <druid.version>1.2.8</druid.version>
+        <druid.version>1.2.23</druid.version>
         <bitwalker.version>1.21</bitwalker.version>
         <swagger.version>3.0.0</swagger.version>
         <kaptcha.version>2.3.2</kaptcha.version>
         <mybatis-spring-boot.version>2.2.2</mybatis-spring-boot.version>
         <pagehelper.version>5.3.0</pagehelper.version>
-        <fastjson.version>1.2.80</fastjson.version>
+        <fastjson2.version>2.0.52</fastjson2.version>
         <oshi.version>6.1.2</oshi.version>
         <jna.version>5.10.0</jna.version>
         <commons.io.version>2.11.0</commons.io.version>
@@ -32,10 +32,10 @@
         <commons.collections.version>3.2.2</commons.collections.version>
         <poi.version>4.1.2</poi.version>
         <velocity.version>1.7</velocity.version>
-        <jwt.version>0.9.1</jwt.version>
+        <jwt.version>0.12.3</jwt.version>
         <mybatis-plus.version>3.5.3.2</mybatis-plus.version>
         <kotlin.version>2.0.0</kotlin.version>
-        <jasypt.version>3.0.4</jasypt.version>
+        <jasypt.version>3.0.5</jasypt.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -45,7 +45,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>2.7.18</version>
+                <version>3.0.6</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -57,13 +57,13 @@
                 <version>${jasypt.version}</version>
             </dependency>
 
-
             <!-- 阿里数据库连接池 -->
             <dependency>
                 <groupId>com.alibaba</groupId>
-                <artifactId>druid-spring-boot-starter</artifactId>
+                <artifactId>druid-spring-boot-3-starter</artifactId>
                 <version>${druid.version}</version>
             </dependency>
+
 
             <!-- 解析客户端操作系统、浏览器等 -->
             <dependency>
@@ -107,8 +107,8 @@
 
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+                <version>3.5.5</version>
             </dependency>
 
             <!-- Swagger3依赖 -->
@@ -165,11 +165,17 @@
                 <version>${commons.collections.version}</version>
             </dependency>
 
-            <!-- 阿里JSON解析器 -->
+            <!--fastJson2-->
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>${fastjson.version}</version>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson2.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2-extension-spring6</artifactId>
+                <version>${fastjson2.version}</version>
             </dependency>
 
             <!-- Token生成与解析-->
@@ -250,6 +256,12 @@
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-stdlib</artifactId>
+                <version>${kotlin.version}</version>
+            </dependency>
+            <!-- Kotlin Reflect Library -->
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-reflect</artifactId>
                 <version>${kotlin.version}</version>
             </dependency>
             <dependency>

@@ -13,7 +13,7 @@ import com.t3rik.mes.md.mapper.MdVendorMapper;
 import com.t3rik.mes.md.domain.MdVendor;
 import com.t3rik.mes.md.service.IMdVendorService;
 
-import javax.validation.Validator;
+import jakarta.validation.Validator;
 
 /**
  * 供应商Service业务层处理

@@ -10,8 +10,8 @@ import com.t3rik.mes.md.mapper.ItemTypeMapper;
 import com.t3rik.mes.md.service.IItemTypeService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;

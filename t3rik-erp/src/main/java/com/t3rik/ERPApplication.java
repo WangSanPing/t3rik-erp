@@ -1,20 +1,16 @@
 package com.t3rik;
 
-import com.bstek.ureport.console.UReportServlet;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.scheduling.annotation.EnableAsync;
 
 /**
  * 启动程序
  *
  * @author ruoyi
  */
-@ImportResource("classpath:ureport-console-context.xml")
+// @ImportResource("classpath:ureport-console-context.xml")
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class ERPApplication {
     public static void main(String[] args) {
@@ -33,10 +29,10 @@ public class ERPApplication {
                 ".:*~*:._.:*~*:._.:*~*:._.:*~*:._._.:.ERP服务 启动成功.:._.:*~*:.._.:*~*:.._.:*~*:.._.:*~*:.");
     }
 
-    @Bean
-    public ServletRegistrationBean urportServlet() {
-        ServletRegistrationBean bean = new ServletRegistrationBean(new UReportServlet());
-        bean.addUrlMappings("/ureport/*");
-        return bean;
-    }
+    // @Bean
+    // public ServletRegistrationBean urportServlet() {
+    //     ServletRegistrationBean bean = new ServletRegistrationBean(new UReportServlet());
+    //     bean.addUrlMappings("/ureport/*");
+    //     return bean;
+    // }
 }

@@ -1,6 +1,6 @@
 package com.t3rik.generator.util;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.t3rik.common.constant.GenConstants;
 import com.t3rik.common.utils.DateUtils;
 import com.t3rik.common.utils.StringUtils;

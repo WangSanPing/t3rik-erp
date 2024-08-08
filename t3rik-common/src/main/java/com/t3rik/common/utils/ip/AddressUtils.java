@@ -2,7 +2,7 @@ package com.t3rik.common.utils.ip;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.t3rik.common.config.PlatformConfig;
 import com.t3rik.common.constant.Constants;
 import com.t3rik.common.utils.StringUtils;

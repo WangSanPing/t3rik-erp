@@ -3,6 +3,7 @@ package com.t3rik.mobile.mes.service
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.t3rik.mes.pro.domain.ProFeedback
 import com.t3rik.mes.pro.domain.ProTask
+import com.t3rik.mobile.mes.dto.TaskAndFeedbackDto
 
 
 /**
@@ -26,4 +27,9 @@ interface IFeedbackService {
      * 新增报工
      */
     fun addFeedback(proFeedback: ProFeedback): String
+
+    /**
+     * 获取报工详细信息以及报工列表
+     */
+    suspend fun getTaskAndFeedback(taskId:Long) : TaskAndFeedbackDto
 }

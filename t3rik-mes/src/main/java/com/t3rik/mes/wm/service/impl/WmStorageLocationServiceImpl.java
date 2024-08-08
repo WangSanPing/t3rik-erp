@@ -9,7 +9,7 @@ import com.t3rik.mes.wm.mapper.WmStorageLocationMapper;
 import com.t3rik.mes.wm.service.IWmStorageLocationService;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

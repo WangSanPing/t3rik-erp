@@ -1,8 +1,8 @@
 package com.t3rik.common.xss;
 
 import com.t3rik.common.utils.StringUtils;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

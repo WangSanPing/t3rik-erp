@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.websocket.Session;
+import jakarta.websocket.Session;
 
 import com.t3rik.common.utils.StringUtils;
 import org.slf4j.Logger;

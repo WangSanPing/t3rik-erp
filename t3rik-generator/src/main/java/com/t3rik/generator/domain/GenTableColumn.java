@@ -3,7 +3,7 @@ package com.t3rik.generator.domain;
 import com.t3rik.common.core.domain.BaseEntity;
 import com.t3rik.common.utils.StringUtils;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 /**
  * 代码生成业务字段表 gen_table_column

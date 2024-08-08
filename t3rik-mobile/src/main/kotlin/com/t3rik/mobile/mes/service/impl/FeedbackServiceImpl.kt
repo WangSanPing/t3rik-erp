@@ -22,14 +22,19 @@ import com.t3rik.mes.pro.service.IProFeedbackService
 import com.t3rik.mes.pro.service.IProRouteProcessService
 import com.t3rik.mes.pro.service.IProTaskService
 import com.t3rik.mobile.common.enums.CurrentIndexEnum
+import com.t3rik.mobile.mes.dto.TaskAndFeedbackDto
 import com.t3rik.mobile.mes.service.IFeedbackService
 import com.t3rik.system.strategy.AutoCodeUtil
 import isGreaterOrEqual
+import jakarta.annotation.Resource
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import orZero
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
-import javax.annotation.Resource
 
 
 /**
@@ -118,6 +123,23 @@ class FeedbackServiceImpl : IFeedbackService {
                 "当前任务报工总数量：「$quantityFeedback」 , 排产数量 「${proFeedback.quantity}」, 距完成任务，还缺少数量: 「$subtract」"
         }
         return msg
+    }
+
+    /**
+     * 获取报工详细信息以及报工列表
+     */
+    @OptIn(DelicateCoroutinesApi::class)
+    override suspend fun getTaskAndFeedback(taskId: Long): TaskAndFeedbackDto {
+        val taskJob = GlobalScope.async {
+            val task = async {
+                taskService.getById(taskId)
+            }
+            val feedbackList = async {
+                proFeedbackService.lambdaQuery().eq(ProFeedback::getTaskId, taskId).list()
+            }
+            TaskAndFeedbackDto(task.await(), feedbackList.await())
+        }
+        return taskJob.await()
     }
 
 

@@ -11,7 +11,7 @@ import com.t3rik.mes.wm.service.IWmWarehouseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.lang.reflect.Method;
 import java.util.Optional;
 

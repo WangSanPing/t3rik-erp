@@ -4,7 +4,7 @@ import com.t3rik.mobile.common.service.IMobileLoginService
 import com.t3rik.mobile.common.vo.DictVo
 import com.t3rik.system.service.ISysDictDataService
 import org.springframework.stereotype.Service
-import javax.annotation.Resource
+import jakarta.annotation.Resource
 
 
 @Service

@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import com.t3rik.mes.md.mapper.MdUnitMeasureMapper;
 import com.t3rik.mes.md.domain.MdUnitMeasure;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 
 /**
  * 单位Service业务层处理

@@ -19,7 +19,7 @@ import ${packageName}.mapper.${ClassName}Mapper;
 import ${packageName}.domain.${ClassName};
 import ${packageName}.service.I${ClassName}Service;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * ${functionName}Service业务层处理
