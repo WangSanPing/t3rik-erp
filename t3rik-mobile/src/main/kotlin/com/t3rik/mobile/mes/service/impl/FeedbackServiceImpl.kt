@@ -132,10 +132,16 @@ class FeedbackServiceImpl : IFeedbackService {
     override suspend fun getTaskAndFeedback(taskId: Long): TaskAndFeedbackDto {
         val taskJob = GlobalScope.async {
             val task = async {
-                taskService.getById(taskId)
+                taskService.lambdaQuery()
+                    .eq(ProTask::getTaskId, taskId)
+                    .eq(ProTask::getTaskUserId, SecurityUtils.getUserId())
+                    .one()
             }
             val feedbackList = async {
-                proFeedbackService.lambdaQuery().eq(ProFeedback::getTaskId, taskId).list()
+                proFeedbackService.lambdaQuery()
+                    .eq(ProFeedback::getTaskId, taskId)
+                    .eq(ProFeedback::getUserId, SecurityUtils.getUserId())
+                    .list()
             }
             TaskAndFeedbackDto(task.await(), feedbackList.await())
         }
