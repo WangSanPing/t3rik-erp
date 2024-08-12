@@ -1,5 +1,9 @@
-# t3rik-erp
-
+<p align="center">
+	<img alt="logo" width="96px" src="https://pic.imgdb.cn/item/66b9aaafd9c307b7e9a749fb.png">
+</p>
+<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">t3rik-erp</h1>
+<h4 align="center">专注于中小企业的erp系统</h4>
+<p align="center">
 <a href='https://gitee.com/wangsanping/t3rik-erp/stargazers'><img src='https://gitee.com/wangsanping/t3rik-erp/badge/star.svg?theme=dark' alt='star'></img></a>
 	<a href="https://gitee.com/kutangguo/ktg-mes/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
 </p>
