@@ -1,5 +1,10 @@
 # t3rik-erp-opensource
 
+
+<a href='https://gitee.com/wangsanping/t3rik-erp/stargazers'><img src=https://gitee.com/wangsanping/t3rik-erp/badge/star.svg?theme=dark%27%20alt=%27star%27></img></a>
+	<a href="https://gitee.com/kutangguo/ktg-mes/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
+</p>
+
 ### 项目介绍
 
 #### 技术架构: springboot3+jdk17+mybatis-plus+mysql8+kotlin+vue+uniapp+elementui等
