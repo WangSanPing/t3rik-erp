@@ -302,6 +302,7 @@ public class ProTaskController extends BaseController {
         proTask.setClientId(order.getClientId());
         proTask.setClientCode(order.getClientCode());
         proTask.setClientName(order.getClientName());
+        proTask.setRequestDate(order.getRequestDate());
         // 工艺信息
         proTask.setRouteCode(route.getRouteCode());
         // 工序信息
