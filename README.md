@@ -1,6 +1,5 @@
-# t3rik-erp-opensource
+# t3rik-erp
 
-https://gitee.com/kutangguo/ktg-mes/badge/star.svg?theme=dark' alt='star'
 <a href='https://gitee.com/wangsanping/t3rik-erp/stargazers'><img src='https://gitee.com/wangsanping/t3rik-erp/badge/star.svg?theme=dark' alt='star'></img></a>
 	<a href="https://gitee.com/kutangguo/ktg-mes/blob/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
 </p>
