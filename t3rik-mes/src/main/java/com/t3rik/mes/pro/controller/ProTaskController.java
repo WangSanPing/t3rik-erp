@@ -16,12 +16,12 @@ import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.mes.pro.domain.*;
 import com.t3rik.mes.pro.service.*;
 import com.t3rik.system.strategy.AutoCodeUtil;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -285,7 +285,9 @@ public class ProTaskController extends BaseController {
         newTask.setDuration(proTask.getDuration());
         newTask.setEndTime(proTask.getEndTime());
         newTask.setColorCode(proTask.getColorCode());
+        newTask.setTaskName(composeTaskName(proTask));
     }
+
 
     /**
      * 构建-新增-生产任务实体
@@ -311,10 +313,17 @@ public class ProTaskController extends BaseController {
         proTask.setProcessName(process.getProcessName());
         // 自动生成任务编号和名称
         proTask.setTaskCode(autoCodeUtil.genSerialCode(UserConstants.TASK_CODE, null));
-        Object cacheUnitMeasure = this.redisCache.getCacheObject(proTask.getUnitOfMeasure());
-        String unitMeasureName = cacheUnitMeasure == null ? proTask.getUnitOfMeasure() : (String) cacheUnitMeasure;
-        proTask.setTaskName(proTask.getItemName() + "【" + proTask.getQuantity().toString() + "】" + unitMeasureName);
         proTask.setStatus(OrderStatusEnum.PREPARE.getCode());
+        proTask.setTaskName(composeTaskName(proTask));
     }
 
+
+    /**
+     * 组成任务名称
+     */
+    private String composeTaskName(ProTask proTask) {
+        Object cacheUnitMeasure = this.redisCache.getCacheObject(proTask.getUnitOfMeasure());
+        String unitMeasureName = cacheUnitMeasure == null ? proTask.getUnitOfMeasure() : (String) cacheUnitMeasure;
+        return proTask.getItemName() + "【" + proTask.getQuantity().toString() + "】" + unitMeasureName;
+    }
 }
