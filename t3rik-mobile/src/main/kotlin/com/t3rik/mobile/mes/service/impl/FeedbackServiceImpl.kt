@@ -28,7 +28,6 @@ import com.t3rik.system.strategy.AutoCodeUtil
 import isGreaterOrEqual
 import jakarta.annotation.Resource
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import orZero
@@ -99,29 +98,39 @@ class FeedbackServiceImpl : IFeedbackService {
         buildFeedback(proFeedback, workstation, routeProcess)
         // 保存更新
         this.proFeedbackService.save(proFeedback)
+        // 回写任务，更新任务表中的数量数据
+        // 计算合格品数量
+        val task = this.taskService.getById(proFeedback.taskId).let { t ->
+            ProTask().apply {
+                // 主键
+                taskId = t.taskId
+                // 已生产数量
+                quantityProduced = t.quantityProduced.orZero().add(proFeedback.quantityFeedback)
+                // 合格品数量
+                quantityQuanlify = t.quantityQuanlify.orZero().add(proFeedback.quantityQualified)
+                // 不良品数量
+                quantityUnquanlify = t.quantityUnquanlify.orZero().add(proFeedback.quantityUnquanlified)
+                // 排产数量
+                quantity = t.quantity
+            }
+        }
         // 判断更新后当前报工数量是否大于任务计划数量
-        // 计算已报工数量
-        val quantityFeedback = this.proFeedbackService.lambdaQuery()
-            .select(ProFeedback::getQuantityFeedback)
-            .eq(ProFeedback::getTaskId, proFeedback.taskId)
-            .list()
-            .sumOf { it.quantityFeedback }
         // 报工数量-计划数量
-        val subtract = quantityFeedback.subtract(proFeedback.quantity)
+        // 报工数量-计划数量
+        val subtract = task.quantityQuanlify.subtract(task.quantity)
         val msg: String
         // 如果报工大于排产，更新任务已完成
         if (subtract.isGreaterOrEqual(BigDecimal.ZERO)) {
-            msg = "当前任务报工总数量：「$quantityFeedback」 已大于排产数量 「${proFeedback.quantity}」，任务自动完成"
-            val proTask = ProTask().apply {
-                status = OrderStatusEnum.FINISHED.code
-                taskId = proFeedback.taskId
-            }
-            // 更新任务已完成
-            this.taskService.updateById(proTask)
+            msg =
+                "当前任务报工合格品总数量：「${task.quantityQuanlify}」 已大于排产数量 「${proFeedback.quantity}」，任务自动完成"
+            // 状态改为已完成
+            task.status = OrderStatusEnum.FINISHED.code
         } else {
             msg =
-                "当前任务报工总数量：「$quantityFeedback」 , 排产数量 「${proFeedback.quantity}」, 距完成任务，还缺少数量: 「$subtract」"
+                "当前任务报工合格品总数量：「${task.quantityQuanlify}」, 排产数量 「${proFeedback.quantity}」, 距完成任务，还缺少数量: 「${subtract.abs()}」"
         }
+        // 更新任务数据
+        this.taskService.updateById(task)
         return msg
     }
 
