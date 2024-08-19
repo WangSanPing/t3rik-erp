@@ -312,4 +312,35 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{taskId}
         </foreach>
     </delete>
+
+    <select id="getTaskListAndFeedbackCount" resultType="com.t3rik.mes.pro.dto.TaskDto">
+        SELECT *
+        FROM (SELECT pt.workorder_code,
+                     pt.client_order_code,
+                     pt.process_id,
+                     pt.process_name,
+                     pt.request_date,
+                     pt.status,
+                     pt.quantity_quanlify,
+                     pt.quantity_unquanlify,
+                     pt.task_id,
+                     pt.unit_of_measure,
+                     COUNT(pf.record_id)                                 AS feedbackCount,
+                     COUNT(CASE WHEN pf.status = 'APPROVING' THEN 1 END) AS approvingCount,
+                     pt.task_name
+              FROM pro_task pt
+                       LEFT JOIN
+                   pro_feedback pf ON pt.task_id = pf.task_id
+              GROUP BY pt.workorder_code,
+                       pt.client_order_code,
+                       pt.process_id,
+                       pt.process_name,
+                       pt.request_date,
+                       pt.status,
+                       pt.quantity_quanlify,
+                       pt.quantity_unquanlify,
+                       pt.task_id,
+                       pt.task_name) subquery
+            ${ew.customSqlSegment}
+    </select>
 </mapper>

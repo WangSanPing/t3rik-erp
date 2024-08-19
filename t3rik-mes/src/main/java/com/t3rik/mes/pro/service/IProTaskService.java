@@ -2,10 +2,15 @@ package com.t3rik.mes.pro.service;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.pro.domain.ProTask;
+import com.t3rik.mes.pro.dto.TaskDto;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -91,4 +96,11 @@ public interface IProTaskService  extends IService<ProTask>
      * @return
      */
     public void listGroupByWorkOrder(LambdaQueryWrapper<ProTask> queryWrapper, Page<ProTask> page);
+
+    /**
+     * 查询任务，同时获取任务下的报工数量
+     * @param query 查询条件
+     * @return
+     */
+    Page<TaskDto> getTaskListAndFeedbackCount(IPage<TaskDto> page, @Param(Constants.WRAPPER) Wrapper<TaskDto> query);
 }
