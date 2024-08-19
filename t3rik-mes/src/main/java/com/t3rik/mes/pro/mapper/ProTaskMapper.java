@@ -1,10 +1,17 @@
 package com.t3rik.mes.pro.mapper;
 
-import java.util.List;
-
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.t3rik.mes.pro.domain.ProTask;
+import com.t3rik.mes.pro.dto.ClientOrderItemPageDto;
+import com.t3rik.mes.pro.dto.TaskDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 生产任务Mapper接口
@@ -13,8 +20,7 @@ import org.apache.ibatis.annotations.Mapper;
  * @date 2022-05-14
  */
 @Mapper
-public interface ProTaskMapper extends BaseMapper<ProTask>
-{
+public interface ProTaskMapper extends BaseMapper<ProTask> {
     /**
      * 查询生产任务
      *
@@ -34,6 +40,7 @@ public interface ProTaskMapper extends BaseMapper<ProTask>
 
     /**
      * 查询某个工单的各个工序生产进度
+     *
      * @param workorderId
      * @return
      */
@@ -70,4 +77,11 @@ public interface ProTaskMapper extends BaseMapper<ProTask>
      * @return 结果
      */
     public int deleteProTaskByTaskIds(Long[] taskIds);
+
+    /**
+     * 查询任务，同时获取任务下的报工数量
+     * @param query 查询条件
+     * @return
+     */
+    Page<TaskDto> getTaskListAndFeedbackCount(IPage<TaskDto> page,@Param(Constants.WRAPPER) Wrapper<TaskDto> query);
 }

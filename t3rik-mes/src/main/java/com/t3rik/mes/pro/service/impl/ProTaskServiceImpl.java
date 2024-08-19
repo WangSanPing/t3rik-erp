@@ -1,23 +1,24 @@
 package com.t3rik.mes.pro.service.impl;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
-
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.enums.mes.OrderStatusEnum;
 import com.t3rik.common.utils.DateUtils;
-import com.t3rik.common.utils.uuid.IdUtils;
+import com.t3rik.mes.pro.domain.ProTask;
+import com.t3rik.mes.pro.dto.TaskDto;
+import com.t3rik.mes.pro.mapper.ProTaskMapper;
+import com.t3rik.mes.pro.service.IProTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.t3rik.mes.pro.mapper.ProTaskMapper;
-import com.t3rik.mes.pro.domain.ProTask;
-import com.t3rik.mes.pro.service.IProTaskService;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 
@@ -120,18 +121,18 @@ public class ProTaskServiceImpl extends ServiceImpl<ProTaskMapper, ProTask> impl
      * @return
      */
     @Override
-    public String addAssignUsers(List<String> taskIds,Long taskUserId,String taskBy){
+    public String addAssignUsers(List<String> taskIds, Long taskUserId, String taskBy) {
         Date nowDate = DateUtils.getNowDate();
-        //符合条件的任务id
-        List<Long> taskIdList  = this.lambdaQuery()
+        // 符合条件的任务id
+        List<Long> taskIdList = this.lambdaQuery()
                 .in(ProTask::getTaskId, taskIds)
                 .list()
                 .stream()
                 .filter(proTask -> !(proTask.getTaskUserId() != null && proTask.getEndTime().compareTo(nowDate) < 1))
                 .map(ProTask::getTaskId)
                 .toList();
-        //更新任务指派用户
-        if(!taskIdList.isEmpty()){
+        // 更新任务指派用户
+        if (!taskIdList.isEmpty()) {
             ////派单已确认
             this.lambdaUpdate()
                     .in(ProTask::getTaskId, taskIdList)
@@ -140,15 +141,15 @@ public class ProTaskServiceImpl extends ServiceImpl<ProTaskMapper, ProTask> impl
                     .set(ProTask::getStatus, OrderStatusEnum.CONFIRMED.getCode())
                     .update(new ProTask());
         }
-        //任务已超过设定完成生产时间编号
-        List<String> codeList  = this.lambdaQuery()
+        // 任务已超过设定完成生产时间编号
+        List<String> codeList = this.lambdaQuery()
                 .in(ProTask::getTaskId, taskIds)
                 .list()
                 .stream()
                 .filter(proTask -> proTask.getTaskUserId() != null && proTask.getEndTime().compareTo(nowDate) < 1)
                 .map(ProTask::getTaskCode)
                 .toList();
-        //返回提示信息
+        // 返回提示信息
         StringBuilder sb = new StringBuilder();
         if (!codeList.isEmpty()) {
             sb.append("编号为：").append(String.join(",", codeList)).append("的任务已超过设定完成生产时间，不能再指派！");
@@ -159,7 +160,7 @@ public class ProTaskServiceImpl extends ServiceImpl<ProTaskMapper, ProTask> impl
     /**
      * 根据工单分组展示
      *
-     * @param page      分页对象
+     * @param page         分页对象
      * @param queryWrapper 条件
      * @return
      */
@@ -167,9 +168,9 @@ public class ProTaskServiceImpl extends ServiceImpl<ProTaskMapper, ProTask> impl
     public void listGroupByWorkOrder(LambdaQueryWrapper<ProTask> queryWrapper, Page<ProTask> page) {
         // 查询
         this.page(page, queryWrapper);
-        //分组
+        // 分组
         Map<Long, List<ProTask>> listMap = page.getRecords().stream().collect(groupingBy(ProTask::getWorkorderId));
-        //构建 ProTask返回值列表
+        // 构建 ProTask返回值列表
         List<ProTask> proTaskList = listMap.values().stream()
                 .map(proTasks -> {
                     long parentId = IdWorker.getId();
@@ -186,6 +187,17 @@ public class ProTaskServiceImpl extends ServiceImpl<ProTaskMapper, ProTask> impl
         // 更新分页对象的记录为 ProTask 列表
         page.setRecords(proTaskList);
         page.setTotal(proTaskList.size());
+    }
+
+    /**
+     * 查询任务，同时获取任务下的报工数量
+     *
+     * @param page
+     * @param query 查询条件
+     */
+    @Override
+    public Page<TaskDto> getTaskListAndFeedbackCount(IPage<TaskDto> page, Wrapper<TaskDto> query) {
+        return this.proTaskMapper.getTaskListAndFeedbackCount(page, query);
     }
 
 }
