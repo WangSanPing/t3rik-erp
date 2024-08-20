@@ -245,5 +245,6 @@ public class ProFeedback extends BaseEntity {
      */
     private Long attr4;
 
-
+    @TableField(exist = false)
+    private Boolean checked;
 }
