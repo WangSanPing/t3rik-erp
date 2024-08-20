@@ -105,11 +105,11 @@ class FeedbackServiceImpl : IFeedbackService {
                 // 主键
                 taskId = t.taskId
                 // 已生产数量
-                quantityProduced = t.quantityProduced.orZero().add(proFeedback.quantityFeedback)
+                quantityProduced = t.quantityProduced.orZero().add(proFeedback.quantityFeedback.orZero())
                 // 合格品数量
-                quantityQuanlify = t.quantityQuanlify.orZero().add(proFeedback.quantityQualified)
+                quantityQuanlify = t.quantityQuanlify.orZero().add(proFeedback.quantityQualified.orZero())
                 // 不良品数量
-                quantityUnquanlify = t.quantityUnquanlify.orZero().add(proFeedback.quantityUnquanlified)
+                quantityUnquanlify = t.quantityUnquanlify.orZero().add(proFeedback.quantityUnquanlified.orZero())
                 // 排产数量
                 quantity = t.quantity
             }
