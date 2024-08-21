@@ -1,6 +1,7 @@
 package com.t3rik.mobile.mes.service
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
+import com.t3rik.common.enums.mes.OrderStatusEnum
 import com.t3rik.mes.pro.domain.ProFeedback
 import com.t3rik.mes.pro.domain.ProTask
 import com.t3rik.mobile.mes.dto.TaskAndFeedbackDto
@@ -21,7 +22,7 @@ interface IFeedbackService {
     /**
      * 根据传入的前端页码，返回数据
      */
-    fun getPageByCurrentIndex(task: ProTask,page: Page<ProTask>): Page<ProTask>
+    fun getPageByCurrentIndex(task: ProTask, page: Page<ProTask>): Page<ProTask>
 
     /**
      * 新增报工
@@ -31,5 +32,5 @@ interface IFeedbackService {
     /**
      * 获取报工详细信息以及报工列表
      */
-    suspend fun getTaskAndFeedback(taskId:Long) : TaskAndFeedbackDto
+    suspend fun getTaskAndFeedback(taskId: Long, status: OrderStatusEnum? = null): TaskAndFeedbackDto
 }

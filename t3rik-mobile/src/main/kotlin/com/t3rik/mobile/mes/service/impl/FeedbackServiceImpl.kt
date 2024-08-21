@@ -138,7 +138,7 @@ class FeedbackServiceImpl : IFeedbackService {
      * 获取报工详细信息以及报工列表
      */
     @OptIn(DelicateCoroutinesApi::class)
-    override suspend fun getTaskAndFeedback(taskId: Long): TaskAndFeedbackDto {
+    override suspend fun getTaskAndFeedback(taskId: Long, status: OrderStatusEnum?): TaskAndFeedbackDto {
         val taskJob = GlobalScope.async {
             val task = async {
                 taskService.lambdaQuery()
@@ -150,6 +150,7 @@ class FeedbackServiceImpl : IFeedbackService {
                 proFeedbackService.lambdaQuery()
                     .eq(ProFeedback::getTaskId, taskId)
                     .eq(ProFeedback::getUserId, SecurityUtils.getUserId())
+                    .eq(status != null, ProFeedback::getStatus, status?.code)
                     .list()
             }
             TaskAndFeedbackDto(task.await(), feedbackList.await())
