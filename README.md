@@ -108,7 +108,7 @@ t3rik-erp项目是在苦糖果开源MES系统基础上进行二次开发的ERP�
 
 ![](https://pic.imgdb.cn/item/66b0ec5cd9c307b7e99c0a4d.png) ![](https://pic.imgdb.cn/item/66b0ec5cd9c307b7e99c0a61.png)
 
-![](https://pic.imgdb.cn/item/66c58d62d9c307b7e9fd7946.png) ![](https://pic.imgdb.cn/item/66c58db3d9c307b7e9fdc24f.png) 
+![](https://pic.imgdb.cn/item/66c58db3d9c307b7e9fdc24f.png) ![](https://pic.imgdb.cn/item/66c58d62d9c307b7e9fd7993.png)
 
 ![](https://pic.imgdb.cn/item/66c58d62d9c307b7e9fd7946.png)
 
