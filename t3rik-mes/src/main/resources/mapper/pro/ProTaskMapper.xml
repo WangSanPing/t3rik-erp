@@ -343,4 +343,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                        pt.task_name) subquery
             ${ew.customSqlSegment}
     </select>
+
+    <select id="getTaskListAndIssueCount" resultType="com.t3rik.mes.pro.dto.TaskDto">
+        SELECT
+            pw.workorder_code,
+            pw.client_order_code,
+            pw.request_date,
+            pw.status,
+            pw.unit_of_measure,
+            pt.task_user_id,
+            pt.task_name,
+            sum(pt.quantity_quanlify) as quantityQuanlify,
+            COUNT(DISTINCT wil.issue_id) AS issueCount
+        FROM
+            pro_workorder pw
+                LEFT JOIN
+            pro_task pt ON pt.workorder_code = pw.workorder_code
+                LEFT JOIN
+            wm_issue_header wih ON pw.workorder_code = wih.workorder_code
+                LEFT JOIN
+            wm_issue_line wil ON wih.issue_id = wil.issue_id
+        ${ew.customSqlSegment}
+        GROUP BY
+            pw.workorder_code,
+            pw.client_order_code,
+            pw.request_date,
+            pw.status,
+            pw.unit_of_measure,
+            pt.task_user_id,
+            pt.task_name
+    </select>
 </mapper>
