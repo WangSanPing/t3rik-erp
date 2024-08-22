@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping(UserConstants.MOBILE_PATH + "/common")
-class MobileCommonController : BaseController() {
+class MesMobileCommonController : BaseController() {
 
     @Resource
     lateinit var mdUnitMeasureService: IMdUnitMeasureService
