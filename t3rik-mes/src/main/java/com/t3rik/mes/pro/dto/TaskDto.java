@@ -21,4 +21,8 @@ public class TaskDto extends ProTask {
      * 待审核数量
      */
     private Integer approvingCount;
+    /**
+     * 已领料次数
+     */
+    private Integer issueCount;
 }

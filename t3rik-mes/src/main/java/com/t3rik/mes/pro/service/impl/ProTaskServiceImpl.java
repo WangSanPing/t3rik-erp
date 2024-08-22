@@ -200,4 +200,15 @@ public class ProTaskServiceImpl extends ServiceImpl<ProTaskMapper, ProTask> impl
         return this.proTaskMapper.getTaskListAndFeedbackCount(page, query);
     }
 
+    /**
+     * 查询任务，根据工单分组展示数据，并统计领料次数
+     *
+     * @param page
+     * @param query 查询条件
+     */
+    @Override
+    public Page<TaskDto> getTaskListAndIssueCount(IPage<TaskDto> page, Wrapper<TaskDto> query) {
+        return this.proTaskMapper.getTaskListAndIssueCount(page, query);
+    }
+
 }

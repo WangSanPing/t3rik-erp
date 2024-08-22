@@ -84,4 +84,10 @@ public interface ProTaskMapper extends BaseMapper<ProTask> {
      * @return
      */
     Page<TaskDto> getTaskListAndFeedbackCount(IPage<TaskDto> page,@Param(Constants.WRAPPER) Wrapper<TaskDto> query);
+
+    /**
+     * 查询任务，根据工单分组展示数据，并统计领料次数
+     * @param query 查询条件
+     */
+    Page<TaskDto> getTaskListAndIssueCount(IPage<TaskDto> page,@Param(Constants.WRAPPER) Wrapper<TaskDto> query);
 }
