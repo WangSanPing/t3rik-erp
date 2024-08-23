@@ -9,9 +9,11 @@ import lombok.Data;
  * @date 2024/8/23 18:25
  */
 @Data
-public class KeyValueDTO {
+public class SelectInfoDTO {
 
     private String label;
 
     private String code;
+
+    private String parentCode;
 }

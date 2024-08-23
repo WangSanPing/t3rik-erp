@@ -2,7 +2,7 @@ package com.t3rik.mobile.mes.service.impl
 
 import com.t3rik.common.constant.UserConstants
 import com.t3rik.common.enums.mes.DefaultDataEnum
-import com.t3rik.mes.common.dto.KeyValueDTO
+import com.t3rik.mes.common.dto.SelectInfoDTO
 import com.t3rik.mes.common.service.ICommonService
 import com.t3rik.mobile.mes.service.IMesMobileService
 import jakarta.annotation.Resource
@@ -28,7 +28,7 @@ class MesMobileServiceImpl : IMesMobileService {
      * 获取所有仓库信息，包括库区库位
      */
     @OptIn(DelicateCoroutinesApi::class)
-    override suspend fun getWarehouseInfo(): HashMap<String, MutableList<KeyValueDTO>> {
+    override suspend fun getWarehouseInfo(): HashMap<String, MutableList<SelectInfoDTO>> {
         val result = GlobalScope.async {
             // 仓库
             val whList = async {
@@ -57,7 +57,7 @@ class MesMobileServiceImpl : IMesMobileService {
                     )
                 )
             }
-            HashMap<String, MutableList<KeyValueDTO>>().apply {
+            HashMap<String, MutableList<SelectInfoDTO>>().apply {
                 put(UserConstants.WAREHOUSE, whList.await())
                 put(UserConstants.STORAGE_LOCATION, wsList.await())
                 put(UserConstants.STORAGE_AREA, waList.await())
