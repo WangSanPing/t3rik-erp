@@ -11,7 +11,7 @@ public class UserConstants {
      */
     public static final String SYS_USER = "SYS_USER";
     public static final Long SYS_USER_ID = 999999999L;
-    
+
     public static final String MOBILE_PATH = "/mobile";
     public static final String PAD_PATH = "/pad";
 
@@ -146,11 +146,11 @@ public class UserConstants {
     /**
      * 单据的状态类型
      */
-    public static final String ORDER_STATUS_PREPARE = "PREPARE"; //prepare 准备
-    public static final String ORDER_STATUS_CONFIRMED = "CONFIRMED";//confirmed 证实
-    public static final String ORDER_STATUS_APPROVING = "APPROVING";//approving 执行
-    public static final String ORDER_STATUS_APPROVED = "APPROVED";//approved 批准
-    public static final String ORDER_STATUS_FINISHED = "FINISHED";//finished 完成
+    public static final String ORDER_STATUS_PREPARE = "PREPARE"; // prepare 准备
+    public static final String ORDER_STATUS_CONFIRMED = "CONFIRMED";// confirmed 证实
+    public static final String ORDER_STATUS_APPROVING = "APPROVING";// approving 执行
+    public static final String ORDER_STATUS_APPROVED = "APPROVED";// approved 批准
+    public static final String ORDER_STATUS_FINISHED = "FINISHED";// finished 完成
 
     /**
      * 维护类型
@@ -244,6 +244,19 @@ public class UserConstants {
     public static final String VIRTUAL_WH = "XBK_VIRTUAL";
     public static final String VIRTUAL_WS = "XBKKQ_VIRTUAL";
     public static final String VIRTUAL_WA = "XBKKW_VIRTUAL";
+
+    /**
+     * 仓库
+     */
+    public static final String WAREHOUSE = "WAREHOUSE";
+    /**
+     * 库位
+     */
+    public static final String STORAGE_AREA = "STORAGE_AREA";
+    /**
+     * 库区
+     */
+    public static final String STORAGE_LOCATION = "STORAGE_LOCATION";
 
     /**
      * 废料线边库对应的仓库、库区、库位编码

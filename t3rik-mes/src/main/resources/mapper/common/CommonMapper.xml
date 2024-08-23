@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.t3rik.mes.common.mapper.CommonMapper">
+
+    <select id="selectAllWarehouse" resultType="com.t3rik.mes.common.dto.KeyValueDTO">
+        select ww.warehouse_name as label, ww.warehouse_code as code
+        from wm_warehouse ww
+        <where>
+            ww.warehouse_code not in
+            <foreach item="code" collection="notInCodeList" open="(" separator="," close=")">
+                #{code}
+            </foreach>
+        </where>
+    </select>
+
+    <select id="selectAllLocation" resultType="com.t3rik.mes.common.dto.KeyValueDTO">
+        select wsl.location_code as label, wsl.location_name as code
+        from wm_storage_location wsl
+        <where>
+            wsl.location_code not in
+            <foreach item="code" collection="notInCodeList" open="(" separator="," close=")">
+                #{code}
+            </foreach>
+        </where>
+    </select>
+
+    <select id="selectAllArea" resultType="com.t3rik.mes.common.dto.KeyValueDTO">
+        select wsa.area_name as label, wsa.area_code as code
+        from wm_storage_area wsa
+        <where>
+            wsa.area_code not in
+            <foreach item="code" collection="notInCodeList" open="(" separator="," close=")">
+                #{code}
+            </foreach>
+        </where>
+    </select>
+</mapper>

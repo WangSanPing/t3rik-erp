@@ -22,7 +22,7 @@ import com.t3rik.mes.pro.service.IProFeedbackService
 import com.t3rik.mes.pro.service.IProRouteProcessService
 import com.t3rik.mes.pro.service.IProTaskService
 import com.t3rik.mobile.common.enums.CurrentIndexEnum
-import com.t3rik.mobile.mes.dto.TaskAndFeedbackDto
+import com.t3rik.mobile.mes.dto.TaskAndFeedbackDTO
 import com.t3rik.mobile.mes.service.IFeedbackService
 import com.t3rik.system.strategy.AutoCodeUtil
 import isGreaterOrEqual
@@ -138,7 +138,7 @@ class FeedbackServiceImpl : IFeedbackService {
      * 获取报工详细信息以及报工列表
      */
     @OptIn(DelicateCoroutinesApi::class)
-    override suspend fun getTaskAndFeedback(taskId: Long, status: OrderStatusEnum?): TaskAndFeedbackDto {
+    override suspend fun getTaskAndFeedback(taskId: Long, status: OrderStatusEnum?): TaskAndFeedbackDTO {
         val taskJob = GlobalScope.async {
             val task = async {
                 taskService.lambdaQuery()
@@ -153,7 +153,7 @@ class FeedbackServiceImpl : IFeedbackService {
                     .eq(status != null, ProFeedback::getStatus, status?.code)
                     .list()
             }
-            TaskAndFeedbackDto(task.await(), feedbackList.await())
+            TaskAndFeedbackDTO(task.await(), feedbackList.await())
         }
         return taskJob.await()
     }
