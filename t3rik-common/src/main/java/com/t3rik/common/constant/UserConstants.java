@@ -248,15 +248,15 @@ public class UserConstants {
     /**
      * 仓库
      */
-    public static final String WAREHOUSE = "WAREHOUSE";
+    public static final String WAREHOUSE = "warehouse";
     /**
      * 库位
      */
-    public static final String STORAGE_AREA = "STORAGE_AREA";
+    public static final String STORAGE_AREA = "storageArea";
     /**
      * 库区
      */
-    public static final String STORAGE_LOCATION = "STORAGE_LOCATION";
+    public static final String STORAGE_LOCATION = "storageLocation";
 
     /**
      * 废料线边库对应的仓库、库区、库位编码

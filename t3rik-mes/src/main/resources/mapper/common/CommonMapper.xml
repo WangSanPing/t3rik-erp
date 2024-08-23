@@ -4,8 +4,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.t3rik.mes.common.mapper.CommonMapper">
 
-    <select id="selectAllWarehouse" resultType="com.t3rik.mes.common.dto.KeyValueDTO">
-        select ww.warehouse_name as label, ww.warehouse_code as code
+    <select id="selectAllWarehouse" resultType="com.t3rik.mes.common.dto.SelectInfoDTO">
+        select ww.warehouse_name as label, ww.warehouse_code as code,'0' as parentCode
         from wm_warehouse ww
         <where>
             ww.warehouse_code not in
@@ -15,9 +15,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
-    <select id="selectAllLocation" resultType="com.t3rik.mes.common.dto.KeyValueDTO">
-        select wsl.location_code as label, wsl.location_name as code
+    <select id="selectAllLocation" resultType="com.t3rik.mes.common.dto.SelectInfoDTO">
+        select wsl.location_name as label, wsl.location_code as code, warehouse_code as parentCode
         from wm_storage_location wsl
+        left join wm_warehouse ww on ww.warehouse_id = wsl.warehouse_id
         <where>
             wsl.location_code not in
             <foreach item="code" collection="notInCodeList" open="(" separator="," close=")">
@@ -26,9 +27,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
-    <select id="selectAllArea" resultType="com.t3rik.mes.common.dto.KeyValueDTO">
-        select wsa.area_name as label, wsa.area_code as code
+    <select id="selectAllArea" resultType="com.t3rik.mes.common.dto.SelectInfoDTO">
+        select wsa.area_name as label, wsa.area_code as code,wsl.location_code as parentCode
         from wm_storage_area wsa
+        left join wm_storage_location wsl on wsa.location_id = wsl.location_id
         <where>
             wsa.area_code not in
             <foreach item="code" collection="notInCodeList" open="(" separator="," close=")">

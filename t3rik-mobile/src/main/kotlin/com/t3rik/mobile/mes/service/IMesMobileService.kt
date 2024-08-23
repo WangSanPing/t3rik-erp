@@ -1,6 +1,6 @@
 package com.t3rik.mobile.mes.service
 
-import com.t3rik.mes.common.dto.KeyValueDTO
+import com.t3rik.mes.common.dto.SelectInfoDTO
 
 
 /**
@@ -13,5 +13,5 @@ interface IMesMobileService {
     /**
      * 获取所有仓库信息，包括库区库位
      */
-    suspend fun getWarehouseInfo(): HashMap<String, MutableList<KeyValueDTO>>
+    suspend fun getWarehouseInfo(): HashMap<String, MutableList<SelectInfoDTO>>
 }

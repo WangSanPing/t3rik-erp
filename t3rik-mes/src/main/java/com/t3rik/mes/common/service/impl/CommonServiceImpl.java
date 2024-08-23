@@ -1,6 +1,6 @@
 package com.t3rik.mes.common.service.impl;
 
-import com.t3rik.mes.common.dto.KeyValueDTO;
+import com.t3rik.mes.common.dto.SelectInfoDTO;
 import com.t3rik.mes.common.mapper.CommonMapper;
 import com.t3rik.mes.common.service.ICommonService;
 import jakarta.annotation.Resource;
@@ -27,7 +27,7 @@ public class CommonServiceImpl implements ICommonService {
      * @param notInCodeList
      */
     @Override
-    public List<KeyValueDTO> selectAllWarehouse(List<String> notInCodeList) {
+    public List<SelectInfoDTO> selectAllWarehouse(List<String> notInCodeList) {
         return this.commonMapper.selectAllWarehouse(notInCodeList);
     }
 
@@ -37,7 +37,7 @@ public class CommonServiceImpl implements ICommonService {
      * @param notInCodeList
      */
     @Override
-    public List<KeyValueDTO> selectAllArea(List<String> notInCodeList) {
+    public List<SelectInfoDTO> selectAllArea(List<String> notInCodeList) {
         return this.commonMapper.selectAllArea(notInCodeList);
     }
 
@@ -47,7 +47,7 @@ public class CommonServiceImpl implements ICommonService {
      * @param notInCodeList
      */
     @Override
-    public List<KeyValueDTO> selectAllLocation(List<String> notInCodeList) {
+    public List<SelectInfoDTO> selectAllLocation(List<String> notInCodeList) {
         return this.commonMapper.selectAllLocation(notInCodeList);
     }
 }

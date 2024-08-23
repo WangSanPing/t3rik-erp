@@ -1,6 +1,6 @@
 package com.t3rik.mes.common.service;
 
-import com.t3rik.mes.common.dto.KeyValueDTO;
+import com.t3rik.mes.common.dto.SelectInfoDTO;
 
 import java.util.List;
 
@@ -15,15 +15,15 @@ public interface ICommonService {
     /**
      * 查询仓库不包含参数列表的仓库信息
      */
-    List<KeyValueDTO> selectAllWarehouse(List<String> notInCodeList);
+    List<SelectInfoDTO> selectAllWarehouse(List<String> notInCodeList);
 
     /**
      * 查询库位不包含参数列表的仓库信息
      */
-    List<KeyValueDTO> selectAllArea(List<String> notInCodeList);
+    List<SelectInfoDTO> selectAllArea(List<String> notInCodeList);
 
     /**
      * 查询库区不包含参数列表的仓库信息
      */
-    List<KeyValueDTO> selectAllLocation(List<String> notInCodeList);
+    List<SelectInfoDTO> selectAllLocation(List<String> notInCodeList);
 }
