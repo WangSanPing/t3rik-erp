@@ -8,14 +8,14 @@ import com.t3rik.common.core.redis.RedisCache;
 import com.t3rik.common.utils.sign.Base64;
 import com.t3rik.common.utils.uuid.IdUtils;
 import com.t3rik.system.service.ISysConfigService;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.annotation.Resource;
 import javax.imageio.ImageIO;
-import jakarta.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
