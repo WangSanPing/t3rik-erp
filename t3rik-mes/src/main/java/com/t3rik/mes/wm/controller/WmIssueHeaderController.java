@@ -1,36 +1,30 @@
 package com.t3rik.mes.wm.controller;
 
 import cn.hutool.core.collection.CollUtil;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.t3rik.common.annotation.Log;
-import com.t3rik.common.constant.MsgConstants;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
-import com.t3rik.common.enums.mes.OrderStatusEnum;
+import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.poi.ExcelUtil;
-import com.t3rik.mes.wm.domain.WmIssueHeader;
-import com.t3rik.mes.wm.domain.WmIssueLine;
-import com.t3rik.mes.wm.service.IWmIssueHeaderService;
-import com.t3rik.mes.wm.service.IWmIssueLineService;
-import com.t3rik.mes.wm.utils.WmWarehouseUtil;
+import com.t3rik.mes.wm.domain.*;
+import com.t3rik.mes.wm.domain.tx.IssueTxBean;
+import com.t3rik.mes.wm.service.*;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * 生产领料单头Controller
- * (已重构)
  *
- * @author t3rik
- * @date 2024-08-26
+ * @author yinjinlu
+ * @date 2022-07-14
  */
 @RestController
 @RequestMapping("/mes/wm/issueheader")
@@ -42,7 +36,16 @@ public class WmIssueHeaderController extends BaseController {
     private IWmIssueLineService wmIssueLineService;
 
     @Resource
-    private WmWarehouseUtil warehouseUtil;
+    private IStorageCoreService storageCoreService;
+
+    @Resource
+    private IWmWarehouseService wmWarehouseService;
+
+    @Resource
+    private IWmStorageLocationService wmStorageLocationService;
+
+    @Resource
+    private IWmStorageAreaService wmStorageAreaService;
 
     /**
      * 查询生产领料单头列表
@@ -84,10 +87,26 @@ public class WmIssueHeaderController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody WmIssueHeader wmIssueHeader) {
         if (UserConstants.NOT_UNIQUE.equals(wmIssueHeaderService.checkIssueCodeUnique(wmIssueHeader))) {
-            return AjaxResult.error(MsgConstants.CODE_ALREADY_EXISTS);
+            return AjaxResult.error("领料单编号已存在");
         }
-        // 设置仓库相关信息
-        warehouseUtil.setWarehouseInfo(wmIssueHeader);
+        // 根据领料单头上的仓库、库区、库位ID设置对应的编号和名称
+        if (StringUtils.isNotNull(wmIssueHeader.getWarehouseId())) {
+            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmIssueHeader.getWarehouseId());
+            wmIssueHeader.setWarehouseCode(warehouse.getWarehouseCode());
+            wmIssueHeader.setWarehouseName(warehouse.getWarehouseName());
+        }
+
+        if (StringUtils.isNotNull(wmIssueHeader.getLocationId())) {
+            WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationId(wmIssueHeader.getLocationId());
+            wmIssueHeader.setLocationCode(location.getLocationCode());
+            wmIssueHeader.setLocationName(location.getLocationName());
+        }
+
+        if (StringUtils.isNotNull(wmIssueHeader.getAreaId())) {
+            WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaId(wmIssueHeader.getAreaId());
+            wmIssueHeader.setAreaCode(area.getAreaCode());
+            wmIssueHeader.setAreaName(area.getAreaName());
+        }
         wmIssueHeader.setCreateBy(getUsername());
         return toAjax(wmIssueHeaderService.insertWmIssueHeader(wmIssueHeader));
     }
@@ -100,10 +119,27 @@ public class WmIssueHeaderController extends BaseController {
     @PutMapping
     public AjaxResult edit(@RequestBody WmIssueHeader wmIssueHeader) {
         if (UserConstants.NOT_UNIQUE.equals(wmIssueHeaderService.checkIssueCodeUnique(wmIssueHeader))) {
-            return AjaxResult.error(MsgConstants.CODE_ALREADY_EXISTS);
+            return AjaxResult.error("领料单编号已存在");
         }
-        // 设置仓库相关信息
-        warehouseUtil.setWarehouseInfo(wmIssueHeader);
+
+        // 根据领料单头上的仓库、库区、库位ID设置对应的编号和名称
+        if (StringUtils.isNotNull(wmIssueHeader.getWarehouseId())) {
+            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmIssueHeader.getWarehouseId());
+            wmIssueHeader.setWarehouseCode(warehouse.getWarehouseCode());
+            wmIssueHeader.setWarehouseName(warehouse.getWarehouseName());
+        }
+
+        if (StringUtils.isNotNull(wmIssueHeader.getLocationId())) {
+            WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationId(wmIssueHeader.getLocationId());
+            wmIssueHeader.setLocationCode(location.getLocationCode());
+            wmIssueHeader.setLocationName(location.getLocationName());
+        }
+
+        if (StringUtils.isNotNull(wmIssueHeader.getAreaId())) {
+            WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaId(wmIssueHeader.getAreaId());
+            wmIssueHeader.setAreaCode(area.getAreaCode());
+            wmIssueHeader.setAreaName(area.getAreaName());
+        }
         return toAjax(wmIssueHeaderService.updateWmIssueHeader(wmIssueHeader));
     }
 
@@ -112,22 +148,19 @@ public class WmIssueHeaderController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:issueheader:remove')")
     @Log(title = "生产领料单头", businessType = BusinessType.DELETE)
+    @Transactional
     @DeleteMapping("/{issueIds}")
     public AjaxResult remove(@PathVariable Long[] issueIds) {
-        if (issueIds.length == 0) {
-            return AjaxResult.error(MsgConstants.PARAM_ERROR);
+        for (long issueId : issueIds
+        ) {
+            WmIssueHeader header = wmIssueHeaderService.selectWmIssueHeaderByIssueId(issueId);
+            if (!UserConstants.ORDER_STATUS_PREPARE.equals(header.getStatus())) {
+                return AjaxResult.error("只能删除草稿状态的单据!");
+            }
+
+            wmIssueLineService.deleteByIssueHeaderId(issueId);
         }
-        List<Long> ids = Arrays.stream(issueIds).toList();
-        // 校验 只能删除草稿状态的单据
-        List<WmIssueHeader> deleteList = this.wmIssueHeaderService.lambdaQuery()
-                .in(WmIssueHeader::getIssueId, ids)
-                .ne(WmIssueHeader::getStatus, OrderStatusEnum.PREPARE.getCode())
-                .list();
-        if (CollectionUtils.isNotEmpty(deleteList)) {
-            return AjaxResult.error("只能删除草稿状态的单据!");
-        }
-        // 批量删除
-        this.wmIssueHeaderService.removeBatchByIds(ids);
+
         return toAjax(wmIssueHeaderService.deleteWmIssueHeaderByIssueIds(issueIds));
     }
 
@@ -141,11 +174,24 @@ public class WmIssueHeaderController extends BaseController {
     @Transactional
     @PutMapping("/{issueId}")
     public AjaxResult execute(@PathVariable Long issueId) {
-        List<WmIssueLine> lines = this.wmIssueLineService.lambdaQuery().eq(WmIssueLine::getIssueId, issueId).list();
+        WmIssueHeader header = wmIssueHeaderService.selectWmIssueHeaderByIssueId(issueId);
+        WmIssueLine param = new WmIssueLine();
+        param.setIssueId(issueId);
+        List<WmIssueLine> lines = wmIssueLineService.selectWmIssueLineList(param);
         if (CollUtil.isEmpty(lines)) {
             return AjaxResult.error("请指定领出的物资");
         }
-        this.wmIssueHeaderService.execute(issueId);
+
+        List<IssueTxBean> beans = wmIssueHeaderService.getTxBeans(issueId);
+
+        // 调用库存核心
+        storageCoreService.processIssue(beans);
+
+        // 更新单据状态
+        header.setStatus(UserConstants.ORDER_STATUS_FINISHED);
+        wmIssueHeaderService.updateWmIssueHeader(header);
         return AjaxResult.success();
     }
+
+
 }
