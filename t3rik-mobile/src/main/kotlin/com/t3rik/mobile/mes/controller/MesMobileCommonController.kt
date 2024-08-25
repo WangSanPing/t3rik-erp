@@ -1,6 +1,5 @@
 package com.t3rik.mobile.mes.controller
 
-import cn.hutool.core.lang.Assert
 import com.t3rik.common.constant.MsgConstants
 import com.t3rik.common.constant.UserConstants
 import com.t3rik.common.core.controller.BaseController
@@ -62,10 +61,8 @@ class MesMobileCommonController : BaseController() {
     @GetMapping("/listMdItemProduct/{type}")
     fun listProduct(mdItem: MdItem, @PathVariable("type") type: String?): AjaxResult {
         // 根据类型查询
-        val itemTypeId = ItemTypeSupport.getDefaultDataIdByItemType(type)
-        Assert.notNull(
-            itemTypeId
-        ) { BusinessException(MsgConstants.PARAM_ERROR) }
+        val itemTypeId =
+            ItemTypeSupport.getDefaultDataIdByItemType(type) ?: throw BusinessException(MsgConstants.PARAM_ERROR)
         mdItem.itemTypeId = itemTypeId.toLong()
         mdItem.enableFlag = EnableFlagEnum.YES.code
         return AjaxResult.success(

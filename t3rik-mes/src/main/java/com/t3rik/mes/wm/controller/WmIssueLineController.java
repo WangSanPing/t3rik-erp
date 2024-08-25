@@ -8,24 +8,23 @@ import com.t3rik.common.enums.BusinessType;
 import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.mes.wm.domain.WmIssueLine;
 import com.t3rik.mes.wm.service.IWmIssueLineService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
  * 生产领料单行Controller
- * 
+ *
  * @author yinjinlu
  * @date 2022-07-14
  */
 @RestController
 @RequestMapping("/mes/wm/issueline")
-public class WmIssueLineController extends BaseController
-{
-    @Autowired
+public class WmIssueLineController extends BaseController {
+    @Resource
     private IWmIssueLineService wmIssueLineService;
 
     /**
@@ -33,8 +32,7 @@ public class WmIssueLineController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:issueheader:list')")
     @GetMapping("/list")
-    public TableDataInfo list(WmIssueLine wmIssueLine)
-    {
+    public TableDataInfo list(WmIssueLine wmIssueLine) {
         startPage();
         List<WmIssueLine> list = wmIssueLineService.selectWmIssueLineList(wmIssueLine);
         return getDataTable(list);
@@ -46,8 +44,7 @@ public class WmIssueLineController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:issueheader:export')")
     @Log(title = "生产领料单行", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, WmIssueLine wmIssueLine)
-    {
+    public void export(HttpServletResponse response, WmIssueLine wmIssueLine) {
         List<WmIssueLine> list = wmIssueLineService.selectWmIssueLineList(wmIssueLine);
         ExcelUtil<WmIssueLine> util = new ExcelUtil<WmIssueLine>(WmIssueLine.class);
         util.exportExcel(response, list, "生产领料单行数据");
@@ -58,8 +55,7 @@ public class WmIssueLineController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:issueheader:query')")
     @GetMapping(value = "/{lineId}")
-    public AjaxResult getInfo(@PathVariable("lineId") Long lineId)
-    {
+    public AjaxResult getInfo(@PathVariable("lineId") Long lineId) {
         return AjaxResult.success(wmIssueLineService.selectWmIssueLineByLineId(lineId));
     }
 
@@ -69,8 +65,7 @@ public class WmIssueLineController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:issueheader:add')")
     @Log(title = "生产领料单行", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody WmIssueLine wmIssueLine)
-    {
+    public AjaxResult add(@RequestBody WmIssueLine wmIssueLine) {
         wmIssueLine.setCreateBy(getUsername());
         return toAjax(wmIssueLineService.insertWmIssueLine(wmIssueLine));
     }
@@ -81,8 +76,7 @@ public class WmIssueLineController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:issueheader:edit')")
     @Log(title = "生产领料单行", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody WmIssueLine wmIssueLine)
-    {
+    public AjaxResult edit(@RequestBody WmIssueLine wmIssueLine) {
         return toAjax(wmIssueLineService.updateWmIssueLine(wmIssueLine));
     }
 
@@ -91,9 +85,8 @@ public class WmIssueLineController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:issueheader:remove')")
     @Log(title = "生产领料单行", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{lineIds}")
-    public AjaxResult remove(@PathVariable Long[] lineIds)
-    {
+    @DeleteMapping("/{lineIds}")
+    public AjaxResult remove(@PathVariable Long[] lineIds) {
         return toAjax(wmIssueLineService.deleteWmIssueLineByLineIds(lineIds));
     }
 }
