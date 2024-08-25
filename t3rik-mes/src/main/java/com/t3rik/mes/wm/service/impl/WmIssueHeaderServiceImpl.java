@@ -1,58 +1,56 @@
 package com.t3rik.mes.wm.service.impl;
 
-import java.util.List;
-
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.utils.DateUtils;
 import com.t3rik.common.utils.StringUtils;
-import com.t3rik.mes.wm.domain.tx.IssueTxBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.t3rik.mes.wm.mapper.WmIssueHeaderMapper;
 import com.t3rik.mes.wm.domain.WmIssueHeader;
+import com.t3rik.mes.wm.domain.tx.IssueTxBean;
+import com.t3rik.mes.wm.mapper.WmIssueHeaderMapper;
 import com.t3rik.mes.wm.service.IWmIssueHeaderService;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 生产领料单头Service业务层处理
- * 
+ *
  * @author yinjinlu
  * @date 2022-07-14
  */
 @Service
-public class WmIssueHeaderServiceImpl implements IWmIssueHeaderService 
-{
-    @Autowired
+public class WmIssueHeaderServiceImpl extends ServiceImpl<WmIssueHeaderMapper, WmIssueHeader> implements IWmIssueHeaderService {
+    @Resource
     private WmIssueHeaderMapper wmIssueHeaderMapper;
 
     /**
      * 查询生产领料单头
-     * 
+     *
      * @param issueId 生产领料单头主键
      * @return 生产领料单头
      */
     @Override
-    public WmIssueHeader selectWmIssueHeaderByIssueId(Long issueId)
-    {
+    public WmIssueHeader selectWmIssueHeaderByIssueId(Long issueId) {
         return wmIssueHeaderMapper.selectWmIssueHeaderByIssueId(issueId);
     }
 
     /**
      * 查询生产领料单头列表
-     * 
+     *
      * @param wmIssueHeader 生产领料单头
      * @return 生产领料单头
      */
     @Override
-    public List<WmIssueHeader> selectWmIssueHeaderList(WmIssueHeader wmIssueHeader)
-    {
+    public List<WmIssueHeader> selectWmIssueHeaderList(WmIssueHeader wmIssueHeader) {
         return wmIssueHeaderMapper.selectWmIssueHeaderList(wmIssueHeader);
     }
 
     @Override
     public String checkIssueCodeUnique(WmIssueHeader wmIssueHeader) {
         WmIssueHeader header = wmIssueHeaderMapper.checkIssueCodeUnique(wmIssueHeader);
-        Long headerId = wmIssueHeader.getIssueId()==null?-1l:wmIssueHeader.getIssueId();
-        if(StringUtils.isNotNull(header) && headerId.longValue() !=header.getIssueId().longValue()){
+        Long headerId = wmIssueHeader.getIssueId() == null ? -1l : wmIssueHeader.getIssueId();
+        if (StringUtils.isNotNull(header) && headerId.longValue() != header.getIssueId().longValue()) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
@@ -60,51 +58,47 @@ public class WmIssueHeaderServiceImpl implements IWmIssueHeaderService
 
     /**
      * 新增生产领料单头
-     * 
+     *
      * @param wmIssueHeader 生产领料单头
      * @return 结果
      */
     @Override
-    public int insertWmIssueHeader(WmIssueHeader wmIssueHeader)
-    {
+    public int insertWmIssueHeader(WmIssueHeader wmIssueHeader) {
         wmIssueHeader.setCreateTime(DateUtils.getNowDate());
         return wmIssueHeaderMapper.insertWmIssueHeader(wmIssueHeader);
     }
 
     /**
      * 修改生产领料单头
-     * 
+     *
      * @param wmIssueHeader 生产领料单头
      * @return 结果
      */
     @Override
-    public int updateWmIssueHeader(WmIssueHeader wmIssueHeader)
-    {
+    public int updateWmIssueHeader(WmIssueHeader wmIssueHeader) {
         wmIssueHeader.setUpdateTime(DateUtils.getNowDate());
         return wmIssueHeaderMapper.updateWmIssueHeader(wmIssueHeader);
     }
 
     /**
      * 批量删除生产领料单头
-     * 
+     *
      * @param issueIds 需要删除的生产领料单头主键
      * @return 结果
      */
     @Override
-    public int deleteWmIssueHeaderByIssueIds(Long[] issueIds)
-    {
+    public int deleteWmIssueHeaderByIssueIds(Long[] issueIds) {
         return wmIssueHeaderMapper.deleteWmIssueHeaderByIssueIds(issueIds);
     }
 
     /**
      * 删除生产领料单头信息
-     * 
+     *
      * @param issueId 生产领料单头主键
      * @return 结果
      */
     @Override
-    public int deleteWmIssueHeaderByIssueId(Long issueId)
-    {
+    public int deleteWmIssueHeaderByIssueId(Long issueId) {
         return wmIssueHeaderMapper.deleteWmIssueHeaderByIssueId(issueId);
     }
 
