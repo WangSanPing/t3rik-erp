@@ -23,4 +23,6 @@ public class MsgConstants {
     public static final String ERROR_ROUTE  = "当前任务对应的工艺和工序配置无效!";
 
     public static final String NO_AUDIT_AUTH  = "当前用户没有审核权限!";
+
+    public static final String CODE_ALREADY_EXISTS  = "编号已存在!";
 }
