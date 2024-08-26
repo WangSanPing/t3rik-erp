@@ -70,4 +70,9 @@ public interface IWmIssueHeaderService extends IService<WmIssueHeader> {
     public int deleteWmIssueHeaderByIssueId(Long issueId);
 
     public List<IssueTxBean> getTxBeans(Long issueId);
+
+    /**
+     * 执行领出
+     */
+    void execute(Long issueId);
 }

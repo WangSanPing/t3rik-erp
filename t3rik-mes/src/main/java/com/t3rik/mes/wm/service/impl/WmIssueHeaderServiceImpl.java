@@ -2,14 +2,17 @@ package com.t3rik.mes.wm.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.constant.UserConstants;
+import com.t3rik.common.enums.mes.OrderStatusEnum;
 import com.t3rik.common.utils.DateUtils;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.mes.wm.domain.WmIssueHeader;
 import com.t3rik.mes.wm.domain.tx.IssueTxBean;
 import com.t3rik.mes.wm.mapper.WmIssueHeaderMapper;
+import com.t3rik.mes.wm.service.IStorageCoreService;
 import com.t3rik.mes.wm.service.IWmIssueHeaderService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,8 +24,11 @@ import java.util.List;
  */
 @Service
 public class WmIssueHeaderServiceImpl extends ServiceImpl<WmIssueHeaderMapper, WmIssueHeader> implements IWmIssueHeaderService {
+
     @Resource
     private WmIssueHeaderMapper wmIssueHeaderMapper;
+    @Resource
+    private IStorageCoreService storageCoreService;
 
     /**
      * 查询生产领料单头
@@ -105,5 +111,20 @@ public class WmIssueHeaderServiceImpl extends ServiceImpl<WmIssueHeaderMapper, W
     @Override
     public List<IssueTxBean> getTxBeans(Long issueId) {
         return wmIssueHeaderMapper.getTxBeans(issueId);
+    }
+
+    /**
+     * 执行领出
+     *
+     * @param issueId
+     */
+    @Transactional
+    @Override
+    public void execute(Long issueId) {
+        List<IssueTxBean> beans = this.getTxBeans(issueId);
+        // 调用库存核心
+        storageCoreService.processIssue(beans);
+        // 更新单据状态
+        this.lambdaUpdate().set(WmIssueHeader::getStatus, OrderStatusEnum.FINISHED.getCode()).update(new WmIssueHeader());
     }
 }
