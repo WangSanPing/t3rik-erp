@@ -124,7 +124,7 @@ public class WmIssueHeaderController extends BaseController {
                 .ne(WmIssueHeader::getStatus, OrderStatusEnum.PREPARE.getCode())
                 .list();
         if (CollectionUtils.isNotEmpty(deleteList)) {
-            return AjaxResult.error("只能删除草稿状态的单据!");
+            return AjaxResult.error(MsgConstants.CAN_ONLY_BE_DELETED_BY_PARAM(OrderStatusEnum.PREPARE.getDesc()));
         }
         // 批量删除
         this.wmIssueHeaderService.removeBatchByIds(ids);
