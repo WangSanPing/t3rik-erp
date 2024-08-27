@@ -1,31 +1,37 @@
 package com.t3rik.mes.wm.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.t3rik.common.annotation.Log;
+import com.t3rik.common.constant.MsgConstants;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
-import com.t3rik.common.utils.StringUtils;
+import com.t3rik.common.enums.mes.OrderStatusEnum;
+import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.poi.ExcelUtil;
-import com.t3rik.mes.wm.domain.*;
-import com.t3rik.mes.wm.domain.tx.ItemRecptTxBean;
-import com.t3rik.mes.wm.service.*;
+import com.t3rik.mes.wm.domain.WmItemRecpt;
+import com.t3rik.mes.wm.domain.WmItemRecptLine;
+import com.t3rik.mes.wm.service.IWmItemRecptLineService;
+import com.t3rik.mes.wm.service.IWmItemRecptService;
 import com.t3rik.mes.wm.utils.WmWarehouseUtil;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 物料入库单Controller
+ * (已重构)
  *
- * @author yinjinlu
- * @date 2022-05-22
+ * @author t3rik
+ * @date 2024-08-27
  */
 @RestController
 @RequestMapping("/mes/wm/itemrecpt")
@@ -35,9 +41,6 @@ public class WmItemRecptController extends BaseController {
 
     @Resource
     private IWmItemRecptLineService wmItemRecptLineService;
-
-    @Resource
-    private IStorageCoreService storageCoreService;
 
     @Resource
     private WmWarehouseUtil warehouseUtil;
@@ -82,12 +85,10 @@ public class WmItemRecptController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody WmItemRecpt wmItemRecpt) {
         if (UserConstants.NOT_UNIQUE.equals(wmItemRecptService.checkRecptCodeUnique(wmItemRecpt))) {
-            return AjaxResult.error("单据编号已存在！");
+            return AjaxResult.error(MsgConstants.CODE_ALREADY_EXISTS);
         }
-
         // 设置仓库相关信息
         warehouseUtil.setWarehouseInfo(wmItemRecpt);
-
         wmItemRecpt.setCreateBy(getUsername());
         return toAjax(wmItemRecptService.insertWmItemRecpt(wmItemRecpt));
     }
@@ -99,14 +100,17 @@ public class WmItemRecptController extends BaseController {
     @Log(title = "物料入库单", businessType = BusinessType.UPDATE)
     @PutMapping("/confirm")
     public AjaxResult confirm(@RequestBody WmItemRecpt wmItemRecpt) {
+        // 参数校验
+        Optional.ofNullable(wmItemRecpt.getRecptId()).orElseThrow(() -> new BusinessException(MsgConstants.PARAM_ERROR));
         // 检查有没有入库单行
-        WmItemRecptLine param = new WmItemRecptLine();
-        param.setRecptId(wmItemRecpt.getRecptId());
-        List<WmItemRecptLine> lines = wmItemRecptLineService.selectWmItemRecptLineList(param);
+        List<WmItemRecptLine> lines =
+                this.wmItemRecptLineService
+                        .lambdaQuery()
+                        .eq(WmItemRecptLine::getRecptId, wmItemRecpt.getRecptId())
+                        .list();
         if (CollUtil.isEmpty(lines)) {
             return AjaxResult.error("请添加入库单行");
         }
-
         wmItemRecpt.setStatus(UserConstants.ORDER_STATUS_CONFIRMED);
         // 设置仓库相关信息
         warehouseUtil.setWarehouseInfo(wmItemRecpt);
@@ -133,22 +137,11 @@ public class WmItemRecptController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:itemrecpt:edit')")
     @Log(title = "物料入库单", businessType = BusinessType.UPDATE)
-    @Transactional
     @PutMapping("/{recptId}")
     public AjaxResult execute(@PathVariable Long recptId) {
-
         WmItemRecpt recpt = wmItemRecptService.selectWmItemRecptByRecptId(recptId);
-
-        // 构造Transaction事务，并执行库存更新逻辑
-        List<ItemRecptTxBean> beans = wmItemRecptService.getTxBeans(recptId);
-
-        // 调用库存核心
-        storageCoreService.processItemRecpt(beans);
-
-        // 更新单据状态
-        recpt.setStatus(UserConstants.ORDER_STATUS_FINISHED);
-        wmItemRecptService.updateWmItemRecpt(recpt);
-
+        Optional.ofNullable(recpt).orElseThrow(() -> new BusinessException(MsgConstants.PARAM_ERROR));
+        this.wmItemRecptService.execute(recptId);
         return AjaxResult.success();
     }
 
@@ -158,20 +151,21 @@ public class WmItemRecptController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:itemrecpt:remove')")
     @Log(title = "物料入库单", businessType = BusinessType.DELETE)
-    @Transactional
     @DeleteMapping("/{recptIds}")
     public AjaxResult remove(@PathVariable Long[] recptIds) {
-        for (Long id :
-                recptIds
-        ) {
-            WmItemRecpt itemRecpt = wmItemRecptService.selectWmItemRecptByRecptId(id);
-            if (!UserConstants.ORDER_STATUS_PREPARE.equals(itemRecpt.getStatus())) {
-                return AjaxResult.error("只能删除草稿状态的单据!");
-            }
-
-            wmItemRecptLineService.deleteByRecptId(id);
+        if (recptIds.length == 0) {
+            return AjaxResult.error(MsgConstants.PARAM_ERROR);
         }
-
+        List<Long> ids = Arrays.stream(recptIds).toList();
+        // 校验 只能删除草稿状态的单据
+        List<WmItemRecpt> deleteList = this.wmItemRecptService.lambdaQuery()
+                .in(WmItemRecpt::getRecptId, ids)
+                .ne(WmItemRecpt::getStatus, OrderStatusEnum.PREPARE.getCode())
+                .list();
+        if (CollectionUtils.isNotEmpty(deleteList)) {
+            return AjaxResult.error(MsgConstants.CAN_ONLY_BE_DELETED_BY_PARAM(OrderStatusEnum.PREPARE.getDesc()));
+        }
+        this.wmItemRecptService.removeByIds(ids);
         return toAjax(wmItemRecptService.deleteWmItemRecptByRecptIds(recptIds));
     }
 }

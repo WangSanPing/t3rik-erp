@@ -79,4 +79,9 @@ public interface IWmItemRecptService extends IService<WmItemRecpt> {
     public List<ItemRecptTxBean> getTxBeans(Long receptId);
 
 
+    /**
+     * 执行
+     * @param recptId
+     */
+    void execute(Long recptId);
 }
