@@ -5,28 +5,26 @@ import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
-import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.mes.wm.domain.WmItemRecptLine;
-import com.t3rik.mes.wm.domain.WmStorageArea;
-import com.t3rik.mes.wm.domain.WmStorageLocation;
-import com.t3rik.mes.wm.domain.WmWarehouse;
 import com.t3rik.mes.wm.service.IWmItemRecptLineService;
 import com.t3rik.mes.wm.service.IWmStorageAreaService;
 import com.t3rik.mes.wm.service.IWmStorageLocationService;
 import com.t3rik.mes.wm.service.IWmWarehouseService;
+import com.t3rik.mes.wm.utils.WmWarehouseUtil;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
  * 物料入库单行Controller
+ * (已重构)
  *
- * @author yinjinlu
- * @date 2022-05-22
+ * @author t3rik
+ * @date 2024-08-27
  */
 @RestController
 @RequestMapping("/mes/wm/itemrecptline")
@@ -35,13 +33,7 @@ public class WmItemRecptLineController extends BaseController {
     private IWmItemRecptLineService wmItemRecptLineService;
 
     @Resource
-    private IWmWarehouseService wmWarehouseService;
-
-    @Resource
-    private IWmStorageLocationService wmStorageLocationService;
-
-    @Resource
-    private IWmStorageAreaService wmStorageAreaService;
+    private WmWarehouseUtil warehouseUtil;
 
     /**
      * 查询物料入库单行列表
@@ -82,7 +74,7 @@ public class WmItemRecptLineController extends BaseController {
     @Log(title = "物料入库单行", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody WmItemRecptLine wmItemRecptLine) {
-        setWarehouseInfo(wmItemRecptLine);
+        this.warehouseUtil.setWarehouseInfo(wmItemRecptLine);
         wmItemRecptLine.setCreateBy(getUsername());
         return toAjax(wmItemRecptLineService.insertWmItemRecptLine(wmItemRecptLine));
     }
@@ -94,26 +86,8 @@ public class WmItemRecptLineController extends BaseController {
     @Log(title = "物料入库单行", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody WmItemRecptLine wmItemRecptLine) {
-        setWarehouseInfo(wmItemRecptLine);
+        this.warehouseUtil.setWarehouseInfo(wmItemRecptLine);
         return toAjax(wmItemRecptLineService.updateWmItemRecptLine(wmItemRecptLine));
-    }
-
-    private void setWarehouseInfo(WmItemRecptLine wmItemRecptLine) {
-        if (StringUtils.isNotNull(wmItemRecptLine.getWarehouseId())) {
-            WmWarehouse warehouse = wmWarehouseService.selectWmWarehouseByWarehouseId(wmItemRecptLine.getWarehouseId());
-            wmItemRecptLine.setWarehouseCode(warehouse.getWarehouseCode());
-            wmItemRecptLine.setWarehouseName(warehouse.getWarehouseName());
-        }
-        if (StringUtils.isNotNull(wmItemRecptLine.getLocationId())) {
-            WmStorageLocation location = wmStorageLocationService.selectWmStorageLocationByLocationId(wmItemRecptLine.getLocationId());
-            wmItemRecptLine.setLocationCode(location.getLocationCode());
-            wmItemRecptLine.setLocationName(location.getLocationName());
-        }
-        if (StringUtils.isNotNull(wmItemRecptLine.getAreaId())) {
-            WmStorageArea area = wmStorageAreaService.selectWmStorageAreaByAreaId(wmItemRecptLine.getAreaId());
-            wmItemRecptLine.setAreaCode(area.getAreaCode());
-            wmItemRecptLine.setAreaName(area.getAreaName());
-        }
     }
 
     /**
