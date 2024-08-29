@@ -128,7 +128,7 @@ public class WmIssueHeaderController extends BaseController {
         }
         // 批量删除
         this.wmIssueHeaderService.removeBatchByIds(ids);
-        return toAjax(wmIssueHeaderService.deleteWmIssueHeaderByIssueIds(issueIds));
+        return AjaxResult.success();
     }
 
     /**
