@@ -11,9 +11,14 @@ import lombok.Data;
 @Data
 public class SelectInfoDTO {
 
+    private String id;
+
+    private String parentId;
+
     private String label;
 
     private String code;
 
     private String parentCode;
+
 }
