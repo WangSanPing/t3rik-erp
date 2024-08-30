@@ -346,6 +346,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="getTaskListAndIssueCount" resultType="com.t3rik.mes.pro.dto.TaskDto">
         SELECT
+            pw.workorder_id,
+            pt.task_id,
             pw.workorder_code,
             pw.client_order_code,
             pw.request_date,
