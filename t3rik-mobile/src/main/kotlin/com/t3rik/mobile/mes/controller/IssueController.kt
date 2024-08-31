@@ -1,25 +1,24 @@
 package com.t3rik.mobile.mes.controller
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils
-import com.t3rik.common.annotation.RepeatSubmit
-import com.t3rik.common.constant.MsgConstants
 import com.t3rik.common.constant.UserConstants
 import com.t3rik.common.core.controller.BaseController
 import com.t3rik.common.core.domain.AjaxResult
 import com.t3rik.common.core.page.TableDataInfo
-import com.t3rik.common.exception.BusinessException
 import com.t3rik.common.utils.SecurityUtils
 import com.t3rik.common.utils.StringUtils
 import com.t3rik.mes.pro.domain.ProTask
 import com.t3rik.mes.pro.dto.TaskDto
 import com.t3rik.mes.pro.service.IProTaskService
-import com.t3rik.mobile.common.ktextend.isNonPositive
 import com.t3rik.mobile.mes.dto.IssueRequestDTO
-import com.t3rik.mobile.mes.service.IIssueService
 import io.swagger.annotations.ApiOperation
 import jakarta.annotation.Resource
-import org.springframework.web.bind.annotation.*
+import org.slf4j.LoggerFactory
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 
 /**
@@ -32,10 +31,7 @@ import org.springframework.web.bind.annotation.*
 class IssueController : BaseController() {
 
     @Resource
-    lateinit var proTaskService: IProTaskService
-
-    @Resource
-    lateinit var issueService: IIssueService
+    lateinit var proTaskService: IProTaskService;
 
     /**
      * 查询任务列表
@@ -51,34 +47,9 @@ class IssueController : BaseController() {
     }
 
     @ApiOperation("领料申请")
-    @RepeatSubmit
     @PostMapping
-    fun issue(@RequestBody issueRequestDTO: IssueRequestDTO): AjaxResult {
-        // 参数校验
-        check(issueRequestDTO)
-        // 领料申请
-        this.issueService.issue(issueRequestDTO)
+    fun issue(@RequestBody issueRequestDTO: IssueRequestDTO):AjaxResult{
+        logger.info(issueRequestDTO.toString())
         return AjaxResult.success()
-    }
-
-    /**
-     * 参数校验
-     */
-    private fun check(issueRequestDTO: IssueRequestDTO) {
-        if (issueRequestDTO.workorderCode.isNullOrBlank()) {
-            throw BusinessException(MsgConstants.PARAM_ERROR)
-        }
-        issueRequestDTO.workorderId.isNonPositive { MsgConstants.PARAM_ERROR }
-        val tasks = this.proTaskService.lambdaQuery()
-            .eq(ProTask::getWorkorderId, issueRequestDTO.workorderId)
-            .eq(ProTask::getWorkorderCode, issueRequestDTO.workorderCode)
-            .eq(ProTask::getTaskUserId, SecurityUtils.getUserId())
-            .list()
-        if (CollectionUtils.isEmpty(tasks)) {
-            throw BusinessException(MsgConstants.NO_OPERATION_AUTH)
-        }
-        if (issueRequestDTO.issueLineList.isEmpty()) {
-            throw BusinessException(MsgConstants.SELECT_AT_ADD_ONE)
-        }
     }
 }
