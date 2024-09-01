@@ -24,11 +24,9 @@ public class MsgConstants {
 
     public static final String ERROR_ROUTE = "当前任务对应的工艺和工序配置无效!";
 
-    public static final String NO_AUDIT_AUTH = "当前用户没有审核权限!";
+    public static final String NO_OPERATION_AUTH = "当前用户没有操作该任务的权限!";
 
     public static final String CODE_ALREADY_EXISTS = "编号已存在!";
-
-    public static final String Can_only_be_deleted = "编号已存在!";
 
     public static String CAN_ONLY_BE_DELETED_BY_PARAM(String status) {
         return MessageFormat.format("只能删除状态为: {0} 的单据", status);
