@@ -60,7 +60,7 @@ public enum DefaultDataEnum {
      */
     VIRTUAL_WA("XBKKW_VIRTUAL", "线边库库位-虚拟", "wm_storage_area"),
     /**
-     * 废料线边库-库位
+     * 废料线边库-仓库
      */
     WASTE_VIRTUAL_WH("WASTE_XBK_VIRTUAL", "废料线边库仓库-虚拟", "wm_warehouse"),
     /**
@@ -71,7 +71,7 @@ public enum DefaultDataEnum {
      * 废料线边库-库位
      */
     WASTE_VIRTUAL_WA("WASTE_XBKKW_VIRTUAL", "废料线边库库位-虚拟", "wm_storage_area"),
-     /**
+    /**
      * 生产废料-入库事务
      */
     TRANSACTION_TYPE_ITEM_WM_WASTE_IN("ITEM_WM_WASTE_IN", "生产废料-入库事务", "wm_transaction"),
@@ -83,7 +83,6 @@ public enum DefaultDataEnum {
      * 生产退料-出库事务
      */
     TRANSACTION_TYPE_ITEM_RT_ISSUE_OUT("ITEM_RT_ISSUE_OUT", "生产退料-出库事务", "wm_transaction");
-
 
 
     /**

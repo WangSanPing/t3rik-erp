@@ -13,8 +13,8 @@ import com.t3rik.common.exception.BusinessException
  * 判断一个长整形数是否小于等于0
  * 如果小于等于0 抛异常
  */
-fun Long.isNonPositive(errorMessage: () -> String){
-    if(this <= 0L){
+fun Long?.isNonPositive(errorMessage: () -> String){
+    if(this == null || this <= 0L){
         throw BusinessException(errorMessage())
     }
 }

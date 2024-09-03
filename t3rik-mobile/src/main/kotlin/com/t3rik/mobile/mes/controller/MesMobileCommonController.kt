@@ -6,12 +6,15 @@ import com.t3rik.common.core.controller.BaseController
 import com.t3rik.common.core.domain.AjaxResult
 import com.t3rik.common.enums.EnableFlagEnum
 import com.t3rik.common.enums.YesOrNoEnum
+import com.t3rik.common.enums.mes.DefaultDataEnum
 import com.t3rik.common.exception.BusinessException
 import com.t3rik.common.support.ItemTypeSupport
 import com.t3rik.mes.md.domain.MdItem
 import com.t3rik.mes.md.domain.MdUnitMeasure
 import com.t3rik.mes.md.service.IMdItemService
 import com.t3rik.mes.md.service.IMdUnitMeasureService
+import com.t3rik.mes.wm.domain.WmMaterialStock
+import com.t3rik.mes.wm.service.IWmMaterialStockService
 import com.t3rik.mobile.mes.service.IMesMobileService
 import jakarta.annotation.Resource
 import kotlinx.coroutines.runBlocking
@@ -33,6 +36,9 @@ class MesMobileCommonController : BaseController() {
 
     @Resource
     lateinit var mdItemService: IMdItemService
+
+    @Resource
+    lateinit var materialStockService: IWmMaterialStockService
 
 
     /**
@@ -67,6 +73,19 @@ class MesMobileCommonController : BaseController() {
         mdItem.enableFlag = EnableFlagEnum.YES.code
         return AjaxResult.success(
             mdItemService.selectMdItemList(mdItem)
+        )
+    }
+
+    /**
+     * 获取当前物料信息及库存
+     */
+    @GetMapping("/materialStockList")
+    fun materialStockList(): AjaxResult {
+        return AjaxResult.success(
+            materialStockService.lambdaQuery().notIn(
+                WmMaterialStock::getWarehouseCode,
+                mutableListOf(DefaultDataEnum.WASTE_VIRTUAL_WH.code, DefaultDataEnum.VIRTUAL_WH.code)
+            ).list()
         )
     }
 }

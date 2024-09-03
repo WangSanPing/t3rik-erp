@@ -28,6 +28,8 @@ public class MsgConstants {
 
     public static final String CODE_ALREADY_EXISTS = "编号已存在!";
 
+    public static final String SELECT_AT_ADD_ONE = "请至少添加一种物料!";
+
     public static String CAN_ONLY_BE_DELETED_BY_PARAM(String status) {
         return MessageFormat.format("只能删除状态为: {0} 的单据", status);
     }

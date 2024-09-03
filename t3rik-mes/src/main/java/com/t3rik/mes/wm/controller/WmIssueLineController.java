@@ -60,7 +60,7 @@ public class WmIssueLineController extends BaseController {
     }
 
     /**
-     * 新增生产领料单行
+     * 新增生产领料单行wmIssueLine = {WmIssueLine@24505} "WmIssueLine(lineId=null, issueId=11, materialStockId=1, itemId=1825101552507518978, itemCode=YCL00007, itemName=PE, specification=10*10, unitOfMeasure=m, quantityIssued=1000, batchCode=null, warehouseId=4, warehouseCode=WH000, warehouseName=预置仓库, locationId=3, locationCode=L003, locationName=预置库区, areaId=3, areaCode=A0006, areaName=预置库位, attr1=null, attr2=null, attr3=null, attr4=null)"
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:issueheader:add')")
     @Log(title = "生产领料单行", businessType = BusinessType.INSERT)

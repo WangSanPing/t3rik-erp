@@ -4,10 +4,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.utils.DateUtils;
 import com.t3rik.mes.wm.domain.WmMaterialStock;
 import com.t3rik.mes.wm.mapper.WmMaterialStockMapper;
 import com.t3rik.mes.wm.service.IWmMaterialStockService;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +21,9 @@ import org.springframework.stereotype.Service;
  * @date 2022-05-24
  */
 @Service
-public class WmMaterialStockServiceImpl implements IWmMaterialStockService
+public class WmMaterialStockServiceImpl extends ServiceImpl<WmMaterialStockMapper,WmMaterialStock> implements IWmMaterialStockService
 {
-    @Autowired
+    @Resource
     private WmMaterialStockMapper wmMaterialStockMapper;
 
     /**
