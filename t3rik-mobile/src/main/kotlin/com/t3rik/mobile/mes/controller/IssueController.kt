@@ -56,6 +56,7 @@ class IssueController : BaseController() {
     fun issue(@RequestBody issueRequestDTO: IssueRequestDTO): AjaxResult {
         // 参数校验
         check(issueRequestDTO)
+        // 领料申请
         this.issueService.issue(issueRequestDTO)
         return AjaxResult.success()
     }
@@ -67,7 +68,7 @@ class IssueController : BaseController() {
         if (issueRequestDTO.workorderCode.isNullOrBlank()) {
             throw BusinessException(MsgConstants.PARAM_ERROR)
         }
-        issueRequestDTO.workstationId.isNonPositive { MsgConstants.PARAM_ERROR }
+        issueRequestDTO.workorderId.isNonPositive { MsgConstants.PARAM_ERROR }
         val tasks = this.proTaskService.lambdaQuery()
             .eq(ProTask::getWorkorderId, issueRequestDTO.workorderId)
             .eq(ProTask::getWorkorderCode, issueRequestDTO.workorderCode)
@@ -75,6 +76,9 @@ class IssueController : BaseController() {
             .list()
         if (CollectionUtils.isEmpty(tasks)) {
             throw BusinessException(MsgConstants.NO_OPERATION_AUTH)
+        }
+        if (issueRequestDTO.issueLineList.isEmpty()) {
+            throw BusinessException(MsgConstants.SELECT_AT_ADD_ONE)
         }
     }
 }

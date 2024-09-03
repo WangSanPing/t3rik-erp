@@ -1,6 +1,8 @@
 package com.t3rik.mes.wm.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.t3rik.mes.wm.domain.WmMaterialStock;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -13,8 +15,8 @@ import java.util.Map;
  * @author yinjinlu
  * @date 2022-05-24
  */
-public interface WmMaterialStockMapper
-{
+@Mapper
+public interface WmMaterialStockMapper extends BaseMapper<WmMaterialStock> {
     /**
      * 查询库存记录
      *

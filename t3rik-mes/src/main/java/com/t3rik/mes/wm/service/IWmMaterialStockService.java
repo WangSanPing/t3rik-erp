@@ -1,5 +1,6 @@
 package com.t3rik.mes.wm.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.wm.domain.WmMaterialStock;
 
 import java.util.Date;
@@ -12,8 +13,7 @@ import java.util.Map;
  * @author yinjinlu
  * @date 2022-05-24
  */
-public interface IWmMaterialStockService
-{
+public interface IWmMaterialStockService extends IService<WmMaterialStock> {
     /**
      * 查询库存记录
      *
@@ -21,7 +21,6 @@ public interface IWmMaterialStockService
      * @return 库存记录
      */
     public WmMaterialStock selectWmMaterialStockByMaterialStockId(Long materialStockId);
-
 
 
     /**
@@ -77,6 +76,7 @@ public interface IWmMaterialStockService
 
     /**
      * 统计库存数量 根据物料id和年月
+     *
      * @param itemCode 物资编码
      * @param dateTime 时间
      * @return

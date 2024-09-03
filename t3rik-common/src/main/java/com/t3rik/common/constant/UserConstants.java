@@ -123,6 +123,18 @@ public class UserConstants {
      * 各种业务单据的内定自动编码规则标识
      */
     public static final String ITEM_TYPE_CODE = "ITEM_TYPE_CODE";
+    /**
+     * 领料
+     */
+    public static final String ISSUE_CODE = "ISSUE_CODE";
+    /**
+     * 废料
+     */
+    public static final String PWASTE_CODE = "PWASTE_CODE";
+    /**
+     * 退料
+     */
+    public static final String RTISSUE_CODE = "RTISSUE_CODE";
     public static final String ITEM_CODE = "ITEM_CODE"; // 物料规则
     public static final String PRODUCE_CODE = "PRODUCE_CODE"; // 物料规则
     public static final String MACHINERY_TYPE_CODE = "MACHINERY_TYPE_CODE";
@@ -132,9 +144,6 @@ public class UserConstants {
     public static final String TRANS_ORDER_CODE = "TRANS_ORDER_CODE";
     public static final String ITEMRECPT_CODE = "ITEMRECPT_CODE"; // 物料采购入库
     public static final String WM_RTVENDOR_CODE = "WM_RTVENDOR_CODE";// 退回供应商
-    public static final String ISSUE_CODE = "ISSUE_CODE"; // 生产领料
-    public static final String RTISSUE_CODE = "RTISSUE_CODE"; // 生产退料
-    public static final String PWASTE_CODE = "PWASTE_CODE"; // 生产废料
     public static final String PRODUCTRECPT_CODE = "PRODUCTRECPT_CODE"; // 产品入库
     public static final String PRODUCTSALSE_CODE = "PRODUCTSALSE_CODE"; // 销售出库
     public static final String RTSALSE_CODE = "RTSALSE_CODE"; // 销售退货
