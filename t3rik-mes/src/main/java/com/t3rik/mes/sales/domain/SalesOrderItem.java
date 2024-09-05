@@ -7,8 +7,6 @@ import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
-//import com.lframework.starter.web.dto.BaseDto;
-import com.lframework.starter.web.dto.BaseDto;
 import com.t3rik.common.core.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,7 +23,7 @@ import com.t3rik.common.annotation.Excel;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @TableName(value = "sales_order_item")
-public class SalesOrderItem extends BaseEntity implements BaseDto
+public class SalesOrderItem extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 

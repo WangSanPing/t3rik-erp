@@ -4,11 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import cn.hutool.core.bean.BeanUtil;
-//import com.t3rik.common.core.domain.A4ExcelPortraitPrintBo;
-import com.lframework.starter.web.resp.InvokeResult;
-import com.lframework.starter.web.resp.InvokeResultBuilder;
-import com.t3rik.mes.sales.bo.SalesOrderItemBo;
-import com.t3rik.mes.sales.print.A4ExcelPortraitPrintBo;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import jakarta.servlet.http.HttpServletResponse;
@@ -141,20 +136,4 @@ public class SalesOrderItemController extends BaseController {
     }
 
 
-    @Log(title = "打印", businessType = BusinessType.DELETE)
-    @GetMapping("/print")
-    public InvokeResult<A4ExcelPortraitPrintBo<SalesOrderItemBo>> print(
-            @NotBlank(message = "订单ID不能为空！") String id) {
-
-        SalesOrderItem data = salesOrderItemService.getById(id);
-        if (data == null) {
-            AjaxResult.error("订单不存在！");
-        }
-        SalesOrderItemBo bo=new SalesOrderItemBo();
-        BeanUtil.copyProperties(bo, bo);
-        A4ExcelPortraitPrintBo<SalesOrderItemBo> printResult = new A4ExcelPortraitPrintBo<>(
-                "print/purchase-order.ftl", bo);
-
-        return InvokeResultBuilder.success(printResult);
-    }
 }
