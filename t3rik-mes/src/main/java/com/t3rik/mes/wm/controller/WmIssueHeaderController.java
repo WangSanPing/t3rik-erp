@@ -127,7 +127,7 @@ public class WmIssueHeaderController extends BaseController {
             return AjaxResult.error(MsgConstants.CAN_ONLY_BE_DELETED_BY_PARAM(OrderStatusEnum.PREPARE.getDesc()));
         }
         // 批量删除
-        this.wmIssueHeaderService.removeBatchByIds(ids);
+        this.wmIssueHeaderService.removeByIds(ids);
         return AjaxResult.success();
     }
 

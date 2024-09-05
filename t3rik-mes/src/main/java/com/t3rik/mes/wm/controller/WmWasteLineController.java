@@ -116,7 +116,7 @@ public class WmWasteLineController extends BaseController {
     @Log(title = "生产废料单行", businessType = BusinessType.DELETE)
     @DeleteMapping("/{lineIds}")
     public AjaxResult remove(@PathVariable List<Long> lineIds) {
-        return toAjax(this.wmWasteLineService.removeBatchByIds(lineIds));
+        return toAjax(this.wmWasteLineService.removeByIds(lineIds));
     }
 
     /**
