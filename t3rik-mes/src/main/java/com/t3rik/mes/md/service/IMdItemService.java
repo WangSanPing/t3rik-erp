@@ -83,5 +83,15 @@ public interface IMdItemService extends IService<MdItem> {
      * 添加产品
      */
     Boolean addItemOrProduct(MdItem mdItem,String type);
+
+    /**
+     * 导入产品信息
+     * @param vendorList
+     * @param isUpdateSupport
+     * @param operName
+     * @return
+     */
+    public String importVendor(List<MdItem> vendorList, Boolean isUpdateSupport, String operName);
+
 }
 

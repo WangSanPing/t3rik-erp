@@ -118,9 +118,9 @@ public class ProFeedbackServiceImpl extends ServiceImpl<ProFeedbackMapper, ProFe
     @Override
     public int deleteProFeedbackByRecordIds(Long[] recordIds) {
         // 废料数量
-        Long wastCount = wmWasteHeaderService.lambdaQuery().in(WmWasteHeader::getRecordId, recordIds).count();
+        Long wastCount = wmWasteHeaderService.lambdaQuery().in(WmWasteHeader::getRecordId, recordIds).count().longValue();
         // 退料数量
-        Long rtIssuecount = wmRtIssueService.lambdaQuery().in(WmRtIssue::getRecordId, recordIds).count();
+        Long rtIssuecount = wmRtIssueService.lambdaQuery().in(WmRtIssue::getRecordId, recordIds).count().longValue();
         if (wastCount > 0 || rtIssuecount > 0)
             throw new BusinessException("该记录已关联废料或退料，不能删除!");
         // 删除退料、废料记录

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.t3rik.mes.md.mapper.SalesOrderMapper">
+    
+    <resultMap type="com.t3rik.mes.sales.domain.SalesOrder" id="BaseResultMap">
+        <!--@Table sales_order-->
+        <result property="salesOrderId"    column="sales_order_id"    />
+        <result property="salesOrderCode"    column="sales_order_code"    />
+        <result property="salesOrderName"    column="sales_order_name"    />
+        <result property="status"    column="status"    />
+        <result property="clientId"    column="client_id"    />
+        <result property="clientCode"    column="client_code"    />
+        <result property="clientPoCode"    column="client_po_code"    />
+        <result property="clientName"    column="client_name"    />
+        <result property="salesOrderDate"    column="sales_order_date"    />
+        <result property="deliveryDate"    column="delivery_date"    />
+        <result property="currency"    column="currency"    />
+        <result property="payUp"    column="pay_up"    />
+        <result property="orderType"    column="order_type"    />
+        <result property="followerMan"    column="follower_man"    />
+        <result property="salesMan"    column="sales_man"    />
+        <result property="qualityRequirement"    column="quality_requirement"    />
+        <result property="attr1"    column="attr1"    />
+        <result property="attr2"    column="attr2"    />
+        <result property="attr3"    column="attr3"    />
+        <result property="attr4"    column="attr4"    />
+        <result property="createUserId"    column="create_user_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateUserId"    column="update_user_id"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectSalesOrderVo">
+        select sales_order_id, sales_order_code, sales_order_name, status, client_id, client_code, client_po_code, client_name, sales_order_date, delivery_date, currency, pay_up, order_type, follower_man, sales_man, quality_requirement, attr1, attr2, attr3, attr4, create_user_id, create_by, create_time, update_user_id, update_by, update_time, remark from sales_order
+    </sql>
+
+</mapper>

@@ -13,15 +13,18 @@ import com.t3rik.common.enums.EnableFlagEnum;
 import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.support.ItemTypeSupport;
 import com.t3rik.common.utils.StringUtils;
+import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.mes.aspect.BarcodeGen;
 import com.t3rik.mes.md.domain.MdItem;
 import com.t3rik.mes.md.service.IItemTypeService;
 import com.t3rik.mes.md.service.IMdItemService;
 import com.t3rik.mes.wm.utils.WmBarCodeUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -167,4 +170,22 @@ public class MdItemController extends BaseController {
     }
 
 
+    @PostMapping("/importTemplate")
+    public void importTemplate(HttpServletResponse response)
+    {
+        ExcelUtil<MdItem> util = new ExcelUtil<MdItem>(MdItem.class);
+        util.importTemplateExcel(response, "产品数据");
+    }
+
+    @Log(title = "物料管理", businessType = BusinessType.IMPORT)
+    @PreAuthorize("@ss.hasPermi('system:user:import')")
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+    {
+        ExcelUtil<MdItem> util = new ExcelUtil<MdItem>(MdItem.class);
+        List<MdItem> mdItemList = util.importExcel(file.getInputStream());
+        String operName = getUsername();
+        String message = mdItemService.importVendor(mdItemList, updateSupport, operName);
+        return AjaxResult.success(message);
+    }
 }

@@ -2,6 +2,7 @@ package com.t3rik.mes.md.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.t3rik.mes.md.domain.MdItem;
+import com.t3rik.mes.md.domain.MdVendor;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -80,4 +81,5 @@ public interface MdItemMapper extends BaseMapper<MdItem> {
      */
     public int deleteMdItemByIds(Long[] itemIds);
 
+    public MdItem checkMdItemCodeUnique(MdItem mdItem);
 }
