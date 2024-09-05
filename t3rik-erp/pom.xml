@@ -50,10 +50,10 @@
         </dependency>
 
         <!-- 定时任务-->
-<!--        <dependency>-->
-<!--            <groupId>com.t3rik</groupId>-->
-<!--            <artifactId>t3rik-quartz</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.t3rik</groupId>-->
+        <!--            <artifactId>t3rik-quartz</artifactId>-->
+        <!--        </dependency>-->
 
         <!-- 代码生成-->
         <dependency>
@@ -65,6 +65,12 @@
         <dependency>
             <groupId>com.t3rik</groupId>
             <artifactId>t3rik-mes</artifactId>
+        </dependency>
+
+        <!-- 打印模块-->
+        <dependency>
+            <groupId>com.t3rik</groupId>
+            <artifactId>t3rik-print</artifactId>
         </dependency>
 
         <dependency>
@@ -113,14 +119,15 @@
                     <warName>${project.artifactId}</warName>
                 </configuration>
             </plugin>
-<!--            <plugin>-->
-<!--                <groupId>com.github.ulisesbocchio</groupId>-->
-<!--                <artifactId>jasypt-maven-plugin</artifactId>-->
-<!--                <version>${jasypt.version}</version>-->
-<!--            </plugin>-->
+            <!--            <plugin>-->
+            <!--                <groupId>com.github.ulisesbocchio</groupId>-->
+            <!--                <artifactId>jasypt-maven-plugin</artifactId>-->
+            <!--                <version>${jasypt.version}</version>-->
+            <!--            </plugin>-->
         </plugins>
         <finalName>${project.artifactId}</finalName>
     </build>
+
 
 
 </project>

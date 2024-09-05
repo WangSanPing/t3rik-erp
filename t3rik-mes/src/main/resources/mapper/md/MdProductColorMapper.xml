@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.t3rik.mes.md.mapper.MdProductColorMapper">
+    
+    <resultMap type="com.t3rik.mes.md.domain.MdProductColor" id="BaseResultMap">
+        <!--@Table md_product_color-->
+        <result property="id"    column="id"    />
+        <result property="colorCode"    column="color_code"    />
+        <result property="colorName"    column="color_name"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectMdProductColorVo">
+        select id, color_code, color_name, remark, status, create_time, create_by, update_time, update_by from md_product_color
+    </sql>
+
+</mapper>

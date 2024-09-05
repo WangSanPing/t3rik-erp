@@ -1,6 +1,7 @@
 package com.t3rik.mes.md.domain;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.t3rik.common.annotation.Excel;
 import com.t3rik.common.core.domain.BaseEntity;
 
 import jakarta.validation.constraints.NotBlank;
@@ -13,22 +14,72 @@ public class MdItem extends BaseEntity {
 
     @TableId
     private Long itemId;
+    /** 产品编码 */
+    @Excel(name = "产品编码")
     private String itemCode;
+    /** 产品名称 */
+    @Excel(name = "产品名称")
     private String itemName;
+    /** 产品规格 */
+    @Excel(name = "规格")
     private String specification;
+    /** 单位 */
+    @Excel(name = "单位")
     private String unitOfMeasure;
+    /** 分类 */
+    @Excel(name = "产品分类")
     private String itemOrProduct;
     private Long itemTypeId;
     private String itemTypeCode;
     private String itemTypeName;
     private String enableFlag;
+    /** 是否安全库存 0/1 */
+    @Excel(name = "是否安全库存")
     private String safeStockFlag;
+    /** 最小库存量 */
+    @Excel(name = "最小库存量")
     private Double minStock;
+    /** 最大库存量 */
+    @Excel(name = "最大库存量")
     private Double maxStock;
     private String attr1;
     private String attr2;
     private String attr3;
     private String attr4;
+
+    /** 单重 */
+    @Excel(name = "单重")
+    private Double weight;
+    /** 单重 */
+    @Excel(name = "模具号")
+    private String moldNo;
+    /** 单重 */
+    @Excel(name = "材质")
+    private String metal;
+
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
+
+    public String getMoldNo() {
+        return moldNo;
+    }
+
+    public void setMoldNo(String moldNo) {
+        this.moldNo = moldNo;
+    }
+
+    public String getMetal() {
+        return metal;
+    }
+
+    public void setMetal(String metal) {
+        this.metal = metal;
+    }
 
     public Long getItemId() {
         return itemId;

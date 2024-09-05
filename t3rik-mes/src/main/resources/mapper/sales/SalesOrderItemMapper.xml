@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.t3rik.mes.md.mapper.SalesOrderItemMapper">
+    
+    <resultMap type="com.t3rik.mes.sales.domain.SalesOrderItem" id="BaseResultMap">
+        <!--@Table sales_order_item-->
+        <result property="salesOrderId"    column="sales_order_id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="productCode"    column="product_code"    />
+        <result property="productName"    column="product_name"    />
+        <result property="productSpec"    column="product_spec"    />
+        <result property="quality"    column="quality"    />
+        <result property="colorCode"    column="color_code"    />
+        <result property="colorName"    column="color_name"    />
+        <result property="unitOfMeasure"    column="unit_of_measure"    />
+        <result property="salesOrderDate"    column="sales_order_date"    />
+        <result property="deliveryDate"    column="delivery_date"    />
+        <result property="clientProductName"    column="client_product_name"    />
+        <result property="stockNum"    column="stock_num"    />
+        <result property="saleQty"    column="sale_qty"    />
+        <result property="saleThqty"    column="sale_thqty"    />
+        <result property="saleSgqty"    column="sale_sgqty"    />
+        <result property="remark"    column="remark"    />
+        <result property="workorderId"    column="workorder_id"    />
+        <result property="createUserId"    column="create_user_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateUserId"    column="update_user_id"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="salesOrderItemId"    column="sales_order_Item_id"    />
+        <result property="workorderCode"    column="workorder_code"    />
+        <result property="workorderName"    column="workorder_name"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectSalesOrderItemVo">
+        select sales_order_Item_id,sales_order_id, product_id, product_code, product_name, product_spec, quality, color_code, color_name, workorder_code,workorder_name,status,
+               unit_of_measure, sales_order_date,delivery_date, client_product_name, stock_num, sale_qty, sale_thqty, sale_sgqty, remark, workorder_id, create_user_id, create_by, create_time, update_user_id, update_by, update_time from sales_order_item
+    </sql>
+
+</mapper>

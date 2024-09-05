@@ -1,5 +1,7 @@
 # 数据源配置
 spring:
+  main:
+    allow-bean-definition-overriding: true
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.cj.jdbc.Driver
@@ -8,7 +10,7 @@ spring:
       master:
         url: jdbc:mysql://localhost:3306/mes?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&allowMultiQueries=true
         username: root
-        password:
+        password: root
       # 从库数据源
       slave:
         # 从数据源开关/默认关闭
@@ -80,3 +82,19 @@ spring:
           # #连接池最大阻塞等待时间（使用负值表示没有限制）
           max-wait: -1ms
       connect-timeout: 60s
+
+#  # netty 配置
+#  netty:
+#    # boss线程数量
+#    boss: 4
+#    # worker线程数量
+#    worker: 2
+#    # 连接超时时间
+#    timeout: 6000
+#    # 服务器主端口
+#    port: 18023
+#    # 服务器备用端口
+#    portSalve: 18026
+#    # 服务器地址
+#    host: 127.0.0.1
+

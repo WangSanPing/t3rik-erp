@@ -64,6 +64,7 @@ spring:
       # 热部署开关
       enabled: true
 
+
 # token配置
 token:
   # 令牌自定义标识
@@ -119,4 +120,6 @@ minio:
   accessKey: your_key
   secretKey: your_secret
   bucketName: ktg-mes
+
+
 
