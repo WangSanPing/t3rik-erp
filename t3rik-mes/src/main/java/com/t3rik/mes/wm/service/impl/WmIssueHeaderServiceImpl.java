@@ -1,5 +1,6 @@
 package com.t3rik.mes.wm.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.enums.mes.OrderStatusEnum;
@@ -7,6 +8,7 @@ import com.t3rik.common.utils.DateUtils;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.mes.wm.domain.WmIssueHeader;
 import com.t3rik.mes.wm.domain.tx.IssueTxBean;
+import com.t3rik.mes.wm.dto.IssueHeaderAndLineDTO;
 import com.t3rik.mes.wm.mapper.WmIssueHeaderMapper;
 import com.t3rik.mes.wm.service.IStorageCoreService;
 import com.t3rik.mes.wm.service.IWmIssueHeaderService;
@@ -126,5 +128,16 @@ public class WmIssueHeaderServiceImpl extends ServiceImpl<WmIssueHeaderMapper, W
         storageCoreService.processIssue(beans);
         // 更新单据状态
         this.lambdaUpdate().set(WmIssueHeader::getStatus, OrderStatusEnum.FINISHED.getCode()).update(new WmIssueHeader());
+    }
+
+
+    /**
+     * 查询领料详情
+     *
+     * @param query 查询条件
+     */
+    @Override
+    public List<IssueHeaderAndLineDTO> getIssueDetail(Wrapper<IssueHeaderAndLineDTO> query) {
+        return this.wmIssueHeaderMapper.getIssueDetail(query);
     }
 }

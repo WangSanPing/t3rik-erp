@@ -14,6 +14,7 @@ import com.t3rik.common.utils.StringUtils
 import com.t3rik.mes.pro.domain.ProTask
 import com.t3rik.mes.pro.dto.TaskDTO
 import com.t3rik.mes.pro.service.IProTaskService
+import com.t3rik.mes.wm.dto.IssueHeaderAndLineDTO
 import com.t3rik.mobile.common.ktextend.isNonPositive
 import com.t3rik.mobile.mes.dto.IssueRequestDTO
 import com.t3rik.mobile.mes.service.IIssueService
@@ -59,6 +60,17 @@ class IssueController : BaseController() {
         // 领料申请
         this.issueService.issue(issueRequestDTO)
         return AjaxResult.success()
+    }
+
+    @ApiOperation("领料申请详情")
+    @GetMapping("/getIssueDetail")
+    fun getIssueDetail(query: IssueHeaderAndLineDTO): AjaxResult {
+        if (query.workorderCode.isNullOrBlank()) {
+            throw BusinessException(MsgConstants.PARAM_ERROR)
+        }
+        return AjaxResult.success(
+            this.issueService.getIssueDetail(query)
+        )
     }
 
     /**

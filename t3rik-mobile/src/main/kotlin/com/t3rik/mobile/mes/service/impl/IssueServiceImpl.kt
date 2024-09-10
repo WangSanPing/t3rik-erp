@@ -1,6 +1,7 @@
 package com.t3rik.mobile.mes.service.impl
 
 import cn.hutool.core.bean.BeanUtil
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
 import com.t3rik.common.constant.MsgConstants
 import com.t3rik.common.constant.UserConstants
 import com.t3rik.common.enums.mes.OrderStatusEnum
@@ -9,6 +10,7 @@ import com.t3rik.common.utils.DateUtils
 import com.t3rik.mes.pro.domain.ProWorkorder
 import com.t3rik.mes.pro.service.IProWorkorderService
 import com.t3rik.mes.wm.domain.WmIssueHeader
+import com.t3rik.mes.wm.dto.IssueHeaderAndLineDTO
 import com.t3rik.mes.wm.service.IWmIssueHeaderService
 import com.t3rik.mes.wm.service.IWmIssueLineService
 import com.t3rik.mobile.mes.dto.IssueRequestDTO
@@ -55,6 +57,15 @@ class IssueServiceImpl : IIssueService {
         // 构造领料申请子单
         issueRequestDTO.issueLineList.forEach { f -> f.issueId = header.issueId }
         this.issueLineService.saveBatch(issueRequestDTO.issueLineList)
+    }
+
+    /**
+     * 领料申请详情
+     */
+    override fun getIssueDetail(query: IssueHeaderAndLineDTO): MutableList<IssueHeaderAndLineDTO> {
+        val wrapper = QueryWrapper<IssueHeaderAndLineDTO>()
+        wrapper.eq("workorder_code", query.workorderCode)
+        return this.issueHeaderService.getIssueDetail(wrapper)
     }
 
     /**
