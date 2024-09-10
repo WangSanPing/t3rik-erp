@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.enums.mes.OrderStatusEnum;
 import com.t3rik.common.utils.DateUtils;
 import com.t3rik.mes.pro.domain.ProTask;
-import com.t3rik.mes.pro.dto.TaskDto;
+import com.t3rik.mes.pro.dto.TaskDTO;
 import com.t3rik.mes.pro.mapper.ProTaskMapper;
 import com.t3rik.mes.pro.service.IProTaskService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -196,7 +196,7 @@ public class ProTaskServiceImpl extends ServiceImpl<ProTaskMapper, ProTask> impl
      * @param query 查询条件
      */
     @Override
-    public Page<TaskDto> getTaskListAndFeedbackCount(IPage<TaskDto> page, Wrapper<TaskDto> query) {
+    public Page<TaskDTO> getTaskListAndFeedbackCount(IPage<TaskDTO> page, Wrapper<TaskDTO> query) {
         return this.proTaskMapper.getTaskListAndFeedbackCount(page, query);
     }
 
@@ -207,7 +207,7 @@ public class ProTaskServiceImpl extends ServiceImpl<ProTaskMapper, ProTask> impl
      * @param query 查询条件
      */
     @Override
-    public Page<TaskDto> getTaskListAndIssueCount(IPage<TaskDto> page, Wrapper<TaskDto> query) {
+    public Page<TaskDTO> getTaskListAndIssueCount(IPage<TaskDTO> page, Wrapper<TaskDTO> query) {
         return this.proTaskMapper.getTaskListAndIssueCount(page, query);
     }
 

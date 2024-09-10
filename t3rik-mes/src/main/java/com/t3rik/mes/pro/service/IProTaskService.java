@@ -9,10 +9,8 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.pro.domain.ProTask;
-import com.t3rik.mes.pro.dto.TaskDto;
+import com.t3rik.mes.pro.dto.TaskDTO;
 import org.apache.ibatis.annotations.Param;
-
-import java.util.List;
 
 /**
  * 生产任务Service接口
@@ -102,11 +100,11 @@ public interface IProTaskService  extends IService<ProTask>
      * @param query 查询条件
      * @return
      */
-    Page<TaskDto> getTaskListAndFeedbackCount(IPage<TaskDto> page, @Param(Constants.WRAPPER) Wrapper<TaskDto> query);
+    Page<TaskDTO> getTaskListAndFeedbackCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query);
 
     /**
      * 查询任务，根据工单分组展示数据，并统计领料次数
      * @param query 查询条件
      */
-    Page<TaskDto> getTaskListAndIssueCount(IPage<TaskDto> page,@Param(Constants.WRAPPER) Wrapper<TaskDto> query);
+    Page<TaskDTO> getTaskListAndIssueCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query);
 }

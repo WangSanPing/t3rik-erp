@@ -9,11 +9,10 @@ import com.t3rik.common.core.domain.AjaxResult
 import com.t3rik.common.core.page.TableDataInfo
 import com.t3rik.common.enums.mes.OrderStatusEnum
 import com.t3rik.common.exception.BusinessException
-import com.t3rik.common.utils.SecurityUtils
 import com.t3rik.common.utils.StringUtils
 import com.t3rik.mes.pro.domain.ProFeedback
 import com.t3rik.mes.pro.domain.ProTask
-import com.t3rik.mes.pro.dto.TaskDto
+import com.t3rik.mes.pro.dto.TaskDTO
 import com.t3rik.mes.pro.service.IProFeedbackService
 import com.t3rik.mes.pro.service.IProTaskService
 import com.t3rik.mobile.common.enums.CurrentIndexEnum
@@ -100,8 +99,8 @@ class AuditController : BaseController() {
     @ApiOperation("查询报工列表")
     @GetMapping("/list")
     fun getTaskList(task: ProTask): TableDataInfo {
-        val page = getMPPage(TaskDto())
-        val queryWrapper = QueryWrapper<TaskDto>()
+        val page = getMPPage(TaskDTO())
+        val queryWrapper = QueryWrapper<TaskDTO>()
         queryWrapper.gt(task.currentIndex.equals(CurrentIndexEnum.UNPROCESSED.code), "approvingCount", 0)
         queryWrapper.likeRight(StringUtils.isNotBlank(task.taskName), "task_name", task.taskName)
         return getDataTableWithPage(this.proTaskService.getTaskListAndFeedbackCount(page, queryWrapper))

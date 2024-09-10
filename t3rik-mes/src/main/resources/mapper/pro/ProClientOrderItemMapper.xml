@@ -68,7 +68,7 @@
         where client_order_id=#{clientOrderId}
     </select>
 
-    <select id="getClientOrderItemPage" resultType="com.t3rik.mes.pro.dto.ClientOrderItemPageDto">
+    <select id="getClientOrderItemPage" resultType="com.t3rik.mes.pro.dto.ClientOrderItemPageDTO">
         SELECT t.order_item_id,
                t.client_order_id,
                t.item_id,

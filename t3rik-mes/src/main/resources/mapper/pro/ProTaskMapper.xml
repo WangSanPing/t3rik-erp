@@ -313,7 +313,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
-    <select id="getTaskListAndFeedbackCount" resultType="com.t3rik.mes.pro.dto.TaskDto">
+    <select id="getTaskListAndFeedbackCount" resultType="com.t3rik.mes.pro.dto.TaskDTO">
         SELECT *
         FROM (SELECT pt.workorder_code,
                      pt.client_order_code,
@@ -344,7 +344,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ${ew.customSqlSegment}
     </select>
 
-    <select id="getTaskListAndIssueCount" resultType="com.t3rik.mes.pro.dto.TaskDto">
+    <select id="getTaskListAndIssueCount" resultType="com.t3rik.mes.pro.dto.TaskDTO">
         SELECT
             pw.workorder_id,
             pw.workorder_code,
