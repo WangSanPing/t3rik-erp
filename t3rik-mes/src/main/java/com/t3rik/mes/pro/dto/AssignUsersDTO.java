@@ -1,6 +1,5 @@
 package com.t3rik.mes.pro.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * @ClassName AssignUsersDto
+ * @ClassName AssignUsersDTO
  * @Description:
  * @Author: 施子安
  * @CreateDate: 2024/7/1 15:42
@@ -23,7 +22,7 @@ import java.util.List;
 @Data
 @Validated
 @NoArgsConstructor
-public class AssignUsersDto {
+public class AssignUsersDTO {
     // 任务id
     @NotNull
     private List<String> taskIds;

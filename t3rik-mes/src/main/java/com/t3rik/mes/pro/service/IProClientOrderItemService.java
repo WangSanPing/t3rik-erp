@@ -1,10 +1,9 @@
 package com.t3rik.mes.pro.service;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.pro.domain.ProClientOrderItem;
-import com.t3rik.mes.pro.dto.ClientOrderItemPageDto;
+import com.t3rik.mes.pro.dto.ClientOrderItemPageDTO;
 
 import java.util.List;
 
@@ -25,5 +24,5 @@ public interface IProClientOrderItemService extends IService<ProClientOrderItem>
     /**
      * 获取分页数据
      */
-    Page<ClientOrderItemPageDto> getClientOrderItemPage(Page<ClientOrderItemPageDto> page, Long clientOrderId, List<String> whCodes);
+    Page<ClientOrderItemPageDTO> getClientOrderItemPage(Page<ClientOrderItemPageDTO> page, Long clientOrderId, List<String> whCodes);
 }
