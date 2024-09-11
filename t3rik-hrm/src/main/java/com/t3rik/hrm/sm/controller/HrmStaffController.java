@@ -3,23 +3,27 @@ package com.t3rik.hrm.sm.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.t3rik.common.annotation.Log;
+import com.t3rik.common.constant.MsgConstants;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
+import com.t3rik.common.enums.hrm.StaffStatusEnum;
+import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.hrm.sm.domain.HrmStaff;
 import com.t3rik.hrm.sm.service.IHrmStaffService;
 import com.t3rik.hrm.sm.vo.HrmStaffVo;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 员工花名册Controller
@@ -30,8 +34,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/hrm/sm/hrm-staff")
 public class HrmStaffController extends BaseController {
-    @Autowired
+    @Resource
     private IHrmStaffService hrmStaffService;
+
     /**
      * 查询人才花名册列表
      */
@@ -39,7 +44,7 @@ public class HrmStaffController extends BaseController {
     @GetMapping("/listTalents")
     public TableDataInfo listTalents(HrmStaff hrmStaff) {
         startPage();
-        List<HrmStaffVo> list =  hrmStaffService.listTalents(hrmStaff);
+        List<HrmStaffVo> list = hrmStaffService.listTalents(hrmStaff);
         return getDataTable(list);
     }
 
@@ -68,7 +73,7 @@ public class HrmStaffController extends BaseController {
         // 获取查询条件
         LambdaQueryWrapper<HrmStaff> queryWrapper = getQueryWrapper(hrmStaff);
         List<HrmStaff> list = this.hrmStaffService.list(queryWrapper);
-        ExcelUtil<HrmStaff> util = new ExcelUtil<HrmStaff>(HrmStaff. class);
+        ExcelUtil<HrmStaff> util = new ExcelUtil<HrmStaff>(HrmStaff.class);
         util.exportExcel(response, list, "员工花名册数据");
     }
 
@@ -113,15 +118,20 @@ public class HrmStaffController extends BaseController {
 
 
     /**
-     * 员工流程审批
-     *
+     * 邀请面试
      */
     @PreAuthorize("@ss.hasPermi('sm:hrmstaff:edit')")
-    @Log(title = "员工花名册", businessType = BusinessType.UPDATE)
-    @PostMapping("/process")
-    public AjaxResult process(@RequestBody HrmStaff hrmStaff) {
-        this.hrmStaffService.process(hrmStaff);
-        return toAjax(this.hrmStaffService.updateById(hrmStaff));
+    @Log(title = "邀请面试", businessType = BusinessType.UPDATE)
+    @PutMapping("/interview/{staffId}")
+    public AjaxResult interview(@PathVariable Long staffId) {
+        HrmStaff staff = this.hrmStaffService.getById(staffId);
+        Optional.ofNullable(staff).orElseThrow(() -> new BusinessException(MsgConstants.PARAM_ERROR));
+        // 邀请面试
+        this.hrmStaffService.lambdaUpdate()
+                .eq(HrmStaff::getStaffId, staffId)
+                .set(HrmStaff::getStatus, StaffStatusEnum.INTERVIEW.getCode())
+                .update(new HrmStaff());
+        return AjaxResult.success();
     }
 
     /**
@@ -131,12 +141,12 @@ public class HrmStaffController extends BaseController {
     @Log(title = "员工花名册", businessType = BusinessType.DELETE)
     @DeleteMapping("/{staffIds}")
     public AjaxResult remove(@PathVariable List<Long> staffIds) {
-        return toAjax(this.hrmStaffService.lambdaUpdate().in(HrmStaff::getStaffId,staffIds).set(HrmStaff::getDeleted,Boolean.TRUE).set(HrmStaff::getDeleteAt,new Date()).update());
+        return toAjax(this.hrmStaffService.lambdaUpdate().in(HrmStaff::getStaffId, staffIds).set(HrmStaff::getDeleted, Boolean.TRUE).set(HrmStaff::getDeleteAt, new Date()).update());
     }
 
     /**
-    * 获取查询条件
-    */
+     * 获取查询条件
+     */
     public LambdaQueryWrapper<HrmStaff> getQueryWrapper(HrmStaff hrmStaff) {
         LambdaQueryWrapper<HrmStaff> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(StringUtils.isNotEmpty(hrmStaff.getStaffCode()), HrmStaff::getStaffCode, hrmStaff.getStaffCode());
@@ -162,7 +172,7 @@ public class HrmStaffController extends BaseController {
         // 默认创建时间倒序
         queryWrapper.orderByDesc(HrmStaff::getCreateTime);
         Map<String, Object> params = hrmStaff.getParams();
-        queryWrapper.between(params.get("beginTime") != null && params.get("endTime") != null,HrmStaff::getCreateTime, params.get("beginTime"), params.get("endTime"));
+        queryWrapper.between(params.get("beginTime") != null && params.get("endTime") != null, HrmStaff::getCreateTime, params.get("beginTime"), params.get("endTime"));
         return queryWrapper;
     }
 }

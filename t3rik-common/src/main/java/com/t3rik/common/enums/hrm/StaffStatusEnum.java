@@ -25,12 +25,12 @@ public enum StaffStatusEnum {
     /**
      * 备注
      */
-    private String remark;
+    private final String remark;
 
     /**
      * 状态数值
      */
-    private Long code;
+    private final Long code;
 
     StaffStatusEnum(Long code, String remark) {
         this.remark = remark;
