@@ -8,12 +8,13 @@ import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
-import com.t3rik.common.enums.hrm.StaffStatusEnum;
 import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.poi.ExcelUtil;
+import com.t3rik.hrm.common.HrmCheckUtils;
 import com.t3rik.hrm.sm.domain.HrmStaff;
 import com.t3rik.hrm.sm.service.IHrmStaffService;
+import com.t3rik.hrm.sm.state.StaffState;
 import com.t3rik.hrm.sm.vo.HrmStaffVo;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
@@ -126,10 +127,13 @@ public class HrmStaffController extends BaseController {
     public AjaxResult interview(@PathVariable Long staffId) {
         HrmStaff staff = this.hrmStaffService.getById(staffId);
         Optional.ofNullable(staff).orElseThrow(() -> new BusinessException(MsgConstants.PARAM_ERROR));
+        StaffState nextState = StaffState.INTERVIEW;
+        // 校验状态
+        HrmCheckUtils.checkStaffStatus(nextState, staff.getStatus()).throwMsg(MsgConstants.ERROR_STATUS);
         // 邀请面试
         this.hrmStaffService.lambdaUpdate()
                 .eq(HrmStaff::getStaffId, staffId)
-                .set(HrmStaff::getStatus, StaffStatusEnum.INTERVIEW.getCode())
+                .set(HrmStaff::getStatus, nextState.getCurrentStatus())
                 .update(new HrmStaff());
         return AjaxResult.success();
     }

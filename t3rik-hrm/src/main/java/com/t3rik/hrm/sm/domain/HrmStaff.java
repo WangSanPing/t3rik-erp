@@ -168,8 +168,8 @@ public class HrmStaff extends BaseEntity {
     /**
      * 状态（0-备选，1-面试，2-面试通过，3-入职申请，4-入职通过）
      */
-    @Excel(name = "状态", readConverterExp = "0-备选，1-面试，2-面试通过，3-入职申请，4-入职通过")
-    private Long status;
+    @Excel(name = "状态", readConverterExp = "0-备选，10-面试，20-面试通过，30-入职申请，40-入职通过")
+    private Integer status;
 
     /**
      * 逻辑删除字段 0:未删除 1:已删除
