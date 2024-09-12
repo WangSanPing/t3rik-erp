@@ -10,16 +10,17 @@ import lombok.Getter;
  */
 @Getter
 public enum StaffStatusEnum {
-    //0-备选，1-面试，2-面试通过，3-入职申请，4-入职通过
-    /**
-     * 备选
-     */
-    ALTERNATE(0L,"备选"),
-    INTERVIEW(1L,"面试"),
-    INTERVIEW_PASS(2L,"面试通过"),
-    ENTRY_APPLICATION(3L,"入职申请"),
-    PASS_ADMISSION(4L,"入职通过"),
-    INTERVIEW_FAIL(5L,"面试失败"),
+    // 0-备选，10-面试，20-面试通过，30-入职申请，40-入职通过
+    ALTERNATE(0, "备选", 0),
+    INTERVIEW(10, "面试", 1),
+    PASS_THE_INTERVIEW(20, "面试通过", 2),
+    INTERVIEW_FAIL(21, "面试失败", 3),
+    EMPLOYMENT_APPLICATION(30, "入职申请", 4),
+    ALLOW_ENTRY(40, "入职通过", 5),
+    REFUSE_ENTRY(41, "申请被拒绝", 5),
+    PROBATION(50, "试用期", 6),
+    BECOME_A_REGULAR_WORKER(60, "已转正", 7),
+    RESIGNED(100, "已离职", 8),
     ;
 
     /**
@@ -30,10 +31,13 @@ public enum StaffStatusEnum {
     /**
      * 状态数值
      */
-    private final Long code;
+    private final Integer code;
 
-    StaffStatusEnum(Long code, String remark) {
+    private final Integer sort;
+
+    StaffStatusEnum(Integer code, String remark, Integer sort) {
         this.remark = remark;
         this.code = code;
+        this.sort = sort;
     }
 }
