@@ -44,6 +44,7 @@ public enum StaffState {
             List.of(StaffStatusEnum.ALTERNATE, StaffStatusEnum.INTERVIEW_FAIL),
             StaffStatusEnum.PASS_THE_INTERVIEW,
             StaffStatusEnum.EMPLOYMENT_APPLICATION),
+
     /**
      * 邀请面试-面试失败
      */
@@ -52,6 +53,15 @@ public enum StaffState {
             List.of(StaffStatusEnum.ALTERNATE, StaffStatusEnum.INTERVIEW_FAIL),
             StaffStatusEnum.INTERVIEW_FAIL,
             null),
+
+    /**
+     * 邀请面试-待定
+     */
+    BE_PENDING(
+            StaffActionEnum.BE_PENDING_ACTION,
+            List.of(StaffStatusEnum.ALTERNATE, StaffStatusEnum.INTERVIEW_FAIL),
+            StaffStatusEnum.BE_PENDING,
+            StaffStatusEnum.EMPLOYMENT_APPLICATION),
 
     /**
      * 申请入职

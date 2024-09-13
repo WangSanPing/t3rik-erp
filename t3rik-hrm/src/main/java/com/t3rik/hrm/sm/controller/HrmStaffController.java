@@ -127,13 +127,13 @@ public class HrmStaffController extends BaseController {
     public AjaxResult interview(@PathVariable Long staffId) {
         HrmStaff staff = this.hrmStaffService.getById(staffId);
         Optional.ofNullable(staff).orElseThrow(() -> new BusinessException(MsgConstants.PARAM_ERROR));
-        StaffState nextState = StaffState.INTERVIEW;
+        StaffState state = StaffState.INTERVIEW;
         // 校验状态
-        HrmCheckUtils.checkStaffStatus(nextState, staff.getStatus()).throwMsg(MsgConstants.ERROR_STATUS);
+        HrmCheckUtils.checkStaffStatus(state, staff.getStatus()).throwMsg(MsgConstants.ERROR_STATUS);
         // 邀请面试
         this.hrmStaffService.lambdaUpdate()
                 .eq(HrmStaff::getStaffId, staffId)
-                .set(HrmStaff::getStatus, nextState.getCurrentStatus())
+                .set(HrmStaff::getStatus, state.getCurrentStatus())
                 .update(new HrmStaff());
         return AjaxResult.success();
     }

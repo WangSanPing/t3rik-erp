@@ -4,6 +4,7 @@ import com.t3rik.hrm.sm.vo.HrmStaffVo;
 import com.t3rik.hrm.sm.domain.HrmStaff;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -29,5 +30,5 @@ public interface HrmStaffMapper extends BaseMapper<HrmStaff> {
     /**
      * 获取人才详情信息
      */
-    HrmStaffVo getTalents(Long staffId);
+    HrmStaffVo getTalents(@Param("staffId") Long staffId);
 }
