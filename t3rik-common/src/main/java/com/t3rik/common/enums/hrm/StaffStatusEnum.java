@@ -15,6 +15,7 @@ public enum StaffStatusEnum {
     INTERVIEW(10, "面试", 1),
     PASS_THE_INTERVIEW(20, "面试通过", 2),
     INTERVIEW_FAIL(21, "面试失败", 3),
+    BE_PENDING(22, "待定", 3),
     EMPLOYMENT_APPLICATION(30, "入职申请", 4),
     ALLOW_ENTRY(40, "入职通过", 5),
     REFUSE_ENTRY(41, "申请被拒绝", 5),

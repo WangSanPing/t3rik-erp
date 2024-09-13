@@ -15,6 +15,7 @@ public enum StaffActionEnum {
     INTERVIEW_ACTION(10, "已邀请面试"),
     PASS_THE_INTERVIEW_ACTION(20, "面试通过"),
     INTERVIEW_FAIL_ACTION(21, "面试失败"),
+    BE_PENDING_ACTION(22, "待定"),
     EMPLOYMENT_APPLICATION_ACTION(30, "已申请入职"),
     ALLOW_ENTRY_ACTION(40, "申请通过，已入职"),
     REFUSE_ENTRY_ACTION(41, "申请被拒绝"),
