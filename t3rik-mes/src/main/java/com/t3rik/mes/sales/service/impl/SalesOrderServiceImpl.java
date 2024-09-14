@@ -1,5 +1,6 @@
 package com.t3rik.mes.sales.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -49,6 +50,9 @@ public class SalesOrderServiceImpl  extends ServiceImpl<SalesOrderMapper, SalesO
             this.save(salesOrder);
             for(SalesOrderItem obj:salesOrder.getSalesOrderItemList()){
                 obj.setSalesOrderId(salesOrder.getSalesOrderId());
+                obj.setSalesOrderCode(salesOrder.getSalesOrderCode());
+                obj.setOweQty(obj.getSalesOrderQuantity());
+                salesOrderItemService.save(obj);
                 // 查询当前产品是否存在bom组合,如果存在,写入到客户订单物料表中
                 List<MdProductBom> productBoms = productBomService.lambdaQuery().
                         eq(MdProductBom::getItemId, obj.getProductId())

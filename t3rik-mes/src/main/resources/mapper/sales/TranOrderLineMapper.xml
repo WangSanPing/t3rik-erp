@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.t3rik.mes.sales.mapper.TranOrderLineMapper">
+
+    <resultMap type="com.t3rik.mes.sales.domain.TranOrderLine" id="BaseResultMap">
+        <!--@Table tran_order_line-->
+        <result property="tranOrderLineId"    column="tran_order_line_id"    />
+        <result property="tranOrderId"    column="tran_order_id"    />
+        <result property="clientId"    column="client_id"    />
+        <result property="clientCode"    column="client_code"    />
+        <result property="clientName"    column="client_name"    />
+        <result property="followerMan"    column="follower_man"    />
+        <result property="busMan"    column="bus_man"    />
+        <result property="tranOrderType"    column="tran_order_type"    />
+        <result property="tranDate"    column="tran_date"    />
+        <result property="tranCode"    column="tran_code"    />
+        <result property="warehouseId"    column="warehouse_id"    />
+        <result property="warehouseCode"    column="warehouse_code"    />
+        <result property="warehouseName"    column="warehouse_name"    />
+        <result property="salesOrderId"    column="sales_order_id"    />
+        <result property="salesOrderCode"    column="sales_order_code"    />
+        <result property="productId"    column="product_id"    />
+        <result property="productCode"    column="product_code"    />
+        <result property="productName"    column="product_name"    />
+        <result property="productSpec"    column="product_spec"    />
+        <result property="quality"    column="quality"    />
+        <result property="level"    column="level"    />
+        <result property="colorName"    column="color_name"    />
+        <result property="unitOfMeasure"    column="unit_of_measure"    />
+        <result property="saleQty"    column="sale_qty"    />
+        <result property="saleThqty"    column="sale_thqty"    />
+        <result property="amount"    column="amount"    />
+        <result property="saleSgqty"    column="sale_sgqty"    />
+        <result property="weight"    column="weight"    />
+        <result property="tax"    column="tax"    />
+        <result property="totalAmount"    column="total_amount"    />
+        <result property="extra"    column="extra"    />
+        <result property="remark"    column="remark"    />
+        <result property="picNum"    column="pic_num"    />
+        <result property="po"    column="po"    />
+        <result property="sku"    column="sku"    />
+        <result property="clientSpec"    column="client_spec"    />
+        <result property="clientProductName"    column="client_product_name"    />
+        <result property="clientColor"    column="client_color"    />
+        <result property="workorderId"    column="workorder_id"    />
+        <result property="workorderCode"    column="workorder_code"    />
+        <result property="status"    column="status"    />
+        <result property="createUserId"    column="create_user_id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateUserId"    column="update_user_id"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTranOrderLineVo">
+        select tran_order_line_id, tran_order_id, client_id, client_code, client_name, follower_man, bus_man, tran_order_type, tran_date, tran_code, warehouse_id, warehouse_code, warehouse_name, sales_order_id, sales_order_code, product_id, product_code, product_name, product_spec, quality, level, color_name, unit_of_measure, sale_qty, sale_thqty, amount, sale_sgqty, weight, tax, total_amount, extra, remark, pic_num, po, sku, client_spec, client_product_name, client_color, workorder_id, workorder_code, status, create_user_id, create_by, create_time, update_user_id, update_by, update_time from tran_order_line
+    </sql>
+
+</mapper>

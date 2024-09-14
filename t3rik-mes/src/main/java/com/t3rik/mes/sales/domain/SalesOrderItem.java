@@ -27,14 +27,24 @@ public class SalesOrderItem extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
+    /** 销售订单列表id */
+    @TableId
+    private Long salesOrderItemId;
+
+    /** 销售订单编码 */
+    @Excel(name = "销售订单列表编码")
+    private String salesOrderItemCode;
+
     /** 销售订单id */
     private Long salesOrderId;
 
-    /** 销售订单产品id */
-    @TableId
-    private Long salesOrderItemId;
+    /** 销售订单编码 */
+    @Excel(name = "销售订单编码")
+    private String salesOrderCode;
+
     /** 产品id */
     private Long productId;
+
 
     /** 产品编码 */
     @Excel(name = "产品编码")
@@ -80,14 +90,24 @@ public class SalesOrderItem extends BaseEntity
 
 
 
+    /** 单价 */
+    @Excel(name = "单价")
+    private BigDecimal amount;
+
+    /** 金额 */
+    @Excel(name = "金额")
+    private BigDecimal totalAmount;
+
     /** 订货数量 */
     @Excel(name = "订货数量")
     private BigDecimal salesOrderQuantity;
 
 
+
     /** 库存数量 */
     @Excel(name = "库存数量")
     private BigDecimal stockNum;
+
 
     /** 已出货数 */
     @Excel(name = "已出货数")
@@ -100,6 +120,11 @@ public class SalesOrderItem extends BaseEntity
     /** 手工消数 */
     @Excel(name = "手工消数")
     private BigDecimal saleSgqty;
+
+    /** 手工消数 */
+    @Excel(name = "欠数")
+    private BigDecimal oweQty;
+
 
     /** 工单ID */
     @Excel(name = "工单ID")
