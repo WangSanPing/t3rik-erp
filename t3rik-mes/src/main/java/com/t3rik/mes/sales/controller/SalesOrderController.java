@@ -66,7 +66,6 @@ public class SalesOrderController extends BaseController {
     private ProClientOrderServiceImpl proClientOrderService;
     @Autowired
     private IMdProductBomService productBomService;
-
     /**
      * 查询销售订单列表
      */
@@ -144,20 +143,45 @@ public class SalesOrderController extends BaseController {
     @DeleteMapping("/{salesOrderIds}")
     public AjaxResult remove(@PathVariable List<Long> salesOrderIds) {
         List<SalesOrder> salesOrders=salesOrderService.listByIds(salesOrderIds);
+        StringBuffer sb=new StringBuffer();
         for (SalesOrder li:salesOrders){
             LambdaQueryWrapper<SalesOrderItem> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(SalesOrderItem::getSalesOrderId, li.getSalesOrderId());
             List<SalesOrderItem> orderItemList= salesOrderItemService.list(queryWrapper);
             if(orderItemList.size()>0){
-                return AjaxResult.success("存在未删除的销售清单，不允许删除");
+                sb.append("销售订单"+li.getSalesOrderCode()+"下还有未删除的清单，不允许删除"+"\n");
             }else{
                 return toAjax( this.salesOrderService.removeByIds(salesOrderIds));
             }
         }
-        return  AjaxResult.success();
+        return  AjaxResult.error(sb.toString());
 
 
     }
+    /**
+     * 查询销售订单产品列列表
+     */
+//    @PreAuthorize("@ss.hasPermi('sales:item:selectItem')")
+    @GetMapping("/selectItem")
+    public TableDataInfo Itemlist(SalesOrder salesOrder) {
+        // 获取查询条件
+        LambdaQueryWrapper<SalesOrder> queryWrapper = getQueryWrapper(salesOrder);
+        List<SalesOrder>salesOrderList=this.salesOrderService.list(queryWrapper);
+
+        List<SalesOrderItem> items=salesOrderItemService.list();
+
+        List<SalesOrderItem> itemList=new ArrayList<>();
+
+        for(SalesOrder li:salesOrderList){
+            for(SalesOrderItem item:items){
+                if(item.getSalesOrderId().equals(li.getSalesOrderId())){
+                    itemList.add(item);
+                }
+            }
+        }
+        return getDataTable(itemList);
+    }
+
 //    /**
 //     * 生成生产订单
 //     */
