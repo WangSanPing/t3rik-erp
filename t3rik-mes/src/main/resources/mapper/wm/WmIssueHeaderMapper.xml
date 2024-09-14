@@ -41,7 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
     </resultMap>
 
-    <resultMap id="IssueTxBeanResult" type="IssueTxBean">
+    <resultMap id="IssueTxBeanResult" type="com.t3rik.mes.wm.domain.tx.IssueTxBean">
         <result property="materialStockId" column="material_stock_id"></result>
         <result property="itemId" column="item_id"></result>
         <result property="itemCode" column="item_code"></result>
@@ -256,4 +256,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{issueId}
         </foreach>
     </delete>
+
+    <select id="getIssueDetail" resultType="com.t3rik.mes.wm.dto.IssueHeaderAndLineDTO">
+        select wih.issue_id,
+        wih.issue_code,
+        wih.issue_date,
+        wih.issue_name,
+        wih.workorder_code,
+        wih.workorder_id,
+        wil.line_id,
+        wil.unit_of_measure,
+        wil.location_id,
+        wil.location_code,
+        wil.location_name,
+        wil.warehouse_id,
+        wil.warehouse_code,
+        wil.warehouse_name,
+        wil.area_id,
+        wil.area_code,
+        wil.area_name,
+        wil.item_id,
+        wil.item_name,
+        wil.item_code,
+        wil.quantity_issued
+        from wm_issue_line wil
+        left join wm_issue_header wih  on wih.issue_id = wil.issue_id
+            ${ew.customSqlSegment}
+        order by wih.issue_date desc
+    </select>
 </mapper>

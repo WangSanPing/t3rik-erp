@@ -14,7 +14,7 @@ import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.mes.pro.domain.ProClientOrder;
 import com.t3rik.mes.pro.domain.ProClientOrderItem;
-import com.t3rik.mes.pro.dto.ClientOrderItemPageDto;
+import com.t3rik.mes.pro.dto.ClientOrderItemPageDTO;
 import com.t3rik.mes.pro.service.IProClientOrderItemService;
 import com.t3rik.mes.pro.service.IProClientOrderService;
 import lombok.AllArgsConstructor;
@@ -50,11 +50,11 @@ public class ProClientOrderItemController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(@Validated ProClientOrderItem proClientOrderItem) {
         // 组装分页
-        Page<ClientOrderItemPageDto> page = getMPPage(new ClientOrderItemPageDto());
+        Page<ClientOrderItemPageDTO> page = getMPPage(new ClientOrderItemPageDTO());
         // 查询
         // 默认仓库
         var defaultWH = Collections.singletonList(DefaultDataEnum.WH00_DEFAULT.getCode());
-        Page<ClientOrderItemPageDto> result = this.proClientOrderItemService.getClientOrderItemPage(page, proClientOrderItem.getClientOrderId(), defaultWH);
+        Page<ClientOrderItemPageDTO> result = this.proClientOrderItemService.getClientOrderItemPage(page, proClientOrderItem.getClientOrderId(), defaultWH);
         return getDataTableWithPage(result);
     }
 

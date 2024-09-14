@@ -4,8 +4,6 @@ import com.t3rik.mes.pro.domain.ProClientOrderItem;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.math.BigDecimal;
-
 /**
  * 客户订单数据扩展DTO
  *
@@ -14,7 +12,7 @@ import java.math.BigDecimal;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class ClientOrderItemPageDto extends ProClientOrderItem {
+public class ClientOrderItemPageDTO extends ProClientOrderItem {
 
     /**
      * 库存量

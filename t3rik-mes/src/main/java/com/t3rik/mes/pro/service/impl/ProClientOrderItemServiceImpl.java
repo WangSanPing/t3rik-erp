@@ -3,7 +3,7 @@ package com.t3rik.mes.pro.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.mes.pro.domain.ProClientOrderItem;
-import com.t3rik.mes.pro.dto.ClientOrderItemPageDto;
+import com.t3rik.mes.pro.dto.ClientOrderItemPageDTO;
 import com.t3rik.mes.pro.mapper.ProClientOrderItemMapper;
 import com.t3rik.mes.pro.service.IProClientOrderItemService;
 import lombok.AllArgsConstructor;
@@ -34,7 +34,7 @@ public class ProClientOrderItemServiceImpl extends ServiceImpl<ProClientOrderIte
      * 获取分页数据
      */
     @Override
-    public Page<ClientOrderItemPageDto> getClientOrderItemPage(Page<ClientOrderItemPageDto> page, Long clientOrderId, List<String> whCodes) {
+    public Page<ClientOrderItemPageDTO> getClientOrderItemPage(Page<ClientOrderItemPageDTO> page, Long clientOrderId, List<String> whCodes) {
         return this.proClientOrderItemMapper.getClientOrderItemPage(page, clientOrderId, whCodes);
     }
 }

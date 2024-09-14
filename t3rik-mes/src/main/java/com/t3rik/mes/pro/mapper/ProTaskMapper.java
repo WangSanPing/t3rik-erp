@@ -6,8 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.t3rik.mes.pro.domain.ProTask;
-import com.t3rik.mes.pro.dto.ClientOrderItemPageDto;
-import com.t3rik.mes.pro.dto.TaskDto;
+import com.t3rik.mes.pro.dto.TaskDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -83,11 +82,11 @@ public interface ProTaskMapper extends BaseMapper<ProTask> {
      * @param query 查询条件
      * @return
      */
-    Page<TaskDto> getTaskListAndFeedbackCount(IPage<TaskDto> page,@Param(Constants.WRAPPER) Wrapper<TaskDto> query);
+    Page<TaskDTO> getTaskListAndFeedbackCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query);
 
     /**
      * 查询任务，根据工单分组展示数据，并统计领料次数
      * @param query 查询条件
      */
-    Page<TaskDto> getTaskListAndIssueCount(IPage<TaskDto> page,@Param(Constants.WRAPPER) Wrapper<TaskDto> query);
+    Page<TaskDTO> getTaskListAndIssueCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query);
 }

@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TaskDto extends ProTask {
+public class TaskDTO extends ProTask {
     /**
      * 已报工数量
      */
