@@ -1,8 +1,10 @@
 package com.t3rik.mes.wm.service;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.wm.domain.WmIssueHeader;
 import com.t3rik.mes.wm.domain.tx.IssueTxBean;
+import com.t3rik.mes.wm.dto.IssueHeaderAndLineDTO;
 
 import java.util.List;
 
@@ -75,4 +77,11 @@ public interface IWmIssueHeaderService extends IService<WmIssueHeader> {
      * 执行领出
      */
     void execute(Long issueId);
+
+    /**
+     * 查询领料详情
+     *
+     * @param query 查询条件
+     */
+    List<IssueHeaderAndLineDTO> getIssueDetail(Wrapper<IssueHeaderAndLineDTO> query);
 }

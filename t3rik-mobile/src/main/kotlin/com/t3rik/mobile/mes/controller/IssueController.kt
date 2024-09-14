@@ -12,8 +12,9 @@ import com.t3rik.common.exception.BusinessException
 import com.t3rik.common.utils.SecurityUtils
 import com.t3rik.common.utils.StringUtils
 import com.t3rik.mes.pro.domain.ProTask
-import com.t3rik.mes.pro.dto.TaskDto
+import com.t3rik.mes.pro.dto.TaskDTO
 import com.t3rik.mes.pro.service.IProTaskService
+import com.t3rik.mes.wm.dto.IssueHeaderAndLineDTO
 import com.t3rik.mobile.common.ktextend.isNonPositive
 import com.t3rik.mobile.mes.dto.IssueRequestDTO
 import com.t3rik.mobile.mes.service.IIssueService
@@ -40,11 +41,11 @@ class IssueController : BaseController() {
     /**
      * 查询任务列表
      */
-    @ApiOperation("查询报工列表")
+    @ApiOperation("查询领料列表")
     @GetMapping("/list")
     fun getTaskList(task: ProTask): TableDataInfo {
-        val page = getMPPage(TaskDto())
-        val queryWrapper = QueryWrapper<TaskDto>()
+        val page = getMPPage(TaskDTO())
+        val queryWrapper = QueryWrapper<TaskDTO>()
         queryWrapper.likeRight(StringUtils.isNotBlank(task.taskName), "task_name", task.taskName)
         queryWrapper.eq("task_user_id", SecurityUtils.getUserId())
         return getDataTableWithPage(this.proTaskService.getTaskListAndIssueCount(page, queryWrapper))
@@ -59,6 +60,17 @@ class IssueController : BaseController() {
         // 领料申请
         this.issueService.issue(issueRequestDTO)
         return AjaxResult.success()
+    }
+
+    @ApiOperation("领料申请详情")
+    @GetMapping("/getIssueDetail")
+    fun getIssueDetail(query: IssueHeaderAndLineDTO): AjaxResult {
+        if (query.workorderCode.isNullOrBlank()) {
+            throw BusinessException(MsgConstants.PARAM_ERROR)
+        }
+        return AjaxResult.success(
+            this.issueService.getIssueDetail(query)
+        )
     }
 
     /**

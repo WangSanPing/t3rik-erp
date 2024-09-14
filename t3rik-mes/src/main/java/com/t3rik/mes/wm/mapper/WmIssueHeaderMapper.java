@@ -1,9 +1,13 @@
 package com.t3rik.mes.wm.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.t3rik.mes.wm.domain.WmIssueHeader;
 import com.t3rik.mes.wm.domain.tx.IssueTxBean;
+import com.t3rik.mes.wm.dto.IssueHeaderAndLineDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -74,4 +78,10 @@ public interface WmIssueHeaderMapper extends BaseMapper<WmIssueHeader> {
 
     public List<IssueTxBean> getTxBeans(Long issueId);
 
+    /**
+     * 查询领料详情
+     *
+     * @param query 查询条件
+     */
+    List<IssueHeaderAndLineDTO> getIssueDetail(@Param(Constants.WRAPPER) Wrapper<IssueHeaderAndLineDTO> query);
 }

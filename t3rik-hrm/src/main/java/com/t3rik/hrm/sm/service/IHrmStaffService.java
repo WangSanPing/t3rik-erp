@@ -14,11 +14,6 @@ import java.util.List;
  */
 public interface IHrmStaffService extends IService<HrmStaff> {
 
-    /**
-     * 员工审批流程
-     * @param hrmStaff
-     */
-    void process(HrmStaff hrmStaff);
 
     /**
      * 人才登记列表查询

@@ -1,5 +1,6 @@
 package com.t3rik.mobile.mes.service
 
+import com.t3rik.mes.wm.dto.IssueHeaderAndLineDTO
 import com.t3rik.mobile.mes.dto.IssueRequestDTO
 
 
@@ -13,4 +14,9 @@ interface IIssueService {
      * 领料申请
      */
     fun issue(issueRequestDTO: IssueRequestDTO)
+
+    /**
+     * 领料申请详情
+     */
+    fun getIssueDetail(query: IssueHeaderAndLineDTO): MutableList<IssueHeaderAndLineDTO>
 }
