@@ -56,6 +56,11 @@ public class GenTable extends BaseEntity {
     private String tplCategory;
 
     /**
+     * 子系统名称
+     */
+    private String subSystemName;
+
+    /**
      * 生成包路径
      */
     @NotBlank(message = "生成包路径不能为空")
@@ -84,6 +89,7 @@ public class GenTable extends BaseEntity {
      */
     @NotBlank(message = "作者不能为空")
     private String functionAuthor;
+
 
     /**
      * 生成代码方式（0zip压缩包 1自定义路径）
@@ -140,6 +146,14 @@ public class GenTable extends BaseEntity {
      * 上级菜单名称字段
      */
     private String parentMenuName;
+
+    public String getSubSystemName() {
+        return subSystemName;
+    }
+
+    public void setSubSystemName(String subSystemName) {
+        this.subSystemName = subSystemName;
+    }
 
     public Long getTableId() {
         return tableId;
