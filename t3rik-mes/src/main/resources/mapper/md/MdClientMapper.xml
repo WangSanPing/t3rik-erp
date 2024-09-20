@@ -34,10 +34,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="currency"    column="currency"    />
+        <result property="payUp"    column="pay_up"    />
+        <result property="followerMan"    column="follower_man"    />
+        <result property="salesMan"    column="sales_man"    />
     </resultMap>
 
     <sql id="selectMdClientVo">
-        select client_id, client_code, client_name, client_nick, client_en, client_des, client_logo, client_type, address, website, email, tel, contact1, contact1_tel, contact1_email, contact2, contact2_tel, contact2_email, credit_code, enable_flag, remark, attr1, attr2, attr3, attr4, create_by, create_time, update_by, update_time from md_client
+        select client_id, client_code, client_name, client_nick, client_en, client_des, client_logo, client_type, address, website,
+                currency, pay_up, follower_man, sales_man,email, tel, contact1, contact1_tel, contact1_email, contact2, contact2_tel, contact2_email, credit_code, enable_flag, remark, attr1, attr2, attr3, attr4, create_by, create_time, update_by, update_time from md_client
     </sql>
 
     <select id="selectMdClientList" parameterType="MdClient" resultMap="MdClientResult">
@@ -62,6 +67,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="contact2Email != null  and contact2Email != ''"> and contact2_email = #{contact2Email}</if>
             <if test="creditCode != null  and creditCode != ''"> and credit_code = #{creditCode}</if>
             <if test="enableFlag != null  and enableFlag != ''"> and enable_flag = #{enableFlag}</if>
+
+            <if test="currency != null  and currency != ''"> and currency = #{currency}</if>
+            <if test="payUp != null  and payUp != ''"> and pay_up = #{payUp}</if>
+            <if test="followerMan != null  and followerMan != ''"> and follower_man = #{followerMan}</if>
+            <if test="salesMan != null  and salesMan != ''"> and sales_man = #{salesMan}</if>
             and client_id != 0
         </where>
     </select>
@@ -117,6 +127,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
+
+            <if test="currency != null">currency,</if>
+            <if test="payUp != null">  pay_up ,</if>
+            <if test="followerMan">  follower_man ,</if>
+            <if test="salesMan">  sales_man ,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="clientCode != null and clientCode != ''">#{clientCode},</if>
@@ -147,6 +162,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
+
+            <if test="currency != null">#{currency},</if>
+            <if test="payUp != null"> #{payUp},</if>
+            <if test="followerMan"> #{followerMan},</if>
+            <if test="salesMan">  #{salesMan},</if>
          </trim>
     </insert>
 
@@ -181,6 +201,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="currency != null  and currency != ''">  currency = #{currency},</if>
+            <if test="payUp != null  and payUp != ''">  pay_up = #{payUp},</if>
+            <if test="followerMan != null  and followerMan != ''">  follower_man = #{followerMan},</if>
+            <if test="salesMan != null  and salesMan != ''">  sales_man = #{salesMan},</if>
         </trim>
         where client_id = #{clientId}
     </update>

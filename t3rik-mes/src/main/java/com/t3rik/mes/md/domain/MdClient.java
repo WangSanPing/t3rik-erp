@@ -107,7 +107,60 @@ public class MdClient extends BaseEntity
     /** 预留字段4 */
     private Long attr4;
 
-    public void setClientId(Long clientId) 
+
+
+    /** 币别 */
+    @Excel(name = "币别")
+    private String currency;
+
+
+    /** 结账方式 */
+    @Excel(name = "结账方式")
+    private String payUp;
+
+
+    /** 跟单 */
+    @Excel(name = "跟单")
+    private String followerMan;
+
+
+    /** 业务员 */
+    @Excel(name = "业务员")
+    private String salesMan;
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public String getPayUp() {
+        return payUp;
+    }
+
+    public void setPayUp(String payUp) {
+        this.payUp = payUp;
+    }
+
+    public String getFollowerMan() {
+        return followerMan;
+    }
+
+    public void setFollowerMan(String followerMan) {
+        this.followerMan = followerMan;
+    }
+
+    public String getSalesMan() {
+        return salesMan;
+    }
+
+    public void setSalesMan(String salesMan) {
+        this.salesMan = salesMan;
+    }
+
+    public void setClientId(Long clientId)
     {
         this.clientId = clientId;
     }
