@@ -24,6 +24,7 @@
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
         <result property="remark" column="remark"/>
+        <result column="sub_system_name" property="subSystemName"/>
         <collection property="columns" javaType="java.util.List" resultMap="GenTableColumnResult"/>
     </resultMap>
 
@@ -72,7 +73,8 @@
                create_time,
                update_by,
                update_time,
-               remark
+               remark,
+            sub_system_name
         from gen_table
     </sql>
 
@@ -94,6 +96,7 @@
                 AND date_format(create_time, '%y%m%d') &lt;= date_format(#{params.endTime}, '%y%m%d')
             </if>
         </where>
+        order by update_time desc
     </select>
 
     <select id="selectDbTableList" parameterType="GenTable" resultMap="GenTableResult">
@@ -173,7 +176,8 @@
                c.query_type,
                c.html_type,
                c.dict_type,
-               c.sort
+               c.sort,
+               t.sub_system_name
         FROM gen_table t
                  LEFT JOIN gen_table_column c ON t.table_id = c.table_id
         where t.table_id = #{tableId}
@@ -213,7 +217,8 @@
                c.query_type,
                c.html_type,
                c.dict_type,
-               c.sort
+               c.sort,
+        t.sub_system_name
         FROM gen_table t
                  LEFT JOIN gen_table_column c ON t.table_id = c.table_id
         where t.table_name = #{tableName}
@@ -251,7 +256,8 @@
                c.query_type,
                c.html_type,
                c.dict_type,
-               c.sort
+               c.sort,
+               t.sub_system_name
         FROM gen_table t
                  LEFT JOIN gen_table_column c ON t.table_id = c.table_id
         order by c.sort
@@ -264,6 +270,9 @@
         </if>
         <if test="tableComment != null and tableComment != ''">
             table_comment,
+        </if>
+        <if test="subSystemName != null and subSystemName != ''">
+            sub_system_name,
         </if>
         <if test="className != null and className != ''">
             class_name,
@@ -304,6 +313,9 @@
         </if>
         <if test="tableComment != null and tableComment != ''">
             #{tableComment},
+        </if>
+        <if test="subSystemName != null and subSystemName != ''">
+            #{subSystemName},
         </if>
         <if test="className != null and className != ''">
             #{className},
@@ -349,6 +361,9 @@
             </if>
             <if test="tableComment != null and tableComment != ''">
                 table_comment = #{tableComment},
+            </if>
+            <if test="subSystemName != null and subSystemName != ''">
+                sub_system_name = #{subSystemName},
             </if>
             <if test="subTableName != null">
                 sub_table_name = #{subTableName},
