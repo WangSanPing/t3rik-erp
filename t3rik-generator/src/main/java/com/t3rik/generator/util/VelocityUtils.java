@@ -70,7 +70,7 @@ public class VelocityUtils {
         // 前端拼写集合list变量使用的字符串
         velocityContext.put("camelBusinessName", camelStr);
         // 前端拼写引入时时候,代表erp中的某个子系统
-        velocityContext.put("subSystemName", "mes");
+        velocityContext.put("subSystemName", genTable.getSubSystemName());
         velocityContext.put("basePackage", getPackagePrefix(packageName));
         velocityContext.put("packageName", packageName);
         velocityContext.put("author", genTable.getFunctionAuthor());

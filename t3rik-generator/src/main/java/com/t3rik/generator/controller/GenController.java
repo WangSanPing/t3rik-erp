@@ -10,6 +10,7 @@ import com.t3rik.generator.domain.GenTable;
 import com.t3rik.generator.domain.GenTableColumn;
 import com.t3rik.generator.service.IGenTableColumnService;
 import com.t3rik.generator.service.IGenTableService;
+import jakarta.annotation.Resource;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,10 +31,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/tool/gen")
 public class GenController extends BaseController {
-    @Autowired
+    @Resource
     private IGenTableService genTableService;
 
-    @Autowired
+    @Resource
     private IGenTableColumnService genTableColumnService;
 
     /**
