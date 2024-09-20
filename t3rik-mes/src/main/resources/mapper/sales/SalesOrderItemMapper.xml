@@ -29,6 +29,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="saleSgqty"    column="sale_sgqty"    />
         <result property="remark"    column="remark"    />
         <result property="workorderId"    column="workorder_id"    />
+        <result property="clientCode"    column="client_code"    />
+        <result property="clientName"    column="client_name"    />
         <result property="createUserId"    column="create_user_id"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
@@ -42,7 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectSalesOrderItemVo">
-        select sales_order_Item_id,sales_order_item_code,sales_order_code,sales_order_id, product_id, product_code, product_name, product_spec, quality, color_code, color_name, workorder_code,workorder_name,status,sales_order_quantity,
+        select sales_order_Item_id,sales_order_item_code,sales_order_code,sales_order_id, product_id, client_code, client_po_code, client_name,product_code, product_name, product_spec, quality, color_code, color_name, workorder_code,workorder_name,status,sales_order_quantity,
                unit_of_measure, sales_order_date,delivery_date, client_product_name, stock_num, sale_qty, sale_thqty, sale_sgqty,owe_qty, remark, workorder_id, create_user_id, create_by, create_time, update_user_id, update_by, update_time from sales_order_item
     </sql>
 

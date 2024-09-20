@@ -19,7 +19,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="address"    column="address"    />
         <result property="totalAmount"    column="total_amount"    />
         <result property="weight"    column="weight"    />
-        <result property="tolal"    column="tolal"    />
+        <result property="total"    column="total"    />
+        <result property="totalPic"    column="total_pic"    />
         <result property="currency"    column="currency"    />
         <result property="payUp"    column="pay_up"    />
         <result property="followerMan"    column="follower_man"    />
@@ -84,7 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTranOrdeVo">
-        select tran_order_id, tran_order_code, warehouse_id,warehouse_name,tran_order_type,tran_date, status, client_id, client_code, client_name,address, total_amount, weight, tolal, currency, pay_up, follower_man, bus_man, attr1, attr2, attr3, attr4, create_user_id, create_by, create_time, update_user_id, update_by, update_time, remark from tran_order
+        select tran_order_id, tran_order_code, warehouse_id,total_pic,warehouse_name,tran_order_type,tran_date, status, client_id, client_code, client_name,address, total_amount, weight, tolal, currency, pay_up, follower_man, bus_man, attr1, attr2, attr3, attr4, create_user_id, create_by, create_time, update_user_id, update_by, update_time, remark from tran_order
     </sql>
 
 </mapper>

@@ -105,10 +105,25 @@ public class TranOrderController extends BaseController {
     public AjaxResult edit(@RequestBody TranOrder tranOrder) {
         this.tranOrderService.updateById(tranOrder);
         if(tranOrder.getTranOrderLineList().size()>0){
+            tranOrder.getTranOrderLineList().forEach(object -> object.setStatus(tranOrder.getStatus()));
             tranOrderLineService.updateBatchById(tranOrder.getTranOrderLineList());
         }
         return success();
     }
+//    /**
+//     * 修改销售送货单
+//     */
+//    @PreAuthorize("@ss.hasPermi('sales:tranOrder:review')")
+//    @Log(title = "销售送货单", businessType = BusinessType.UPDATE)
+//    @PutMapping("/review")
+//    @Transactional
+//    public AjaxResult review(@RequestBody TranOrder tranOrder) {
+//        this.tranOrderService.updateById(tranOrder);
+//        if(tranOrder.getTranOrderLineList().size()>0){
+//            tranOrderLineService.updateBatchById(tranOrder.getTranOrderLineList());
+//        }
+//        return success();
+//    }
 
     /**
      * 删除销售送货单
@@ -131,7 +146,30 @@ public class TranOrderController extends BaseController {
         }
         return  AjaxResult.error(sb.toString());
     }
+    /**
+     * 审批（提交、拒绝）
+     */
+    @PreAuthorize("@ss.hasPermi('sales:order:edit')")
+    @Log(title = "销售订单审批", businessType = BusinessType.UPDATE)
+    @Transactional
+    @PutMapping("/refuse/{tranOrderId},{status}")
+    public AjaxResult refuse(@PathVariable("tranOrderId") Long tranOrderId,@PathVariable("status") String status) {
+        if (StringUtils.isNull(tranOrderId)) {
+            return AjaxResult.error("请先保存单据");
+        }
+        TranOrder tranOrder=this.tranOrderService.getById(tranOrderId);
+        // 审批拒绝/提交
+        this.tranOrderService.lambdaUpdate()
+                .set(TranOrder::getStatus, status)
+                .eq(TranOrder::getTranOrderId, tranOrderId)
+                .update();
+        if(tranOrder.getTranOrderLineList().size()>0){
+            tranOrder.getTranOrderLineList().forEach(object -> object.setStatus(status));
+        }
+        tranOrderLineService.updateBatchById(tranOrder.getTranOrderLineList());
 
+        return AjaxResult.success();
+    }
 
     /**
      * 获取查询条件
@@ -147,7 +185,6 @@ public class TranOrderController extends BaseController {
         queryWrapper.like(StringUtils.isNotEmpty(tranOrde.getClientName()), TranOrder::getClientName, tranOrde.getClientName());
         queryWrapper.eq(tranOrde.getTotalAmount() != null, TranOrder::getTotalAmount, tranOrde.getTotalAmount());
         queryWrapper.eq(tranOrde.getWeight() != null, TranOrder::getWeight, tranOrde.getWeight());
-        queryWrapper.eq(tranOrde.getTolal() != null, TranOrder::getTolal, tranOrde.getTolal());
         queryWrapper.eq(tranOrde.getCurrency() != null, TranOrder::getCurrency, tranOrde.getCurrency());
         queryWrapper.eq(tranOrde.getPayUp() != null, TranOrder::getPayUp, tranOrde.getPayUp());
         queryWrapper.like(StringUtils.isNotEmpty(tranOrde.getFollowerMan()), TranOrder::getFollowerMan, tranOrde.getFollowerMan());

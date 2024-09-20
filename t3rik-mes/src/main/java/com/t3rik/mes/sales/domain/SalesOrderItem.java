@@ -136,6 +136,22 @@ public class SalesOrderItem extends BaseEntity
     @Excel(name = "工单编码")
     private String workorderCode;
 
+
+    /** 客户编码 */
+    @Excel(name = "客户编码")
+    private String clientCode;
+
+
+    /** 客户PO号 */
+    @Excel(name = "客户PO号")
+    private String clientPoCode;
+
+
+    /** 客户名称 */
+    @Excel(name = "客户名称")
+    private String clientName;
+
+
     /** 订单状态 */
     @Excel(name = "订单状态")
     private String status;

@@ -13,12 +13,12 @@ import cn.hutool.core.lang.Assert;
 import com.t3rik.common.constant.MsgConstants;
 import com.t3rik.common.core.domain.CheckInfo;
 import com.t3rik.common.enums.mes.ClientOrderStatusEnum;
+import com.t3rik.common.enums.mes.OrderStatusEnum;
 import com.t3rik.common.exception.BusinessException;
+import com.t3rik.mes.api.service.IMesWorkOrderService;
 import com.t3rik.mes.md.domain.MdProductBom;
 import com.t3rik.mes.md.service.IMdProductBomService;
-import com.t3rik.mes.pro.domain.ProClientOrder;
-import com.t3rik.mes.pro.domain.ProClientOrderItem;
-import com.t3rik.mes.pro.domain.ProWorkorder;
+import com.t3rik.mes.pro.domain.*;
 import com.t3rik.mes.pro.service.IProClientOrderItemService;
 import com.t3rik.mes.pro.service.IProWorkorderService;
 import com.t3rik.mes.pro.service.impl.ProClientOrderServiceImpl;
@@ -29,6 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -66,6 +67,11 @@ public class SalesOrderController extends BaseController {
     private ProClientOrderServiceImpl proClientOrderService;
     @Autowired
     private IMdProductBomService productBomService;
+    @Resource
+    private IProClientOrderItemService proClientOrderItemService;
+    @Resource
+    private IMesWorkOrderService mesWorkOrderService;
+
     /**
      * 查询销售订单列表
      */
@@ -102,11 +108,11 @@ public class SalesOrderController extends BaseController {
     @GetMapping(value = "/{salesOrderId}")
     public AjaxResult getInfo(@PathVariable("salesOrderId") Long salesOrderId) {
         SalesOrder salesOrder=this.salesOrderService.getById(salesOrderId);
-
-        LambdaQueryWrapper<SalesOrderItem> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(salesOrder.getSalesOrderId() != null, SalesOrderItem::getSalesOrderId, salesOrder.getSalesOrderId());
-        List<SalesOrderItem> orderItemList= salesOrderItemService.list(queryWrapper);
-        salesOrder.setSalesOrderItemList(orderItemList);
+        // 查询是否已经添加销售列
+        List<SalesOrderItem> itemList = this.salesOrderItemService.lambdaQuery()
+                .eq(SalesOrderItem::getSalesOrderId, salesOrder.getSalesOrderId())
+                .list();
+        salesOrder.setSalesOrderItemList(itemList);
         return AjaxResult.success(salesOrder);
     }
 
@@ -129,9 +135,6 @@ public class SalesOrderController extends BaseController {
     @PutMapping
     public AjaxResult edit(@RequestBody SalesOrder salesOrder) {
         this.salesOrderService.updateById(salesOrder);
-        if(salesOrder.getSalesOrderItemList().size()>0){
-            salesOrderItemService.updateBatchById(salesOrder.getSalesOrderItemList());
-        }
         return success();
     }
 
@@ -161,7 +164,7 @@ public class SalesOrderController extends BaseController {
     /**
      * 查询销售订单产品列列表
      */
-//    @PreAuthorize("@ss.hasPermi('sales:item:selectItem')")
+    @PreAuthorize("@ss.hasPermi('sales:item:selectItem')")
     @GetMapping("/selectItem")
     public TableDataInfo Itemlist(SalesOrder salesOrder) {
         // 获取查询条件
@@ -181,73 +184,121 @@ public class SalesOrderController extends BaseController {
         }
         return getDataTable(itemList);
     }
+    /**
+     * 审批（提交、拒绝）
+     */
+    @PreAuthorize("@ss.hasPermi('sales:order:edit')")
+    @Log(title = "销售订单审批", businessType = BusinessType.UPDATE)
+    @Transactional
+    @PutMapping("/refuse/{salesOrderId},{status}")
+    public AjaxResult refuse(@PathVariable("salesOrderId") Long salesOrderId,@PathVariable("status") String status) {
+        if (StringUtils.isNull(salesOrderId)) {
+            return AjaxResult.error("请先保存单据");
+        }
+        SalesOrder salesOrder=this.salesOrderService.getById(salesOrderId);
+        // 审批拒绝/提交
+        this.salesOrderService.lambdaUpdate()
+                .set(SalesOrder::getStatus, status)
+                .eq(SalesOrder::getSalesOrderId, salesOrderId)
+                .update();
+        if(salesOrder.getSalesOrderItemList().size()>0){
+            salesOrder.getSalesOrderItemList().forEach(object -> object.setStatus(status));
+        }
+        salesOrderItemService.updateBatchById(salesOrder.getSalesOrderItemList());
 
-//    /**
-//     * 生成生产订单
-//     */
-//    @PreAuthorize("@ss.hasPermi('sales:order:add')")
-//    @Log(title = "客户订单", businessType = BusinessType.INSERT)
-//    @PostMapping("/generateWorkOrder/{clientOrderId}")
-//    public AjaxResult generateWorkOrder(@PathVariable("clientOrderId") String clientOrderId) {
-//        SalesOrder salesOrder = this.salesOrderService.getById(clientOrderId);
-//        // 数据校验
-//        CheckInfo check = this.check(salesOrder);
-//        // 未通过校验
-//        Assert.isTrue(check.getIsCheckPassed(), () -> new BusinessException(check.getMsg()));
-//        ProWorkorder workOrder = this.salesOrderService.generateWorkOrder(salesOrder);
-//        return AjaxResult.success(workOrder);
-//    }
-//
-//    /**
-//     * 生成生产订单数据校验方法
-//     */
-//    private CheckInfo check(SalesOrder salesOrder) {
-//        CheckInfo checkInfo = new CheckInfo();
-//        // 默认未通过
-//        checkInfo.setIsCheckPassed(Boolean.FALSE);
-//        if (salesOrder == null) {
-//            checkInfo.setMsg(MsgConstants.PARAM_ERROR);
-//            return checkInfo;
-//        }
-//        // 查询是否已经添加需求物料数据
-//        List<SalesOrderItem> itemList = this.salesOrderItemService.lambdaQuery()
-//                .eq(SalesOrderItem::getSalesOrderId, salesOrder.getSalesOrderId())
-//                .list();
-//        if (CollectionUtil.isEmpty(itemList)) {
-//            checkInfo.setMsg("未添加物料需求数据的客户订单,不允许生成生产订单");
-//            return checkInfo;
-//        }
-//
-////        // 最多只能添加4条数据,对应4个级别
-////        if (itemList.size() > 4) {
-////            checkInfo.setMsg("最多只能添加4行数据");
-////            return checkInfo;
-////        }
-//
-//        // 校验层级是否为空
-////        List<ProClientOrderItem> levelList = itemList.stream().filter(f -> StringUtils.isBlank(f.getLevel())).toList();
-////        if (CollectionUtil.isNotEmpty(levelList)) {
-////            checkInfo.setMsg("存在层级为空的数据,不允许生成生产订单");
-////            return checkInfo;
-////        }
-//
-//        // 校验已经添加的需求物料数据中,数量是否有0的数据,如果有,不允许生成生产订单
-//        List<SalesOrderItem> zeroQuantityList = itemList.stream().filter(f -> f.getSalesOrderQuantity().equals(new BigDecimal(0))).toList();
-//        if (CollectionUtil.isNotEmpty(zeroQuantityList)) {
-//            checkInfo.setMsg("订单中,存在订货数量0的数据,不允许生成生产订单");
-//            return checkInfo;
-//        }
-//
-//        // 校验是否已经生成过生产订单
-//        if (ClientOrderStatusEnum.WORK_ORDER_FINISHED.getCode().equals(salesOrder.getStatus())) {
-//            String msg = MessageFormat.format("已经生成过生产订单(生成订单的编号为:{0}),不允许再次生成", salesOrder.getWorkorderCode());
-//            checkInfo.setMsg(msg);
-//            return checkInfo;
-//        }
-//        // 校验通过
-//        checkInfo.setIsCheckPassed(Boolean.TRUE);
-//        return checkInfo;
-//    }
+        return AjaxResult.success();
+    }
+
+    /**
+     * 生成生产订单
+     */
+    @PreAuthorize("@ss.hasPermi('sales:order:execute')")
+    @Log(title = "客户订单", businessType = BusinessType.INSERT)
+    @PostMapping("/execute/{salesOrderId}")
+    public AjaxResult generateWorkOrder(@PathVariable("salesOrderId") String salesOrderId) throws Exception {
+        SalesOrder salesOrder = this.salesOrderService.getById(salesOrderId);
+        // 查询是否已经添加销售列
+        List<SalesOrderItem> itemList = this.salesOrderItemService.lambdaQuery()
+                .eq(SalesOrderItem::getSalesOrderId, salesOrder.getSalesOrderId())
+                .list();
+        salesOrder.setSalesOrderItemList(itemList);
+        // 数据校验
+        CheckInfo check = this.check(salesOrder);
+        // 未通过校验
+        Assert.isTrue(check.getIsCheckPassed(), () -> new BusinessException(check.getMsg()));
+        List<ProWorkorder> workOrders = this.salesOrderService.execute(salesOrder);
+        return AjaxResult.success(workOrders);
+    }
+
+    /**
+     * 推送mes
+     */
+    @PreAuthorize("@ss.hasPermi('sales:order:push')")
+    @Log(title = "客户订单", businessType = BusinessType.INSERT)
+    @PostMapping("/push/{salesOrderId}")
+    public AjaxResult push(@PathVariable("salesOrderId") String salesOrderId) throws Exception {
+        SalesOrder salesOrder = this.salesOrderService.getById(salesOrderId);
+        // 查询是否已经添加销售列
+        List<SalesOrderItem> itemList = this.salesOrderItemService.lambdaQuery()
+                .eq(SalesOrderItem::getSalesOrderId, salesOrder.getSalesOrderId())
+                .list();
+        salesOrder.setSalesOrderItemList(itemList);
+        // 数据校验
+        CheckInfo check = this.check(salesOrder);
+        // 未通过校验
+        Assert.isTrue(check.getIsCheckPassed(), () -> new BusinessException(check.getMsg()));
+
+        return AjaxResult.success(mesWorkOrderService.pushMesWorkOrder(salesOrder));
+    }
+
+    /**
+     * 生成生产订单数据校验方法
+     */
+    private CheckInfo check(SalesOrder salesOrder) {
+        CheckInfo checkInfo = new CheckInfo();
+        // 默认未通过
+        checkInfo.setIsCheckPassed(Boolean.FALSE);
+        if (salesOrder == null) {
+            checkInfo.setMsg(MsgConstants.PARAM_ERROR);
+            return checkInfo;
+        }
+        // 查询是否已经添加销售列
+        List<SalesOrderItem> itemList = salesOrder.getSalesOrderItemList();
+        if (CollectionUtil.isEmpty(itemList)) {
+            checkInfo.setMsg("此单据下没有销售列,不允许生成生产订单");
+            return checkInfo;
+        }
+        itemList.stream().forEach(f->{
+            // 查询是否已经添加需求物料数据
+            List<ProClientOrderItem> list = this.proClientOrderItemService.lambdaQuery()
+                    .eq(ProClientOrderItem::getClientOrderId, f.getSalesOrderItemId())
+                    .list();
+            if (CollectionUtil.isEmpty(itemList)) {
+                checkInfo.setMsg("未添加物料需求数据的客户订单,不允许生成生产订单");
+            }else{
+                checkInfo.setIsCheckPassed(Boolean.TRUE);
+            }
+        });
+
+        // 校验已经添加的需求物料数据中,数量是否有0的数据,如果有,不允许生成生产订单
+        List<SalesOrderItem> zeroQuantityList = itemList.stream().filter(f -> f.getSalesOrderQuantity().equals(new BigDecimal(0))).toList();
+        if (CollectionUtil.isNotEmpty(zeroQuantityList)) {
+            checkInfo.setMsg("订单中,存在订货数量0的数据,不允许生成生产订单");
+            return checkInfo;
+        }
+
+        itemList.stream().forEach(f ->{
+            if(f.getWorkorderCode()!=null){
+                String msg = MessageFormat.format("已经生成过生产订单(生成订单的编号为:{0}),不允许再次生成", f.getWorkorderCode());
+                checkInfo.setMsg(msg);
+            }else {
+                // 校验通过
+                checkInfo.setIsCheckPassed(Boolean.TRUE);
+            }
+        });
+
+        return checkInfo;
+    }
     /**
     * 获取查询条件
     */

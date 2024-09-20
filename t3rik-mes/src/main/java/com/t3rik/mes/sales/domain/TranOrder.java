@@ -6,6 +6,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.t3rik.common.annotation.Excel;
 import com.t3rik.common.core.domain.BaseEntity;
 import com.t3rik.common.enums.EnableFlagEnum;
@@ -46,6 +47,7 @@ public class TranOrder extends BaseEntity
 
     /** 日期 */
     @Excel(name = "日期")
+    @JsonFormat(pattern = "yyyy-MM-dd HH")
     private String tranDate;
 
 
@@ -84,8 +86,11 @@ public class TranOrder extends BaseEntity
 
     /** 总件数 */
     @Excel(name = "总件数")
-    private Long tolal;
+    private Long totalPic;
 
+    /** 总数量 */
+    @Excel(name = "总数量")
+    private BigDecimal total;
 
     /** 币别 */
     @Excel(name = "币别")
