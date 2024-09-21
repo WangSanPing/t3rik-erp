@@ -189,7 +189,7 @@ public class SalesOrderServiceImpl  extends ServiceImpl<SalesOrderMapper, SalesO
         salesOrderItemUpdate.setWorkorderCode(workorder.getWorkorderCode());
         salesOrderItemUpdate.setWorkorderName(workorder.getWorkorderName());
         // 订单状态变为已生成生成订单
-        salesOrderItemUpdate.setStatus(ClientOrderStatusEnum.WORK_ORDER_FINISHED.getCode());
+        salesOrderItemUpdate.setStatus(OrderStatusEnum.WORK_ORDER_FINISHED.getCode());
         return salesOrderItemUpdate;
     }
 

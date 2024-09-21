@@ -63,10 +63,7 @@ public class SalesOrderController extends BaseController {
     private ISalesOrderService salesOrderService;
     @Autowired
     private ISalesOrderItemService salesOrderItemService;
-    @Autowired
-    private ProClientOrderServiceImpl proClientOrderService;
-    @Autowired
-    private IMdProductBomService productBomService;
+
     @Resource
     private IProClientOrderItemService proClientOrderItemService;
     @Resource
@@ -97,7 +94,7 @@ public class SalesOrderController extends BaseController {
         // 获取查询条件
         LambdaQueryWrapper<SalesOrder> queryWrapper = getQueryWrapper(salesOrder);
         List<SalesOrder> list = this.salesOrderService.list(queryWrapper);
-        ExcelUtil<SalesOrder> util = new ExcelUtil<SalesOrder>(SalesOrder. class);
+        ExcelUtil<SalesOrder> util = new ExcelUtil<SalesOrder>(SalesOrder.class);
         util.exportExcel(response, list, "销售订单数据");
     }
 
@@ -107,7 +104,7 @@ public class SalesOrderController extends BaseController {
     @PreAuthorize("@ss.hasPermi('sales:order:query')")
     @GetMapping(value = "/{salesOrderId}")
     public AjaxResult getInfo(@PathVariable("salesOrderId") Long salesOrderId) {
-        SalesOrder salesOrder=this.salesOrderService.getById(salesOrderId);
+        SalesOrder salesOrder = this.salesOrderService.getById(salesOrderId);
         // 查询是否已经添加销售列
         List<SalesOrderItem> itemList = this.salesOrderItemService.lambdaQuery()
                 .eq(SalesOrderItem::getSalesOrderId, salesOrder.getSalesOrderId())
@@ -134,7 +131,14 @@ public class SalesOrderController extends BaseController {
     @Log(title = "销售订单", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SalesOrder salesOrder) {
+        if (salesOrder.getStatus().equals(OrderStatusEnum.REFUSE.getCode())) {
+            salesOrder.setStatus(OrderStatusEnum.APPROVING.getCode());
+        }
         this.salesOrderService.updateById(salesOrder);
+        if (salesOrder.getSalesOrderItemList().size() > 0) {
+            salesOrder.getSalesOrderItemList().forEach(object -> object.setStatus(salesOrder.getStatus()));
+            salesOrderItemService.updateBatchById(salesOrder.getSalesOrderItemList());
+        }
         return success();
     }
 
@@ -145,22 +149,23 @@ public class SalesOrderController extends BaseController {
     @Log(title = "销售订单", businessType = BusinessType.DELETE)
     @DeleteMapping("/{salesOrderIds}")
     public AjaxResult remove(@PathVariable List<Long> salesOrderIds) {
-        List<SalesOrder> salesOrders=salesOrderService.listByIds(salesOrderIds);
-        StringBuffer sb=new StringBuffer();
-        for (SalesOrder li:salesOrders){
+        List<SalesOrder> salesOrders = salesOrderService.listByIds(salesOrderIds);
+        StringBuffer sb = new StringBuffer();
+        for (SalesOrder li : salesOrders) {
             LambdaQueryWrapper<SalesOrderItem> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(SalesOrderItem::getSalesOrderId, li.getSalesOrderId());
-            List<SalesOrderItem> orderItemList= salesOrderItemService.list(queryWrapper);
-            if(orderItemList.size()>0){
-                sb.append("销售订单"+li.getSalesOrderCode()+"下还有未删除的清单，不允许删除"+"\n");
-            }else{
-                return toAjax( this.salesOrderService.removeByIds(salesOrderIds));
+            List<SalesOrderItem> orderItemList = salesOrderItemService.list(queryWrapper);
+            if (orderItemList.size() > 0) {
+                sb.append("销售订单" + li.getSalesOrderCode() + "下还有未删除的清单，不允许删除" + "\n");
+            } else {
+                return toAjax(this.salesOrderService.removeByIds(salesOrderIds));
             }
         }
-        return  AjaxResult.error(sb.toString());
+        return AjaxResult.error(sb.toString());
 
 
     }
+
     /**
      * 查询销售订单产品列列表
      */
@@ -169,21 +174,22 @@ public class SalesOrderController extends BaseController {
     public TableDataInfo Itemlist(SalesOrder salesOrder) {
         // 获取查询条件
         LambdaQueryWrapper<SalesOrder> queryWrapper = getQueryWrapper(salesOrder);
-        List<SalesOrder>salesOrderList=this.salesOrderService.list(queryWrapper);
+        List<SalesOrder> salesOrderList = this.salesOrderService.list(queryWrapper);
 
-        List<SalesOrderItem> items=salesOrderItemService.list();
+        List<SalesOrderItem> items = salesOrderItemService.list();
 
-        List<SalesOrderItem> itemList=new ArrayList<>();
+        List<SalesOrderItem> itemList = new ArrayList<>();
 
-        for(SalesOrder li:salesOrderList){
-            for(SalesOrderItem item:items){
-                if(item.getSalesOrderId().equals(li.getSalesOrderId())){
+        for (SalesOrder li : salesOrderList) {
+            for (SalesOrderItem item : items) {
+                if (item.getSalesOrderId().equals(li.getSalesOrderId())) {
                     itemList.add(item);
                 }
             }
         }
         return getDataTable(itemList);
     }
+
     /**
      * 审批（提交、拒绝）
      */
@@ -191,17 +197,17 @@ public class SalesOrderController extends BaseController {
     @Log(title = "销售订单审批", businessType = BusinessType.UPDATE)
     @Transactional
     @PutMapping("/refuse/{salesOrderId},{status}")
-    public AjaxResult refuse(@PathVariable("salesOrderId") Long salesOrderId,@PathVariable("status") String status) {
+    public AjaxResult refuse(@PathVariable("salesOrderId") Long salesOrderId, @PathVariable("status") String status) {
         if (StringUtils.isNull(salesOrderId)) {
             return AjaxResult.error("请先保存单据");
         }
-        SalesOrder salesOrder=this.salesOrderService.getById(salesOrderId);
+        SalesOrder salesOrder = this.salesOrderService.getById(salesOrderId);
         // 审批拒绝/提交
         this.salesOrderService.lambdaUpdate()
                 .set(SalesOrder::getStatus, status)
                 .eq(SalesOrder::getSalesOrderId, salesOrderId)
                 .update();
-        if(salesOrder.getSalesOrderItemList().size()>0){
+        if (salesOrder.getSalesOrderItemList().size() > 0) {
             salesOrder.getSalesOrderItemList().forEach(object -> object.setStatus(status));
         }
         salesOrderItemService.updateBatchById(salesOrder.getSalesOrderItemList());
@@ -210,7 +216,7 @@ public class SalesOrderController extends BaseController {
     }
 
     /**
-     * 生成生产订单
+     * 审批通过并生成生产订单
      */
     @PreAuthorize("@ss.hasPermi('sales:order:execute')")
     @Log(title = "客户订单", businessType = BusinessType.INSERT)
@@ -268,14 +274,14 @@ public class SalesOrderController extends BaseController {
             checkInfo.setMsg("此单据下没有销售列,不允许生成生产订单");
             return checkInfo;
         }
-        itemList.stream().forEach(f->{
+        itemList.stream().forEach(f -> {
             // 查询是否已经添加需求物料数据
             List<ProClientOrderItem> list = this.proClientOrderItemService.lambdaQuery()
                     .eq(ProClientOrderItem::getClientOrderId, f.getSalesOrderItemId())
                     .list();
             if (CollectionUtil.isEmpty(itemList)) {
                 checkInfo.setMsg("未添加物料需求数据的客户订单,不允许生成生产订单");
-            }else{
+            } else {
                 checkInfo.setIsCheckPassed(Boolean.TRUE);
             }
         });
@@ -287,11 +293,11 @@ public class SalesOrderController extends BaseController {
             return checkInfo;
         }
 
-        itemList.stream().forEach(f ->{
-            if(f.getWorkorderCode()!=null){
+        itemList.stream().forEach(f -> {
+            if (f.getWorkorderCode() != null) {
                 String msg = MessageFormat.format("已经生成过生产订单(生成订单的编号为:{0}),不允许再次生成", f.getWorkorderCode());
                 checkInfo.setMsg(msg);
-            }else {
+            } else {
                 // 校验通过
                 checkInfo.setIsCheckPassed(Boolean.TRUE);
             }
@@ -299,14 +305,15 @@ public class SalesOrderController extends BaseController {
 
         return checkInfo;
     }
+
     /**
-    * 获取查询条件
-    */
+     * 获取查询条件
+     */
     public LambdaQueryWrapper<SalesOrder> getQueryWrapper(SalesOrder salesOrder) {
         LambdaQueryWrapper<SalesOrder> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(StringUtils.isNotEmpty(salesOrder.getSalesOrderCode()), SalesOrder::getSalesOrderCode, salesOrder.getSalesOrderCode());
         queryWrapper.like(StringUtils.isNotEmpty(salesOrder.getSalesOrderName()), SalesOrder::getSalesOrderName, salesOrder.getSalesOrderName());
-        Optional.ofNullable(salesOrder.getStatus()).ifPresent(status -> queryWrapper.eq( SalesOrder::getStatus, salesOrder.getStatus()));
+        Optional.ofNullable(salesOrder.getStatus()).ifPresent(status -> queryWrapper.eq(SalesOrder::getStatus, salesOrder.getStatus()));
         queryWrapper.like(StringUtils.isNotEmpty(salesOrder.getClientCode()), SalesOrder::getClientCode, salesOrder.getClientCode());
         queryWrapper.eq(salesOrder.getClientPoCode() != null, SalesOrder::getClientPoCode, salesOrder.getClientPoCode());
         queryWrapper.like(StringUtils.isNotEmpty(salesOrder.getClientName()), SalesOrder::getClientName, salesOrder.getClientName());
@@ -321,7 +328,7 @@ public class SalesOrderController extends BaseController {
         // 默认创建时间倒序
         queryWrapper.orderByDesc(SalesOrder::getCreateTime);
         Map<String, Object> params = salesOrder.getParams();
-        queryWrapper.between(params.get("beginTime") != null && params.get("endTime") != null,SalesOrder::getCreateTime, params.get("beginTime"), params.get("endTime"));
+        queryWrapper.between(params.get("beginTime") != null && params.get("endTime") != null, SalesOrder::getCreateTime, params.get("beginTime"), params.get("endTime"));
         return queryWrapper;
     }
 }

@@ -3,6 +3,7 @@ package com.t3rik.mes.sales.service;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.mes.sales.domain.TranOrder;
 
 /**
@@ -15,4 +16,5 @@ public interface ITranOrderService extends IService<TranOrder> {
 
     public void saveTranOrder(TranOrder tranOrder);
 
+    public AjaxResult execute(TranOrder tranOrder) throws Exception;
 }
