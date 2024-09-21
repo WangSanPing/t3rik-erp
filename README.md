@@ -6,10 +6,10 @@
 <p align="center">
 <a href='https://gitee.com/wangsanping/t3rik-erp/stargazers'><img src='https://gitee.com/wangsanping/t3rik-erp/badge/star.svg?theme=dark' alt='star'></img></a>
         <a href="https://spring.io/projects/spring-boot">
-            <img src="https://img.shields.io/badge/spring-boot-3-green.svg" alt="spring-boot">
+            <img src="https://img.shields.io/badge/spring--boot-3-green.svg" alt="spring-boot">
         </a>
         <a href="https://baomidou.com/">
-            <img src="https://img.shields.io/badge/mybatis-plus-3.5.3.2-blue.svg" alt="mybatis-plus">
+            <img src="https://img.shields.io/badge/mybatis--plus-3.5.3.2-blue.svg" alt="mybatis-plus">
         </a> 
 </p>
 
