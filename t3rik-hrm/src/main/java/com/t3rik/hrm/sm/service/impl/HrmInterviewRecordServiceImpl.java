@@ -52,8 +52,6 @@ public class HrmInterviewRecordServiceImpl extends ServiceImpl<HrmInterviewRecor
                         dto.setParentId(k);
                         // 当前员工状态
                         dto.setStatus(v.get(0).getCurrentStatus());
-                        // 面试次数
-                        dto.setTimes(v.size());
                         // 取最新的面试定级
                         v.stream()
                                 .filter(f -> StringUtils.isNotBlank(f.getRankType()))
@@ -70,6 +68,8 @@ public class HrmInterviewRecordServiceImpl extends ServiceImpl<HrmInterviewRecor
                                 .filter(f -> f.getTimeForInterview() != null)
                                 .sorted(Comparator.comparing(HrmInterviewRecord::getTimeForInterview).reversed())
                                 .toList();
+                        // 面试次数
+                        dto.setTimes(recordDTOList.size());
                         dto.setChildren(recordDTOList);
                         // 最新的面试反馈
                         if (CollectionUtils.isNotEmpty(recordDTOList)) {
