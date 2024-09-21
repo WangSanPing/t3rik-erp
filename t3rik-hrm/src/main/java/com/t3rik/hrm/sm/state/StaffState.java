@@ -32,7 +32,7 @@ public enum StaffState {
      */
     INTERVIEW(
             StaffActionEnum.INTERVIEW_ACTION,
-            List.of(StaffStatusEnum.ALTERNATE, StaffStatusEnum.INTERVIEW_FAIL),
+            List.of(StaffStatusEnum.BE_PENDING,StaffStatusEnum.ALTERNATE, StaffStatusEnum.INTERVIEW_FAIL),
             StaffStatusEnum.INTERVIEW,
             null),
 
@@ -41,7 +41,7 @@ public enum StaffState {
      */
     REEXAMINATION(
             StaffActionEnum.REEXAMINATION_ACTION,
-            List.of(StaffStatusEnum.INTERVIEW,StaffStatusEnum.REEXAMINATION, StaffStatusEnum.ALTERNATE, StaffStatusEnum.INTERVIEW_FAIL),
+            List.of(StaffStatusEnum.BE_PENDING,StaffStatusEnum.INTERVIEW,StaffStatusEnum.REEXAMINATION, StaffStatusEnum.ALTERNATE, StaffStatusEnum.INTERVIEW_FAIL),
             StaffStatusEnum.REEXAMINATION,
             null),
 
@@ -50,7 +50,7 @@ public enum StaffState {
      */
     INTERVIEW_PASS(
             StaffActionEnum.PASS_THE_INTERVIEW_ACTION,
-            List.of(StaffStatusEnum.REEXAMINATION,StaffStatusEnum.ALTERNATE, StaffStatusEnum.INTERVIEW_FAIL),
+            List.of(StaffStatusEnum.BE_PENDING,StaffStatusEnum.REEXAMINATION,StaffStatusEnum.ALTERNATE, StaffStatusEnum.INTERVIEW_FAIL),
             StaffStatusEnum.PASS_THE_INTERVIEW,
             StaffStatusEnum.EMPLOYMENT_APPLICATION),
 
@@ -59,7 +59,7 @@ public enum StaffState {
      */
     INTERVIEW_REFUSE(
             StaffActionEnum.INTERVIEW_FAIL_ACTION,
-            List.of(StaffStatusEnum.REEXAMINATION,StaffStatusEnum.ALTERNATE, StaffStatusEnum.INTERVIEW_FAIL),
+            List.of(StaffStatusEnum.BE_PENDING,StaffStatusEnum.REEXAMINATION,StaffStatusEnum.ALTERNATE, StaffStatusEnum.INTERVIEW_FAIL),
             StaffStatusEnum.INTERVIEW_FAIL,
             null),
 
