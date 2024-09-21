@@ -41,6 +41,11 @@ public class HrmInterviewRecordServiceImpl extends ServiceImpl<HrmInterviewRecor
     @Override
     public Page<InterviewRecordDTO> pageGroupByStaff(HrmInterviewRecord query) {
         Page<InterviewRecordDTO> staffList = this.interviewRecordMapper.pageGroupByStaff(query);
+        // 没有数据直接返回
+        if (CollectionUtils.isEmpty(staffList)) {
+            return staffList;
+        }
+        // 重组数据
         try (Page<InterviewRecordDTO> result = new Page<>()) {
             staffList.stream()
                     .collect(Collectors.groupingBy(HrmInterviewRecord::getStaffId))
