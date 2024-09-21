@@ -38,4 +38,49 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select interview_record_id, staff_id, staff_code, staff_name, rank_id, rank_code, rank_type, rank_name, actual_salary, salary_expectation, interview_feedback, times, time_for_interview, interviewer_id, interviewer_name, create_user_id, create_by, create_time, update_user_id, update_by, update_time, status, remark, deleted, deleteAt, version from hrm_interview_record
     </sql>
 
+    <select id="pageGroupByStaff" resultType="com.t3rik.hrm.sm.dto.InterviewRecordDTO">
+        select hs.staff_id as parentId,
+               hs.id_card,
+               hs.staff_id,
+               hs.staff_name,
+               hs.staff_code,
+               hs.email,
+               hs.contact_phone,
+               hs.sex,
+               hs.status as currentStatus,
+               hir.interview_record_id,
+               hir.rank_id,
+               hir.rank_code,
+               hir.rank_type,
+               hir.rank_name,
+               hir.actual_salary,
+               hir.salary_expectation,
+               hir.interview_feedback,
+               hir.times,
+               hir.time_for_interview,
+               hir.interviewer_id,
+               hir.interviewer_name,
+               hir.create_user_id,
+               hir.create_by,
+               hir.create_time,
+               hir.update_user_id,
+               hir.update_by,
+               hir.update_time,
+               hir.status,
+               hir.remark,
+               hir.deleted,
+               hir.deleteAt,
+               hir.version
+        from hrm_staff hs
+                 left join hrm_interview_record hir on hs.staff_id = hir.staff_id and hir.deleted = 0
+        <where>
+            hs.deleted = 0
+            <if test="query.staffName != null and query.staffName != ''">
+                and hs.staff_name like concat('%',#{query.staffName},'%')
+            </if>
+            <if test="query.interviewerName != null and query.interviewerName != ''">
+                and hir.interviewer_name like concat('%',#{query.interviewerName},'%')
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -10,9 +10,9 @@ import lombok.Getter;
  */
 @Getter
 public enum StaffStatusEnum {
-    // 0-备选，10-面试，20-面试通过，30-入职申请，40-入职通过
     ALTERNATE(0, "备选", 0),
     INTERVIEW(10, "面试", 1),
+    REEXAMINATION(11, "待复试", 1),
     PASS_THE_INTERVIEW(20, "面试通过", 2),
     INTERVIEW_FAIL(21, "面试失败", 3),
     BE_PENDING(22, "待定", 3),

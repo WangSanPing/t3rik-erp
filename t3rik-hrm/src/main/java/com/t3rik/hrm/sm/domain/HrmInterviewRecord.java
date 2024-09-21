@@ -2,6 +2,8 @@ package com.t3rik.hrm.sm.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -76,7 +78,7 @@ public class HrmInterviewRecord extends BaseEntity
 
     /** 面试次数 */
     @Excel(name = "面试次数")
-    private Long times;
+    private Integer times;
 
 
     /** 面试时间 */
@@ -104,7 +106,7 @@ public class HrmInterviewRecord extends BaseEntity
 
 
     /** 状态 */
-    private Long status;
+    private Integer status;
 
 
     /** 逻辑删除字段 0:未删除 1:已删除 */
@@ -117,7 +119,5 @@ public class HrmInterviewRecord extends BaseEntity
 
     /** 乐观锁 */
     private Long version;
-
-
 
 }

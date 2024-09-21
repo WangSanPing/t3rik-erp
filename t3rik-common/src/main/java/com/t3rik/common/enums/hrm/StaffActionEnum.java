@@ -13,6 +13,7 @@ public enum StaffActionEnum {
 
     CREATE_STAFF_ACTION(0, "创建备选员工"),
     INTERVIEW_ACTION(10, "已邀请面试"),
+    REEXAMINATION_ACTION(11, "待复试"),
     PASS_THE_INTERVIEW_ACTION(20, "面试通过"),
     INTERVIEW_FAIL_ACTION(21, "面试失败"),
     BE_PENDING_ACTION(22, "待定"),
