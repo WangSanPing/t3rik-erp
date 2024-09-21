@@ -15,7 +15,7 @@
             <img src="https://img.shields.io/badge/mybatis--plus-3.5.3.2-blue.svg" alt="mybatis-plus">
         </a> 
         <a href="https://kotlinlang.org/">
-            <img src="https://img.shields.io/badge/kotlin-2.0-yellow-svg" alt="kotlin">
+            <img src="https://img.shields.io/badge/kotlin-2.0-yellow.svg" alt="kotlin">
         </a> 
 </p>
 
