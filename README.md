@@ -5,11 +5,17 @@
 <h4 align="center">专注于中小企业的erp系统</h4>
 <p align="center">
 <a href='https://gitee.com/wangsanping/t3rik-erp/stargazers'><img src='https://gitee.com/wangsanping/t3rik-erp/badge/star.svg?theme=dark' alt='star'></img></a>
+        <a href="https://www.java.com/zh-CN/">
+            <img src="https://img.shields.io/badge/java-17-red.svg" alt="java">
+        </a> 
         <a href="https://spring.io/projects/spring-boot">
             <img src="https://img.shields.io/badge/spring--boot-3-green.svg" alt="spring-boot">
         </a>
         <a href="https://baomidou.com/">
             <img src="https://img.shields.io/badge/mybatis--plus-3.5.3.2-blue.svg" alt="mybatis-plus">
+        </a> 
+        <a href="https://kotlinlang.org/">
+            <img src="https://img.shields.io/badge/kotlin-2.0-yellow-svg" alt="kotlin">
         </a> 
 </p>
 
