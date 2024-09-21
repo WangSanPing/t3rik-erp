@@ -117,27 +117,6 @@ public class HrmStaffController extends BaseController {
         return toAjax(this.hrmStaffService.updateById(hrmStaff));
     }
 
-
-    /**
-     * 邀请面试
-     */
-    @PreAuthorize("@ss.hasPermi('sm:hrmstaff:edit')")
-    @Log(title = "邀请面试", businessType = BusinessType.UPDATE)
-    @PutMapping("/interview/{staffId}")
-    public AjaxResult interview(@PathVariable Long staffId) {
-        HrmStaff staff = this.hrmStaffService.getById(staffId);
-        Optional.ofNullable(staff).orElseThrow(() -> new BusinessException(MsgConstants.PARAM_ERROR));
-        StaffState state = StaffState.INTERVIEW;
-        // 校验状态
-        HrmCheckUtils.checkStaffStatus(state, staff.getStatus()).throwMsg(MsgConstants.ERROR_STATUS);
-        // 邀请面试
-        this.hrmStaffService.lambdaUpdate()
-                .eq(HrmStaff::getStaffId, staffId)
-                .set(HrmStaff::getStatus, state.getCurrentStatus())
-                .update(new HrmStaff());
-        return AjaxResult.success();
-    }
-
     /**
      * 删除员工花名册
      */

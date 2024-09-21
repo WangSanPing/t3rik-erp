@@ -1,12 +1,23 @@
 package com.t3rik.hrm.sm.service.impl;
 
-import java.util.List;
+import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.t3rik.hrm.sm.mapper.HrmInterviewRecordMapper;
+import com.github.pagehelper.Page;
+import com.t3rik.common.utils.StringUtils;
 import com.t3rik.hrm.sm.domain.HrmInterviewRecord;
+import com.t3rik.hrm.sm.domain.HrmStaff;
+import com.t3rik.hrm.sm.dto.InterviewRecordDTO;
+import com.t3rik.hrm.sm.mapper.HrmInterviewRecordMapper;
 import com.t3rik.hrm.sm.service.IHrmInterviewRecordService;
+import com.t3rik.hrm.sm.service.IHrmStaffService;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 面试记录Service业务层处理
@@ -14,10 +25,81 @@ import com.t3rik.hrm.sm.service.IHrmInterviewRecordService;
  * @author t3rik
  * @date 2024-09-15
  */
-@Service
-public class HrmInterviewRecordServiceImpl  extends ServiceImpl<HrmInterviewRecordMapper, HrmInterviewRecord>  implements IHrmInterviewRecordService
-{
-    @Autowired
-    private HrmInterviewRecordMapper hrmInterviewRecordMapper;
 
+@Service
+public class HrmInterviewRecordServiceImpl extends ServiceImpl<HrmInterviewRecordMapper, HrmInterviewRecord> implements IHrmInterviewRecordService {
+
+    @Resource
+    private HrmInterviewRecordMapper interviewRecordMapper;
+
+    @Resource
+    private IHrmStaffService staffService;
+
+    /**
+     * 按员工分组查询列表
+     */
+    @Override
+    public Page<InterviewRecordDTO> pageGroupByStaff(HrmInterviewRecord query) {
+        Page<InterviewRecordDTO> staffList = this.interviewRecordMapper.pageGroupByStaff(query);
+        try (Page<InterviewRecordDTO> result = new Page<>()) {
+            staffList.stream()
+                    .collect(Collectors.groupingBy(HrmInterviewRecord::getStaffId))
+                    .forEach((k, v) -> {
+                        InterviewRecordDTO dto = new InterviewRecordDTO();
+                        BeanUtil.copyProperties(v.get(0), dto);
+                        // 用户前端判断是否显示操作按钮，主数据置空
+                        dto.setInterviewRecordId(null);
+                        dto.setParentId(k);
+                        // 当前员工状态
+                        dto.setStatus(v.get(0).getCurrentStatus());
+                        // 面试次数
+                        dto.setTimes(v.size());
+                        // 取最新的面试定级
+                        v.stream()
+                                .filter(f -> StringUtils.isNotBlank(f.getRankType()))
+                                .max(Comparator.comparing(HrmInterviewRecord::getTimeForInterview))
+                                .ifPresent(maxRank -> {
+                                    dto.setRankId(maxRank.getRankId());
+                                    dto.setRankType(maxRank.getRankType());
+                                    dto.setRankName(maxRank.getRankName());
+                                    dto.setRankCode(maxRank.getRankCode());
+                                });
+                        // 子集
+                        List<InterviewRecordDTO> recordDTOList = v.stream()
+                                .filter(f -> f.getInterviewRecordId() != null)
+                                .filter(f -> f.getTimeForInterview() != null)
+                                .sorted(Comparator.comparing(HrmInterviewRecord::getTimeForInterview).reversed())
+                                .toList();
+                        dto.setChildren(recordDTOList);
+                        // 最新的面试反馈
+                        if (CollectionUtils.isNotEmpty(recordDTOList)) {
+                            dto.setInterviewFeedback(
+                                    StringUtils.isNotBlank(recordDTOList.get(0).getInterviewFeedback()) ?
+                                            recordDTOList.get(0).getInterviewFeedback() :
+                                            "最新一轮面试反馈：暂无文字反馈");
+                        }
+                        result.add(dto);
+                    });
+            result.setTotal(staffList.getTotal());
+            result.setPageNum(staffList.getPageNum());
+            result.setPageSize(staffList.getPageSize());
+            result.setPages(staffList.getPages());
+            return result;
+        }
+    }
+
+    /**
+     * 更新面试结果和员工状态
+     */
+    @Transactional
+    @Override
+    public Boolean updateWithStaff(HrmInterviewRecord hrmInterviewRecord) {
+        // 更新人员表状态
+        this.staffService.lambdaUpdate()
+                .set(HrmStaff::getStatus, hrmInterviewRecord.getStatus())
+                .eq(HrmStaff::getStaffId, hrmInterviewRecord.getStaffId())
+                .update(new HrmStaff());
+        // 更新子表
+        return this.updateById(hrmInterviewRecord);
+    }
 }
