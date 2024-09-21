@@ -1,15 +1,23 @@
 package com.t3rik.mes.sales.controller;
 
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.t3rik.common.annotation.Log;
+import com.t3rik.common.constant.MsgConstants;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
+import com.t3rik.common.core.domain.CheckInfo;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
+import com.t3rik.common.enums.mes.OrderStatusEnum;
+import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.poi.ExcelUtil;
+import com.t3rik.mes.pro.domain.ProClientOrderItem;
+import com.t3rik.mes.pro.domain.ProWorkorder;
 import com.t3rik.mes.sales.domain.SalesOrder;
 import com.t3rik.mes.sales.domain.SalesOrderItem;
 import com.t3rik.mes.sales.domain.TranOrder;
@@ -22,6 +30,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -103,6 +113,9 @@ public class TranOrderController extends BaseController {
     @PutMapping
     @Transactional
     public AjaxResult edit(@RequestBody TranOrder tranOrder) {
+        if(tranOrder.getStatus().equals(OrderStatusEnum.REFUSE.getCode())){
+            tranOrder.setStatus(OrderStatusEnum.APPROVING.getCode());
+        }
         this.tranOrderService.updateById(tranOrder);
         if(tranOrder.getTranOrderLineList().size()>0){
             tranOrder.getTranOrderLineList().forEach(object -> object.setStatus(tranOrder.getStatus()));
@@ -149,7 +162,7 @@ public class TranOrderController extends BaseController {
     /**
      * 审批（提交、拒绝）
      */
-    @PreAuthorize("@ss.hasPermi('sales:order:edit')")
+    @PreAuthorize("@ss.hasPermi('sales:tranOrder:edit')")
     @Log(title = "销售订单审批", businessType = BusinessType.UPDATE)
     @Transactional
     @PutMapping("/refuse/{tranOrderId},{status}")
@@ -158,6 +171,11 @@ public class TranOrderController extends BaseController {
             return AjaxResult.error("请先保存单据");
         }
         TranOrder tranOrder=this.tranOrderService.getById(tranOrderId);
+        // 查询是否已经添加销列
+        List<TranOrderLine> itemList = this.tranOrderLineService.lambdaQuery()
+                .eq(TranOrderLine::getTranOrderId, tranOrder.getTranOrderId())
+                .list();
+        tranOrder.setTranOrderLineList(itemList);
         // 审批拒绝/提交
         this.tranOrderService.lambdaUpdate()
                 .set(TranOrder::getStatus, status)
@@ -169,6 +187,51 @@ public class TranOrderController extends BaseController {
         tranOrderLineService.updateBatchById(tranOrder.getTranOrderLineList());
 
         return AjaxResult.success();
+    }
+    /**
+     * 审批通过并执行相关操作
+     */
+    @PreAuthorize("@ss.hasPermi('sales:tranOrder:execute')")
+    @Log(title = "销售送货订单", businessType = BusinessType.INSERT)
+    @PostMapping("/execute/{tranOrderId}")
+    @Transactional
+    public AjaxResult generateWorkOrder(@PathVariable("tranOrderId") String salesOrderId) throws Exception {
+        TranOrder tranOrder = this.tranOrderService.getById(salesOrderId);
+        // 查询是否已经添加销列
+        List<TranOrderLine> itemList = this.tranOrderLineService.lambdaQuery()
+                .eq(TranOrderLine::getTranOrderId, tranOrder.getTranOrderId())
+                .list();
+        tranOrder.setTranOrderLineList(itemList);
+        // 数据校验
+        CheckInfo check = this.check(tranOrder);
+        // 未通过校验
+        Assert.isTrue(check.getIsCheckPassed(), () -> new BusinessException(check.getMsg()));
+
+        return this.tranOrderService.execute(tranOrder);
+    }
+
+    /**
+     * 生成生产订单数据校验方法
+     */
+    private CheckInfo check(TranOrder tranOrder) {
+        CheckInfo checkInfo = new CheckInfo();
+        // 默认未通过
+        checkInfo.setIsCheckPassed(Boolean.FALSE);
+        if (tranOrder == null) {
+            checkInfo.setMsg(MsgConstants.PARAM_ERROR);
+            return checkInfo;
+        }
+        // 查询是否已经添加销售列
+        List<TranOrderLine> itemList = tranOrder.getTranOrderLineList();
+        if (CollectionUtil.isEmpty(itemList)) {
+            checkInfo.setMsg("此单据下没有送货列,请添加相关送货数据");
+            return checkInfo;
+        }else{
+            // 校验通过
+            checkInfo.setIsCheckPassed(Boolean.TRUE);
+        }
+
+        return checkInfo;
     }
 
     /**
