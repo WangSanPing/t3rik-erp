@@ -5,24 +5,9 @@ ALTER TABLE wm_material_stock ADD COLUMN remark varchar(500) COMMENT '备注';
 ALTER TABLE gen_table ADD COLUMN sub_system_name varchar(32) COMMENT '子系统名称';
 
 -- 菜单 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('面试管理', '2385', '1', 'hrmInterviewRecord', 'mes/st/hrm-interview-record/index', 1, 0, 'C', '0', '0', 'st:hrminterviewrecord:list', '#', 'admin', sysdate(), '', null, '面试记录菜单');
-
--- 按钮父菜单ID
-SELECT @parentId := LAST_INSERT_ID();
-
--- 按钮 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('面试记录查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', 'st:hrminterviewrecord:query',        '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('面试记录新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', 'st:hrminterviewrecord:add',          '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('面试记录修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', 'st:hrminterviewrecord:edit',         '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('面试记录删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', 'st:hrminterviewrecord:remove',       '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('面试记录导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', 'st:hrminterviewrecord:export',       '#', 'admin', sysdate(), '', null, '');
+INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query`, `is_frame`, `is_cache`, `menu_type`, `module_type`, `visible`, `status`, `perms`, `icon`, `create_by`, `create_user_id`, `create_time`, `update_by`, `update_user_id`, `update_time`, `remark`, `deleted`, `deleteAt`, `version`) VALUES (2419, '面试管理', 2385, 1, 'hrmInterviewRecord', 'hrm/sm/hrm-interview-record/index', NULL, 1, 0, 'C', '1', '0', '0', 'sm:hrminterviewrecord:list', 'form', 'admin', NULL, '2024-09-15 22:20:35', 'admin', NULL, '2024-09-21 13:45:07', '面试记录菜单', 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query`, `is_frame`, `is_cache`, `menu_type`, `module_type`, `visible`, `status`, `perms`, `icon`, `create_by`, `create_user_id`, `create_time`, `update_by`, `update_user_id`, `update_time`, `remark`, `deleted`, `deleteAt`, `version`) VALUES (2420, '面试记录查询', 2419, 1, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sm:hrminterviewrecord:query', '#', 'admin', NULL, '2024-09-15 22:20:36', '', NULL, NULL, '', 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query`, `is_frame`, `is_cache`, `menu_type`, `module_type`, `visible`, `status`, `perms`, `icon`, `create_by`, `create_user_id`, `create_time`, `update_by`, `update_user_id`, `update_time`, `remark`, `deleted`, `deleteAt`, `version`) VALUES (2421, '面试记录新增', 2419, 2, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sm:hrminterviewrecord:add', '#', 'admin', NULL, '2024-09-15 22:20:36', '', NULL, NULL, '', 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query`, `is_frame`, `is_cache`, `menu_type`, `module_type`, `visible`, `status`, `perms`, `icon`, `create_by`, `create_user_id`, `create_time`, `update_by`, `update_user_id`, `update_time`, `remark`, `deleted`, `deleteAt`, `version`) VALUES (2422, '面试记录修改', 2419, 3, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sm:hrminterviewrecord:edit', '#', 'admin', NULL, '2024-09-15 22:20:37', '', NULL, NULL, '', 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query`, `is_frame`, `is_cache`, `menu_type`, `module_type`, `visible`, `status`, `perms`, `icon`, `create_by`, `create_user_id`, `create_time`, `update_by`, `update_user_id`, `update_time`, `remark`, `deleted`, `deleteAt`, `version`) VALUES (2423, '面试记录删除', 2419, 4, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sm:hrminterviewrecord:remove', '#', 'admin', NULL, '2024-09-15 22:20:37', '', NULL, NULL, '', 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query`, `is_frame`, `is_cache`, `menu_type`, `module_type`, `visible`, `status`, `perms`, `icon`, `create_by`, `create_user_id`, `create_time`, `update_by`, `update_user_id`, `update_time`, `remark`, `deleted`, `deleteAt`, `version`) VALUES (2424, '面试记录导出', 2419, 5, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sm:hrminterviewrecord:export', '#', 'admin', NULL, '2024-09-15 22:20:37', '', NULL, NULL, '', 0, '1000-01-01 00:00:00', 1);
