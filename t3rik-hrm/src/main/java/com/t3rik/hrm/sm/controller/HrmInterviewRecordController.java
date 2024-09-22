@@ -105,7 +105,7 @@ public class HrmInterviewRecordController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody HrmInterviewRecord hrmInterviewRecord) {
         Optional.ofNullable(hrmInterviewRecord.getTimeForInterview()).orElseThrow(() -> new BusinessException("面试时间不允许为空"));
-        hrmInterviewRecord.setStatus(StaffStatusEnum.INTERVIEW.getCode());
+        hrmInterviewRecord.setStatus(StaffStatusEnum.INTERVIEW.getCode().longValue());
         return toAjax(this.hrmInterviewRecordService.save(hrmInterviewRecord));
     }
 
@@ -120,7 +120,7 @@ public class HrmInterviewRecordController extends BaseController {
         HrmStaff staff = this.hrmStaffService.getById(hrmInterviewRecord.getStaffId());
         Optional.ofNullable(staff).orElseThrow(() -> new BusinessException(MsgConstants.PARAM_ERROR));
         // 校验当前状态是否允许执行此操作
-        StaffState state = StaffState.STAFF_STATE_MAP.get(hrmInterviewRecord.getStatus());
+        StaffState state = StaffState.STAFF_STATE_MAP.get(hrmInterviewRecord.getStatus().intValue());
         HrmCheckUtils.checkStaffStatus(state, staff.getStatus()).throwMsg(MsgConstants.ERROR_STATUS);
         return toAjax(this.hrmInterviewRecordService.updateWithStaff(hrmInterviewRecord));
     }

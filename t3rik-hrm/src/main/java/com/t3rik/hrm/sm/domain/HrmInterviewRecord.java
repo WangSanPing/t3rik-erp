@@ -106,7 +106,7 @@ public class HrmInterviewRecord extends BaseEntity
 
 
     /** 状态 */
-    private Integer status;
+    private Long status;
 
 
     /** 逻辑删除字段 0:未删除 1:已删除 */

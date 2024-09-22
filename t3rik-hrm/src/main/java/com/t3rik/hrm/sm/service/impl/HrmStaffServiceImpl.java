@@ -1,13 +1,16 @@
 package com.t3rik.hrm.sm.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.t3rik.hrm.sm.domain.HrmInterviewRecord;
 import com.t3rik.hrm.sm.domain.HrmStaff;
 import com.t3rik.hrm.sm.mapper.HrmStaffMapper;
+import com.t3rik.hrm.sm.service.IHrmInterviewRecordService;
 import com.t3rik.hrm.sm.service.IHrmStaffService;
+import com.t3rik.hrm.sm.state.StaffState;
 import com.t3rik.hrm.sm.vo.HrmStaffVo;
-import com.t3rik.system.service.ISysUserService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -39,5 +42,21 @@ public class HrmStaffServiceImpl extends ServiceImpl<HrmStaffMapper, HrmStaff> i
     @Override
     public HrmStaffVo getTalents(Long staffId) {
         return hrmStaffMapper.getTalents(staffId);
+    }
+
+    /**
+     * 入职申请
+     *
+     * @param hrmInterviewRecord
+     */
+    @Transactional
+    @Override
+    public void employmentApplication(HrmInterviewRecord hrmInterviewRecord, StaffState state) {
+        // 更新状态和实际入职薪资
+        this.lambdaUpdate()
+                .set(HrmStaff::getStatus, state.getCurrentStatus())
+                .set(HrmStaff::getActualSalary, hrmInterviewRecord.getActualSalary())
+                .eq(HrmStaff::getStaffId, hrmInterviewRecord.getStaffId())
+                .update(new HrmStaff());
     }
 }
