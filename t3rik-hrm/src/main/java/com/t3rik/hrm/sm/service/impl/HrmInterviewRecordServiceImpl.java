@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.pagehelper.Page;
+import com.t3rik.common.enums.hrm.StaffStatusEnum;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.hrm.sm.domain.HrmInterviewRecord;
 import com.t3rik.hrm.sm.domain.HrmStaff;
@@ -40,7 +41,25 @@ public class HrmInterviewRecordServiceImpl extends ServiceImpl<HrmInterviewRecor
      */
     @Override
     public Page<InterviewRecordDTO> pageGroupByStaff(HrmInterviewRecord query) {
-        Page<InterviewRecordDTO> staffList = this.interviewRecordMapper.pageGroupByStaff(query);
+        return this.pageGroupByStaffWithStatus(query,
+                List.of(StaffStatusEnum.INTERVIEW.getCode(),
+                        StaffStatusEnum.REEXAMINATION.getCode(),
+                        StaffStatusEnum.PASS_THE_INTERVIEW.getCode(),
+                        StaffStatusEnum.INTERVIEW_FAIL.getCode(),
+                        StaffStatusEnum.BE_PENDING.getCode())
+        );
+    }
+
+    /**
+     * 按员工分组查询列表-可以添加状态条件
+     */
+    @Override
+    public Page<InterviewRecordDTO> pageGroupByStaffWithStatus(HrmInterviewRecord query, List<Integer> statusList) {
+        return this.getGroupByStaffList(query, statusList);
+    }
+
+    private Page<InterviewRecordDTO> getGroupByStaffList(HrmInterviewRecord query, List<Integer> statusList) {
+        Page<InterviewRecordDTO> staffList = this.interviewRecordMapper.pageGroupByStaff(query, statusList);
         // 没有数据直接返回
         if (CollectionUtils.isEmpty(staffList)) {
             return staffList;
@@ -56,7 +75,7 @@ public class HrmInterviewRecordServiceImpl extends ServiceImpl<HrmInterviewRecor
                         dto.setInterviewRecordId(null);
                         dto.setParentId(k);
                         // 当前员工状态
-                        dto.setStatus(v.get(0).getCurrentStatus());
+                        dto.setStatus(v.get(0).getCurrentStatus().longValue());
                         // 取最新的面试定级
                         v.stream()
                                 .filter(f -> StringUtils.isNotBlank(f.getRankType()))

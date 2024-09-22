@@ -48,6 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                hs.contact_phone,
                hs.sex,
                hs.status as currentStatus,
+               hs.actual_salary,
                hir.interview_record_id,
                hir.rank_id,
                hir.rank_code,
@@ -80,6 +81,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </if>
             <if test="query.interviewerName != null and query.interviewerName != ''">
                 and hir.interviewer_name like concat('%',#{query.interviewerName},'%')
+            </if>
+            <if test="statusList != null and statusList.size() != 0">
+                and hs.status in
+                <foreach collection="statusList" item="status" open="(" separator="," close=")">
+                     #{status}
+                </foreach>
             </if>
         </where>
     </select>

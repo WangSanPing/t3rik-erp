@@ -5,6 +5,7 @@ import com.t3rik.hrm.sm.domain.HrmInterviewRecord;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -45,6 +46,11 @@ public class InterviewRecordDTO extends HrmInterviewRecord {
      * 当前员工状态
      */
     private Integer currentStatus;
+
+    /**
+     * 实际薪资
+     */
+    private BigDecimal actualSalary;
 
     /**
      * 子集数据
