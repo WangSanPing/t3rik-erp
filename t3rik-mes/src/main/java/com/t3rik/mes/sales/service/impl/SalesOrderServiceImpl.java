@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.core.domain.AjaxResult;
@@ -25,6 +26,7 @@ import com.t3rik.mes.sales.domain.SalesOrderItem;
 import com.t3rik.mes.sales.service.ISalesOrderItemService;
 import com.t3rik.system.strategy.AutoCodeUtil;
 import jakarta.annotation.Resource;
+import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -158,6 +160,40 @@ public class SalesOrderServiceImpl  extends ServiceImpl<SalesOrderMapper, SalesO
         salesOrder.setStatus("WORK_ORDER_FINISHED");
         this.updateById(salesOrder);
         return proWorkorderList;
+    }
+
+    @Override
+    @Transactional
+    public boolean updateById(SalesOrder salesOrder) {
+        if (salesOrder.getStatus().equals(OrderStatusEnum.REFUSE.getCode())) {
+            salesOrder.setStatus(OrderStatusEnum.APPROVING.getCode());
+        }
+        this.updateById(salesOrder);
+        if (salesOrder.getSalesOrderItemList().size() > 0) {
+            salesOrder.getSalesOrderItemList().forEach(object -> object.setStatus(salesOrder.getStatus()));
+            salesOrderItemService.updateBatchById(salesOrder.getSalesOrderItemList());
+        }
+        return false;
+    }
+
+    @Override
+    @Transactional
+    public StringBuffer removeByIds(List<Long> salesOrderIds){
+        List<SalesOrder> salesOrders = this.listByIds(salesOrderIds);
+        StringBuffer sb = new StringBuffer();
+        for (SalesOrder li : salesOrders) {
+            LambdaQueryWrapper<SalesOrderItem> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(SalesOrderItem::getSalesOrderId, li.getSalesOrderId());
+            List<SalesOrderItem> orderItemList = salesOrderItemService.list(queryWrapper);
+            if (orderItemList.size() > 0) {
+                sb.append("销售订单" + li.getSalesOrderCode() + "下还有未删除的清单，不允许删除" + "\n");
+                salesOrderIds.remove(li);
+            } else {
+                sb.append("销售订单" + li.getSalesOrderCode() + "删除成功" + "\n");
+            }
+        }
+        this.removeByIds(salesOrderIds);
+        return sb;
     }
 
     /**
