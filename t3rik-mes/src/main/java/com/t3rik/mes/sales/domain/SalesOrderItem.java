@@ -106,7 +106,7 @@ public class SalesOrderItem extends BaseEntity
 
     /** 库存数量 */
     @Excel(name = "库存数量")
-    private BigDecimal stockNum;
+    private String stockNum;
 
 
     /** 已出货数 */

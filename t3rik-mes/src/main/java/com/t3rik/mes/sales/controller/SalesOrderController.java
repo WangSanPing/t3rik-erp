@@ -207,6 +207,12 @@ public class SalesOrderController extends BaseController {
                 .set(SalesOrder::getStatus, status)
                 .eq(SalesOrder::getSalesOrderId, salesOrderId)
                 .update();
+
+        List<SalesOrderItem> itemList = this.salesOrderItemService.lambdaQuery()
+                .eq(SalesOrderItem::getSalesOrderId, salesOrder.getSalesOrderId())
+                .list();
+        salesOrder.setSalesOrderItemList(itemList);
+
         if (salesOrder.getSalesOrderItemList().size() > 0) {
             salesOrder.getSalesOrderItemList().forEach(object -> object.setStatus(status));
         }
