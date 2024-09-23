@@ -131,15 +131,7 @@ public class SalesOrderController extends BaseController {
     @Log(title = "销售订单", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SalesOrder salesOrder) {
-        if (salesOrder.getStatus().equals(OrderStatusEnum.REFUSE.getCode())) {
-            salesOrder.setStatus(OrderStatusEnum.APPROVING.getCode());
-        }
-        this.salesOrderService.updateById(salesOrder);
-        if (salesOrder.getSalesOrderItemList().size() > 0) {
-            salesOrder.getSalesOrderItemList().forEach(object -> object.setStatus(salesOrder.getStatus()));
-            salesOrderItemService.updateBatchById(salesOrder.getSalesOrderItemList());
-        }
-        return success();
+        return AjaxResult.success(this.salesOrderService.updateById(salesOrder));
     }
 
     /**
@@ -149,21 +141,7 @@ public class SalesOrderController extends BaseController {
     @Log(title = "销售订单", businessType = BusinessType.DELETE)
     @DeleteMapping("/{salesOrderIds}")
     public AjaxResult remove(@PathVariable List<Long> salesOrderIds) {
-        List<SalesOrder> salesOrders = salesOrderService.listByIds(salesOrderIds);
-        StringBuffer sb = new StringBuffer();
-        for (SalesOrder li : salesOrders) {
-            LambdaQueryWrapper<SalesOrderItem> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(SalesOrderItem::getSalesOrderId, li.getSalesOrderId());
-            List<SalesOrderItem> orderItemList = salesOrderItemService.list(queryWrapper);
-            if (orderItemList.size() > 0) {
-                sb.append("销售订单" + li.getSalesOrderCode() + "下还有未删除的清单，不允许删除" + "\n");
-            } else {
-                return toAjax(this.salesOrderService.removeByIds(salesOrderIds));
-            }
-        }
-        return AjaxResult.error(sb.toString());
-
-
+        return AjaxResult.success(this.salesOrderService.removeByIds(salesOrderIds));
     }
 
     /**
@@ -216,9 +194,7 @@ public class SalesOrderController extends BaseController {
         if (salesOrder.getSalesOrderItemList().size() > 0) {
             salesOrder.getSalesOrderItemList().forEach(object -> object.setStatus(status));
         }
-        salesOrderItemService.updateBatchById(salesOrder.getSalesOrderItemList());
-
-        return AjaxResult.success();
+        return AjaxResult.success(salesOrderItemService.updateBatchById(salesOrder.getSalesOrderItemList()));
     }
 
     /**
