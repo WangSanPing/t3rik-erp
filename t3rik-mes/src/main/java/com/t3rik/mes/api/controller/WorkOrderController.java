@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2024-09-19
  */
 @RestController
-@RequestMapping("/pro/work")
+@RequestMapping("/open/work")
 public class WorkOrderController  extends BaseController {
     @Autowired
     private ISalesOrderService salesOrderService;
