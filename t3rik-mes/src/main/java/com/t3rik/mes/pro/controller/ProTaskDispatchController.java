@@ -12,6 +12,7 @@ import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.mes.pro.domain.*;
 import com.t3rik.mes.pro.dto.AssignUsersDTO;
 import com.t3rik.mes.pro.service.*;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ import static java.util.stream.Collectors.groupingBy;
 @RestController
 @RequestMapping("/pro/task-dispatch")
 public class ProTaskDispatchController extends BaseController {
-    @Autowired
+    @Resource
     private IProTaskService proTaskService;
 
     /**

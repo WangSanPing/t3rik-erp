@@ -1,16 +1,23 @@
 package com.t3rik.hrm.sm.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.t3rik.common.annotation.Log;
+import com.t3rik.common.constant.MsgConstants;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
+import com.t3rik.common.enums.hrm.StaffStatusEnum;
+import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.poi.ExcelUtil;
+import com.t3rik.hrm.common.HrmCheckUtils;
 import com.t3rik.hrm.sm.domain.HrmInterviewRecord;
+import com.t3rik.hrm.sm.domain.HrmStaff;
+import com.t3rik.hrm.sm.dto.InterviewRecordDTO;
 import com.t3rik.hrm.sm.service.IHrmInterviewRecordService;
+import com.t3rik.hrm.sm.service.IHrmStaffService;
+import com.t3rik.hrm.sm.state.StaffState;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 面试记录Controller
@@ -32,19 +40,38 @@ public class HrmInterviewRecordController extends BaseController {
     @Resource
     private IHrmInterviewRecordService hrmInterviewRecordService;
 
+    @Resource
+    private IHrmStaffService hrmStaffService;
+
+    /**
+     * 邀请面试
+     */
+    @PreAuthorize("@ss.hasPermi('sm:hrmstaff:edit')")
+    @Log(title = "邀请面试", businessType = BusinessType.UPDATE)
+    @PutMapping("/interview/{staffId}")
+    public AjaxResult interview(@PathVariable Long staffId) {
+        HrmStaff staff = this.hrmStaffService.getById(staffId);
+        Optional.ofNullable(staff).orElseThrow(() -> new BusinessException(MsgConstants.PARAM_ERROR));
+        StaffState state = StaffState.INTERVIEW;
+        // 校验状态
+        HrmCheckUtils.checkStaffStatus(state, staff.getStatus()).throwMsg(MsgConstants.ERROR_STATUS);
+        // 邀请面试
+        this.hrmStaffService.lambdaUpdate()
+                .eq(HrmStaff::getStaffId, staffId)
+                .set(HrmStaff::getStatus, state.getCurrentStatus())
+                .update(new HrmStaff());
+        return AjaxResult.success();
+    }
+
     /**
      * 查询面试记录列表
      */
     @PreAuthorize("@ss.hasPermi('sm:hrminterviewrecord:list')")
     @GetMapping("/list")
     public TableDataInfo list(HrmInterviewRecord hrmInterviewRecord) {
-        // 获取查询条件
-        LambdaQueryWrapper<HrmInterviewRecord> queryWrapper = getQueryWrapper(hrmInterviewRecord);
-        // 组装分页
-        Page<HrmInterviewRecord> page = getMPPage(hrmInterviewRecord);
-        // 查询
-        this.hrmInterviewRecordService.page(page, queryWrapper);
-        return getDataTableWithPage(page);
+        startPage();
+        List<InterviewRecordDTO> list = this.hrmInterviewRecordService.pageGroupByStaff(hrmInterviewRecord);
+        return getDataTable(list);
     }
 
     /**
@@ -77,6 +104,8 @@ public class HrmInterviewRecordController extends BaseController {
     @Log(title = "面试记录", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody HrmInterviewRecord hrmInterviewRecord) {
+        Optional.ofNullable(hrmInterviewRecord.getTimeForInterview()).orElseThrow(() -> new BusinessException("面试时间不允许为空"));
+        hrmInterviewRecord.setStatus(StaffStatusEnum.INTERVIEW.getCode().longValue());
         return toAjax(this.hrmInterviewRecordService.save(hrmInterviewRecord));
     }
 
@@ -87,7 +116,13 @@ public class HrmInterviewRecordController extends BaseController {
     @Log(title = "面试记录", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody HrmInterviewRecord hrmInterviewRecord) {
-        return toAjax(this.hrmInterviewRecordService.updateById(hrmInterviewRecord));
+        // 校验员工数据
+        HrmStaff staff = this.hrmStaffService.getById(hrmInterviewRecord.getStaffId());
+        Optional.ofNullable(staff).orElseThrow(() -> new BusinessException(MsgConstants.PARAM_ERROR));
+        // 校验当前状态是否允许执行此操作
+        StaffState state = StaffState.STAFF_STATE_MAP.get(hrmInterviewRecord.getStatus().intValue());
+        HrmCheckUtils.checkStaffStatus(state, staff.getStatus()).throwMsg(MsgConstants.ERROR_STATUS);
+        return toAjax(this.hrmInterviewRecordService.updateWithStaff(hrmInterviewRecord));
     }
 
     /**

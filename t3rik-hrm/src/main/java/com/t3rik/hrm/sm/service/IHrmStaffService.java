@@ -1,7 +1,9 @@
 package com.t3rik.hrm.sm.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.t3rik.hrm.sm.domain.HrmInterviewRecord;
 import com.t3rik.hrm.sm.domain.HrmStaff;
+import com.t3rik.hrm.sm.state.StaffState;
 import com.t3rik.hrm.sm.vo.HrmStaffVo;
 
 import java.util.List;
@@ -26,4 +28,9 @@ public interface IHrmStaffService extends IService<HrmStaff> {
      * 获取人才详情信息
      */
     HrmStaffVo getTalents(Long staffId);
+
+    /**
+     * 入职申请
+     */
+    void employmentApplication(HrmInterviewRecord hrmInterviewRecord, StaffState state);
 }
