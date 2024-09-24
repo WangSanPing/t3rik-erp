@@ -81,7 +81,7 @@ public class SecurityConfig {
                         authorizeHttpRequests ->
                                 // 对于登录login 注册register 验证码captchaImage 允许匿名访问
                                 authorizeHttpRequests.requestMatchers("/login", "/register", "/captchaImage", "/mobile/captchaImage"
-                                                , UserConstants.MOBILE_PATH + "/login"
+                                                , UserConstants.MOBILE_PATH + "/login","/md_color/color/list"
                                                 , UserConstants.MOBILE_PATH + "/logout")
                                         .anonymous()
                                         .requestMatchers(
