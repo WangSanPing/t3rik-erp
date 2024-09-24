@@ -30,7 +30,7 @@ CREATE TABLE `sales_order` (
                                `update_time` datetime DEFAULT NULL COMMENT '更新时间',
                                `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '备注',
                                PRIMARY KEY (`sales_order_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='销售订单'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='销售订单';
 
 -- 销售订单产品列表
 DROP TABLE IF EXISTS `sales_order_item`;
@@ -73,7 +73,7 @@ CREATE TABLE `sales_order_item` (
                                     `status` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'PREPARE' COMMENT '单据状态',
                                     `client_po_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '客户PO号',
                                     PRIMARY KEY (`sales_order_item_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='销售订单产品列表'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='销售订单产品列表';
 
 -- 销售送货单
 DROP TABLE IF EXISTS `tran_order`;
@@ -109,7 +109,7 @@ CREATE TABLE `tran_order` (
                               `update_time` datetime DEFAULT NULL COMMENT '更新时间',
                               `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '备注',
                               PRIMARY KEY (`tran_order_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='销售送货单'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='销售送货单';
 
 -- 销售送货单列表
 DROP TABLE IF EXISTS `tran_order_line`;
@@ -161,7 +161,7 @@ CREATE TABLE `tran_order_line` (
                                    `update_user_id` bigint(20) DEFAULT NULL COMMENT '更新人id',
                                    `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '更新者',
                                    `update_time` datetime DEFAULT NULL COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='销售送货单列表'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='销售送货单列表';
 
 
 DROP TABLE IF EXISTS `md_product_color`;
@@ -177,32 +177,32 @@ CREATE TABLE `md_product_color` (
                                     `update_by` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
                                     `create_user_id` bigint(20) DEFAULT NULL COMMENT '创建人id',
                                     `update_user_id` bigint(20) DEFAULT NULL COMMENT '修改人id'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 
 ALTER TABLE md_item ADD COLUMN mold_no varchar(32) COMMENT '模具号',ADD COLUMN weight DOUBLE(12,4) COMMENT '单重',ADD COLUMN metal varchar(32) COMMENT '材质';
 
-INSERT INTO `sys_dict_data` VALUES (247, 2, '月结30天', '02', 'pay_up_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:10:44', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (248, 3, '月结45天', '03', 'pay_up_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:10:51', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (249, 4, '月结60天', '04', 'pay_up_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:10:58', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (250, 5, '代收货款', '05', 'pay_up_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:11:13', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (251, 6, '转贝宝', '06', 'pay_up_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:11:22', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (252, 7, '店面收现金', '07', 'pay_up_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:11:29', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (253, 8, '转账', '08', 'pay_up_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:11:37', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (254, 9, '月结90天', '09', 'pay_up_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:11:46', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (255, 1, '客户订单', '0', 'order_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:15:15', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (256, 2, '备货订单', '1', 'order_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:15:27', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (257, 3, '样品订单', '2', 'order_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:15:37', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (258, 4, '退货订单', '3', 'order_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:15:43', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (259, 0, 'A', '0', 'level', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:18:00', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (260, 1, 'AA', '1', 'level', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:18:08', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (261, 2, 'AAA', '2', 'level', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:18:13', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (262, 3, 'AAAA', '3', 'level', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:18:18', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (263, 4, 'AAAAA', '4', 'level', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:18:29', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (264, 0, 'RMB', '01', 'currency_type', NULL, 'default', 'N', '0', 'admin', '2024-09-11 15:13:27', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (265, 1, 'HKD', '02', 'currency_type', NULL, 'default', 'N', '0', 'admin', '2024-09-11 15:13:35', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (266, 2, 'USD', '03', 'currency_type', NULL, 'default', 'N', '0', 'admin', '2024-09-11 15:13:43', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_dict_data` VALUES (267, 3, 'EUR', '04', 'currency_type', NULL, 'default', 'N', '0', 'admin', '2024-09-11 15:13:52', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,2, '月结30天', '02', 'pay_up_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:10:44', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,3, '月结45天', '03', 'pay_up_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:10:51', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,4, '月结60天', '04', 'pay_up_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:10:58', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,5, '代收货款', '05', 'pay_up_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:11:13', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,6, '转贝宝', '06', 'pay_up_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:11:22', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,7, '店面收现金', '07', 'pay_up_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:11:29', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,8, '转账', '08', 'pay_up_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:11:37', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,9, '月结90天', '09', 'pay_up_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:11:46', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,1, '客户订单', '0', 'order_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:15:15', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,2, '备货订单', '1', 'order_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:15:27', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,3, '样品订单', '2', 'order_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:15:37', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,4, '退货订单', '3', 'order_type', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:15:43', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,0, 'A', '0', 'level', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:18:00', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,1, 'AA', '1', 'level', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:18:08', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,2, 'AAA', '2', 'level', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:18:13', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,3, 'AAAA', '3', 'level', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:18:18', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,4, 'AAAAA', '4', 'level', NULL, 'default', 'N', '0', 'admin', '2024-09-09 16:18:29', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,0, 'RMB', '01', 'currency_type', NULL, 'default', 'N', '0', 'admin', '2024-09-11 15:13:27', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,1, 'HKD', '02', 'currency_type', NULL, 'default', 'N', '0', 'admin', '2024-09-11 15:13:35', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,2, 'USD', '03', 'currency_type', NULL, 'default', 'N', '0', 'admin', '2024-09-11 15:13:43', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_dict_data` VALUES (null,3, 'EUR', '04', 'currency_type', NULL, 'default', 'N', '0', 'admin', '2024-09-11 15:13:52', '', NULL, NULL, NULL, NULL, 0, '1000-01-01 00:00:00', 1);
 
 INSERT INTO `sys_dict_type` VALUES (1833053825115680770, '送货类别', 'tran_type', '0', 'admin', '2024-09-09 16:04:23', 'admin', '2024-09-09 16:04:23', NULL, 1, 1, 0, '1000-01-01 00:00:00', 1);
 INSERT INTO `sys_dict_type` VALUES (1833054685090607105, '订单类型', 'order_type', '0', 'admin', '2024-09-09 16:07:48', 'admin', '2024-09-09 16:14:07', NULL, 1, 1, 0, '1000-01-01 00:00:00', 1);
@@ -210,20 +210,30 @@ INSERT INTO `sys_dict_type` VALUES (1833054750651772929, '结账方式', 'pay_up
 INSERT INTO `sys_dict_type` VALUES (1833054809674018817, '币别', 'currency_type', '0', 'admin', '2024-09-09 16:08:18', 'admin', '2024-09-09 16:12:39', NULL, 1, 1, 0, '1000-01-01 00:00:00', 1);
 INSERT INTO `sys_dict_type` VALUES (1833057216776695810, '质量等级', 'level', '0', 'admin', '2024-09-09 16:17:52', 'admin', '2024-09-09 16:17:52', NULL, 1, 1, 0, '1000-01-01 00:00:00', 1);
 
-INSERT INTO `sys_menu` VALUES (2354, '销售管理', 0, 4, 'mes/sales-order', NULL, NULL, 1, 0, 'M', '1', '0', '0', '', 'build', 'admin', NULL, '2024-09-04 16:20:03', 'admin', NULL, '2024-09-05 11:11:08', '', 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_menu` VALUES (2357, '颜色资料', 2000, 10, 'color', 'mes/md/color/index', NULL, 1, 0, 'C', '1', '0', '0', NULL, 'color', 'admin', NULL, '2024-09-05 10:58:36', '', NULL, NULL, '', 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_menu` VALUES (2358, '销售订单', 2354, 1, 'sales-order', 'mes/sales/sales-order/index', NULL, 1, 0, 'C', '1', '0', '0', '', 'build', 'admin', NULL, '2024-09-05 11:00:50', 'admin', NULL, '2024-09-10 09:08:31', '', 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_menu` VALUES (2359, '销售列表', 2354, 2, '/sales-order/item', 'mes/sales/sales-order/item/salesItem', NULL, 1, 0, 'C', '1', '0', '0', '', 'tab', 'admin', NULL, '2024-09-05 11:02:40', 'admin', NULL, '2024-09-10 09:08:50', '', 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_menu` VALUES (2360, '销售送货单', 2354, 3, 'tran-order', 'mes/sales/tran-order/index', NULL, 1, 0, 'C', '1', '0', '0', 'sales:tranOrder:list', 'build', 'admin', NULL, '2024-09-09 16:38:50', 'admin', NULL, '2024-09-11 13:58:31', '销售送货单菜单', 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_menu` VALUES (2361, '销售送货单查询', 2360, 1, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:query', '#', 'admin', NULL, '2024-09-09 16:38:50', 'admin', NULL, '2024-09-11 11:52:11', '', 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_menu` VALUES (2362, '销售送货单新增', 2360, 2, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:add', '#', 'admin', NULL, '2024-09-09 16:38:50', 'admin', NULL, '2024-09-11 11:52:24', '', 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_menu` VALUES (2363, '销售送货单修改', 2360, 3, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:edit', '#', 'admin', NULL, '2024-09-09 16:38:50', 'admin', NULL, '2024-09-11 11:52:37', '', 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_menu` VALUES (2364, '销售送货单删除', 2360, 4, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:remove', '#', 'admin', NULL, '2024-09-09 16:38:50', 'admin', NULL, '2024-09-11 11:52:58', '', 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_menu` VALUES (2365, '销售送货单导出', 2360, 5, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:export', '#', 'admin', NULL, '2024-09-09 16:38:50', 'admin', NULL, '2024-09-11 11:52:53', '', 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_menu` VALUES (2366, '销售送货单列', 2354, 4, 'line', 'mes/sales/tran-order/line/index', NULL, 1, 0, 'C', '1', '0', '0', 'sales:tranOrder:line:list', 'tab', 'admin', NULL, '2024-09-13 10:22:19', 'admin', NULL, '2024-09-23 16:02:35', '销售送货单列菜单', 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_menu` VALUES (2367, '销售送货单列查询', 2366, 1, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:line:query', '#', 'admin', NULL, '2024-09-13 10:22:19', 'admin', NULL, '2024-09-13 14:55:33', '', 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_menu` VALUES (2368, '销售送货单列新增', 2366, 2, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:line:add', '#', 'admin', NULL, '2024-09-13 10:22:19', 'admin', NULL, '2024-09-13 14:55:45', '', 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_menu` VALUES (2369, '销售送货单列修改', 2366, 3, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:line:edit', '#', 'admin', NULL, '2024-09-13 10:22:19', 'admin', NULL, '2024-09-13 14:55:52', '', 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_menu` VALUES (2370, '销售送货单列删除', 2366, 4, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:line:remove', '#', 'admin', NULL, '2024-09-13 10:22:19', 'admin', NULL, '2024-09-13 14:56:00', '', 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_menu` VALUES (2371, '销售送货单列导出', 2366, 5, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:line:export', '#', 'admin', NULL, '2024-09-13 10:22:19', 'admin', NULL, '2024-09-13 14:56:05', '', 0, '1000-01-01 00:00:00', 1);
-INSERT INTO `sys_menu` VALUES (2372, '显示金额', 2360, 6, '', NULL, NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:money', '#', 'admin', NULL, '2024-09-18 16:05:10', 'admin', NULL, '2024-09-18 16:05:20', '', 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_menu` VALUES (null,'颜色资料', 2000, 10, 'color', 'mes/md/color/index', NULL, 1, 0, 'C', '1', '0', '0', NULL, 'color', 'admin', NULL, '2024-09-05 10:58:36', '', NULL, NULL, '', 0, '1000-01-01 00:00:00', 1);
+
+INSERT INTO `sys_menu` VALUES (null, '销售管理', 0, 4, 'mes/sales-order', NULL, NULL, 1, 0, 'M', '1', '0', '0', '', 'build', 'admin', NULL, '2024-09-04 16:20:03', 'admin', NULL, '2024-09-05 11:11:08', '', 0, '1000-01-01 00:00:00', 1);
+-- 按钮父菜单ID
+SELECT @parentId := LAST_INSERT_ID();
+
+INSERT INTO `sys_menu` VALUES (null, '销售订单', @parentId, 1, 'sales-order', 'mes/sales/sales-order/index', NULL, 1, 0, 'C', '1', '0', '0', '', 'build', 'admin', NULL, '2024-09-05 11:00:50', 'admin', NULL, '2024-09-10 09:08:31', '', 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_menu` VALUES (null, '销售列表', @parentId, 2, '/sales-order/item', 'mes/sales/sales-order/item/salesItem', NULL, 1, 0, 'C', '1', '0', '0', '', 'tab', 'admin', NULL, '2024-09-05 11:02:40', 'admin', NULL, '2024-09-10 09:08:50', '', 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_menu` VALUES (null, '销售送货单列', @parentId, 4, 'line', 'mes/sales/tran-order/line/index', NULL, 1, 0, 'C', '1', '0', '0', 'sales:tranOrder:line:list', 'tab', 'admin', NULL, '2024-09-13 10:22:19', 'admin', NULL, '2024-09-23 16:02:35', '销售送货单列菜单', 0, '1000-01-01 00:00:00', 1);
+-- 销售送货单列
+INSERT INTO `sys_menu` VALUES (null, '销售送货单列查询', 2366, 1, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:line:query', '#', 'admin', NULL, '2024-09-13 10:22:19', 'admin', NULL, '2024-09-13 14:55:33', '', 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_menu` VALUES (null, '销售送货单列新增', 2366, 2, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:line:add', '#', 'admin', NULL, '2024-09-13 10:22:19', 'admin', NULL, '2024-09-13 14:55:45', '', 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_menu` VALUES (null, '销售送货单列修改', 2366, 3, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:line:edit', '#', 'admin', NULL, '2024-09-13 10:22:19', 'admin', NULL, '2024-09-13 14:55:52', '', 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_menu` VALUES (null, '销售送货单列删除', 2366, 4, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:line:remove', '#', 'admin', NULL, '2024-09-13 10:22:19', 'admin', NULL, '2024-09-13 14:56:00', '', 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_menu` VALUES (null, '销售送货单列导出', 2366, 5, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:line:export', '#', 'admin', NULL, '2024-09-13 10:22:19', 'admin', NULL, '2024-09-13 14:56:05', '', 0, '1000-01-01 00:00:00', 1);
+-- 销售送货单
+INSERT INTO `sys_menu` VALUES (null, '销售送货单', @parentId, 3, 'tran-order', 'mes/sales/tran-order/index', NULL, 1, 0, 'C', '1', '0', '0', 'sales:tranOrder:list', 'build', 'admin', NULL, '2024-09-09 16:38:50', 'admin', NULL, '2024-09-11 13:58:31', '销售送货单菜单', 0, '1000-01-01 00:00:00', 1);
+-- 销售送货单Id
+SELECT @salesId := LAST_INSERT_ID();
+INSERT INTO `sys_menu` VALUES (null, '显示金额', @salesId, 6, '', NULL, NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:money', '#', 'admin', NULL, '2024-09-18 16:05:10', 'admin', NULL, '2024-09-18 16:05:20', '', 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_menu` VALUES (null, '销售送货单查询', @salesId, 1, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:query', '#', 'admin', NULL, '2024-09-09 16:38:50', 'admin', NULL, '2024-09-11 11:52:11', '', 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_menu` VALUES (null, '销售送货单新增', @salesId, 2, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:add', '#', 'admin', NULL, '2024-09-09 16:38:50', 'admin', NULL, '2024-09-11 11:52:24', '', 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_menu` VALUES (null, '销售送货单修改', @salesId, 3, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:edit', '#', 'admin', NULL, '2024-09-09 16:38:50', 'admin', NULL, '2024-09-11 11:52:37', '', 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_menu` VALUES (null, '销售送货单删除', @salesId, 4, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:remove', '#', 'admin', NULL, '2024-09-09 16:38:50', 'admin', NULL, '2024-09-11 11:52:58', '', 0, '1000-01-01 00:00:00', 1);
+INSERT INTO `sys_menu` VALUES (null, '销售送货单导出', @salesId, 5, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:export', '#', 'admin', NULL, '2024-09-09 16:38:50', 'admin', NULL, '2024-09-11 11:52:53', '', 0, '1000-01-01 00:00:00', 1);
+
+
