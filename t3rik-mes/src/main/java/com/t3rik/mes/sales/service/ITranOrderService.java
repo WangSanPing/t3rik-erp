@@ -14,7 +14,16 @@ import com.t3rik.mes.sales.domain.TranOrder;
  */
 public interface ITranOrderService extends IService<TranOrder> {
 
-    public void saveTranOrder(TranOrder tranOrder);
+     void saveTranOrder(TranOrder tranOrder);
 
-    public AjaxResult execute(TranOrder tranOrder) throws Exception;
+    StringBuffer execute(TranOrder tranOrder) throws Exception;
+
+    //update
+    boolean updateTranOrder(TranOrder tranOrder);
+
+    //remove
+    StringBuffer deleteByIds(List<Long> tranOrderIds);
+
+    //审批
+    boolean refuse(TranOrder tranOrder);
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.enums.mes.OrderStatusEnum;
@@ -62,7 +63,7 @@ public class TranOrderServiceImpl  extends ServiceImpl<TranOrderMapper, TranOrde
 
     @Transactional
     @Override
-    public AjaxResult execute(TranOrder tranOrder) throws Exception {
+    public StringBuffer execute(TranOrder tranOrder) throws Exception {
         List<Long> orderIds = tranOrder.getTranOrderLineList().stream().map(o -> o.getSalesOrderId()).collect(Collectors.toList());
         List<TranOrderLine> tranOrderLineList = tranOrder.getTranOrderLineList();
         List<SalesOrderItem> salesOrderItems = salesOrderItemService.listByIds(orderIds);
@@ -95,6 +96,50 @@ public class TranOrderServiceImpl  extends ServiceImpl<TranOrderMapper, TranOrde
             salesOrderItemService.updateBatchById(salesOrderItemList);
         }
         sb.append("成功" + salesOrderItemList.size() + "条数据");
-        return AjaxResult.success(sb.toString());
+        return sb;
+    }
+
+    @Override
+    public boolean updateTranOrder(TranOrder tranOrder) {
+        if(tranOrder.getStatus().equals(OrderStatusEnum.REFUSE.getCode())){
+            tranOrder.setStatus(OrderStatusEnum.APPROVING.getCode());
+        }
+        this.updateById(tranOrder);
+        if(tranOrder.getTranOrderLineList().size()>0){
+            tranOrder.getTranOrderLineList().forEach(object -> object.setStatus(tranOrder.getStatus()));
+            return tranOrderLineService.updateBatchById(tranOrder.getTranOrderLineList());
+        }
+        return false;
+    }
+
+    @Override
+    public StringBuffer deleteByIds(List<Long> tranOrderIds) {
+        List<TranOrder> tranOrders=this.listByIds(tranOrderIds);
+        StringBuffer sb=new StringBuffer();
+        for (TranOrder li:tranOrders){
+            LambdaQueryWrapper<TranOrderLine> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(TranOrderLine::getTranOrderId, li.getTranOrderId());
+            List<TranOrderLine> orderItemList= tranOrderLineService.list(queryWrapper);
+            if(orderItemList.size()>0){
+                sb.append("销售送货单"+li.getTranOrderCode()+"下还有未删除的清单，不允许删除"+"\n");
+            }
+        }
+        this.removeByIds(tranOrderIds);
+        return sb;
+    }
+
+    @Override
+    public boolean refuse(TranOrder tranOrder) {
+        // 查询是否已经添加销列
+        List<TranOrderLine> itemList = this.tranOrderLineService.lambdaQuery()
+                .eq(TranOrderLine::getTranOrderId, tranOrder.getTranOrderId())
+                .list();
+        tranOrder.setTranOrderLineList(itemList);
+        // 审批拒绝/提交
+        this.updateById(tranOrder);
+        if(tranOrder.getTranOrderLineList().size()>0){
+            tranOrder.getTranOrderLineList().forEach(object -> object.setStatus(tranOrder.getStatus()));
+        }
+        return  tranOrderLineService.updateBatchById(tranOrder.getTranOrderLineList());
     }
 }
