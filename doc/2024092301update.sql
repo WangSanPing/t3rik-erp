@@ -1,17 +1,18 @@
+
 -- 销售订单
 DROP TABLE IF EXISTS `sales_order`;
 CREATE TABLE `sales_order` (
-                               `sales_order_id` bigint(20) NOT NULL COMMENT '销售订单id',
+                               `sales_order_id` bigint NOT NULL COMMENT '销售订单id',
                                `sales_order_code` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '订单编码',
                                `sales_order_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '订单名称',
                                `status` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'PREPARE' COMMENT '订单状态',
-                               `client_id` bigint(20) NOT NULL COMMENT '客户id',
+                               `client_id` bigint NOT NULL COMMENT '客户id',
                                `client_code` varchar(64) DEFAULT NULL COMMENT '客户编码',
                                `client_po_code` varchar(64) DEFAULT NULL COMMENT '客户PO号',
                                `client_name` varchar(255) NOT NULL COMMENT '客户名称',
                                `sales_order_date` datetime NOT NULL COMMENT '订货日期',
                                `delivery_date` datetime NOT NULL COMMENT '交货日期',
-                               `sales_order_quantity` int(11) DEFAULT NULL COMMENT '订货数量',
+                               `sales_order_quantity` int DEFAULT NULL COMMENT '订货数量',
                                `currency` varchar(64) DEFAULT NULL COMMENT '币别',
                                `pay_up` varchar(64) DEFAULT NULL COMMENT '结账方式',
                                `order_type` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '0' COMMENT '订单类别',
@@ -20,26 +21,28 @@ CREATE TABLE `sales_order` (
                                `quality_requirement` varchar(255) DEFAULT NULL COMMENT '质量要求',
                                `attr1` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '预留字段1',
                                `attr2` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '预留字段2',
-                               `attr3` int(11) DEFAULT '0' COMMENT '预留字段3',
-                               `attr4` int(11) DEFAULT '0' COMMENT '预留字段4',
-                               `create_user_id` bigint(20) DEFAULT NULL COMMENT '创建人id',
+                               `attr3` int DEFAULT '0' COMMENT '预留字段3',
+                               `attr4` int DEFAULT '0' COMMENT '预留字段4',
+                               `create_user_id` bigint DEFAULT NULL COMMENT '创建人id',
                                `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '创建者',
                                `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-                               `update_user_id` bigint(20) DEFAULT NULL COMMENT '更新人id',
+                               `update_user_id` bigint DEFAULT NULL COMMENT '更新人id',
                                `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '更新者',
                                `update_time` datetime DEFAULT NULL COMMENT '更新时间',
                                `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '备注',
                                PRIMARY KEY (`sales_order_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='销售订单';
 
+-- ----------------------------
 -- 销售订单产品列表
+-- ----------------------------
 DROP TABLE IF EXISTS `sales_order_item`;
 CREATE TABLE `sales_order_item` (
-                                    `sales_order_item_id` bigint(20) NOT NULL COMMENT '销售订单产品id',
+                                    `sales_order_item_id` bigint NOT NULL COMMENT '销售订单产品id',
                                     `sales_order_item_code` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '销售列表编码',
                                     `sales_order_code` varchar(32) NOT NULL COMMENT '销售订单编码',
-                                    `sales_order_id` bigint(20) NOT NULL COMMENT '销售订单id',
-                                    `product_id` bigint(20) NOT NULL COMMENT '产品id',
+                                    `sales_order_id` bigint NOT NULL COMMENT '销售订单id',
+                                    `product_id` bigint NOT NULL COMMENT '产品id',
                                     `product_code` varchar(64) NOT NULL COMMENT '产品编码',
                                     `product_name` varchar(64) NOT NULL COMMENT '产品名称',
                                     `product_spec` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '产品规格',
@@ -61,11 +64,11 @@ CREATE TABLE `sales_order_item` (
                                     `amount` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '单价',
                                     `total_amount` decimal(12,2) DEFAULT NULL COMMENT '金额',
                                     `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '备注',
-                                    `workorder_id` bigint(20) DEFAULT NULL COMMENT '工单ID',
-                                    `create_user_id` bigint(20) DEFAULT NULL COMMENT '创建人id',
+                                    `workorder_id` bigint DEFAULT NULL COMMENT '工单ID',
+                                    `create_user_id` bigint DEFAULT NULL COMMENT '创建人id',
                                     `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '创建者',
                                     `create_time` datetime DEFAULT NULL COMMENT '创建时间',
-                                    `update_user_id` bigint(20) DEFAULT NULL COMMENT '更新人id',
+                                    `update_user_id` bigint DEFAULT NULL COMMENT '更新人id',
                                     `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '更新者',
                                     `update_time` datetime DEFAULT NULL COMMENT '更新时间',
                                     `workorder_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '工单编码',
@@ -74,6 +77,7 @@ CREATE TABLE `sales_order_item` (
                                     `client_po_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '客户PO号',
                                     PRIMARY KEY (`sales_order_item_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='销售订单产品列表';
+
 
 -- 销售送货单
 DROP TABLE IF EXISTS `tran_order`;
