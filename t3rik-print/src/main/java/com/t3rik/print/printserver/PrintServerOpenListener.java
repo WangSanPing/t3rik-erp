@@ -14,7 +14,7 @@ public class PrintServerOpenListener implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        printerServer.start();
+        // printerServer.start();
     }
 
 }
