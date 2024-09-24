@@ -44,7 +44,7 @@ public class MdProductColorController extends BaseController {
     /**
      * 查询颜色列表
      */
-    @PreAuthorize("@ss.hasPermi('md_color:color:list')")
+    // @PreAuthorize("@ss.hasPermi('md_color:color:list')")
     @GetMapping("/list")
     public TableDataInfo list(MdProductColor mdProductColor) {
         // 获取查询条件
