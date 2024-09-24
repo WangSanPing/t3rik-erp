@@ -164,7 +164,7 @@ public class SalesOrderServiceImpl  extends ServiceImpl<SalesOrderMapper, SalesO
 
     @Override
     @Transactional
-    public boolean updateById(SalesOrder salesOrder) {
+    public boolean updateSalesOrder(SalesOrder salesOrder) {
         if (salesOrder.getStatus().equals(OrderStatusEnum.REFUSE.getCode())) {
             salesOrder.setStatus(OrderStatusEnum.APPROVING.getCode());
         }
@@ -178,7 +178,7 @@ public class SalesOrderServiceImpl  extends ServiceImpl<SalesOrderMapper, SalesO
 
     @Override
     @Transactional
-    public StringBuffer removeByIds(List<Long> salesOrderIds){
+    public StringBuffer deleteByIds(List<Long> salesOrderIds){
         List<SalesOrder> salesOrders = this.listByIds(salesOrderIds);
         StringBuffer sb = new StringBuffer();
         for (SalesOrder li : salesOrders) {
@@ -188,12 +188,26 @@ public class SalesOrderServiceImpl  extends ServiceImpl<SalesOrderMapper, SalesO
             if (orderItemList.size() > 0) {
                 sb.append("销售订单" + li.getSalesOrderCode() + "下还有未删除的清单，不允许删除" + "\n");
                 salesOrderIds.remove(li);
-            } else {
-                sb.append("销售订单" + li.getSalesOrderCode() + "删除成功" + "\n");
             }
         }
         this.removeByIds(salesOrderIds);
         return sb;
+    }
+
+    @Override
+    @Transactional
+    public boolean refuse(SalesOrder salesOrder) {
+        // 审批拒绝/提交
+        this.updateById(salesOrder);
+        List<SalesOrderItem> itemList = salesOrderItemService.lambdaQuery()
+                .eq(SalesOrderItem::getSalesOrderId, salesOrder.getSalesOrderId())
+                .list();
+        salesOrder.setSalesOrderItemList(itemList);
+
+        if (salesOrder.getSalesOrderItemList().size() > 0) {
+            salesOrder.getSalesOrderItemList().forEach(object -> object.setStatus(salesOrder.getStatus()));
+        }
+        return salesOrderItemService.updateBatchById(salesOrder.getSalesOrderItemList());
     }
 
     /**

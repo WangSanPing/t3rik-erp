@@ -113,15 +113,8 @@ public class TranOrderController extends BaseController {
     @PutMapping
     @Transactional
     public AjaxResult edit(@RequestBody TranOrder tranOrder) {
-        if(tranOrder.getStatus().equals(OrderStatusEnum.REFUSE.getCode())){
-            tranOrder.setStatus(OrderStatusEnum.APPROVING.getCode());
-        }
-        this.tranOrderService.updateById(tranOrder);
-        if(tranOrder.getTranOrderLineList().size()>0){
-            tranOrder.getTranOrderLineList().forEach(object -> object.setStatus(tranOrder.getStatus()));
-            tranOrderLineService.updateBatchById(tranOrder.getTranOrderLineList());
-        }
-        return success();
+
+        return AjaxResult.success(this.tranOrderService.updateTranOrder(tranOrder));
     }
 //    /**
 //     * 修改销售送货单
@@ -145,19 +138,12 @@ public class TranOrderController extends BaseController {
     @Log(title = "销售送货单", businessType = BusinessType.DELETE)
     @DeleteMapping("/{tranOrderIds}")
     public AjaxResult remove(@PathVariable List<Long> tranOrderIds) {
-        List<TranOrder> tranOrders=tranOrderService.listByIds(tranOrderIds);
-        StringBuffer sb=new StringBuffer();
-        for (TranOrder li:tranOrders){
-            LambdaQueryWrapper<TranOrderLine> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(TranOrderLine::getTranOrderId, li.getTranOrderId());
-            List<TranOrderLine> orderItemList= tranOrderLineService.list(queryWrapper);
-            if(orderItemList.size()>0){
-                sb.append("销售送货单"+li.getTranOrderCode()+"下还有未删除的清单，不允许删除"+"\n");
-            }else{
-                return toAjax(this.tranOrderService.removeByIds(tranOrderIds));
-            }
+        StringBuffer sb=this.tranOrderService.deleteByIds(tranOrderIds);
+        if(sb.length()>0){
+            return AjaxResult.error(sb.toString());
+        }else{
+            return  AjaxResult.success();
         }
-        return  AjaxResult.error(sb.toString());
     }
     /**
      * 审批（提交、拒绝）
@@ -171,22 +157,10 @@ public class TranOrderController extends BaseController {
             return AjaxResult.error("请先保存单据");
         }
         TranOrder tranOrder=this.tranOrderService.getById(tranOrderId);
-        // 查询是否已经添加销列
-        List<TranOrderLine> itemList = this.tranOrderLineService.lambdaQuery()
-                .eq(TranOrderLine::getTranOrderId, tranOrder.getTranOrderId())
-                .list();
-        tranOrder.setTranOrderLineList(itemList);
-        // 审批拒绝/提交
-        this.tranOrderService.lambdaUpdate()
-                .set(TranOrder::getStatus, status)
-                .eq(TranOrder::getTranOrderId, tranOrderId)
-                .update();
-        if(tranOrder.getTranOrderLineList().size()>0){
-            tranOrder.getTranOrderLineList().forEach(object -> object.setStatus(status));
-        }
-        tranOrderLineService.updateBatchById(tranOrder.getTranOrderLineList());
+        tranOrder.setStatus(status);
 
-        return AjaxResult.success();
+
+        return AjaxResult.success(this.tranOrderService.refuse(tranOrder));
     }
     /**
      * 审批通过并执行相关操作
@@ -207,7 +181,7 @@ public class TranOrderController extends BaseController {
         // 未通过校验
         Assert.isTrue(check.getIsCheckPassed(), () -> new BusinessException(check.getMsg()));
 
-        return this.tranOrderService.execute(tranOrder);
+        return AjaxResult.success(this.tranOrderService.execute(tranOrder).toString());
     }
 
     /**

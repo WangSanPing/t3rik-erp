@@ -3,9 +3,9 @@ package com.t3rik.mes.sales.service;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.mes.pro.domain.ProWorkorder;
 import com.t3rik.mes.sales.domain.SalesOrder;
+
 
 /**
  * 销售订单Service接口
@@ -15,13 +15,21 @@ import com.t3rik.mes.sales.domain.SalesOrder;
  */
 public interface ISalesOrderService extends IService<SalesOrder> {
 
-    public void saveOrder(SalesOrder order);
+    //save
+     void saveOrder(SalesOrder order);
 
-    public  List<ProWorkorder>  execute(SalesOrder order) throws Exception;
+     //执行
+     List<ProWorkorder>  execute(SalesOrder order) throws Exception;
 
-    public boolean updateById(SalesOrder salesOrder);
+     //update
+     boolean updateSalesOrder(SalesOrder salesOrder);
 
-    public StringBuffer removeByIds(List<Long> salesOrderIds);
+     //remove
+     StringBuffer deleteByIds(List<Long> salesOrderIds);
+
+     //审批
+     boolean refuse(SalesOrder salesOrder);
+
 
 
 }

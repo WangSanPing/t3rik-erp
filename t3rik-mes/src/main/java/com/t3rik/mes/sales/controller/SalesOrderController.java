@@ -120,8 +120,8 @@ public class SalesOrderController extends BaseController {
     @Log(title = "销售订单", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SalesOrder salesOrder) {
-        salesOrderService.saveOrder(salesOrder);
-        return success();
+        this.salesOrderService.saveOrder(salesOrder);
+        return AjaxResult.success();
     }
 
     /**
@@ -131,7 +131,7 @@ public class SalesOrderController extends BaseController {
     @Log(title = "销售订单", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SalesOrder salesOrder) {
-        return AjaxResult.success(this.salesOrderService.updateById(salesOrder));
+        return AjaxResult.success(this.salesOrderService.updateSalesOrder(salesOrder));
     }
 
     /**
@@ -141,7 +141,12 @@ public class SalesOrderController extends BaseController {
     @Log(title = "销售订单", businessType = BusinessType.DELETE)
     @DeleteMapping("/{salesOrderIds}")
     public AjaxResult remove(@PathVariable List<Long> salesOrderIds) {
-        return AjaxResult.success(this.salesOrderService.removeByIds(salesOrderIds));
+        StringBuffer sb=this.salesOrderService.deleteByIds(salesOrderIds);
+        if(sb.length()>0){
+            return AjaxResult.error(sb.toString());
+        }else{
+            return  AjaxResult.success();
+        }
     }
 
     /**
@@ -149,23 +154,11 @@ public class SalesOrderController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('sales:item:selectItem')")
     @GetMapping("/selectItem")
-    public TableDataInfo Itemlist(SalesOrder salesOrder) {
+    public TableDataInfo itemList(SalesOrder salesOrder) {
         // 获取查询条件
         LambdaQueryWrapper<SalesOrder> queryWrapper = getQueryWrapper(salesOrder);
         List<SalesOrder> salesOrderList = this.salesOrderService.list(queryWrapper);
-
-        List<SalesOrderItem> items = salesOrderItemService.list();
-
-        List<SalesOrderItem> itemList = new ArrayList<>();
-
-        for (SalesOrder li : salesOrderList) {
-            for (SalesOrderItem item : items) {
-                if (item.getSalesOrderId().equals(li.getSalesOrderId())) {
-                    itemList.add(item);
-                }
-            }
-        }
-        return getDataTable(itemList);
+        return getDataTable(this.salesOrderItemService.getItemList(salesOrderList));
     }
 
     /**
@@ -180,21 +173,9 @@ public class SalesOrderController extends BaseController {
             return AjaxResult.error("请先保存单据");
         }
         SalesOrder salesOrder = this.salesOrderService.getById(salesOrderId);
-        // 审批拒绝/提交
-        this.salesOrderService.lambdaUpdate()
-                .set(SalesOrder::getStatus, status)
-                .eq(SalesOrder::getSalesOrderId, salesOrderId)
-                .update();
+        salesOrder.setStatus(status);
 
-        List<SalesOrderItem> itemList = this.salesOrderItemService.lambdaQuery()
-                .eq(SalesOrderItem::getSalesOrderId, salesOrder.getSalesOrderId())
-                .list();
-        salesOrder.setSalesOrderItemList(itemList);
-
-        if (salesOrder.getSalesOrderItemList().size() > 0) {
-            salesOrder.getSalesOrderItemList().forEach(object -> object.setStatus(status));
-        }
-        return AjaxResult.success(salesOrderItemService.updateBatchById(salesOrder.getSalesOrderItemList()));
+        return AjaxResult.success(this.salesOrderService.refuse(salesOrder));
     }
 
     /**
