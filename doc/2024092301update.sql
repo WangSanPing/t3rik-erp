@@ -232,3 +232,7 @@ INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`
 INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query`, `is_frame`, `is_cache`, `menu_type`, `module_type`, `visible`, `status`, `perms`, `icon`, `create_by`, `create_user_id`, `create_time`, `update_by`, `update_user_id`, `update_time`, `remark`, `deleted`, `deleteAt`, `version`) VALUES (2442, '销售送货单列导出', 2437, 5, '#', '', NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:line:export', '#', 'admin', NULL, '2024-09-13 10:22:19', 'admin', NULL, '2024-09-24 16:45:40', '', 0, '1000-01-01 00:00:00', 1);
 INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query`, `is_frame`, `is_cache`, `menu_type`, `module_type`, `visible`, `status`, `perms`, `icon`, `create_by`, `create_user_id`, `create_time`, `update_by`, `update_user_id`, `update_time`, `remark`, `deleted`, `deleteAt`, `version`) VALUES (2443, '显示金额', 2360, 6, '', NULL, NULL, 1, 0, 'F', '1', '0', '0', 'sales:tranOrder:money', '#', 'admin', NULL, '2024-09-18 16:05:10', 'admin', NULL, '2024-09-18 16:05:20', '', 0, '1000-01-01 00:00:00', 1);
 
+ALTER TABLE md_client ADD COLUMN currency varchar(32) COMMENT '币别',
+                      ADD COLUMN pay_up varchar(32) COMMENT '结账方式',
+                      ADD COLUMN follower_man varchar(32) COMMENT '跟单',
+                      ADD COLUMN sales_man varchar(32) COMMENT '业务员';
