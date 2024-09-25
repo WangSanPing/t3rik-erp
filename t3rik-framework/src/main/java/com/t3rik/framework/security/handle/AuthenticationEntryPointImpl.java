@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ import com.t3rik.common.utils.StringUtils;
  * 
  * @author ruoyi
  */
+@Slf4j
 @Component
 public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint, Serializable
 {
@@ -29,6 +31,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint, S
     {
         int code = HttpStatus.UNAUTHORIZED;
         String msg = StringUtils.format("请求访问：{}，认证失败，无法访问系统资源", request.getRequestURI());
+        log.error("登录失败日志---------{}", e.getMessage());
         ServletUtils.renderString(response, JSON.toJSONString(AjaxResult.error(code, msg)));
     }
 }
