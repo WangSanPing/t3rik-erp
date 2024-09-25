@@ -24,6 +24,8 @@ import com.t3rik.mes.pro.service.IProWorkorderBomService;
 import com.t3rik.mes.pro.service.IProWorkorderService;
 import com.t3rik.mes.sales.domain.SalesOrderItem;
 import com.t3rik.mes.sales.service.ISalesOrderItemService;
+import com.t3rik.mes.wm.domain.WmMaterialStock;
+import com.t3rik.mes.wm.service.IWmMaterialStockService;
 import com.t3rik.system.strategy.AutoCodeUtil;
 import jakarta.annotation.Resource;
 import org.checkerframework.checker.units.qual.A;
@@ -62,36 +64,79 @@ public class SalesOrderServiceImpl  extends ServiceImpl<SalesOrderMapper, SalesO
     private AutoCodeUtil autoCodeUtil;
     @Resource
     private IMesWorkOrderService IMesWorkOrderService;
+    @Autowired
+    private IWmMaterialStockService wmMaterialStockService;
 
     @Override
     @Transactional
-    public void saveOrder(SalesOrder salesOrder){
+    public boolean saveOrder(SalesOrder salesOrder){
         if(salesOrder.getSalesOrderItemList().size()>0){
             this.save(salesOrder);
-            for(SalesOrderItem obj:salesOrder.getSalesOrderItemList()){
-                obj.setSalesOrderId(salesOrder.getSalesOrderId());
-                obj.setSalesOrderCode(salesOrder.getSalesOrderCode());
-                obj.setOweQty(obj.getSalesOrderQuantity());
-                obj.setSalesOrderItemCode(autoCodeUtil.genSerialCode("SALES_ITEM_CODE", null));
-                salesOrderItemService.save(obj);
-                // 查询当前产品是否存在bom组合,如果存在,写入到客户订单物料表中
-                List<MdProductBom> productBoms = productBomService.lambdaQuery().
-                        eq(MdProductBom::getItemId, obj.getProductId())
-                        .list();
-                // 如果存在bom组合,写入到客户订单物料表中
-                if (CollectionUtil.isNotEmpty(productBoms)) {
-                    List<ProClientOrderItem> proClientOrderItems = buildClientOrderItems(obj, productBoms);
-                    // 保存数据
-                    this.clientOrderItemService.saveBatch(proClientOrderItems);
+            this.buildSalesOrderItems(salesOrder).stream().forEach(f->{
+                if(f.getSalesOrderDate()==null){
+                    f.setSalesOrderDate(salesOrder.getSalesOrderDate());
                 }
-            }
+                if(f.getDeliveryDate()==null){
+                    f.setDeliveryDate(salesOrder.getDeliveryDate());
+                }
+                this.salesOrderItemService.save(f);
+                this.buildItemProduct(f);
+            });
+            return true;
         }else{
             this.save(salesOrder);
+            return true;
         }
     }
+    /**
+     * 构建订单子项
+     */
+    @NotNull
+    private List<SalesOrderItem> buildSalesOrderItems(SalesOrder salesOrder){
+        List<SalesOrderItem>itemList=new ArrayList<>();
+        for(SalesOrderItem obj:salesOrder.getSalesOrderItemList()){
+            obj.setSalesOrderId(salesOrder.getSalesOrderId());
+            obj.setSalesOrderCode(salesOrder.getSalesOrderCode());
+            obj.setOweQty(obj.getSalesOrderQuantity());
+            obj.setSalesOrderItemCode(autoCodeUtil.genSerialCode("SALES_ITEM_CODE", null));
+            if(salesOrder.getStatus()!=null){
+                obj.setStatus(salesOrder.getStatus());
+            }
+            //查询库存
+            WmMaterialStock wmMaterialStock=new WmMaterialStock();
+            wmMaterialStock.setItemId(obj.getProductId());
+            wmMaterialStock.setItemCode(obj.getProductCode());
+            wmMaterialStock.setItemName(obj.getProductName());
+            List<WmMaterialStock> list = wmMaterialStockService.selectWmMaterialStockList(wmMaterialStock);
+            if(list.size()>0){
+                StringBuffer sb=new StringBuffer();
+                list.forEach(f->{
+                    sb.append(f.getWarehouseName()+":"+f.getQuantityOnhand());
+                });
+                obj.setStockNum(sb.toString());
+            }
+//            salesOrderItemService.save(obj);
+            itemList.add(obj);
 
+        }
+        return itemList;
+    }
 
-
+    /**
+     * 订单子项产品是否有bom
+     */
+    private void buildItemProduct(SalesOrderItem salesOrderItem){
+        // 查询当前产品是否存在bom组合,如果存在,写入到客户订单物料表中
+        List<MdProductBom> productBoms = productBomService.lambdaQuery().
+                eq(MdProductBom::getItemId, salesOrderItem.getProductId())
+                .list();
+        // 如果存在bom组合,写入到客户订单物料表中
+        if (CollectionUtil.isNotEmpty(productBoms)) {
+            List<ProClientOrderItem> proClientOrderItems = buildClientOrderItems(salesOrderItem, productBoms);
+            // 保存数据
+            this.clientOrderItemService.saveBatch(proClientOrderItems);
+        }
+    }
     /**
      * 构建客户订单子项
      */
@@ -168,12 +213,23 @@ public class SalesOrderServiceImpl  extends ServiceImpl<SalesOrderMapper, SalesO
         if (salesOrder.getStatus().equals(OrderStatusEnum.REFUSE.getCode())) {
             salesOrder.setStatus(OrderStatusEnum.APPROVING.getCode());
         }
+        List<SalesOrderItem> orderItemList = getItemList(salesOrder);
+        this.salesOrderItemService.removeByIds(orderItemList);
+
         this.updateById(salesOrder);
         if (salesOrder.getSalesOrderItemList().size() > 0) {
-            salesOrder.getSalesOrderItemList().forEach(object -> object.setStatus(salesOrder.getStatus()));
-            salesOrderItemService.updateBatchById(salesOrder.getSalesOrderItemList());
+            this.buildSalesOrderItems(salesOrder).stream().forEach(f->{
+                if(f.getSalesOrderDate()==null){
+                    f.setSalesOrderDate(salesOrder.getSalesOrderDate());
+                }
+                if(f.getDeliveryDate()==null){
+                    f.setDeliveryDate(salesOrder.getDeliveryDate());
+                }
+                this.salesOrderItemService.save(f);
+                this.buildItemProduct(f);
+            });
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -182,30 +238,37 @@ public class SalesOrderServiceImpl  extends ServiceImpl<SalesOrderMapper, SalesO
         List<SalesOrder> salesOrders = this.listByIds(salesOrderIds);
         StringBuffer sb = new StringBuffer();
         for (SalesOrder li : salesOrders) {
-            LambdaQueryWrapper<SalesOrderItem> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(SalesOrderItem::getSalesOrderId, li.getSalesOrderId());
-            List<SalesOrderItem> orderItemList = salesOrderItemService.list(queryWrapper);
+            List<SalesOrderItem> orderItemList = getItemList(li);
             if (orderItemList.size() > 0) {
                 sb.append("销售订单" + li.getSalesOrderCode() + "下还有未删除的清单，不允许删除" + "\n");
-                salesOrderIds.remove(li);
+                salesOrderIds.remove(li.getSalesOrderId());
             }
         }
         this.removeByIds(salesOrderIds);
         return sb;
     }
 
+    //根据主单id查找子项
+    private List<SalesOrderItem> getItemList(SalesOrder salesOrder){
+        LambdaQueryWrapper<SalesOrderItem> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SalesOrderItem::getSalesOrderId, salesOrder.getSalesOrderId());
+        List<SalesOrderItem> orderItemList = salesOrderItemService.list(queryWrapper);
+        return orderItemList;
+    }
+
     @Override
     @Transactional
-    public boolean refuse(SalesOrder salesOrder) {
+    public boolean refuse(SalesOrder salesOrder){
         // 审批拒绝/提交
         this.updateById(salesOrder);
         List<SalesOrderItem> itemList = salesOrderItemService.lambdaQuery()
                 .eq(SalesOrderItem::getSalesOrderId, salesOrder.getSalesOrderId())
                 .list();
         salesOrder.setSalesOrderItemList(itemList);
-
         if (salesOrder.getSalesOrderItemList().size() > 0) {
             salesOrder.getSalesOrderItemList().forEach(object -> object.setStatus(salesOrder.getStatus()));
+        }else{
+            return false;
         }
         return salesOrderItemService.updateBatchById(salesOrder.getSalesOrderItemList());
     }

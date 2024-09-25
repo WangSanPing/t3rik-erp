@@ -53,10 +53,11 @@
         <result property="updateUserId"    column="update_user_id"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="tranOrderCode"    column="tran_order_code"    />
     </resultMap>
 
     <sql id="selectTranOrderLineVo">
-        select tran_order_line_id, tran_order_id, client_id, client_code, client_name, follower_man, bus_man, tran_order_type, tran_date, tran_code, warehouse_id, warehouse_code, warehouse_name, sales_order_id, sales_order_code, product_id, product_code, product_name, product_spec, quality, level, color_name, unit_of_measure, sale_qty, sale_thqty, amount, sale_sgqty, weight, tax, total_amount, extra, remark, pic_num, po, sku, client_spec, client_product_name, client_color, workorder_id, workorder_code, status, create_user_id, create_by, create_time, update_user_id, update_by, update_time from tran_order_line
+        select tran_order_line_id, tran_order_id, client_id, client_code, client_name, follower_man, bus_man, tran_order_type, tran_date, tran_code,tran_order_code, warehouse_id, warehouse_code, warehouse_name, sales_order_id, sales_order_code, product_id, product_code, product_name, product_spec, quality, level, color_name, unit_of_measure, sale_qty, sale_thqty, amount, sale_sgqty, weight, tax, total_amount, extra, remark, pic_num, po, sku, client_spec, client_product_name, client_color, workorder_id, workorder_code, status, create_user_id, create_by, create_time, update_user_id, update_by, update_time from tran_order_line
     </sql>
 
 </mapper>

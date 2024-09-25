@@ -16,7 +16,7 @@ import com.t3rik.mes.sales.domain.SalesOrder;
 public interface ISalesOrderService extends IService<SalesOrder> {
 
     //save
-     void saveOrder(SalesOrder order);
+     boolean saveOrder(SalesOrder order);
 
      //执行
      List<ProWorkorder>  execute(SalesOrder order) throws Exception;

@@ -34,6 +34,9 @@ public class TranOrderLine extends BaseEntity
     @Excel(name = "送货单id")
     private Long tranOrderId;
 
+    /** 主单号 */
+    @Excel(name = "主单号")
+    private String tranOrderCode;
 
     /** 客户id */
     @Excel(name = "客户id")

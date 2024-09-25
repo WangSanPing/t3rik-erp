@@ -48,23 +48,30 @@ public class TranOrderServiceImpl  extends ServiceImpl<TranOrderMapper, TranOrde
     public void saveTranOrder(TranOrder tranOrder){
         if(tranOrder.getTranOrderLineList().size()>0){
             this.save(tranOrder);
-            for(TranOrderLine obj:tranOrder.getTranOrderLineList()){
-                obj.setTranCode(autoCodeUtil.genSerialCode("TRAN_CODE", null));
-                obj.setTranOrderId(tranOrder.getTranOrderId());
-                obj.setBusMan(tranOrder.getBusMan());
-                obj.setFollowerMan(tranOrder.getFollowerMan());
-            }
-            tranOrderLineService.saveBatch(tranOrder.getTranOrderLineList());
+            this.saveLine(tranOrder);
         }else{
             this.save(tranOrder);
         }
     }
-
+    //保存子项
+    private void saveLine(TranOrder tranOrder){
+        for(TranOrderLine obj:tranOrder.getTranOrderLineList()){
+            obj.setTranCode(autoCodeUtil.genSerialCode("TRAN_CODE", null));
+            obj.setTranOrderId(tranOrder.getTranOrderId());
+            obj.setTranOrderCode(tranOrder.getTranOrderCode());
+            obj.setBusMan(tranOrder.getBusMan());
+            obj.setFollowerMan(tranOrder.getFollowerMan());
+            if(tranOrder.getStatus()!=null){
+                obj.setStatus(tranOrder.getStatus());
+            }
+        }
+        tranOrderLineService.saveBatch(tranOrder.getTranOrderLineList());
+    }
 
     @Transactional
     @Override
     public StringBuffer execute(TranOrder tranOrder) throws Exception {
-        List<Long> orderIds = tranOrder.getTranOrderLineList().stream().map(o -> o.getSalesOrderId()).collect(Collectors.toList());
+        List<Long> orderIds = tranOrder.getTranOrderLineList().stream().map(o ->o.getSalesOrderId()).collect(Collectors.toList());
         List<TranOrderLine> tranOrderLineList = tranOrder.getTranOrderLineList();
         List<SalesOrderItem> salesOrderItems = salesOrderItemService.listByIds(orderIds);
         Map<Long, SalesOrderItem> salesOrderMap = salesOrderItems.stream().collect
@@ -88,6 +95,9 @@ public class TranOrderServiceImpl  extends ServiceImpl<TranOrderMapper, TranOrde
                 sb.append("送货单" + f.getTranCode() + "出现错误:" + e.getMessage()+"\n");
             }
         });
+        if(sb!=null){
+            return sb;
+        }
         if(tranOrderLineList.size()>0){
             tranOrder.setStatus(OrderStatusEnum.APPROVED.getCode());
             this.updateById(tranOrder);
@@ -104,10 +114,15 @@ public class TranOrderServiceImpl  extends ServiceImpl<TranOrderMapper, TranOrde
         if(tranOrder.getStatus().equals(OrderStatusEnum.REFUSE.getCode())){
             tranOrder.setStatus(OrderStatusEnum.APPROVING.getCode());
         }
+
         this.updateById(tranOrder);
         if(tranOrder.getTranOrderLineList().size()>0){
-            tranOrder.getTranOrderLineList().forEach(object -> object.setStatus(tranOrder.getStatus()));
-            return tranOrderLineService.updateBatchById(tranOrder.getTranOrderLineList());
+            List<TranOrderLine> itemList =getLines(tranOrder);
+            //删除原来的数据
+            this.tranOrderLineService.removeByIds(itemList);
+
+            this.saveLine(tranOrder);
+            return true;
         }
         return false;
     }
@@ -117,15 +132,22 @@ public class TranOrderServiceImpl  extends ServiceImpl<TranOrderMapper, TranOrde
         List<TranOrder> tranOrders=this.listByIds(tranOrderIds);
         StringBuffer sb=new StringBuffer();
         for (TranOrder li:tranOrders){
-            LambdaQueryWrapper<TranOrderLine> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(TranOrderLine::getTranOrderId, li.getTranOrderId());
-            List<TranOrderLine> orderItemList= tranOrderLineService.list(queryWrapper);
+            List<TranOrderLine> orderItemList= getLines(li);
             if(orderItemList.size()>0){
                 sb.append("销售送货单"+li.getTranOrderCode()+"下还有未删除的清单，不允许删除"+"\n");
+                tranOrders.remove(li.getTranOrderId());
             }
         }
         this.removeByIds(tranOrderIds);
         return sb;
+    }
+
+    //根据主单id查找子项
+    private List<TranOrderLine> getLines(TranOrder tranOrder){
+        LambdaQueryWrapper<TranOrderLine> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(TranOrderLine::getTranOrderId, tranOrder.getTranOrderId());
+        List<TranOrderLine> list= tranOrderLineService.list(queryWrapper);
+        return list;
     }
 
     @Override
