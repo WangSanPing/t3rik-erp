@@ -116,20 +116,6 @@ public class TranOrderController extends BaseController {
 
         return AjaxResult.success(this.tranOrderService.updateTranOrder(tranOrder));
     }
-//    /**
-//     * 修改销售送货单
-//     */
-//    @PreAuthorize("@ss.hasPermi('sales:tranOrder:review')")
-//    @Log(title = "销售送货单", businessType = BusinessType.UPDATE)
-//    @PutMapping("/review")
-//    @Transactional
-//    public AjaxResult review(@RequestBody TranOrder tranOrder) {
-//        this.tranOrderService.updateById(tranOrder);
-//        if(tranOrder.getTranOrderLineList().size()>0){
-//            tranOrderLineService.updateBatchById(tranOrder.getTranOrderLineList());
-//        }
-//        return success();
-//    }
 
     /**
      * 删除销售送货单
@@ -145,6 +131,17 @@ public class TranOrderController extends BaseController {
             return  AjaxResult.success();
         }
     }
+
+    /**
+     * 删除送货单子项
+     */
+    @PreAuthorize("@ss.hasPermi('sales:order:remove')")
+    @Log(title = "销售订单", businessType = BusinessType.DELETE)
+    @DeleteMapping("/delOrderItem/{itemIds}")
+    public AjaxResult delOrderItem(@PathVariable List<Long> itemIds) {
+        return  AjaxResult.success(this.tranOrderLineService.removeByIds(itemIds));
+    }
+
     /**
      * 审批（提交、拒绝）
      */

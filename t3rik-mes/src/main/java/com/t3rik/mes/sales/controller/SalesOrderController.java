@@ -120,8 +120,8 @@ public class SalesOrderController extends BaseController {
     @Log(title = "销售订单", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SalesOrder salesOrder) {
-        this.salesOrderService.saveOrder(salesOrder);
-        return AjaxResult.success();
+
+        return AjaxResult.success(this.salesOrderService.saveOrder(salesOrder));
     }
 
     /**
@@ -147,6 +147,16 @@ public class SalesOrderController extends BaseController {
         }else{
             return  AjaxResult.success();
         }
+    }
+
+    /**
+     * 删除销售订单产品列
+     */
+    @PreAuthorize("@ss.hasPermi('sales:order:remove')")
+    @Log(title = "销售订单", businessType = BusinessType.DELETE)
+    @DeleteMapping("/delOrderItem/{itemIds}")
+    public AjaxResult delOrderItem(@PathVariable List<Long> itemIds) {
+        return  AjaxResult.success(this.salesOrderItemService.removeByIds(itemIds));
     }
 
     /**
