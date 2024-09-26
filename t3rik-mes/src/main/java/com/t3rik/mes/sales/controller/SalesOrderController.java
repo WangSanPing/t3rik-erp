@@ -1,5 +1,7 @@
 package com.t3rik.mes.sales.controller;
 
+// -t3rik
+// 多用格式化代码，并且去掉无用的包
 import java.beans.Transient;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
@@ -59,6 +61,8 @@ import com.t3rik.common.core.page.TableDataInfo;
 @RestController
 @RequestMapping("/sales/order")
 public class SalesOrderController extends BaseController {
+    // -t3rik
+    // 用Resource或者构造函数的方式做依赖注入 Resource至少没有警告
     @Autowired
     private ISalesOrderService salesOrderService;
     @Autowired
@@ -120,7 +124,6 @@ public class SalesOrderController extends BaseController {
     @Log(title = "销售订单", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SalesOrder salesOrder) {
-
         return AjaxResult.success(this.salesOrderService.saveOrder(salesOrder));
     }
 
@@ -141,12 +144,18 @@ public class SalesOrderController extends BaseController {
     @Log(title = "销售订单", businessType = BusinessType.DELETE)
     @DeleteMapping("/{salesOrderIds}")
     public AjaxResult remove(@PathVariable List<Long> salesOrderIds) {
+        // -t3rik
+        // 多用格式化代码，并且去掉无用的包
         StringBuffer sb=this.salesOrderService.deleteByIds(salesOrderIds);
-        if(sb.length()>0){
-            return AjaxResult.error(sb.toString());
-        }else{
-            return  AjaxResult.success();
-        }
+        // -t3rik
+        // 简单的if else 用三元运算符
+        // if(sb.length()>0){
+        //     return AjaxResult.error(sb.toString());
+        // }else{
+        //     return  AjaxResult.success();
+        // }
+
+        return sb.isEmpty() ? AjaxResult.success() : AjaxResult.error(sb.toString());
     }
 
     /**
@@ -179,10 +188,16 @@ public class SalesOrderController extends BaseController {
     @Transactional
     @PutMapping("/refuse/{salesOrderId},{status}")
     public AjaxResult refuse(@PathVariable("salesOrderId") Long salesOrderId, @PathVariable("status") String status) {
+        // -t3rik
+        // 没记错的话，salesOrderId这个参数应该永远不会为null，不太确定，你可以用postman试试，
         if (StringUtils.isNull(salesOrderId)) {
             return AjaxResult.error("请先保存单据");
         }
         SalesOrder salesOrder = this.salesOrderService.getById(salesOrderId);
+        // -t3rik
+        // 这里也判断下数据是否能查询得到
+        // Optional.ofNullable(salesOrder).orElseThrow(() -> new BusinessException(MsgConstants.PARAM_ERROR));
+        // 状态类的参数最好不要用前端传的，前端的参数都不可靠
         salesOrder.setStatus(status);
 
         return AjaxResult.success(this.salesOrderService.refuse(salesOrder));
@@ -195,6 +210,7 @@ public class SalesOrderController extends BaseController {
     @Log(title = "客户订单", businessType = BusinessType.INSERT)
     @PostMapping("/execute/{salesOrderId}")
     public AjaxResult generateWorkOrder(@PathVariable("salesOrderId") String salesOrderId) throws Exception {
+        // 重复代码最好想办法提取出来 -t3rik
         SalesOrder salesOrder = this.salesOrderService.getById(salesOrderId);
         // 查询是否已经添加销售列
         List<SalesOrderItem> itemList = this.salesOrderItemService.lambdaQuery()
@@ -216,6 +232,7 @@ public class SalesOrderController extends BaseController {
     @Log(title = "客户订单", businessType = BusinessType.INSERT)
     @PostMapping("/push/{salesOrderId}")
     public AjaxResult push(@PathVariable("salesOrderId") String salesOrderId) throws Exception {
+        // 重复代码最好想办法提取出来 -t3rik
         SalesOrder salesOrder = this.salesOrderService.getById(salesOrderId);
         // 查询是否已经添加销售列
         List<SalesOrderItem> itemList = this.salesOrderItemService.lambdaQuery()
@@ -249,6 +266,8 @@ public class SalesOrderController extends BaseController {
         }
         itemList.stream().forEach(f -> {
             // 查询是否已经添加需求物料数据
+            // 这里的这个list就没用到吧？这段逻辑我记得好像是客户订单的，你确定一下你是否要用。 -t3rik
+            // 另外forEach不需要先调用stream()，直接forEach就可以
             List<ProClientOrderItem> list = this.proClientOrderItemService.lambdaQuery()
                     .eq(ProClientOrderItem::getClientOrderId, f.getSalesOrderItemId())
                     .list();
@@ -265,8 +284,9 @@ public class SalesOrderController extends BaseController {
             checkInfo.setMsg("订单中,存在订货数量0的数据,不允许生成生产订单");
             return checkInfo;
         }
-
         itemList.stream().forEach(f -> {
+            // -t3rik
+            // 这个for循环有问题吧？如果都不等于空，不是一直覆盖了吗？
             if (f.getWorkorderCode() != null) {
                 String msg = MessageFormat.format("已经生成过生产订单(生成订单的编号为:{0}),不允许再次生成", f.getWorkorderCode());
                 checkInfo.setMsg(msg);
