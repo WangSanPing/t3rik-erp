@@ -10,7 +10,7 @@ import com.t3rik.mes.sales.domain.SalesOrder;
 /**
  * 销售订单Service接口
  *
- * @author t3rik
+ * @author 堇年
  * @date 2024-08-29
  */
 public interface ISalesOrderService extends IService<SalesOrder> {

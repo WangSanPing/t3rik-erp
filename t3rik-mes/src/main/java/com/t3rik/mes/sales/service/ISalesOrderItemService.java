@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * 销售订单产品列Service接口
  *
- * @author t3rik
+ * @author 堇年
  * @date 2024-08-29
  */
 public interface ISalesOrderItemService extends IService<SalesOrderItem> {

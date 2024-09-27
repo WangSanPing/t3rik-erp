@@ -17,7 +17,7 @@ import com.t3rik.common.annotation.Excel;
 /**
  * 销售订单产品列对象 sales_order_item
  * 
- * @author t3rik
+ * @author 堇年
  * @date 2024-08-29
  */
 @Data
