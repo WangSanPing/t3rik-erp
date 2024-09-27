@@ -24,7 +24,9 @@ import com.t3rik.mes.sales.domain.TranOrder;
 import com.t3rik.mes.sales.domain.TranOrderLine;
 import com.t3rik.mes.sales.service.ITranOrderLineService;
 import com.t3rik.mes.sales.service.ITranOrderService;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,9 +47,9 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/sales/tranOrder")
 public class TranOrderController extends BaseController {
-    @Autowired
+    @Resource
     private ITranOrderService tranOrderService;
-    @Autowired
+    @Resource
     private ITranOrderLineService tranOrderLineService;
 
     /**
@@ -85,13 +87,7 @@ public class TranOrderController extends BaseController {
     @PreAuthorize("@ss.hasPermi('sales:tranOrder:query')")
     @GetMapping(value = "/{tranOrderId}")
     public AjaxResult getInfo(@PathVariable("tranOrderId") Long tranOrderId) {
-        TranOrder tranOrder=this.tranOrderService.getById(tranOrderId);
-
-        LambdaQueryWrapper<TranOrderLine> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(tranOrder.getTranOrderId() != null, TranOrderLine::getTranOrderId, tranOrder.getTranOrderId());
-        List<TranOrderLine> orderItemList= tranOrderLineService.list(queryWrapper);
-        tranOrder.setTranOrderLineList(orderItemList);
-        return AjaxResult.success(tranOrder);
+        return AjaxResult.success(getItemList(tranOrderId));
     }
 
     /**
@@ -113,7 +109,6 @@ public class TranOrderController extends BaseController {
     @PutMapping
     @Transactional
     public AjaxResult edit(@RequestBody TranOrder tranOrder) {
-
         return AjaxResult.success(this.tranOrderService.updateTranOrder(tranOrder));
     }
 
@@ -150,13 +145,11 @@ public class TranOrderController extends BaseController {
     @Transactional
     @PutMapping("/refuse/{tranOrderId},{status}")
     public AjaxResult refuse(@PathVariable("tranOrderId") Long tranOrderId,@PathVariable("status") String status) {
-        if (StringUtils.isNull(tranOrderId)) {
-            return AjaxResult.error("请先保存单据");
+        TranOrder tranOrder = getItemList(tranOrderId);
+        Optional.ofNullable(tranOrder).orElseThrow(() -> new BusinessException(MsgConstants.PARAM_ERROR));
+        if (CollectionUtils.isEmpty(tranOrder.getTranOrderLineList())) {
+            return AjaxResult.error("销售订单下未添加产品数据!");
         }
-        TranOrder tranOrder=this.tranOrderService.getById(tranOrderId);
-        tranOrder.setStatus(status);
-
-
         return AjaxResult.success(this.tranOrderService.refuse(tranOrder));
     }
     /**
@@ -166,23 +159,26 @@ public class TranOrderController extends BaseController {
     @Log(title = "销售送货订单", businessType = BusinessType.INSERT)
     @PostMapping("/execute/{tranOrderId}")
     @Transactional
-    public AjaxResult generateWorkOrder(@PathVariable("tranOrderId") String salesOrderId) throws Exception {
-        TranOrder tranOrder = this.tranOrderService.getById(salesOrderId);
-        // 查询是否已经添加销列
-        List<TranOrderLine> itemList = this.tranOrderLineService.lambdaQuery()
-                .eq(TranOrderLine::getTranOrderId, tranOrder.getTranOrderId())
-                .list();
-        tranOrder.setTranOrderLineList(itemList);
+    public AjaxResult generateWorkOrder(@PathVariable("tranOrderId") Long tranOrderId) throws Exception {
+        TranOrder tranOrder = getItemList(tranOrderId);
         // 数据校验
         CheckInfo check = this.check(tranOrder);
         // 未通过校验
         Assert.isTrue(check.getIsCheckPassed(), () -> new BusinessException(check.getMsg()));
-
         return AjaxResult.success(this.tranOrderService.execute(tranOrder).toString());
     }
 
+    // 查询是否已经添加列
+    private TranOrder getItemList(Long tranOrderId){
+        TranOrder tranOrder=this.tranOrderService.getById(tranOrderId);
+        List<TranOrderLine> itemList = this.tranOrderLineService.lambdaQuery()
+                .eq(TranOrderLine::getTranOrderId, tranOrderId)
+                .list();
+        tranOrder.setTranOrderLineList(itemList);
+        return tranOrder;
+    }
     /**
-     * 生成生产订单数据校验方法
+     * 单据数据校验方法
      */
     private CheckInfo check(TranOrder tranOrder) {
         CheckInfo checkInfo = new CheckInfo();
@@ -201,7 +197,6 @@ public class TranOrderController extends BaseController {
             // 校验通过
             checkInfo.setIsCheckPassed(Boolean.TRUE);
         }
-
         return checkInfo;
     }
 

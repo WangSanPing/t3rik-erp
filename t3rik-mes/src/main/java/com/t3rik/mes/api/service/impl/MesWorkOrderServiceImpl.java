@@ -17,6 +17,7 @@ import com.t3rik.mes.api.service.IMesWorkOrderService;
 import com.t3rik.mes.api.utils.UrlCode;
 import com.t3rik.mes.sales.domain.SalesOrder;
 import com.t3rik.mes.sales.domain.SalesOrderItem;
+import jakarta.annotation.Resource;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
 @Service
 public class MesWorkOrderServiceImpl implements IMesWorkOrderService {
 
-    @Autowired
+    @Resource
     IMesAccessService accessServicel;
 
     private Logger logger = LoggerFactory.getLogger(MesWorkOrderServiceImpl.class);

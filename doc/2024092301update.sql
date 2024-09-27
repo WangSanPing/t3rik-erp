@@ -252,3 +252,17 @@ INSERT INTO `mes`.`sys_auto_code_part` VALUES (347, 256, 2, 'SERIALNO', 'P3', '�
 INSERT INTO `mes`.`sys_auto_code_part` VALUES (341, 257, 1, 'FIXCHAR', 'P1', '前缀', 1, NULL, NULL, 'P0', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 'admin', '2024-09-14 10:03:45', 'admin', '2024-09-14 10:05:21', 0, '1000-01-01 00:00:00', 1);
 INSERT INTO `mes`.`sys_auto_code_part` VALUES (342, 257, 3, 'NOWDATE', 'P2', '日期', 8, 'yyyyMMdd', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 'admin', '2024-09-14 10:05:14', 'admin', '2024-09-14 10:06:04', 0, '1000-01-01 00:00:00', 1);
 INSERT INTO `mes`.`sys_auto_code_part` VALUES (343, 257, 3, 'SERIALNO', 'P3', '流水', 2, NULL, NULL, NULL, 1, 1, NULL, 'Y', 'DAY', NULL, NULL, NULL, 0, 0, 'admin', '2024-09-14 10:05:53', 'admin', '2024-09-14 10:06:10', 0, '1000-01-01 00:00:00', 1);
+
+CREATE TABLE `mes_access` (
+                              `id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+                              `access_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+                              `secret` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+                              `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+                              `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+                              `create_time` datetime DEFAULT NULL,
+                              `create_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+                              `update_time` datetime DEFAULT NULL,
+                              `update_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+                              `create_user_id` bigint(20) DEFAULT NULL COMMENT '创建人id',
+                              `update_user_id` bigint(20) DEFAULT NULL COMMENT '修改人id'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin
