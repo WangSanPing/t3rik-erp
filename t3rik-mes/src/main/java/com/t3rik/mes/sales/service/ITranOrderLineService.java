@@ -13,7 +13,7 @@ import org.apache.ibatis.annotations.Mapper;
 /**
  * 销售送货单列Service接口
  *
- * @author t3rik
+ * @author 堇年
  * @date 2024-09-13
  */
 public interface ITranOrderLineService extends IService<TranOrderLine> {

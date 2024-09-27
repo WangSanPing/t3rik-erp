@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
 /**
 * 销售订单对象 sales_order
 *
-* @author t3rik
+* @author 堇年
 * @date 2024-08-29
 */
 @Data

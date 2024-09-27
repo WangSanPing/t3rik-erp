@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 /**
  * 销售送货单列对象 tran_order_line
  *
- * @author t3rik
+ * @author 堇年
  * @date 2024-09-13
  */
 @Data
