@@ -1,11 +1,7 @@
 package com.t3rik.mes.sales.controller;
 
-// -t3rik
-// 多用格式化代码，并且去掉无用的包
-import java.beans.Transient;
+
 import java.math.BigDecimal;
-import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,23 +10,17 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
 import com.t3rik.common.constant.MsgConstants;
 import com.t3rik.common.core.domain.CheckInfo;
-import com.t3rik.common.enums.mes.ClientOrderStatusEnum;
-import com.t3rik.common.enums.mes.OrderStatusEnum;
 import com.t3rik.common.exception.BusinessException;
 import com.t3rik.mes.api.service.IMesWorkOrderService;
-import com.t3rik.mes.md.domain.MdProductBom;
-import com.t3rik.mes.md.service.IMdProductBomService;
 import com.t3rik.mes.pro.domain.*;
 import com.t3rik.mes.pro.service.IProClientOrderItemService;
-import com.t3rik.mes.pro.service.IProWorkorderService;
-import com.t3rik.mes.pro.service.impl.ProClientOrderServiceImpl;
 import com.t3rik.mes.sales.domain.SalesOrderItem;
 import com.t3rik.mes.sales.service.ISalesOrderItemService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,11 +51,10 @@ import com.t3rik.common.core.page.TableDataInfo;
 @RestController
 @RequestMapping("/sales/order")
 public class SalesOrderController extends BaseController {
-    // -t3rik
-    // 用Resource或者构造函数的方式做依赖注入 Resource至少没有警告
-    @Autowired
+
+    @Resource
     private ISalesOrderService salesOrderService;
-    @Autowired
+    @Resource
     private ISalesOrderItemService salesOrderItemService;
 
     @Resource
@@ -108,13 +97,7 @@ public class SalesOrderController extends BaseController {
     @PreAuthorize("@ss.hasPermi('sales:order:query')")
     @GetMapping(value = "/{salesOrderId}")
     public AjaxResult getInfo(@PathVariable("salesOrderId") Long salesOrderId) {
-        SalesOrder salesOrder = this.salesOrderService.getById(salesOrderId);
-        // 查询是否已经添加销售列
-        List<SalesOrderItem> itemList = this.salesOrderItemService.lambdaQuery()
-                .eq(SalesOrderItem::getSalesOrderId, salesOrder.getSalesOrderId())
-                .list();
-        salesOrder.setSalesOrderItemList(itemList);
-        return AjaxResult.success(salesOrder);
+        return AjaxResult.success(getSalesOrderItem(salesOrderId));
     }
 
     /**
@@ -144,17 +127,7 @@ public class SalesOrderController extends BaseController {
     @Log(title = "销售订单", businessType = BusinessType.DELETE)
     @DeleteMapping("/{salesOrderIds}")
     public AjaxResult remove(@PathVariable List<Long> salesOrderIds) {
-        // -t3rik
-        // 多用格式化代码，并且去掉无用的包
-        StringBuffer sb=this.salesOrderService.deleteByIds(salesOrderIds);
-        // -t3rik
-        // 简单的if else 用三元运算符
-        // if(sb.length()>0){
-        //     return AjaxResult.error(sb.toString());
-        // }else{
-        //     return  AjaxResult.success();
-        // }
-
+        StringBuilder sb = this.salesOrderService.deleteByIds(salesOrderIds);
         return sb.isEmpty() ? AjaxResult.success() : AjaxResult.error(sb.toString());
     }
 
@@ -165,7 +138,7 @@ public class SalesOrderController extends BaseController {
     @Log(title = "销售订单", businessType = BusinessType.DELETE)
     @DeleteMapping("/delOrderItem/{itemIds}")
     public AjaxResult delOrderItem(@PathVariable List<Long> itemIds) {
-        return  AjaxResult.success(this.salesOrderItemService.removeByIds(itemIds));
+        return AjaxResult.success(this.salesOrderItemService.removeByIds(itemIds));
     }
 
     /**
@@ -181,48 +154,35 @@ public class SalesOrderController extends BaseController {
     }
 
     /**
-     * 审批（提交、拒绝）
+     * 提交（确认/提交/拒绝）
      */
     @PreAuthorize("@ss.hasPermi('sales:order:edit')")
     @Log(title = "销售订单审批", businessType = BusinessType.UPDATE)
     @Transactional
-    @PutMapping("/refuse/{salesOrderId},{status}")
-    public AjaxResult refuse(@PathVariable("salesOrderId") Long salesOrderId, @PathVariable("status") String status) {
-        // -t3rik
-        // 没记错的话，salesOrderId这个参数应该永远不会为null，不太确定，你可以用postman试试，
-        if (StringUtils.isNull(salesOrderId)) {
-            return AjaxResult.error("请先保存单据");
+    @PutMapping("/refuse/{salesOrderId}")
+    public AjaxResult refuse(@PathVariable("salesOrderId") Long salesOrderId) {
+        SalesOrder salesOrder =getSalesOrderItem(salesOrderId);
+        Optional.ofNullable(salesOrder).orElseThrow(() -> new BusinessException(MsgConstants.PARAM_ERROR));
+        if (CollectionUtils.isEmpty(salesOrder.getSalesOrderItemList())) {
+            return AjaxResult.error("销售订单下未添加产品数据!");
         }
-        SalesOrder salesOrder = this.salesOrderService.getById(salesOrderId);
-        // -t3rik
-        // 这里也判断下数据是否能查询得到
-        // Optional.ofNullable(salesOrder).orElseThrow(() -> new BusinessException(MsgConstants.PARAM_ERROR));
-        // 状态类的参数最好不要用前端传的，前端的参数都不可靠
-        salesOrder.setStatus(status);
-
-        return AjaxResult.success(this.salesOrderService.refuse(salesOrder));
+        return salesOrderService.refuse(salesOrder) ? AjaxResult.success() : AjaxResult.error();
     }
 
     /**
      * 审批通过并生成生产订单
      */
     @PreAuthorize("@ss.hasPermi('sales:order:execute')")
-    @Log(title = "客户订单", businessType = BusinessType.INSERT)
+    @Log(title = "销售订单", businessType = BusinessType.INSERT)
     @PostMapping("/execute/{salesOrderId}")
-    public AjaxResult generateWorkOrder(@PathVariable("salesOrderId") String salesOrderId) throws Exception {
-        // 重复代码最好想办法提取出来 -t3rik
-        SalesOrder salesOrder = this.salesOrderService.getById(salesOrderId);
-        // 查询是否已经添加销售列
-        List<SalesOrderItem> itemList = this.salesOrderItemService.lambdaQuery()
-                .eq(SalesOrderItem::getSalesOrderId, salesOrder.getSalesOrderId())
-                .list();
-        salesOrder.setSalesOrderItemList(itemList);
+    public AjaxResult generateWorkOrder(@PathVariable("salesOrderId") Long salesOrderId) throws Exception {
+        SalesOrder salesOrder =getSalesOrderItem(salesOrderId);
         // 数据校验
         CheckInfo check = this.check(salesOrder);
         // 未通过校验
         Assert.isTrue(check.getIsCheckPassed(), () -> new BusinessException(check.getMsg()));
-        List<ProWorkorder> workOrders = this.salesOrderService.execute(salesOrder);
-        return AjaxResult.success(workOrders);
+        StringBuilder sb = this.salesOrderService.execute(salesOrder);
+        return AjaxResult.success(sb.toString());
     }
 
     /**
@@ -231,20 +191,24 @@ public class SalesOrderController extends BaseController {
     @PreAuthorize("@ss.hasPermi('sales:order:push')")
     @Log(title = "客户订单", businessType = BusinessType.INSERT)
     @PostMapping("/push/{salesOrderId}")
-    public AjaxResult push(@PathVariable("salesOrderId") String salesOrderId) throws Exception {
-        // 重复代码最好想办法提取出来 -t3rik
+    public AjaxResult push(@PathVariable("salesOrderId") Long salesOrderId) throws Exception {
+        SalesOrder salesOrder =getSalesOrderItem(salesOrderId);
+        // 数据校验
+        CheckInfo check = this.check(salesOrder);
+        // 未通过校验
+        Assert.isTrue(check.getIsCheckPassed(), () -> new BusinessException(check.getMsg()));
+        return AjaxResult.success(mesWorkOrderService.pushMesWorkOrder(salesOrder));
+    }
+
+    //获取销售订单数据和填充子项
+    private SalesOrder getSalesOrderItem(Long salesOrderId){
         SalesOrder salesOrder = this.salesOrderService.getById(salesOrderId);
         // 查询是否已经添加销售列
         List<SalesOrderItem> itemList = this.salesOrderItemService.lambdaQuery()
                 .eq(SalesOrderItem::getSalesOrderId, salesOrder.getSalesOrderId())
                 .list();
         salesOrder.setSalesOrderItemList(itemList);
-        // 数据校验
-        CheckInfo check = this.check(salesOrder);
-        // 未通过校验
-        Assert.isTrue(check.getIsCheckPassed(), () -> new BusinessException(check.getMsg()));
-
-        return AjaxResult.success(mesWorkOrderService.pushMesWorkOrder(salesOrder));
+        return salesOrder;
     }
 
     /**
@@ -264,14 +228,14 @@ public class SalesOrderController extends BaseController {
             checkInfo.setMsg("此单据下没有销售列,不允许生成生产订单");
             return checkInfo;
         }
-        itemList.stream().forEach(f -> {
+        itemList.forEach(f -> {
             // 查询是否已经添加需求物料数据
             // 这里的这个list就没用到吧？这段逻辑我记得好像是客户订单的，你确定一下你是否要用。 -t3rik
             // 另外forEach不需要先调用stream()，直接forEach就可以
             List<ProClientOrderItem> list = this.proClientOrderItemService.lambdaQuery()
                     .eq(ProClientOrderItem::getClientOrderId, f.getSalesOrderItemId())
                     .list();
-            if (CollectionUtil.isEmpty(itemList)) {
+            if (CollectionUtil.isEmpty(list)) {
                 checkInfo.setMsg("未添加物料需求数据的客户订单,不允许生成生产订单");
             } else {
                 checkInfo.setIsCheckPassed(Boolean.TRUE);
@@ -284,17 +248,17 @@ public class SalesOrderController extends BaseController {
             checkInfo.setMsg("订单中,存在订货数量0的数据,不允许生成生产订单");
             return checkInfo;
         }
-        itemList.stream().forEach(f -> {
-            // -t3rik
-            // 这个for循环有问题吧？如果都不等于空，不是一直覆盖了吗？
-            if (f.getWorkorderCode() != null) {
-                String msg = MessageFormat.format("已经生成过生产订单(生成订单的编号为:{0}),不允许再次生成", f.getWorkorderCode());
-                checkInfo.setMsg(msg);
-            } else {
-                // 校验通过
-                checkInfo.setIsCheckPassed(Boolean.TRUE);
-            }
-        });
+//        itemList.forEach(f -> {
+//            // -t3rik
+//            // 这个for循环有问题吧？如果都不等于空，不是一直覆盖了吗？
+//            if (f.getWorkorderCode() != null) {
+//                String msg = MessageFormat.format("已经生成过生产订单(生成订单的编号为:{0}),不允许再次生成", f.getWorkorderCode());
+//                checkInfo.setMsg(msg);
+//            } else {
+//                // 校验通过
+//                checkInfo.setIsCheckPassed(Boolean.TRUE);
+//            }
+//        });
 
         return checkInfo;
     }

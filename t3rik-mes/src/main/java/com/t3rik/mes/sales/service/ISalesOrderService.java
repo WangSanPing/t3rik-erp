@@ -16,20 +16,19 @@ import com.t3rik.mes.sales.domain.SalesOrder;
 public interface ISalesOrderService extends IService<SalesOrder> {
 
     //save
-     boolean saveOrder(SalesOrder order);
+    boolean saveOrder(SalesOrder order);
 
-     //执行
-     List<ProWorkorder>  execute(SalesOrder order) throws Exception;
+    //执行
+    StringBuilder execute(SalesOrder order) throws Exception;
 
-     //update
-     boolean updateSalesOrder(SalesOrder salesOrder);
+    //update
+    boolean updateSalesOrder(SalesOrder salesOrder);
 
-     //remove
-     StringBuffer deleteByIds(List<Long> salesOrderIds);
+    //remove
+    StringBuilder deleteByIds(List<Long> salesOrderIds);
 
-     //审批
-     boolean refuse(SalesOrder salesOrder);
-
+    //审批
+    boolean refuse(SalesOrder salesOrder);
 
 
 }

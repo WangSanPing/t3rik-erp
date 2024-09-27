@@ -10,5 +10,5 @@ import java.util.List;
  * MES工单Service接口
  */
 public interface IMesWorkOrderService {
-    public AjaxResult pushMesWorkOrder(SalesOrder salesOrder) throws Exception;
+     AjaxResult pushMesWorkOrder(SalesOrder salesOrder) throws Exception;
 }

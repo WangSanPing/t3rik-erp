@@ -2,8 +2,6 @@ package com.t3rik.mes.sales.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.enums.mes.ItemTypeEnum;
@@ -11,7 +9,6 @@ import com.t3rik.common.enums.mes.OrderStatusEnum;
 import com.t3rik.common.enums.mes.WorkOrderSourceTypeEnum;
 import com.t3rik.common.enums.mes.WorkOrderTypeEnum;
 import com.t3rik.common.utils.StringUtils;
-import com.t3rik.mes.api.service.IMesWorkOrderService;
 import com.t3rik.mes.common.service.IAsyncService;
 import com.t3rik.mes.md.domain.MdProductBom;
 import com.t3rik.mes.md.service.IMdProductBomService;
@@ -30,11 +27,13 @@ import com.t3rik.mes.wm.domain.WmMaterialStock;
 import com.t3rik.mes.wm.service.IWmMaterialStockService;
 import com.t3rik.system.strategy.AutoCodeUtil;
 import jakarta.annotation.Resource;
+import org.apache.commons.collections.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -47,25 +46,21 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Service
 public class SalesOrderServiceImpl extends ServiceImpl<SalesOrderMapper, SalesOrder> implements ISalesOrderService {
-    @Autowired
-    private SalesOrderMapper salesOrderMapper;
-    @Autowired
+    @Resource
     private ISalesOrderItemService salesOrderItemService;
-    @Autowired
+    @Resource
     private IMdProductBomService productBomService;
     @Resource
     private IProWorkorderService proWorkorderService;
-    @Autowired
+    @Resource
     private IProClientOrderItemService clientOrderItemService;
     @Resource
     private IProWorkorderBomService workorderBomService;
     @Resource
     private IAsyncService asyncService;
-    @Autowired
+    @Resource
     private AutoCodeUtil autoCodeUtil;
     @Resource
-    private IMesWorkOrderService IMesWorkOrderService;
-    @Autowired
     private IWmMaterialStockService wmMaterialStockService;
 
     @Override
@@ -113,7 +108,7 @@ public class SalesOrderServiceImpl extends ServiceImpl<SalesOrderMapper, SalesOr
             if (list.size() > 0) {
                 StringBuffer sb = new StringBuffer();
                 list.forEach(f -> {
-                    sb.append(f.getWarehouseName() + ":" + f.getQuantityOnhand());
+                    sb.append("销售订单").append(":").append(f.getQuantityOnhand()).append("\n");
                 });
                 obj.setStockNum(sb.toString());
             }
@@ -172,10 +167,16 @@ public class SalesOrderServiceImpl extends ServiceImpl<SalesOrderMapper, SalesOr
      */
     @Transactional
     @Override
-    public List<ProWorkorder> execute(SalesOrder salesOrder) throws Exception {
+    public StringBuilder execute(SalesOrder salesOrder) throws Exception {
+        StringBuilder sb = new StringBuilder();
         List<SalesOrderItem> salesOrderItems = salesOrder.getSalesOrderItemList();
-        List<ProWorkorder> proWorkorderList = new ArrayList<>();
+        //校验是否全部生成
+        List<SalesOrderItem> newSalesOrderItems = new ArrayList<>();
         salesOrderItems.stream().forEach(f -> {
+            if (StringUtils.isNotEmpty(f.getWorkorderCode()) || f.getWorkorderId() != null) {
+                sb.append(MessageFormat.format("已经生成过生产订单(生成订单的编号为:{0}),不允许再次生成", f.getSalesOrderItemCode()));
+                return;
+            }
             // 生产订单
             ProWorkorder workorder = buildWorkOrder(f, salesOrder.getOrderType());
             // 保存生成工单
@@ -189,10 +190,11 @@ public class SalesOrderServiceImpl extends ServiceImpl<SalesOrderMapper, SalesOr
             List<ProWorkorderBom> workorderBomList = buildWorkBomList(workorder, clientOrderItems);
             // 保存工单相应的bom列表
             this.workorderBomService.saveBatch(workorderBomList);
-            // 回写客户订单
-            SalesOrderItem salesOrderItem = buildClientOrder(f, workorder);
-            // 更新客户订单
-            this.salesOrderItemService.updateById(salesOrderItem);
+            // 回写销售订单子项
+            buildSalesOrder(f, workorder);
+            // 更新销售订单子项
+            this.salesOrderItemService.updateById(f);
+            newSalesOrderItems.add(f);
             // 回写客户订单物料信息
             this.clientOrderItemService.lambdaUpdate()
                     .ge(ProClientOrderItem::getClientOrderId, f.getSalesOrderItemId())
@@ -202,12 +204,16 @@ public class SalesOrderServiceImpl extends ServiceImpl<SalesOrderMapper, SalesOr
                     .update();
             // 异步回写产品对应的bom列表
             this.asyncService.updateItemBomAndLevel(f.getProductId(), clientOrderItems);
-            proWorkorderList.add(workorder);
-
+            sb.append(MessageFormat.format("成功生成生产订单(生成订单的编号为:{0})", f.getSalesOrderItemCode())).append("\n");
+            ;
         });
-        salesOrder.setStatus("WORK_ORDER_FINISHED");
-        this.updateById(salesOrder);
-        return proWorkorderList;
+        // 校验子单是否全部生成生产订单
+        List<SalesOrderItem> nullWorkList = newSalesOrderItems.stream().filter(f -> f.getWorkorderCode().equals(null)).toList();
+        if (CollectionUtil.isNotEmpty(nullWorkList)) {
+            salesOrder.setStatus("WORK_ORDER_FINISHED");
+            this.updateById(salesOrder);
+        }
+        return sb;
     }
 
     @Override
@@ -216,7 +222,7 @@ public class SalesOrderServiceImpl extends ServiceImpl<SalesOrderMapper, SalesOr
         if (salesOrder.getStatus().equals(OrderStatusEnum.REFUSE.getCode())) {
             salesOrder.setStatus(OrderStatusEnum.APPROVING.getCode());
         }
-        List<SalesOrderItem> orderItemList = getItemList(salesOrder);
+        List<SalesOrderItem> orderItemList = salesOrderItemService.lambdaQuery().eq(SalesOrderItem::getSalesOrderId, salesOrder.getSalesOrderId()).list();
         this.salesOrderItemService.removeByIds(orderItemList);
 
         this.updateById(salesOrder);
@@ -237,89 +243,51 @@ public class SalesOrderServiceImpl extends ServiceImpl<SalesOrderMapper, SalesOr
 
     @Override
     @Transactional
-    public StringBuffer deleteByIds(List<Long> salesOrderIds) {
+    public StringBuilder deleteByIds(List<Long> salesOrderIds) {
         List<SalesOrder> salesOrders = this.listByIds(salesOrderIds);
-        // -t3rik
-        // 没有线程安全的问题的情况下 用 StringBuilder
-        StringBuffer sb = new StringBuffer();
-        for (SalesOrder li : salesOrders) {
-            List<SalesOrderItem> orderItemList = getItemList(li);
-            // -t3rik
-            // 建议多用工具类做集合判空和非空，例如 if(CollectionUtils.isNotEmpty())
-            if (orderItemList.size() > 0) {
-                // 已经用了StringBuffer类了，就不要再用字符串+号拼接了
-                // sb.append("销售订单").append(li.getSalesOrderCode()).append("下还有未删除的清单，不允许删除").append("\n");
-                sb.append("销售订单" + li.getSalesOrderCode() + "下还有未删除的清单，不允许删除" + "\n");
-                salesOrderIds.remove(li.getSalesOrderId());
-            }
+        if (CollectionUtils.isEmpty(salesOrders)) {
+            return new StringBuilder("没有要删除的数据!");
         }
+        // 返回错误信息
+        StringBuilder sb = new StringBuilder();
+        salesOrders.forEach(item -> {
+            List<SalesOrderItem> orderItemList =
+                    this.salesOrderItemService.lambdaQuery()
+                            .eq(SalesOrderItem::getSalesOrderId, item.getSalesOrderId())
+                            .list();
+            // 没数据后面就不操作了，直接到下个循环
+            if (CollectionUtils.isEmpty(orderItemList)) {
+                return;
+            }
+            sb.append("销售订单").append(item.getSalesOrderCode()).append("下还有未删除的清单，不允许删除").append("\n");
+            salesOrderIds.remove(item.getSalesOrderId());
+        });
         this.removeByIds(salesOrderIds);
-
-        // 参考
-        // List<SalesOrder> salesOrders = this.listByIds(salesOrderIds);
-        // if (CollectionUtils.isEmpty(salesOrders)) {
-        //     return new StringBuffer("没有要删除的数据!");
-        // }
-        // // 返回错误信息
-        // StringBuffer sb = new StringBuffer();
-        // salesOrders.forEach(item -> {
-        //     List<SalesOrderItem> orderItemList =
-        //             this.salesOrderItemService.lambdaQuery()
-        //                     .eq(SalesOrderItem::getSalesOrderId, item.getSalesOrderId())
-        //                     .list();
-        //     // 没数据后面就不操作了，直接到下个循环
-        //     if (CollectionUtils.isEmpty(orderItemList)) {
-        //         return;
-        //     }
-        //     sb.append("销售订单").append(item.getSalesOrderCode()).append("下还有未删除的清单，不允许删除").append("\n");
-        //     salesOrderIds.remove(item.getSalesOrderId());
-        // });
-        // this.removeByIds(salesOrderIds);
         return sb;
     }
 
-    // 根据主单id查找子项
-    // -t3rik
-    // 这个可以写成一行，提这个方法没有太大不要
-    private List<SalesOrderItem> getItemList(SalesOrder salesOrder) {
-        LambdaQueryWrapper<SalesOrderItem> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(SalesOrderItem::getSalesOrderId, salesOrder.getSalesOrderId());
-        List<SalesOrderItem> orderItemList = salesOrderItemService.list(queryWrapper);
-        return orderItemList;
-    }
-
+    // 审批拒绝/提交
     @Override
     @Transactional
     public boolean refuse(SalesOrder salesOrder) {
-        // 审批拒绝/提交
-        this.updateById(salesOrder);
-        List<SalesOrderItem> itemList = salesOrderItemService.lambdaQuery()
-                .eq(SalesOrderItem::getSalesOrderId, salesOrder.getSalesOrderId())
-                .list();
-        // -t3rik
-        // 参考
-        // 这里如果itemList为空应该可以直接返回了。
-        // if(CollectionUtils.isEmpty(itemList)){
-        //     return false;
-        // }
-        // // 不为空再执行下面的
-        // salesOrder.setSalesOrderItemList(itemList);
-        // salesOrder.getSalesOrderItemList().forEach(object -> object.setStatus(salesOrder.getStatus()));
-        // return salesOrderItemService.updateBatchById(salesOrder.getSalesOrderItemList());
-        // 但是我不确定你的逻辑，如果SalesOrderItemList要是没有需要更新的子单，就算更新失败的话，那你直接返回false，不会触发事务
-        // 要是你主单和子单都各自更新的话，返回false就没问题，
-        // 要想触发事务，就得抛异常
-        salesOrder.setSalesOrderItemList(itemList);
-        if (salesOrder.getSalesOrderItemList().size() > 0) {
-            salesOrder.getSalesOrderItemList().forEach(object -> object.setStatus(salesOrder.getStatus()));
+        if (salesOrder.getStatus().equals(OrderStatusEnum.PREPARE.getCode())) {
+            salesOrder.setStatus(OrderStatusEnum.CONFIRMED.getCode());
+        } else if (salesOrder.getStatus().equals(OrderStatusEnum.CONFIRMED.getCode())) {
+            salesOrder.setStatus(OrderStatusEnum.APPROVING.getCode());
+        } else if (salesOrder.getStatus().equals(OrderStatusEnum.APPROVING.getCode())) {
+            salesOrder.setStatus(OrderStatusEnum.REFUSE.getCode());
         } else {
             return false;
         }
-        return salesOrderItemService.updateBatchById(salesOrder.getSalesOrderItemList());
-
-
-
-
+        this.updateById(salesOrder);
+        //获取子项
+        List<SalesOrderItem> itemList = salesOrder.getSalesOrderItemList();
+        if (CollectionUtils.isNotEmpty(itemList)) {
+            itemList.forEach(object -> object.setStatus(salesOrder.getStatus()));
+            this.updateById(salesOrder);
+            return salesOrderItemService.updateBatchById(itemList);
+        }
+        return false;
     }
 
     /**
@@ -342,24 +310,24 @@ public class SalesOrderServiceImpl extends ServiceImpl<SalesOrderMapper, SalesOr
 
 
     /**
-     * 构建回写客户订单
+     * 构建回写销售订单子项
      */
-    private SalesOrderItem buildClientOrder(@NotNull SalesOrderItem salesOrderItem, @NotNull ProWorkorder workorder) {
-        SalesOrderItem salesOrderItemUpdate = new SalesOrderItem();
-        salesOrderItemUpdate.setSalesOrderItemId(salesOrderItem.getSalesOrderItemId());
-        salesOrderItemUpdate.setWorkorderId(workorder.getWorkorderId());
-        salesOrderItemUpdate.setWorkorderCode(workorder.getWorkorderCode());
-        salesOrderItemUpdate.setWorkorderName(workorder.getWorkorderName());
+    private void buildSalesOrder(@NotNull SalesOrderItem salesOrderItem, @NotNull ProWorkorder workorder) {
+//        SalesOrderItem salesOrderItemUpdate = new SalesOrderItem();
+        salesOrderItem.setSalesOrderItemId(salesOrderItem.getSalesOrderItemId());
+        salesOrderItem.setWorkorderId(workorder.getWorkorderId());
+        salesOrderItem.setWorkorderCode(workorder.getWorkorderCode());
+        salesOrderItem.setWorkorderName(workorder.getWorkorderName());
         // 订单状态变为已生成生成订单
-        salesOrderItemUpdate.setStatus(OrderStatusEnum.WORK_ORDER_FINISHED.getCode());
-        return salesOrderItemUpdate;
+        salesOrderItem.setStatus(OrderStatusEnum.WORK_ORDER_FINISHED.getCode());
     }
 
 
     /**
      * 构建生产订单
      */
-    private @NotNull ProWorkorder buildWorkOrder(@NotNull SalesOrderItem salesOrderItem, String sourceCode) {
+    private @NotNull
+    ProWorkorder buildWorkOrder(@NotNull SalesOrderItem salesOrderItem, String sourceCode) {
         ProWorkorder workorder = new ProWorkorder();
         BeanUtil.copyProperties(salesOrderItem, workorder);
         String workorderCode = this.autoCodeUtil.genSerialCode(UserConstants.WORKORDER_CODE, null);
