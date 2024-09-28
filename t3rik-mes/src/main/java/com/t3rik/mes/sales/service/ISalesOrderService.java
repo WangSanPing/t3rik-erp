@@ -3,7 +3,6 @@ package com.t3rik.mes.sales.service;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.t3rik.mes.pro.domain.ProWorkorder;
 import com.t3rik.mes.sales.domain.SalesOrder;
 
 

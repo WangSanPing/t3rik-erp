@@ -1,6 +1,5 @@
 package com.t3rik.mes.sales.mapper;
 
-import java.util.List;
 
 import com.t3rik.mes.sales.domain.SalesOrderItem;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;

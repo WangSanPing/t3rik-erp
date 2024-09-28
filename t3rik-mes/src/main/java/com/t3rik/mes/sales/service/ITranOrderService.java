@@ -3,9 +3,7 @@ package com.t3rik.mes.sales.service;
 import java.util.List;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.mes.sales.domain.TranOrder;
-import com.t3rik.mes.sales.domain.TranOrderLine;
 
 /**
  * 销售送货单Service接口

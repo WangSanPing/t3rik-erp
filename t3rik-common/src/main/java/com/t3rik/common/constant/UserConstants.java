@@ -211,6 +211,8 @@ public class UserConstants {
     public static final String TRANSACTION_TYPE_PRODUCT_ISSUE = "PRODUCT_SALSE"; // 销售出库
     public static final String TRANSACTION_TYPE_PRODUCT_RS = "PRODUCT_RT"; // 销售退货
 
+    public static final String TRANSACTION_TYPE_TRAN_SALES = "TRAN_SALES"; // 销售送货出库
+
 
     /**
      * 轮班方式

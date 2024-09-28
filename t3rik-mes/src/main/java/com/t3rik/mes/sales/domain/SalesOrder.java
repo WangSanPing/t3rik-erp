@@ -10,8 +10,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.t3rik.common.annotation.Excel;
 import com.t3rik.common.core.domain.BaseEntity;
-import com.t3rik.common.enums.EnableFlagEnum;
-import com.t3rik.mes.sales.domain.SalesOrderItem;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -139,4 +137,6 @@ public class SalesOrder extends BaseEntity
     private List<SalesOrderItem> salesOrderItemList;
 
 
+    @TableField(exist = false)
+    private Long warehouseId;
 }
