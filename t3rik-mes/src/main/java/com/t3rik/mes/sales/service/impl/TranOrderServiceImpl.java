@@ -1,27 +1,27 @@
 package com.t3rik.mes.sales.service.impl;
 
-import java.math.BigDecimal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.t3rik.common.core.domain.AjaxResult;
+import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.enums.mes.OrderStatusEnum;
-import com.t3rik.mes.md.domain.MdProductBom;
-import com.t3rik.mes.pro.domain.ProClientOrder;
-import com.t3rik.mes.pro.domain.ProClientOrderItem;
+import com.t3rik.common.exception.BusinessException;
 import com.t3rik.mes.sales.domain.SalesOrderItem;
 import com.t3rik.mes.sales.domain.TranOrderLine;
 import com.t3rik.mes.sales.service.ISalesOrderItemService;
 import com.t3rik.mes.sales.service.ITranOrderLineService;
+import com.t3rik.mes.wm.domain.WmMaterialStock;
+import com.t3rik.mes.wm.domain.WmTransaction;
+import com.t3rik.mes.wm.service.IWmMaterialStockService;
+import com.t3rik.mes.wm.service.IWmTransactionService;
 import com.t3rik.system.strategy.AutoCodeUtil;
 import org.apache.commons.collections.CollectionUtils;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.t3rik.mes.sales.mapper.TranOrderMapper;
@@ -45,6 +45,12 @@ public class TranOrderServiceImpl extends ServiceImpl<TranOrderMapper, TranOrder
     private AutoCodeUtil autoCodeUtil;
     @Autowired
     private ISalesOrderItemService salesOrderItemService;
+    @Autowired
+    private IWmTransactionService wmTransactionService;
+    @Autowired
+    private IWmMaterialStockService wmMaterialStockService;
+
+
 
     @Transactional
     @Override
@@ -101,20 +107,79 @@ public class TranOrderServiceImpl extends ServiceImpl<TranOrderMapper, TranOrder
                 f.setStatus(OrderStatusEnum.APPROVED.getCode());
                 newLineList.add(f);
             } catch (Exception e) {
-                sb.append("送货单" + f.getTranCode() + "出现错误:" + e.getMessage() + "\n");
+                throw new BusinessException("没有需要处理的产品销售出库单行");
             }
         });
         salesOrderItemService.updateBatchById(salesOrderItemList);
-        // 校验子单是否全部生成生产订单
-        List<TranOrderLine> nullWorkList = newLineList.stream().filter(f -> !f.getStatus().equals(OrderStatusEnum.APPROVED.getCode())).toList();
+        // 校验子单是否全部通过审批
+        List<TranOrderLine> nullWorkList = tranOrderLineList.stream().filter(f -> !f.getStatus().equals(OrderStatusEnum.APPROVED.getCode())).toList();
         if (CollectionUtil.isEmpty(nullWorkList)) {
             tranOrder.setStatus(OrderStatusEnum.APPROVED.getCode());
             this.updateById(tranOrder);
-            //更新送货单状态
-            tranOrderLineService.updateBatchById(tranOrderLineList);
         }
-        sb.append("成功" + salesOrderItemList.size() + "条数据");
+        //更新送货单状态
+        tranOrderLineService.updateBatchById(newLineList);
+        if (CollectionUtil.isEmpty(newLineList)) {
+            sb.append("失败！没有可送货的单据");
+        }else{
+            //扣除库存
+            processTranOrder(newLineList);
+            sb.append("成功" + newLineList.size() + "条数据");
+        }
         return sb;
+    }
+
+    //库存
+    private void processTranOrder(List<TranOrderLine>lines){
+        String transactionType = UserConstants.TRANSACTION_TYPE_TRAN_SALES;
+//        List<WmTransaction> list=new ArrayList<>();
+        lines.forEach(f->{
+            //查询库存记录
+            // 查询库存
+            WmMaterialStock wmMaterialStock = wmMaterialStockService.lambdaQuery()
+                    .eq(WmMaterialStock::getItemId,f.getProductId())
+                    .eq(WmMaterialStock::getWarehouseId,f.getWarehouseId())
+                    .one();
+            if(wmMaterialStock==null){
+                 throw new BusinessException("仓库未查询到该产品数据，请检查各环节！"+f.getProductCode()+"/"+f.getProductName());
+            }
+            WmTransaction transaction = new WmTransaction();
+            //产品
+            transaction.setItemId(f.getProductId());
+            transaction.setItemCode(f.getProductCode());
+            transaction.setItemName(f.getProductName());
+            transaction.setSpecification(f.getProductSpec());
+            transaction.setUnitOfMeasure(f.getUnitOfMeasure());
+            //仓库
+            transaction.setWarehouseId(f.getWarehouseId());
+            transaction.setWarehouseCode(f.getWarehouseCode());
+            transaction.setWarehouseName(f.getWarehouseName());
+            //库区(未做)
+            transaction.setLocationId(null);
+            transaction.setLocationCode(null);
+            transaction.setLocationName(null);
+            //库位(未做)
+            transaction.setAreaId(null);
+            transaction.setAreaCode(null);
+            transaction.setAreaName(null);
+            //数量
+            transaction.setTransactionQuantity(f.getSaleSgqty());
+            //工单
+            transaction.setWorkorderId(f.getWorkorderId());
+            transaction.setWorkorderCode(f.getWorkorderCode());
+
+            transaction.setSourceDocId(f.getTranOrderId());
+            transaction.setSourceDocCode(f.getTranOrderCode());
+            transaction.setSourceDocLineId(f.getTranOrderLineId());
+
+            transaction.setMaterialStockId(wmMaterialStock.getMaterialStockId());
+            transaction.setTransactionType(transactionType);
+            transaction.setTransactionFlag(-1); // 库存减少
+            transaction.setTransactionDate(new Date());
+            wmTransactionService.processTransaction(transaction);
+//            list.add(transaction);
+        });
+
     }
 
     @Override

@@ -150,7 +150,10 @@ public class SalesOrderController extends BaseController {
         // 获取查询条件
         LambdaQueryWrapper<SalesOrder> queryWrapper = getQueryWrapper(salesOrder);
         List<SalesOrder> salesOrderList = this.salesOrderService.list(queryWrapper);
-        return getDataTable(this.salesOrderItemService.getItemList(salesOrderList));
+        if(CollectionUtils.isEmpty(salesOrderList)){
+            return getDataTable(salesOrderList);
+        }
+        return getDataTable(this.salesOrderItemService.getItemList(salesOrderList,salesOrder.getWarehouseId()));
     }
 
     /**

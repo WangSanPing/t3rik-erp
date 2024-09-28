@@ -1,17 +1,15 @@
 package com.t3rik.mes.sales.domain;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.t3rik.common.core.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.t3rik.common.annotation.Excel;
 
 /**
@@ -104,10 +102,14 @@ public class SalesOrderItem extends BaseEntity
 
 
 
-    /** 库存数量 */
+    /** 库存数量（固定） */
     @Excel(name = "库存数量")
     private String stockNum;
 
+    /** 库存数量 */
+    @Excel(name = "当前库存")
+    @TableField(exist = false)
+    private BigDecimal stockNumber;
 
     /** 已出货数 */
     @Excel(name = "已出货数")

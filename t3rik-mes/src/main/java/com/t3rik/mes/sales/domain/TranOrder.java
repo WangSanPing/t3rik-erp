@@ -9,7 +9,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.t3rik.common.annotation.Excel;
 import com.t3rik.common.core.domain.BaseEntity;
-import com.t3rik.common.enums.EnableFlagEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

@@ -29,7 +29,6 @@ import com.t3rik.system.strategy.AutoCodeUtil;
 import jakarta.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -108,7 +107,7 @@ public class SalesOrderServiceImpl extends ServiceImpl<SalesOrderMapper, SalesOr
             if (list.size() > 0) {
                 StringBuffer sb = new StringBuffer();
                 list.forEach(f -> {
-                    sb.append("销售订单").append(":").append(f.getQuantityOnhand()).append("\n");
+                    sb.append(f.getWarehouseName()).append(":").append(f.getQuantityOnhand()).append("\n");
                 });
                 obj.setStockNum(sb.toString());
             }
@@ -192,8 +191,6 @@ public class SalesOrderServiceImpl extends ServiceImpl<SalesOrderMapper, SalesOr
             this.workorderBomService.saveBatch(workorderBomList);
             // 回写销售订单子项
             buildSalesOrder(f, workorder);
-            // 更新销售订单子项
-            this.salesOrderItemService.updateById(f);
             newSalesOrderItems.add(f);
             // 回写客户订单物料信息
             this.clientOrderItemService.lambdaUpdate()
@@ -207,9 +204,11 @@ public class SalesOrderServiceImpl extends ServiceImpl<SalesOrderMapper, SalesOr
             sb.append(MessageFormat.format("成功生成生产订单(生成订单的编号为:{0})", f.getSalesOrderItemCode())).append("\n");
             ;
         });
+        // 更新销售订单子项
+        this.salesOrderItemService.updateBatchById(newSalesOrderItems);
         // 校验子单是否全部生成生产订单
-        List<SalesOrderItem> nullWorkList = newSalesOrderItems.stream().filter(f -> f.getWorkorderCode().equals(null)).toList();
-        if (CollectionUtil.isNotEmpty(nullWorkList)) {
+        List<SalesOrderItem> nullWorkList = salesOrderItems.stream().filter(f -> f.getWorkorderCode().equals(null)).toList();
+        if (CollectionUtil.isEmpty(nullWorkList)) {
             salesOrder.setStatus("WORK_ORDER_FINISHED");
             this.updateById(salesOrder);
         }
