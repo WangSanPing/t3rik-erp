@@ -42,7 +42,8 @@ public class HrmInterviewRecordServiceImpl extends ServiceImpl<HrmInterviewRecor
     @Override
     public Page<InterviewRecordDTO> pageGroupByStaff(HrmInterviewRecord query) {
         return this.pageGroupByStaffWithStatus(query,
-                List.of(StaffStatusEnum.INTERVIEW.getCode(),
+                List.of(StaffStatusEnum.ALTERNATE.getCode(),
+                        StaffStatusEnum.INTERVIEW.getCode(),
                         StaffStatusEnum.REEXAMINATION.getCode(),
                         StaffStatusEnum.PASS_THE_INTERVIEW.getCode(),
                         StaffStatusEnum.INTERVIEW_FAIL.getCode(),
