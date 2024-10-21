@@ -30,7 +30,7 @@ CREATE TABLE `sales_order` (
                                `update_time` datetime DEFAULT NULL COMMENT '更新时间',
                                `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '备注',
                                PRIMARY KEY (`sales_order_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='销售订单'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='销售订单';
 
 -- 销售订单产品列表
 DROP TABLE IF EXISTS `sales_order_item`;
@@ -73,7 +73,7 @@ CREATE TABLE `sales_order_item` (
                                     `status` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'PREPARE' COMMENT '单据状态',
                                     `client_po_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '客户PO号',
                                     PRIMARY KEY (`sales_order_item_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='销售订单产品列表'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='销售订单产品列表';
 
 -- 销售送货单
 DROP TABLE IF EXISTS `tran_order`;
@@ -109,7 +109,7 @@ CREATE TABLE `tran_order` (
                               `update_time` datetime DEFAULT NULL COMMENT '更新时间',
                               `remark` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '备注',
                               PRIMARY KEY (`tran_order_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='销售送货单'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='销售送货单';
 
 -- 销售送货单列表
 DROP TABLE IF EXISTS `tran_order_line`;
@@ -161,7 +161,7 @@ CREATE TABLE `tran_order_line` (
                                    `update_user_id` bigint(20) DEFAULT NULL COMMENT '更新人id',
                                    `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '更新者',
                                    `update_time` datetime DEFAULT NULL COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='销售送货单列表'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='销售送货单列表';
 
 
 DROP TABLE IF EXISTS `md_product_color`;
@@ -177,7 +177,7 @@ CREATE TABLE `md_product_color` (
                                     `update_by` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
                                     `create_user_id` bigint(20) DEFAULT NULL COMMENT '创建人id',
                                     `update_user_id` bigint(20) DEFAULT NULL COMMENT '修改人id'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 
 ALTER TABLE md_item ADD COLUMN mold_no varchar(32) COMMENT '模具号',ADD COLUMN weight DOUBLE(12,4) COMMENT '单重',ADD COLUMN metal varchar(32) COMMENT '材质';
@@ -265,4 +265,4 @@ CREATE TABLE `mes_access` (
                               `update_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
                               `create_user_id` bigint(20) DEFAULT NULL COMMENT '创建人id',
                               `update_user_id` bigint(20) DEFAULT NULL COMMENT '修改人id'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
