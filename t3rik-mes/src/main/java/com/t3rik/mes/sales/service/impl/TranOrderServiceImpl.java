@@ -104,28 +104,30 @@ public class TranOrderServiceImpl extends ServiceImpl<TranOrderMapper, TranOrder
                 if (orderItem.getSaleQty().compareTo(orderItem.getSalesOrderQuantity()) == 0) {
                     orderItem.setStatus(OrderStatusEnum.FINISHED.getCode());
                 }
-                f.setStatus(OrderStatusEnum.APPROVED.getCode());
                 newLineList.add(f);
+                f.setStatus(OrderStatusEnum.APPROVED.getCode());
             } catch (Exception e) {
                 throw new BusinessException("没有需要处理的产品销售出库单行");
             }
         });
-        salesOrderItemService.updateBatchById(salesOrderItemList);
+
         // 校验子单是否全部通过审批
         List<TranOrderLine> nullWorkList = tranOrderLineList.stream().filter(f -> !f.getStatus().equals(OrderStatusEnum.APPROVED.getCode())).toList();
         if (CollectionUtil.isEmpty(nullWorkList)) {
             tranOrder.setStatus(OrderStatusEnum.APPROVED.getCode());
             this.updateById(tranOrder);
         }
-        //更新送货单状态
-        tranOrderLineService.updateBatchById(newLineList);
+
         if (CollectionUtil.isEmpty(newLineList)) {
             sb.append("失败！没有可送货的单据");
         }else{
             //扣除库存
-            processTranOrder(newLineList);
+            this.processTranOrder(newLineList);
+            salesOrderItemService.updateBatchById(salesOrderItemList);
             sb.append("成功" + newLineList.size() + "条数据");
         }
+        //更新送货单状态
+        tranOrderLineService.updateBatchById(newLineList);
         return sb;
     }
 

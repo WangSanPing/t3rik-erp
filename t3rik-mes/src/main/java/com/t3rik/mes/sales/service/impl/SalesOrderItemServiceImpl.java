@@ -31,11 +31,10 @@ public class SalesOrderItemServiceImpl  extends ServiceImpl<SalesOrderItemMapper
 
     @Override
     public List<SalesOrderItem> getItemList(List<SalesOrder> salesOrderList,Long warehouseId) {
-        List<SalesOrderItem> items = this.list();
+        List<SalesOrderItem> items = this.lambdaQuery().eq(SalesOrderItem::getStatus,OrderStatusEnum.WORK_ORDER_FINISHED.getCode()).list();
         List<SalesOrderItem> itemList = new ArrayList<>();
         for (SalesOrder li : salesOrderList) {
             for (SalesOrderItem item : items) {
-                if (item.getSalesOrderId().equals(li.getSalesOrderId())&&li.getStatus().equals(OrderStatusEnum.WORK_ORDER_FINISHED.getCode())) {
                     // 查询库存
                     WmMaterialStock wmMaterialStock = wmMaterialStockService.lambdaQuery()
                             .eq(WmMaterialStock::getItemId,item.getProductId())
@@ -48,7 +47,6 @@ public class SalesOrderItemServiceImpl  extends ServiceImpl<SalesOrderItemMapper
                     }
                     itemList.add(item);
                 }
-            }
         }
         return items;
     }
