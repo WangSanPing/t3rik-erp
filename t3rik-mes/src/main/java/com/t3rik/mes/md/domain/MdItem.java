@@ -56,6 +56,8 @@ public class MdItem extends BaseEntity {
     /** 单重 */
     @Excel(name = "材质")
     private String metal;
+    /**图片url**/
+    private String imgUrl;
 
     public Double getWeight() {
         return weight;
@@ -224,6 +226,13 @@ public class MdItem extends BaseEntity {
         this.attr4 = attr4;
     }
 
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
 
     @Override
     public String toString() {
