@@ -30,6 +30,7 @@
         <result property="weight" column="weight"/>
         <result property="moldNo" column="mold_no"/>
         <result property="metal" column="metal"/>
+        <result property="imgUrl" column="img_url"/>
     </resultMap>
 
     <sql id="selectMdItemVo">
@@ -51,7 +52,8 @@
                remark,
                weight,
                mold_no,
-               metal
+               metal,
+               img_url
         from md_item
     </sql>
 
@@ -120,6 +122,7 @@
         <if test="moldNo !=null and moldNo !=''">mold_no,</if>
         <if test="metal !=null and metal !=''">metal,</if>
         <if test="createBy !=null and createBy !=''">create_by,</if>
+        <if test="imgUrl !=null">img_url,</if>
         create_time
         )
         values (
@@ -146,6 +149,7 @@
 
 
         <if test="createBy !=null and createBy !=''">#{createBy},</if>
+        <if test="imgUrl !=null">#{imgUrl},</if>
         sysdate()
         )
     </insert>
@@ -175,6 +179,7 @@
             <if test="metal !=null and metal !=''">metal=#{metal},</if>
 
             <if test="updateBy !=null and updateBy !=''">update_by=#{updateBy},</if>
+            <if test="imgUrl !=null ">img_url=#{imgUrl},</if>
             update_time = sysdate()
         </set>
         where item_id = #{itemId}
@@ -197,4 +202,4 @@
         <include refid="selectMdItemVo"/>
         where item_code = #{itemCode} limit 1
     </select>
-</mapper> 
+</mapper>
