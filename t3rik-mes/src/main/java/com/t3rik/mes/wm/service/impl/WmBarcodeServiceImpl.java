@@ -9,6 +9,7 @@ import com.t3rik.common.utils.file.FileUtils;
 import com.t3rik.mes.wm.domain.WmBarcode;
 import com.t3rik.mes.wm.mapper.WmBarcodeMapper;
 import com.t3rik.mes.wm.service.IWmBarcodeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,19 +19,20 @@ import java.util.List;
 
 /**
  * 条码清单Service业务层处理
- * 
+ *
  * @author yinjinlu
  * @date 2022-08-01
  */
 @Service
-public class WmBarcodeServiceImpl implements IWmBarcodeService 
+@Slf4j
+public class WmBarcodeServiceImpl implements IWmBarcodeService
 {
     @Autowired
     private WmBarcodeMapper wmBarcodeMapper;
 
     /**
      * 查询条码清单
-     * 
+     *
      * @param barcodeId 条码清单主键
      * @return 条码清单
      */
@@ -42,7 +44,7 @@ public class WmBarcodeServiceImpl implements IWmBarcodeService
 
     /**
      * 查询条码清单列表
-     * 
+     *
      * @param wmBarcode 条码清单
      * @return 条码清单
      */
@@ -64,7 +66,7 @@ public class WmBarcodeServiceImpl implements IWmBarcodeService
 
     /**
      * 新增条码清单
-     * 
+     *
      * @param wmBarcode 条码清单
      * @return 结果
      */
@@ -77,7 +79,7 @@ public class WmBarcodeServiceImpl implements IWmBarcodeService
 
     /**
      * 修改条码清单
-     * 
+     *
      * @param wmBarcode 条码清单
      * @return 结果
      */
@@ -90,7 +92,7 @@ public class WmBarcodeServiceImpl implements IWmBarcodeService
 
     /**
      * 批量删除条码清单
-     * 
+     *
      * @param barcodeIds 需要删除的条码清单主键
      * @return 结果
      */
@@ -102,7 +104,7 @@ public class WmBarcodeServiceImpl implements IWmBarcodeService
 
     /**
      * 删除条码清单信息
-     * 
+     *
      * @param barcodeId 条码清单主键
      * @return 结果
      */
@@ -114,23 +116,22 @@ public class WmBarcodeServiceImpl implements IWmBarcodeService
 
     @Override
     public String generateBarcode(WmBarcode wmBarcode) {
-		File buf = BarcodeUtil.generateBarCode(wmBarcode.getBarcodeContent(), wmBarcode.getBarcodeFormart(),
+		File file = BarcodeUtil.generateBarCode(wmBarcode.getBarcodeContent(), wmBarcode.getBarcodeFormart(),
 				"./tmp/barcode/" + wmBarcode.getBarcodeContent() + ".png");
-        // MultipartFile file = FileUtils.getMultipartFile(buf);
         String fileName = null;
         try {
             // todo 后期需要修改使用minio的升级类
-            fileName = FileUploadUtils.uploadMinio(null);
+            fileName = FileUploadUtils.uploadMinio(file);
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            log.error(e.getMessage());
         }finally{
         	//删除掉临时文件
-        	if(buf!=null && buf.exists()){
-        		FileUtils.deleteFile(buf.getAbsolutePath());
+        	if(file!=null && file.exists()){
+        		FileUtils.deleteFile(file.getAbsolutePath());
         	}
+            return fileName;
         }
-        return fileName;
+
     }
 
 

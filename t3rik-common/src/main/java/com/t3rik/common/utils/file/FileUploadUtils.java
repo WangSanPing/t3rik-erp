@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Objects;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.IdUtil;
 import com.t3rik.common.config.MinioConfig;
 import com.t3rik.common.config.PlatformConfig;
 import org.apache.commons.io.FilenameUtils;
@@ -150,6 +153,24 @@ public class FileUploadUtils
     }
 
     /**
+     * 以默认BucketName配置上传到Minio服务器
+     *
+     * @param file 上传的文件
+     * @return 文件名称
+     * @throws Exception
+     */
+    public static final String uploadMinio(File file) throws IOException
+    {
+        try
+        {
+            return uploadMinino(getBucketName(), file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
+        }
+        catch (Exception e)
+        {
+            throw new IOException(e.getMessage(), e);
+        }
+    }
+    /**
      * 自定义bucketName配置上传到Minio服务器
      *
      * @param file 上传的文件
@@ -157,6 +178,25 @@ public class FileUploadUtils
      * @throws Exception
      */
     public static final String uploadMinio(MultipartFile file, String bucketName) throws IOException
+    {
+        try
+        {
+            return uploadMinino(bucketName, file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
+        }
+        catch (Exception e)
+        {
+            throw new IOException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 自定义bucketName配置上传到Minio服务器
+     *
+     * @param file 上传的文件
+     * @return 文件名称
+     * @throws Exception
+     */
+    public static final String uploadMinio(File file, String bucketName) throws IOException
     {
         try
         {
@@ -189,7 +229,27 @@ public class FileUploadUtils
             throw new IOException(e.getMessage(), e);
         }
     }
-
+    private static final String uploadMinino(String bucketName, File file, String[] allowedExtension)
+            throws FileSizeLimitExceededException, IOException, FileNameLengthLimitExceededException,
+            InvalidExtensionException
+    {
+        int fileNamelength = file.getName().length();
+        if (fileNamelength > FileUploadUtils.DEFAULT_FILE_NAME_LENGTH)
+        {
+            throw new FileNameLengthLimitExceededException(FileUploadUtils.DEFAULT_FILE_NAME_LENGTH);
+        }
+        assertAllowed(file, allowedExtension);
+        try
+        {
+            String fileName = extractFilename(file);
+            String pathFileName = MinioUtil.uploadFile(bucketName, fileName, file);
+            return pathFileName;
+        }
+        catch (Exception e)
+        {
+            throw new IOException(e.getMessage(), e);
+        }
+    }
 
     /**
      * 编码文件名
@@ -200,6 +260,16 @@ public class FileUploadUtils
                 FilenameUtils.getBaseName(file.getOriginalFilename()), Seq.getId(Seq.uploadSeqType), getExtension(file));
     }
 
+    /**
+     * 编码文件名
+     */
+    public static final String extractFilename(File file)
+    {
+        // 获取文件的扩展名
+        String extension = FileUtil.extName(file.getName());
+        return StringUtils.format("{}/{}_{}.{}", DateUtils.datePath(),
+                FilenameUtils.getBaseName(file.getName()), Seq.getId(Seq.uploadSeqType), getExtension(file));
+    }
     public static final File getAbsoluteFile(String uploadDir, String fileName) throws IOException
     {
         File desc = new File(uploadDir + File.separator + fileName);
@@ -270,6 +340,56 @@ public class FileUploadUtils
 
     }
 
+
+    /**
+     * 文件大小校验
+     *
+     * @param file 上传的文件
+     * @return
+     * @throws FileSizeLimitExceededException 如果超出最大大小
+     * @throws InvalidExtensionException
+     */
+    public static final void assertAllowed(File file, String[] allowedExtension)
+            throws FileSizeLimitExceededException, InvalidExtensionException
+    {
+        long size = file.length();
+        if (size > DEFAULT_MAX_SIZE)
+        {
+            throw new FileSizeLimitExceededException(DEFAULT_MAX_SIZE / 1024 / 1024);
+        }
+
+        String fileName = file.getName();
+        String extension = getExtension(file);
+        if (allowedExtension != null && !isAllowedExtension(extension, allowedExtension))
+        {
+            if (allowedExtension == MimeTypeUtils.IMAGE_EXTENSION)
+            {
+                throw new InvalidExtensionException.InvalidImageExtensionException(allowedExtension, extension,
+                        fileName);
+            }
+            else if (allowedExtension == MimeTypeUtils.FLASH_EXTENSION)
+            {
+                throw new InvalidExtensionException.InvalidFlashExtensionException(allowedExtension, extension,
+                        fileName);
+            }
+            else if (allowedExtension == MimeTypeUtils.MEDIA_EXTENSION)
+            {
+                throw new InvalidExtensionException.InvalidMediaExtensionException(allowedExtension, extension,
+                        fileName);
+            }
+            else if (allowedExtension == MimeTypeUtils.VIDEO_EXTENSION)
+            {
+                throw new InvalidExtensionException.InvalidVideoExtensionException(allowedExtension, extension,
+                        fileName);
+            }
+            else
+            {
+                throw new InvalidExtensionException(allowedExtension, extension, fileName);
+            }
+        }
+
+    }
+
     /**
      * 判断MIME类型是否是允许的MIME类型
      *
@@ -304,4 +424,21 @@ public class FileUploadUtils
         }
         return extension;
     }
+
+    /**
+     * 获取文件名的后缀
+     *
+     * @param file 表单文件
+     * @return 后缀名
+     */
+    public static final String getExtension(File file)
+    {
+        String fileName = file.getName();
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex == -1) {
+            return ""; // 没有后缀名
+        }
+        return fileName.substring(dotIndex + 1);
+    }
+
 }
