@@ -10,9 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -81,8 +79,7 @@ public class SecurityConfig {
                         authorizeHttpRequests ->
                                 // 对于登录login 注册register 验证码captchaImage 允许匿名访问
                                 authorizeHttpRequests.requestMatchers("/login", "/register", "/captchaImage", "/mobile/captchaImage"
-                                                , UserConstants.MOBILE_PATH + "/login"
-                                                , UserConstants.MOBILE_PATH + "/logout")
+                                                , UserConstants.MOBILE_PATH + "/login")
                                         .anonymous()
                                         .requestMatchers(
                                                 HttpMethod.GET,
@@ -100,7 +97,8 @@ public class SecurityConfig {
                                         .requestMatchers("/*/api-docs").anonymous()
                                         .requestMatchers("/druid/**").anonymous()
                                         .requestMatchers("/websocket/**").anonymous()
-                                        .requestMatchers("/system/autocode/get/**").permitAll()
+                                        .requestMatchers("/system/autocode/get/**"
+                                                , UserConstants.MOBILE_PATH + "/logout").permitAll()
                                         // 除上面外的所有请求全部需要鉴权认证
                                         .anyRequest().authenticated()
 
