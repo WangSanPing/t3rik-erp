@@ -1,5 +1,6 @@
 package com.t3rik.system.controller;
 
+import com.t3rik.common.annotation.RepeatSubmit;
 import com.t3rik.common.constant.Constants;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.domain.entity.SysMenu;
@@ -40,6 +41,7 @@ public class SysLoginController {
      * @param loginBody 登录信息
      * @return 结果
      */
+    @RepeatSubmit
     @PostMapping("/login")
     public AjaxResult login(@RequestBody LoginBody loginBody) {
         AjaxResult ajax = AjaxResult.success();
