@@ -1,5 +1,6 @@
 package com.t3rik.mobile.common.controller
 
+import com.t3rik.common.annotation.RepeatSubmit
 import com.t3rik.common.constant.Constants
 import com.t3rik.common.constant.MsgConstants
 import com.t3rik.common.constant.UserConstants
@@ -40,6 +41,7 @@ class MobileLoginController {
     /**
      * 登录
      */
+    @RepeatSubmit
     @PostMapping("/login")
     fun login(@RequestBody loginBody: LoginBody): AjaxResult {
         if (loginBody.username.isNullOrBlank() || loginBody.password.isNullOrBlank()) {
