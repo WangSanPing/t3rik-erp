@@ -1,19 +1,21 @@
 package com.t3rik.mes.wm.mapper;
 
-import java.util.List;
 import com.t3rik.mes.wm.domain.WmTransaction;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * 库存事务Mapper接口
- * 
+ *
  * @author yinjinlu
  * @date 2022-05-24
  */
-public interface WmTransactionMapper 
-{
+@Mapper
+public interface WmTransactionMapper {
     /**
      * 查询库存事务
-     * 
+     *
      * @param transactionId 库存事务主键
      * @return 库存事务
      */
@@ -21,7 +23,7 @@ public interface WmTransactionMapper
 
     /**
      * 查询库存事务列表
-     * 
+     *
      * @param wmTransaction 库存事务
      * @return 库存事务集合
      */
@@ -29,7 +31,7 @@ public interface WmTransactionMapper
 
     /**
      * 新增库存事务
-     * 
+     *
      * @param wmTransaction 库存事务
      * @return 结果
      */
@@ -37,7 +39,7 @@ public interface WmTransactionMapper
 
     /**
      * 修改库存事务
-     * 
+     *
      * @param wmTransaction 库存事务
      * @return 结果
      */
@@ -45,7 +47,7 @@ public interface WmTransactionMapper
 
     /**
      * 删除库存事务
-     * 
+     *
      * @param transactionId 库存事务主键
      * @return 结果
      */
@@ -53,7 +55,7 @@ public interface WmTransactionMapper
 
     /**
      * 批量删除库存事务
-     * 
+     *
      * @param transactionIds 需要删除的数据主键集合
      * @return 结果
      */

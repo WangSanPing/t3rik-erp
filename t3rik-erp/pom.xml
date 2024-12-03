@@ -83,6 +83,12 @@
             <artifactId>t3rik-hrm</artifactId>
         </dependency>
 
+        <!-- 汉字转拼音 -->
+        <dependency>
+            <groupId>io.github.biezhi</groupId>
+            <artifactId>TinyPinyin</artifactId>
+        </dependency>
+
         <!--test-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
