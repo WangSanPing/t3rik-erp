@@ -36,6 +36,7 @@
         <mybatis-plus.version>3.5.3.2</mybatis-plus.version>
         <kotlin.version>2.0.0</kotlin.version>
         <jasypt.version>3.0.5</jasypt.version>
+        <tinyPinyin.version>2.0.3.RELEASE</tinyPinyin.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -64,6 +65,12 @@
                 <version>${druid.version}</version>
             </dependency>
 
+            <!-- 汉字转拼音 -->
+            <dependency>
+                <groupId>io.github.biezhi</groupId>
+                <artifactId>TinyPinyin</artifactId>
+                <version>${tinyPinyin.version}</version>
+            </dependency>
 
             <!-- 解析客户端操作系统、浏览器等 -->
             <dependency>

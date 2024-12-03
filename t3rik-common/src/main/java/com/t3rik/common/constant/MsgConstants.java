@@ -32,6 +32,10 @@ public class MsgConstants {
 
     public static final String ERROR_STATUS = "当前数据状态不允许执行此操作!";
 
+    public static final String ERROR_DATA = "获取数据失败!";
+
+    public static final String NOT_ALLOW_OPT_ADMIN = "不允许操作系统管理员";
+
     public static String CAN_ONLY_BE_DELETED_BY_PARAM(String status) {
         return MessageFormat.format("只能删除状态为: {0} 的单据", status);
     }

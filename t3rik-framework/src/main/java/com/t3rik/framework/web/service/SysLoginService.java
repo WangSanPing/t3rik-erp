@@ -33,19 +33,19 @@ import jakarta.annotation.Resource;
  */
 @Component
 public class SysLoginService {
-    @Autowired
+    @Resource
     private TokenService tokenService;
 
     @Resource
     private AuthenticationManager authenticationManager;
 
-    @Autowired
+    @Resource
     private RedisCache redisCache;
 
-    @Autowired
+    @Resource
     private ISysUserService userService;
 
-    @Autowired
+    @Resource
     private ISysConfigService configService;
 
     /**

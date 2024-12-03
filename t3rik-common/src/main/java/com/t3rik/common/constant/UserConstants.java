@@ -10,6 +10,10 @@ public class UserConstants {
      * 平台内系统用户的唯一标志
      */
     public static final String SYS_USER = "SYS_USER";
+    /**
+     * 默认密码
+     */
+    public static final String DEFAULT_PASSWORD = "123456";
     public static final Long SYS_USER_ID = 999999999L;
 
     public static final String MOBILE_PATH = "/mobile";
