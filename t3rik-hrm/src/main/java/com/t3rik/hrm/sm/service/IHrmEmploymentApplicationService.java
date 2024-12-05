@@ -15,4 +15,9 @@ public interface IHrmEmploymentApplicationService {
      * 入职申请
      */
     void employmentApplication(HrmInterviewRecord hrmInterviewRecord, StaffState state);
+
+    /**
+     * 审核通过
+     */
+    String pass(HrmInterviewRecord hrmInterviewRecord, StaffState state);
 }

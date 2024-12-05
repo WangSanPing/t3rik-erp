@@ -74,7 +74,7 @@ public class HrmInterviewRecordServiceImpl extends ServiceImpl<HrmInterviewRecor
                         BeanUtil.copyProperties(v.get(0), dto);
                         // 用户前端判断是否显示操作按钮，主数据置空
                         dto.setInterviewRecordId(null);
-                        dto.setParentId(k);
+                        dto.setParentId(0L);
                         // 当前员工状态
                         dto.setStatus(v.get(0).getCurrentStatus().longValue());
                         // 取最新的面试定级

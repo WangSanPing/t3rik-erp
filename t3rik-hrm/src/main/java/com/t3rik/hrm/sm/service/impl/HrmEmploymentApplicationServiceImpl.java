@@ -1,13 +1,26 @@
 package com.t3rik.hrm.sm.service.impl;
 
+import cn.hutool.extra.pinyin.PinyinUtil;
+import com.t3rik.common.constant.MsgConstants;
+import com.t3rik.common.constant.UserConstants;
+import com.t3rik.common.core.domain.entity.SysUser;
+import com.t3rik.common.enums.SexEnum;
+import com.t3rik.common.enums.StatusEnum;
+import com.t3rik.common.exception.BusinessException;
+import com.t3rik.common.utils.SecurityUtils;
 import com.t3rik.hrm.sm.domain.HrmInterviewRecord;
+import com.t3rik.hrm.sm.domain.HrmStaff;
 import com.t3rik.hrm.sm.service.IHrmEmploymentApplicationService;
 import com.t3rik.hrm.sm.service.IHrmInterviewRecordService;
 import com.t3rik.hrm.sm.service.IHrmStaffService;
 import com.t3rik.hrm.sm.state.StaffState;
+import com.t3rik.system.service.ISysUserService;
 import jakarta.annotation.Resource;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 /**
  * 入职申请
@@ -22,6 +35,8 @@ public class HrmEmploymentApplicationServiceImpl implements IHrmEmploymentApplic
     private IHrmInterviewRecordService interviewRecordService;
     @Resource
     private IHrmStaffService hrmStaffService;
+    @Resource
+    private ISysUserService sysUserService;
 
     /**
      * 入职申请
@@ -37,5 +52,55 @@ public class HrmEmploymentApplicationServiceImpl implements IHrmEmploymentApplic
                 .update(new HrmInterviewRecord());
         // 更新员工表
         this.hrmStaffService.employmentApplication(hrmInterviewRecord, state);
+    }
+
+    /**
+     * 审核通过
+     */
+    @Transactional
+    @Override
+    public String pass(HrmInterviewRecord hrmInterviewRecord, StaffState state) {
+        // 写入新的面试记录
+        saveNewInterviewRecord(hrmInterviewRecord, state);
+        // 修改员工状态
+        this.hrmStaffService.lambdaUpdate()
+                .set(HrmStaff::getStatus, state.getCurrentStatus())
+                .eq(HrmStaff::getStaffId, hrmInterviewRecord.getStaffId())
+                .update(new HrmStaff());
+        // 创建该员工的账户
+        SysUser user = buildSysUser(hrmInterviewRecord.getStaffId());
+
+
+        return "";
+    }
+
+    /**
+     * 构建用户信息
+     */
+    private SysUser buildSysUser(Long staffId) {
+        HrmStaff staff = this.hrmStaffService.getById(staffId);
+        String account = PinyinUtil.getFirstLetter(staff.getStaffName(), "") + StringUtils.right(staff.getContactPhone(), 4);
+        SysUser user = new SysUser();
+        user.setUserName(account);
+        user.setPassword(SecurityUtils.encryptPassword(UserConstants.DEFAULT_PASSWORD));
+        user.setPhonenumber(staff.getContactPhone());
+        user.setSex(staff.getSex() != null ? staff.getSex().toString() : SexEnum.UNKNOWN.getCode());
+        user.setEmail(staff.getEmail());
+        user.setStatus(StatusEnum.ENABLE.getCode());
+        return user;
+    }
+
+    /**
+     * vg
+     * 新面试记录
+     */
+    private void saveNewInterviewRecord(HrmInterviewRecord hrmInterviewRecord, StaffState state) {
+        HrmInterviewRecord newRecord = this.interviewRecordService.getById(hrmInterviewRecord.getInterviewRecordId());
+        Optional.ofNullable(newRecord).orElseThrow(() -> new BusinessException(MsgConstants.ERROR_DATA));
+        // 写入新纪录
+        newRecord.setRemark(hrmInterviewRecord.getRemark());
+        newRecord.setInterviewRecordId(null);
+        newRecord.setStatus(state.getCurrentStatus().longValue());
+        this.interviewRecordService.save(newRecord);
     }
 }

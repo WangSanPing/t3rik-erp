@@ -1,0 +1,1 @@
+ALTER TABLE hrm_interview_record ADD COLUMN dept_id bigint COMMENT '归属部门',ADD COLUMN role_id bigint COMMENT '角色',ADD COLUMN post_id bigint COMMENT '岗位';
