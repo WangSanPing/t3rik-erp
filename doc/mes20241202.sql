@@ -8679,6 +8679,19 @@ CREATE TABLE `wm_waste_line` (
   PRIMARY KEY (`line_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='生产废料单行表';
 
+CREATE TABLE `mes_access` (
+                              `id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+                              `access_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+                              `secret` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+                              `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+                              `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+                              `create_time` datetime DEFAULT NULL,
+                              `create_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+                              `update_time` datetime DEFAULT NULL,
+                              `update_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+                              `create_user_id` bigint(20) DEFAULT NULL COMMENT '创建人id',
+                              `update_user_id` bigint(20) DEFAULT NULL COMMENT '修改人id'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 -- ----------------------------
 -- Records of wm_waste_line
 -- ----------------------------
