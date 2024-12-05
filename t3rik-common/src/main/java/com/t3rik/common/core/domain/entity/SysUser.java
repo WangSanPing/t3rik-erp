@@ -203,8 +203,7 @@ public class SysUser extends BaseEntity
         this.avatar = avatar;
     }
 
-    @JsonIgnore
-    @JsonProperty
+
     public String getPassword()
     {
         return password;
