@@ -56,10 +56,8 @@ public class HrmInterviewRecordController extends BaseController {
         // 校验状态
         HrmCheckUtils.checkStaffStatus(state, staff.getStatus()).throwMsg(MsgConstants.ERROR_STATUS);
         // 邀请面试
-        this.hrmStaffService.lambdaUpdate()
-                .eq(HrmStaff::getStaffId, staffId)
-                .set(HrmStaff::getStatus, state.getCurrentStatus())
-                .update(new HrmStaff());
+        this.hrmStaffService.lambdaUpdate().eq(HrmStaff::getStaffId, staffId)
+                .set(HrmStaff::getStatus, state.getCurrentStatus()).update(new HrmStaff());
         return AjaxResult.success();
     }
 

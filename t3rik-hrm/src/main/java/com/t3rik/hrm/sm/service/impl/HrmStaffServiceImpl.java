@@ -27,9 +27,6 @@ public class HrmStaffServiceImpl extends ServiceImpl<HrmStaffMapper, HrmStaff> i
 
     /**
      * 人才登记列表查询
-     *
-     * @param hrmStaff
-     * @return
      */
     @Override
     public List<HrmStaffVo> listTalents(HrmStaff hrmStaff) {
@@ -46,8 +43,6 @@ public class HrmStaffServiceImpl extends ServiceImpl<HrmStaffMapper, HrmStaff> i
 
     /**
      * 入职申请
-     *
-     * @param hrmInterviewRecord
      */
     @Transactional
     @Override
