@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/open/work")
 public class WorkOrderController  extends BaseController {
-    @Autowired
-    private ISalesOrderService salesOrderService;
-    @Autowired
-    private ISalesOrderItemService salesOrderItemService;
-    @Resource
-    private IMesWorkOrderService mesWorkOrderService;
+//    @Autowired
+//    private ISalesOrderService salesOrderService;
+//    @Autowired
+//    private ISalesOrderItemService salesOrderItemService;
+//    @Resource
+//    private IMesWorkOrderService mesWorkOrderService;
 }
