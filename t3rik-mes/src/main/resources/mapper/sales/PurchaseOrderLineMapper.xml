@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.t3rik.mes.sales.mapper.PurchaseOrderLineMapper">
+    
+    <resultMap type="com.t3rik.mes.sales.domain.PurchaseOrderLine" id="BaseResultMap">
+        <!--@Table purchase_order_line-->
+        <result property="id"    column="id"    />
+        <result property="poOrderLineNo"    column="po_order_line_no"    />
+        <result property="poOrderNo"    column="po_order_no"    />
+        <result property="productNo"    column="product_no"    />
+        <result property="productName"    column="product_name"    />
+        <result property="colorNo"    column="color_no"    />
+        <result property="colorName"    column="color_name"    />
+        <result property="unit"    column="unit"    />
+        <result property="qty"    column="qty"    />
+        <result property="weight"    column="weight"    />
+        <result property="price"    column="price"    />
+        <result property="discount"    column="discount"    />
+        <result property="addMoney"    column="add_money"    />
+        <result property="money"    column="money"    />
+        <result property="tranDate"    column="tran_Date"    />
+        <result property="memo"    column="memo"    />
+        <result property="shQty"    column="sh_qty"    />
+        <result property="thQty"    column="th_qty"    />
+        <result property="inQty"    column="in_qty"    />
+        <result property="status"    column="status"    />
+        <result property="payUp"    column="pay_up"    />
+        <result property="cusNo"    column="cus_no"    />
+        <result property="ssQty"    column="ss_qty"    />
+        <result property="attr1"    column="attr1"    />
+        <result property="attr2"    column="attr2"    />
+        <result property="attr3"    column="attr3"    />
+        <result property="attr4"    column="attr4"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="deleteat"    column="deleteAt"    />
+        <result property="version"    column="version"    />
+        <result property="totalWeight"    column="total_weight"    />
+    </resultMap>
+
+    <sql id="selectPurchaseOrderLineVo">
+        select id, po_order_line_no, po_order_no, product_no, product_name, color_no, color_name, unit, qty, weight, price, discount, add_money, money, tran_Date, memo, sh_qty, th_qty, in_qty, status, pay_up, cus_no, ss_qty, attr1, attr2, attr3, attr4, create_by, create_time, update_by, update_time, deleted, deleteAt, version, total_weight from purchase_order_line
+    </sql>
+
+</mapper>

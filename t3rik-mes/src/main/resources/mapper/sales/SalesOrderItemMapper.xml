@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.t3rik.mes.md.mapper.SalesOrderItemMapper">
+<mapper namespace="com.t3rik.mes.sales.mapper.SalesOrderItemMapper">
     
     <resultMap type="com.t3rik.mes.sales.domain.SalesOrderItem" id="BaseResultMap">
         <!--@Table sales_order_item-->
