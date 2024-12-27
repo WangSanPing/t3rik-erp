@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.t3rik.mes.sales.mapper.PurchaseOrderMapper">
+    
+    <resultMap type="com.t3rik.mes.sales.domain.PurchaseOrder" id="BaseResultMap">
+        <!--@Table purchase_order-->
+        <result property="id"    column="id"    />
+        <result property="poOrderNo"    column="po_order_no"    />
+        <result property="hwNo"    column="hw_no"    />
+        <result property="vendorNo"    column="vendor_no"    />
+        <result property="poOrderDate"    column="po_order_date"    />
+        <result property="poOrderUser"    column="po_order_user"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="tranAddress"    column="tran_address"    />
+        <result property="tranDate"    column="tran_date"    />
+        <result property="remake"    column="remake"    />
+        <result property="billUser"    column="bill_user"    />
+        <result property="review"    column="review"    />
+        <result property="status"    column="status"    />
+        <result property="partDate"    column="part_date"    />
+        <result property="partUser"    column="part_user"    />
+        <result property="auditDate"    column="audit_date"    />
+        <result property="auditUser"    column="audit_user"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="endUser"    column="end_user"    />
+        <result property="attr1"    column="attr1"    />
+        <result property="attr2"    column="attr2"    />
+        <result property="attr3"    column="attr3"    />
+        <result property="attr4"    column="attr4"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="deleteat"    column="deleteAt"    />
+        <result property="version"    column="version"    />
+    </resultMap>
+
+    <sql id="selectPurchaseOrderVo">
+        select id, po_order_no, hw_no, vendor_no, po_order_date, po_order_user, dept_id, tran_address, tran_date, remake, bill_user, review, status, part_date, part_user, audit_date, audit_user, end_date, end_user, attr1, attr2, attr3, attr4, create_by, create_time, update_by, update_time, deleted, deleteAt, version from purchase_order
+    </sql>
+
+</mapper>
