@@ -200,11 +200,11 @@
             </dependency>
 
             <!-- 定时任务-->
-<!--            <dependency>-->
-<!--                <groupId>com.t3rik</groupId>-->
-<!--                <artifactId>t3rik-quartz</artifactId>-->
-<!--                <version>${t3rik.version}</version>-->
-<!--            </dependency>-->
+            <dependency>
+                <groupId>com.t3rik</groupId>
+                <artifactId>t3rik-quartz</artifactId>
+                <version>${t3rik.version}</version>
+            </dependency>
 
             <!-- 代码生成-->
             <dependency>
@@ -302,11 +302,11 @@
         <module>t3rik-erp</module>
         <module>t3rik-framework</module>
         <module>t3rik-system</module>
-<!--        <module>t3rik-quartz</module>-->
+        <module>t3rik-quartz</module>
         <module>t3rik-generator</module>
         <module>t3rik-common</module>
         <module>t3rik-mes</module>
-<!--        <module>t3rik-print</module>-->
+        <!--        <module>t3rik-print</module>-->
         <module>t3rik-mobile</module>
         <module>t3rik-hrm</module>
     </modules>

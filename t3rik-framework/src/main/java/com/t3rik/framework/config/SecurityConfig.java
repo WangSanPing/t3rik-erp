@@ -90,6 +90,7 @@ public class SecurityConfig {
                                                 "/**/*.js",
                                                 "/profile/**"
                                         ).permitAll()
+                                        .requestMatchers("/error").permitAll()
                                         .requestMatchers("/swagger-ui.html").anonymous()
                                         .requestMatchers("/ureport/**").anonymous()
                                         .requestMatchers("/swagger-resources/**").anonymous()
