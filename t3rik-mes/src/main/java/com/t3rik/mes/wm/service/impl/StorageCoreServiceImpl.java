@@ -470,7 +470,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
         String transactionType_in = DefaultDataEnum.TRANSACTION_TYPE_ITEM_WM_WASTE_IN.getCode();
         //生产退料-出库事务
         String transactionType_out = DefaultDataEnum.TRANSACTION_TYPE_ITEM_RT_ISSUE_OUT.getCode();
-        beans.stream().forEach(a -> {
+        beans.forEach(a -> {
             //构造信息 将信息存入线边库
             //校验 取出来的数量不超过领料数量
             //线边库-虚拟库存出库（退料）取出数据放到线边库-废料库存入库（废料）
