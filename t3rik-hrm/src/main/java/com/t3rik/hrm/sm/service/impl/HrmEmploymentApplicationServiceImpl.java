@@ -91,7 +91,6 @@ public class HrmEmploymentApplicationServiceImpl implements IHrmEmploymentApplic
     }
 
     /**
-     * vg
      * 新面试记录
      */
     private void saveNewInterviewRecord(HrmInterviewRecord hrmInterviewRecord, StaffState state) {
