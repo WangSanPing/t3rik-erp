@@ -82,7 +82,27 @@ spring:
           # #连接池最大阻塞等待时间（使用负值表示没有限制）
           max-wait: -1ms
       connect-timeout: 60s
-
+# redisson配置
+redisson:
+  config: |
+    singleServerConfig:
+      address: "redis://127.0.0.1:6379" 
+      password:                
+      database: 0 
+      # 最小空闲连接数
+      connectionMinimumIdleSize: 10 
+      # 连接池大小
+      connectionPoolSize: 64    
+      # 空闲连接超时时间（ms）
+      idleConnectionTimeout: 10000  
+      # 连接超时时间（ms）
+      connectTimeout: 10000   
+      # 命令超时时间（ms）
+      timeout: 3000     
+      # 重试次数
+      retryAttempts: 3   
+      # 重试间隔时间（ms）
+      retryInterval: 1500
 #  # netty 配置
 #  netty:
 #    # boss线程数量

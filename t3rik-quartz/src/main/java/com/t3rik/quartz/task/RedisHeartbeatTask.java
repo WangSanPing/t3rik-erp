@@ -27,9 +27,9 @@ public class RedisHeartbeatTask {
     @Scheduled(fixedRate = 1000 * 60 * 20)
     public void heartbeat() {
         try (RedisConnection connection = redisTemplate.getConnectionFactory().getConnection()) {
-            byte[] ping = (byte[]) connection.execute("PING");
-            String result = new String(ping);
-            log.info("定时检查redis连接，结果: {},执行时间: {}", result, LocalDate.now());
+            connection.execute("PING");
+            // String result = new String(ping);
+            // log.info("定时检查redis连接，结果: {},执行时间: {}", result, LocalDate.now());
         } catch (Exception e) {
             log.error("定时检查redis连接失败，原因: {},执行时间: {}", e.getMessage(), LocalDate.now());
         }

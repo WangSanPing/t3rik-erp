@@ -49,12 +49,6 @@
             <artifactId>t3rik-framework</artifactId>
         </dependency>
 
-        <!-- 定时任务-->
-                <dependency>
-                    <groupId>com.t3rik</groupId>
-                    <artifactId>t3rik-quartz</artifactId>
-                </dependency>
-
         <!-- 代码生成-->
         <dependency>
             <groupId>com.t3rik</groupId>
@@ -68,10 +62,10 @@
         </dependency>
 
         <!-- 打印模块-->
-<!--        <dependency>-->
-<!--            <groupId>com.t3rik</groupId>-->
-<!--            <artifactId>t3rik-print</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.t3rik</groupId>-->
+        <!--            <artifactId>t3rik-print</artifactId>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>com.t3rik</groupId>
@@ -81,6 +75,13 @@
         <dependency>
             <groupId>com.t3rik</groupId>
             <artifactId>t3rik-hrm</artifactId>
+        </dependency>
+
+
+        <!-- 定时任务-->
+        <dependency>
+            <groupId>com.t3rik</groupId>
+            <artifactId>t3rik-quartz</artifactId>
         </dependency>
 
         <!-- 汉字转拼音 -->
@@ -133,7 +134,6 @@
         </plugins>
         <finalName>${project.artifactId}</finalName>
     </build>
-
 
 
 </project>
