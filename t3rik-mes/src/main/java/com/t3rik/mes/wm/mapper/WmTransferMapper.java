@@ -3,6 +3,7 @@ package com.t3rik.mes.wm.mapper;
 import java.util.List;
 import com.t3rik.mes.wm.domain.WmTransfer;
 import com.t3rik.mes.wm.domain.tx.TransferTxBean;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 转移单Mapper接口
@@ -10,6 +11,7 @@ import com.t3rik.mes.wm.domain.tx.TransferTxBean;
  * @author yinjinlu
  * @date 2022-11-28
  */
+@Mapper
 public interface WmTransferMapper 
 {
     /**
