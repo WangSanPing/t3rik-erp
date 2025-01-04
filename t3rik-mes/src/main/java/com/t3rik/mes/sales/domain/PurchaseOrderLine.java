@@ -32,6 +32,10 @@ public class PurchaseOrderLine extends BaseEntity
     @Excel(name = "物料编号")
     private String productNo;
 
+    /** 供应商编号 */
+    @Excel(name = "供应商简称")
+    private String vendorName;
+
     /** 物料名称 */
     @Excel(name = "物料名称")
     private String productName;
