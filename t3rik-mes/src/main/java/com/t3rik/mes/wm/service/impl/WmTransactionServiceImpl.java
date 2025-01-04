@@ -12,7 +12,6 @@ import com.t3rik.mes.wm.mapper.WmTransactionMapper;
 import com.t3rik.mes.wm.service.IWmTransactionService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -30,10 +29,10 @@ public class WmTransactionServiceImpl implements IWmTransactionService {
     @Resource
     private WmTransactionMapper wmTransactionMapper;
 
-    @Autowired
+    @Resource
     private WmMaterialStockMapper wmMaterialStockMapper;
 
-    @Autowired
+    @Resource
     private MdItemMapper mdItemMapper;
 
     @Override
