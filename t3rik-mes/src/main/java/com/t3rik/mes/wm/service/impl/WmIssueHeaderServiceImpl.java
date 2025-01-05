@@ -127,7 +127,9 @@ public class WmIssueHeaderServiceImpl extends ServiceImpl<WmIssueHeaderMapper, W
         // 调用库存核心
         storageCoreService.processIssue(beans);
         // 更新单据状态
-        this.lambdaUpdate().set(WmIssueHeader::getStatus, OrderStatusEnum.FINISHED.getCode()).update(new WmIssueHeader());
+        this.lambdaUpdate().set(WmIssueHeader::getStatus, OrderStatusEnum.FINISHED.getCode())
+                .eq(WmIssueHeader::getIssueId, issueId)
+                .update(new WmIssueHeader());
     }
 
 
