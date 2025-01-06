@@ -1,7 +1,8 @@
 package com.t3rik.mes.wm.service;
 
-import java.util.List;
 import com.t3rik.mes.wm.domain.WmTransaction;
+
+import java.util.List;
 
 /**
  * 库存事务Service接口
@@ -9,8 +10,7 @@ import com.t3rik.mes.wm.domain.WmTransaction;
  * @author yinjinlu
  * @date 2022-05-24
  */
-public interface IWmTransactionService
-{
+public interface IWmTransactionService {
 
     public WmTransaction processTransaction(WmTransaction wmTransaction);
 
@@ -63,10 +63,4 @@ public interface IWmTransactionService
      */
     public int deleteWmTransactionByTransactionId(Long transactionId);
 
-    /**
-     * 退料事务
-     * @param wmTransaction
-     * @return
-     */
-    public WmTransaction processTransactionWaste(WmTransaction wmTransaction);
 }

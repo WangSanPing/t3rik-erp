@@ -501,7 +501,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
 
 
             //添加事务
-            wmTransactionService.processTransactionWaste(transaction_out);
+            wmTransactionService.processTransaction(transaction_out);
 
             //构造信息 将信息存入线边库-废料库存
             //线边库新增虚拟物料数量
@@ -536,7 +536,7 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
 
             transaction_in.setWorkorderId(st.getWorkorderId());//生产单id
             transaction_in.setWorkorderCode(st.getWorkorderCode());//生产单编号
-            wmTransactionService.processTransactionWaste(transaction_in);//添加事务以及虚拟库信息
+            wmTransactionService.processTransaction(transaction_in);//添加事务以及虚拟库信息
         });
 
     }

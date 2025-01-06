@@ -6,6 +6,7 @@ import org.redisson.api.RLock;
 import org.redisson.api.RMap;
 import org.redisson.api.RSemaphore;
 import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -23,6 +24,12 @@ public class RedissonUtil {
 
     @Resource
     private RedissonClient redissonClient;
+
+    @Value("${lock.waitTime}")
+    private Integer waitTime;
+
+    @Value("${lock.leaseTime}")
+    private Integer leaseTime;
 
     /**
      * 获取分布式锁
@@ -86,6 +93,24 @@ public class RedissonUtil {
     public void deleteCache(String key) {
         redissonClient.getBucket(key).delete();
     }
+
+    /**
+     * 尝试获取锁，如果获取不到则等待指定时间
+     * 默认等待5秒，持有锁10秒
+     *
+     * @param lockKey 锁的名称
+     * @return 是否获取到锁
+     */
+    public boolean tryLock(String lockKey) {
+        RLock lock = redissonClient.getLock(lockKey);
+        try {
+            return lock.tryLock(waitTime, leaseTime, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            log.error("获取锁失败， 异常信息 {}", e.getMessage());
+        }
+        return false;
+    }
+
 
     /**
      * 尝试获取锁，如果获取不到则等待指定时间
