@@ -146,10 +146,11 @@ public class WmWarehouseServiceImpl extends ServiceImpl<WmWarehouseMapper, WmWar
                 .list()
                 .stream().map(WmStorageLocation::getLocationId)
                 .toList();
-        this.wmStorageAreaService.remove(
-                new LambdaQueryWrapper<WmStorageArea>()
-                        .in(WmStorageArea::getLocationId, locationIds));
-
+        if(locationIds!=null&&!locationIds.isEmpty()){
+            this.wmStorageAreaService.remove(
+                    new LambdaQueryWrapper<WmStorageArea>()
+                            .in(WmStorageArea::getLocationId, locationIds));
+        }
         // 删除库区
         this.wmStorageLocationService.remove(
                 new LambdaQueryWrapper<WmStorageLocation>()
