@@ -1,5 +1,6 @@
 package com.t3rik.mes.wm.service.impl;
 
+import com.t3rik.common.core.redis.RedissonUtil;
 import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.DateUtils;
 import com.t3rik.common.utils.StringUtils;
@@ -11,21 +12,26 @@ import com.t3rik.mes.wm.mapper.WmMaterialStockMapper;
 import com.t3rik.mes.wm.mapper.WmTransactionMapper;
 import com.t3rik.mes.wm.service.IWmTransactionService;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 库存事务Service业务层处理
  *
- * @author yinjinlu
- * @date 2022-05-24
+ * @author t3rik
+ * @date 2025-1-4
  */
+@Slf4j
 @Service
 public class WmTransactionServiceImpl implements IWmTransactionService {
+    public static final String PREFIX_LOCK = "lock:";
     @Resource
     private WmTransactionMapper wmTransactionMapper;
 
@@ -34,6 +40,9 @@ public class WmTransactionServiceImpl implements IWmTransactionService {
 
     @Resource
     private MdItemMapper mdItemMapper;
+
+    @Resource
+    private RedissonUtil redissonUtil;
 
     @Override
     public synchronized WmTransaction processTransaction(WmTransaction wmTransaction) {
@@ -47,25 +56,36 @@ public class WmTransactionServiceImpl implements IWmTransactionService {
         WmMaterialStock ms = wmMaterialStockMapper.loadMaterialStock(stock);
         // 扣减或者新增数量 = 事务数量/事务方向
         BigDecimal quantity = wmTransaction.getTransactionQuantity().multiply(new BigDecimal(wmTransaction.getTransactionFlag()));
-        if (StringUtils.isNotNull(ms)) {
-            // MS已存在扣减库存/添加库存
-            BigDecimal resultQuantity = ms.getQuantityOnhand().add(quantity);
-            // 检查库存量是否充足
-            if (wmTransaction.isStorageCheckFlag() && resultQuantity.compareTo(new BigDecimal(0)) < 0) {
-                throw new BusinessException("库存数量不足！");
+        String key = this.generateKey(stock);
+        try {
+            if (redissonUtil.tryLock(key)) {
+                if (StringUtils.isNotNull(ms)) {
+                    // MS已存在扣减库存/添加库存
+                    BigDecimal resultQuantity = ms.getQuantityOnhand().add(quantity);
+                    // 检查库存量是否充足
+                    if (wmTransaction.isStorageCheckFlag() && resultQuantity.compareTo(new BigDecimal(0)) < 0) {
+                        throw new BusinessException("库存数量不足！");
+                    }
+                    // 更新在库数量
+                    stock.setQuantityOnhand(resultQuantity);
+                    stock.setMaterialStockId(ms.getMaterialStockId());
+                    wmMaterialStockMapper.updateWmMaterialStock(stock);
+                } else {
+                    // MS不存在
+                    stock.setQuantityOnhand(quantity);
+                    wmMaterialStockMapper.insertWmMaterialStock(stock);// 新增库存记录
+                }
+                wmTransaction.setMaterialStockId(stock.getMaterialStockId());
+                wmTransaction.setTransactionQuantity(quantity);// 事务数量
+                wmTransactionMapper.insertWmTransaction(wmTransaction);
             }
-            // 更新在库数量
-            stock.setQuantityOnhand(resultQuantity);
-            stock.setMaterialStockId(ms.getMaterialStockId());
-            wmMaterialStockMapper.updateWmMaterialStock(stock);
-        } else {
-            // MS不存在
-            stock.setQuantityOnhand(quantity);
-            wmMaterialStockMapper.insertWmMaterialStock(stock);// 新增库存记录
+        } catch (BusinessException e) {
+            log.error("库存处理失败，异常信息: {}", e.getMessage());
+            throw new RuntimeException(e);
+        } finally {
+            // 释放锁
+            redissonUtil.releaseLock(key);
         }
-        wmTransaction.setMaterialStockId(stock.getMaterialStockId());
-        wmTransaction.setTransactionQuantity(quantity);// 事务数量
-        wmTransactionMapper.insertWmTransaction(wmTransaction);
         return wmTransaction;
     }
 
@@ -150,6 +170,40 @@ public class WmTransactionServiceImpl implements IWmTransactionService {
         }
     }
 
+    /**
+     * 生成分布式锁使用的key
+     */
+    private String generateKey(WmMaterialStock stock) {
+        StringBuilder stringBuilder = new StringBuilder();
+        // 物料id
+        Optional.ofNullable(stock.getItemId()).ifPresent(stringBuilder::append);
+        // 仓库id
+        Optional.ofNullable(stock.getWarehouseId()).ifPresent(stringBuilder::append);
+        // 库区id
+        Optional.ofNullable(stock.getLocationId()).ifPresent(stringBuilder::append);
+        // 库位id
+        Optional.ofNullable(stock.getAreaId()).ifPresent(stringBuilder::append);
+        // 供应商id
+        Optional.ofNullable(stock.getVendorId()).ifPresent(stringBuilder::append);
+        // 生产工单id
+        Optional.ofNullable(stock.getWorkorderId()).ifPresent(stringBuilder::append);
+        // 生产工单编码
+        if (StringUtils.isBlank(stock.getWorkorderCode())) {
+            stringBuilder.append(stock.getWorkorderCode());
+        }
+        // 单位
+        if (StringUtils.isBlank(stock.getUnitOfMeasure())) {
+            stringBuilder.append(stock.getUnitOfMeasure());
+        }
+        // 入库批次号
+        if (StringUtils.isBlank(stock.getBatchCode())) {
+            stringBuilder.append(stock.getBatchCode());
+        }
+        // 缩短字符串
+        String md5Str = DigestUtils.md5DigestAsHex(stringBuilder.toString().getBytes());
+        return PREFIX_LOCK + md5Str + stock.getItemId();
+
+    }
 
     /**
      * 查询库存事务
@@ -217,47 +271,6 @@ public class WmTransactionServiceImpl implements IWmTransactionService {
     @Override
     public int deleteWmTransactionByTransactionId(Long transactionId) {
         return wmTransactionMapper.deleteWmTransactionByTransactionId(transactionId);
-    }
-
-    /**
-     * 退料事务
-     *
-     * @param wmTransaction
-     * @return
-     */
-    @Override
-    public synchronized WmTransaction processTransactionWaste(WmTransaction wmTransaction) {
-        // 声明库存记录
-        WmMaterialStock stock = new WmMaterialStock();
-        // 校验传参数是否为空
-        validate(wmTransaction);
-        // 初始化赋值声明库存记录信息
-        initStock(wmTransaction, stock);
-        // 查询库存记录通过构建好的库存记录
-        WmMaterialStock ms = wmMaterialStockMapper.loadMaterialStock(stock);
-        // 扣减或者新增数量 = 事务数量/事务方向
-        BigDecimal quantity = wmTransaction.getTransactionQuantity().multiply(new BigDecimal(wmTransaction.getTransactionFlag()));
-        if (StringUtils.isNotNull(ms)) {
-            // 物料数量
-            BigDecimal resultQuantity = ms.getQuantityOnhand().add(quantity);
-            // 库存数量是否充足
-            if (wmTransaction.isStorageCheckFlag() && resultQuantity.compareTo(new BigDecimal(0)) < 0) {
-                throw new BusinessException("库存数量不足！");
-            }
-            // 更新在库数量
-            stock.setQuantityOnhand(resultQuantity);
-            stock.setMaterialStockId(ms.getMaterialStockId());
-            wmMaterialStockMapper.updateWmMaterialStock(stock);
-        } else {
-            // MS不存在
-            stock.setQuantityOnhand(quantity);
-            // 添加生产工单信息
-            wmMaterialStockMapper.insertWmMaterialStock(stock);// 新增库存记录
-        }
-        wmTransaction.setMaterialStockId(stock.getMaterialStockId());
-        wmTransaction.setTransactionQuantity(quantity);// 事务数量
-        wmTransactionMapper.insertWmTransaction(wmTransaction);// 新增库存事务
-        return wmTransaction;
     }
 }
 

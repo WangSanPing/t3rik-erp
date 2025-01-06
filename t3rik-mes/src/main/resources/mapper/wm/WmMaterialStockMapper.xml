@@ -138,7 +138,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="workorderId !=null">and workorder_id = #{workorderId}</if>
             <if test="workorderCode !=null">and workorder_code = #{workorderCode}</if>
         </where>
-        and 1=1 limit 1
+        limit 1
     </select>
 
     <insert id="insertWmMaterialStock" parameterType="WmMaterialStock" useGeneratedKeys="true" keyProperty="materialStockId">
