@@ -188,15 +188,15 @@ public class WmTransactionServiceImpl implements IWmTransactionService {
         // 生产工单id
         Optional.ofNullable(stock.getWorkorderId()).ifPresent(stringBuilder::append);
         // 生产工单编码
-        if (StringUtils.isBlank(stock.getWorkorderCode())) {
+        if (StringUtils.isNotBlank(stock.getWorkorderCode())) {
             stringBuilder.append(stock.getWorkorderCode());
         }
         // 单位
-        if (StringUtils.isBlank(stock.getUnitOfMeasure())) {
+        if (StringUtils.isNotBlank(stock.getUnitOfMeasure())) {
             stringBuilder.append(stock.getUnitOfMeasure());
         }
         // 入库批次号
-        if (StringUtils.isBlank(stock.getBatchCode())) {
+        if (StringUtils.isNotBlank(stock.getBatchCode())) {
             stringBuilder.append(stock.getBatchCode());
         }
         // 缩短字符串
