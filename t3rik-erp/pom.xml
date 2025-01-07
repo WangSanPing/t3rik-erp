@@ -61,12 +61,6 @@
             <artifactId>t3rik-mes</artifactId>
         </dependency>
 
-        <!-- 打印模块-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.t3rik</groupId>-->
-        <!--            <artifactId>t3rik-print</artifactId>-->
-        <!--        </dependency>-->
-
         <dependency>
             <groupId>com.t3rik</groupId>
             <artifactId>t3rik-mobile</artifactId>

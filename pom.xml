@@ -249,13 +249,6 @@
                 <version>${redisson.version}</version>
             </dependency>
 
-            <!-- 打印模块 -->
-<!--            <dependency>-->
-<!--                <groupId>com.t3rik</groupId>-->
-<!--                <artifactId>t3rik-print</artifactId>-->
-<!--                <version>${t3rik.version}</version>-->
-<!--            </dependency>-->
-
             <!-- 移动业务模块 -->
             <dependency>
                 <groupId>com.t3rik</groupId>
