@@ -49,6 +49,7 @@ t3rik-erp项目是在苦糖果开源MES系统基础上进行二次开发的ERP�
 - springboot版本升级为3.0.6
 - 集成了mybatis-plus框架及其提供的，如自动填充等功能
 - 集成Redisson客户端，几行代码就可以使用分布式锁
+- mybatis插件方式实现数据脱敏
 - 代码生成可以选择生成mybatis-plus风格的代码
 - 可以和kotlin进行混编
 - fastjson升级为fastjson2
