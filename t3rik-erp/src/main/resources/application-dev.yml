@@ -104,7 +104,7 @@ redisson:
       # 重试间隔时间（ms）
       retryInterval: 1500
 
-url: https://www.t3rik.top/
+url: https://www.t3rik.top
 #  # netty 配置
 #  netty:
 #    # boss线程数量
