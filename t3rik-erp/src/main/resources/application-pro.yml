@@ -88,5 +88,5 @@ publicKey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIYNjaUHGDqD8nlWSKV9Uez6thB3XB/x7/iwc
 jeecg :
   jmreport:
     #自定义项目前缀
-    customPrePath: /prod-api/
+    customPrePath: /prod-api
 url: https://www.t3rik.top
