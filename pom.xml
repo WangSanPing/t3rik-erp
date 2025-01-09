@@ -38,6 +38,8 @@
         <jasypt.version>3.0.5</jasypt.version>
         <tinyPinyin.version>2.0.3.RELEASE</tinyPinyin.version>
         <redisson.version>3.40.1</redisson.version>
+        <jimureport.version>1.8.1</jimureport.version>
+        <jimudashboard.version>1.8.1-beta</jimudashboard.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -200,6 +202,18 @@
                 <version>${kaptcha.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.jeecgframework.jimureport</groupId>
+                <artifactId>jimureport-spring-boot3-starter-fastjson2</artifactId>
+                <version>${jimureport.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jeecgframework.jimureport</groupId>
+                <artifactId>jimureport-dashboard-spring-boot3-starter</artifactId>
+                <version>${jimudashboard.version}</version>
+            </dependency>
+
             <!-- 定时任务-->
             <dependency>
                 <groupId>com.t3rik</groupId>
@@ -262,6 +276,14 @@
                 <artifactId>t3rik-hrm</artifactId>
                 <version>${t3rik.version}</version>
             </dependency>
+
+            <!-- 报表 -->
+            <dependency>
+                <groupId>com.t3rik</groupId>
+                <artifactId>t3rik-report</artifactId>
+                <version>${t3rik.version}</version>
+            </dependency>
+
             <!--kotlin相关-->
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -310,6 +332,7 @@
         <!--        <module>t3rik-print</module>-->
         <module>t3rik-mobile</module>
         <module>t3rik-hrm</module>
+        <module>t3rik-report</module>
     </modules>
     <packaging>pom</packaging>
 
