@@ -114,6 +114,13 @@ xss:
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
 
+# 分布式锁配置
+lock:
+  # 锁等待时间
+  waitTime: 5
+  # 锁持有时间
+  leaseTime : 10
+
 #Mino配置
 minio:
   url: http://127.0.0.1:9000
