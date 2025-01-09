@@ -89,3 +89,4 @@ jeecg :
   jmreport:
     #自定义项目前缀
     customPrePath: /prod-api/
+url: https://www.t3rik.top/
