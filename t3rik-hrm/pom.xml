@@ -22,11 +22,6 @@
             <groupId>com.t3rik</groupId>
             <artifactId>t3rik-framework</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-models</artifactId>
-            <version>1.6.2</version>
-        </dependency>
     </dependencies>
 
     <build>

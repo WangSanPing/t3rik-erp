@@ -3,15 +3,13 @@ package com.t3rik;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.context.annotation.ImportResource;
 
 /**
  * 启动程序
  *
- * @author ruoyi
+ * @author t3rik
  */
-// @ImportResource("classpath:ureport-console-context.xml")
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class}, scanBasePackages = {"org.jeecg", "com.t3rik"})
 public class ERPApplication {
     public static void main(String[] args) {
         // System.setProperty("spring.devtools.restart.enabled", "false");
