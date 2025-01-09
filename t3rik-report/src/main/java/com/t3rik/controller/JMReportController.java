@@ -28,7 +28,7 @@ public class JMReportController {
         String[] activeProfiles = environment.getActiveProfiles();
         String url;
         if(activeProfiles[0].equals("pro")){
-            url = scheme + "://" + serverName + ":" + serverPort + "/prod-api/jmreport/list";
+            url = "https://" + serverName + ":" + serverPort + "/prod-api/jmreport/list";
         }else {
             url = scheme + "://" + serverName + ":" + serverPort + "/jmreport/list";
         }
