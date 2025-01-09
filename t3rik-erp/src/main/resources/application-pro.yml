@@ -84,3 +84,8 @@ spring:
       connect-timeout: 60s
 #数据库链接公钥
 publicKey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIYNjaUHGDqD8nlWSKV9Uez6thB3XB/x7/iwcVU3tqQm4hdDWywBPmtz7UtsH3V2NA9hjDaLue/3tENmA2vIHNsCAwEAAQ==
+# 报表访问地址
+jeecg :
+  jmreport:
+    #自定义项目前缀
+    customPrePath: /prod-api/
