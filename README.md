@@ -24,11 +24,7 @@
 #### 技术架构: springboot3+jdk17+mybatis-plus+mysql8+kotlin+vue+uniapp+elementui等
 #### 项目包括后台管理系统、手机端及pad端，手机端采用uniapp架构，可以随时编译为小程序
 
-t3rik-erp项目是在苦糖果开源MES系统基础上进行二次开发的ERP系统，旨在解决中小企业在人力、物料及生产制造等方面的信息化建设需求。该系统为中小企业提供了全面的信息化解决方案，帮助企业优化资源配置、提升生产效率，从而实现更高效、更智能的运营。
-
-##### 路过点个star，后续在迭代业务代码的同时，会持续提供高质量代码，可以帮助你更好的学习Java
-
-##### 联系请加qq群：9052204
+t3rik-erp项目是在苦糖果开源MES系统基础上进行二次开发的ERP系统，旨在解决中小企业在人力、物料、销售、生产制造等方面的信息化建设需求。该系统为中小企业提供了全面的信息化解决方案，帮助企业优化资源配置、提升生产效率，从而实现更高效、更智能的运营。
 
 #### 演示地址
 
@@ -37,9 +33,17 @@ t3rik-erp项目是在苦糖果开源MES系统基础上进行二次开发的ERP�
 - 移动端：http://1.92.89.102:8000/
   - 当前是h5模式，请打开浏览器的调试工具选择移动设备模式查看
 
+##### 路过点个star，后续在迭代业务代码的同时，会持续提供高质量代码，可以帮助你更好的学习Java
+
+##### 联系请加qq群：9052204
+
 #### 项目介绍视频陆续录制中...
 
  - 01-项目介绍：https://www.bilibili.com/video/BV1ZZ8meeE7U
+
+#### 系统架构图
+
+![](https://pic1.imgdb.cn/item/678145cfd0e0a243d4f327b7.jpg)
 
 #### 软件架构
 
@@ -104,20 +108,20 @@ t3rik-erp项目是在苦糖果开源MES系统基础上进行二次开发的ERP�
 
 - 客户订单
   - 添加物料需求后可实时查看库存
-![库存](https://pic.imgdb.cn/item/668a3392d9c307b7e9c920a7.png)
+  ![库存](https://pic.imgdb.cn/item/668a3392d9c307b7e9c920a7.png)
   - 重写选择组件，产品选择页面可直接添加产品
-![产品](https://pic.imgdb.cn/item/668a3402d9c307b7e9c9c5a5.png)
+  ![产品](https://pic.imgdb.cn/item/668a3402d9c307b7e9c9c5a5.png)
   - 新增后可识别产品物料需求，自动添加
-![产品](https://pic.imgdb.cn/item/668a3392d9c307b7e9c920a7.png)
+  ![产品](https://pic.imgdb.cn/item/668a3392d9c307b7e9c920a7.png)
   - 可在信息填写完成后，生成生产工单
-![产品](https://pic.imgdb.cn/item/668a34e5d9c307b7e9cafa54.png)
+  ![产品](https://pic.imgdb.cn/item/668a34e5d9c307b7e9cafa54.png)
 - 生产报工
   - 重做成产报工功能，在报工的同时可以添加当前任务的退料及废料
-![报工](https://pic.imgdb.cn/item/668a3666d9c307b7e9cd1a69.png)
+  ![报工](https://pic.imgdb.cn/item/668a3666d9c307b7e9cd1a69.png)
 - 生产派单
   - 生产任务新建完成后，可选择派单到某责任人，支持按订单分组
-![派单](https://pic.imgdb.cn/item/668a3533d9c307b7e9cb6795.png)
-![派单](https://pic.imgdb.cn/item/668a354fd9c307b7e9cb898f.png)
+  ![派单](https://pic.imgdb.cn/item/668a3533d9c307b7e9cb6795.png)
+  ![派单](https://pic.imgdb.cn/item/668a354fd9c307b7e9cb898f.png)
 - 移动端截图
 
 ![](https://pic.imgdb.cn/item/66b0ec5cd9c307b7e99c0a4d.png) ![](https://pic.imgdb.cn/item/66b0ec5cd9c307b7e99c0a61.png)
