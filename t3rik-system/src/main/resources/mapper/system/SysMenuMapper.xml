@@ -177,6 +177,7 @@
                  left join sys_role r on r.role_id = ur.role_id
         where m.status = '0'
           and r.status = '0'
+          and m.perms is not null
           and ur.user_id = #{userId}
     </select>
 
