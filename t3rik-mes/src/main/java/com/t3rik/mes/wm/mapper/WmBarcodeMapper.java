@@ -1,6 +1,7 @@
 package com.t3rik.mes.wm.mapper;
 
 import com.t3rik.mes.wm.domain.WmBarcode;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
  * @author yinjinlu
  * @date 2022-08-01
  */
+@Mapper
 public interface WmBarcodeMapper 
 {
     /**

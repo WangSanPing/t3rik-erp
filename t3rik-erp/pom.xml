@@ -81,7 +81,10 @@
             <groupId>com.t3rik</groupId>
             <artifactId>t3rik-quartz</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>com.t3rik</groupId>
+            <artifactId>t3rik-oss-spring-boot-starter</artifactId>
+        </dependency>
         <!-- 汉字转拼音 -->
         <dependency>
             <groupId>io.github.biezhi</groupId>

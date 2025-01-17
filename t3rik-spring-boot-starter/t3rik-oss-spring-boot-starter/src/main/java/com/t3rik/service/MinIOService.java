@@ -1,0 +1,91 @@
+package com.t3rik.service;
+
+import com.t3rik.config.MinIOConfig;
+import com.t3rik.config.OSSProperties;
+import com.t3rik.utils.CommonUtils;
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Import;
+import org.springframework.stereotype.Service;
+
+import java.io.InputStream;
+
+/**
+ * minio
+ *
+ * @author t3rik
+ * @date 2025/1/16 22:34
+ */
+@Slf4j
+@Service
+@Import(MinIOConfig.class)
+public class MinIOService {
+
+    @Resource
+    private MinioClient minioClient;
+    @Resource
+    private OSSProperties ossProperties;
+
+    /**
+     * 上传文件
+     *
+     * @param fileName    文件名
+     * @param inputStream 文件
+     * @return oss访问路径
+     */
+    public String uploadFile(String fileName, InputStream inputStream) {
+        return this.uploadFileWithPrefix("", fileName, inputStream);
+    }
+
+    /**
+     * 上传文件，保存后带oss前缀路径
+     *
+     * @param prefix      前缀文件夹
+     * @param fileName    文件名
+     * @param inputStream 文件
+     * @return oss访问路径
+     */
+    public String uploadFileWithPrefix(String prefix, String fileName, InputStream inputStream) {
+        String filePath = CommonUtils.builderFilePath(prefix, fileName);
+        try {
+            PutObjectArgs putObjectArgs = PutObjectArgs.builder()
+                    .object(filePath)
+                    .bucket(ossProperties.getBuket())
+                    .stream(inputStream, inputStream.available(), -1)
+                    .build();
+            minioClient.putObject(putObjectArgs);
+            // 拼接访问路径
+            return ossProperties.getEndPoint() + CommonUtils.separator + ossProperties.getBuket() + CommonUtils.separator + filePath;
+        } catch (Exception e) {
+            log.error("上传文件失败，请确认是否已经在配置文件中正确配置了minIO,异常信息: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 删除文件
+     */
+    public void deleteFile(String url) {
+        if (StringUtils.isBlank(url)) {
+            throw new RuntimeException("文件不能为空!");
+        }
+        try {
+            int start = url.indexOf(ossProperties.getBuket());
+            String objectName = url.substring(start + ossProperties.getBuket().length());
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket(ossProperties.getBuket())
+                            .object(objectName)
+                            .build()
+            );
+        } catch (Exception e) {
+            log.error("删除文件失败，请确认是否已经在配置文件中正确配置了minIO,异常信息: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+}

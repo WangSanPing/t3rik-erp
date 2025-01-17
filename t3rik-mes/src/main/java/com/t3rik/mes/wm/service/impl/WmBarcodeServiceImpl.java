@@ -4,16 +4,17 @@ import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.utils.DateUtils;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.barcode.BarcodeUtil;
-import com.t3rik.common.utils.file.FileUploadUtils;
 import com.t3rik.common.utils.file.FileUtils;
 import com.t3rik.mes.wm.domain.WmBarcode;
 import com.t3rik.mes.wm.mapper.WmBarcodeMapper;
 import com.t3rik.mes.wm.service.IWmBarcodeService;
+import com.t3rik.service.MinIOService;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -25,10 +26,11 @@ import java.util.List;
  */
 @Service
 @Slf4j
-public class WmBarcodeServiceImpl implements IWmBarcodeService
-{
-    @Autowired
+public class WmBarcodeServiceImpl implements IWmBarcodeService {
+    @Resource
     private WmBarcodeMapper wmBarcodeMapper;
+    @Resource
+    private MinIOService minIOService;
 
     /**
      * 查询条码清单
@@ -37,8 +39,7 @@ public class WmBarcodeServiceImpl implements IWmBarcodeService
      * @return 条码清单
      */
     @Override
-    public WmBarcode selectWmBarcodeByBarcodeId(Long barcodeId)
-    {
+    public WmBarcode selectWmBarcodeByBarcodeId(Long barcodeId) {
         return wmBarcodeMapper.selectWmBarcodeByBarcodeId(barcodeId);
     }
 
@@ -49,16 +50,15 @@ public class WmBarcodeServiceImpl implements IWmBarcodeService
      * @return 条码清单
      */
     @Override
-    public List<WmBarcode> selectWmBarcodeList(WmBarcode wmBarcode)
-    {
+    public List<WmBarcode> selectWmBarcodeList(WmBarcode wmBarcode) {
         return wmBarcodeMapper.selectWmBarcodeList(wmBarcode);
     }
 
     @Override
     public String checkBarcodeUnique(WmBarcode wmBarcode) {
         WmBarcode barcode = wmBarcodeMapper.checkBarcodeUnique(wmBarcode);
-        Long barcodeId = wmBarcode.getBarcodeId()==null?-1L:wmBarcode.getBarcodeId();
-        if(StringUtils.isNotNull(barcode) && barcode.getBarcodeId().longValue() != barcodeId.longValue()){
+        Long barcodeId = wmBarcode.getBarcodeId() == null ? -1L : wmBarcode.getBarcodeId();
+        if (StringUtils.isNotNull(barcode) && barcode.getBarcodeId().longValue() != barcodeId.longValue()) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
@@ -71,8 +71,7 @@ public class WmBarcodeServiceImpl implements IWmBarcodeService
      * @return 结果
      */
     @Override
-    public int insertWmBarcode(WmBarcode wmBarcode)
-    {
+    public int insertWmBarcode(WmBarcode wmBarcode) {
         wmBarcode.setCreateTime(DateUtils.getNowDate());
         return wmBarcodeMapper.insertWmBarcode(wmBarcode);
     }
@@ -84,8 +83,7 @@ public class WmBarcodeServiceImpl implements IWmBarcodeService
      * @return 结果
      */
     @Override
-    public int updateWmBarcode(WmBarcode wmBarcode)
-    {
+    public int updateWmBarcode(WmBarcode wmBarcode) {
         wmBarcode.setUpdateTime(DateUtils.getNowDate());
         return wmBarcodeMapper.updateWmBarcode(wmBarcode);
     }
@@ -97,8 +95,7 @@ public class WmBarcodeServiceImpl implements IWmBarcodeService
      * @return 结果
      */
     @Override
-    public int deleteWmBarcodeByBarcodeIds(Long[] barcodeIds)
-    {
+    public int deleteWmBarcodeByBarcodeIds(Long[] barcodeIds) {
         return wmBarcodeMapper.deleteWmBarcodeByBarcodeIds(barcodeIds);
     }
 
@@ -109,26 +106,24 @@ public class WmBarcodeServiceImpl implements IWmBarcodeService
      * @return 结果
      */
     @Override
-    public int deleteWmBarcodeByBarcodeId(Long barcodeId)
-    {
+    public int deleteWmBarcodeByBarcodeId(Long barcodeId) {
         return wmBarcodeMapper.deleteWmBarcodeByBarcodeId(barcodeId);
     }
 
     @Override
     public String generateBarcode(WmBarcode wmBarcode) {
-		File file = BarcodeUtil.generateBarCode(wmBarcode.getBarcodeContent(), wmBarcode.getBarcodeFormart(),
-				"./tmp/barcode/" + wmBarcode.getBarcodeContent() + ".png");
+        File file = BarcodeUtil.generateBarCode(wmBarcode.getBarcodeContent(), wmBarcode.getBarcodeFormart(),
+                "./tmp/barcode/" + wmBarcode.getBarcodeContent() + ".png");
         String fileName = null;
         try {
-            // todo 后期需要修改使用minio的升级类
-            fileName = FileUploadUtils.uploadMinio(file);
+            fileName = minIOService.uploadFile(file.getName(), new FileInputStream(file));
         } catch (IOException e) {
             log.error(e.getMessage());
-        }finally{
-        	//删除掉临时文件
-        	if(file!=null && file.exists()){
-        		FileUtils.deleteFile(file.getAbsolutePath());
-        	}
+        } finally {
+            // 删除掉临时文件
+            if (file != null && file.exists()) {
+                FileUtils.deleteFile(file.getAbsolutePath());
+            }
             return fileName;
         }
 
