@@ -1,26 +1,27 @@
 package com.t3rik.common;
 
-import java.util.ArrayList;
-import java.util.List;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import com.t3rik.common.config.PlatformConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import com.t3rik.common.constant.Constants;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.file.FileUploadUtils;
 import com.t3rik.common.utils.file.FileUtils;
 import com.t3rik.framework.config.ServerConfig;
+import com.t3rik.service.MinIOService;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 通用请求处理
@@ -32,9 +33,10 @@ import com.t3rik.framework.config.ServerConfig;
 public class CommonController {
     private static final Logger log = LoggerFactory.getLogger(CommonController.class);
 
-    @Autowired
+    @Resource
     private ServerConfig serverConfig;
-
+    @Resource
+    private MinIOService minIOService;
     private static final String FILE_DELIMETER = ",";
 
     /**
@@ -144,7 +146,7 @@ public class CommonController {
     @PostMapping("/uploadMinio")
     public AjaxResult uploadFileMinio(MultipartFile file) throws Exception {
         try {
-            String fileName = FileUploadUtils.uploadMinio(file);
+            String fileName = minIOService.uploadFile(file.getOriginalFilename(), file.getInputStream());
             AjaxResult rt = AjaxResult.success();
             rt.put("url", fileName);
             rt.put("fileName", fileName);
