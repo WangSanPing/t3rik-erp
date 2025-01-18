@@ -12,9 +12,7 @@ import com.t3rik.common.utils.SecurityUtils;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.file.FileUploadUtils;
 import com.t3rik.framework.web.service.TokenService;
-import com.t3rik.service.MinIOService;
 import com.t3rik.system.service.ISysUserService;
-import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -103,8 +101,8 @@ public class SysProfileController extends BaseController {
         return AjaxResult.error("修改密码异常，请联系管理员");
     }
 
-    @Resource
-    private MinIOService minIOService;
+    // @Resource
+    // private OssProcessor ossProcessor;
 
     /**
      * 头像上传
@@ -115,8 +113,6 @@ public class SysProfileController extends BaseController {
         if (!file.isEmpty()) {
             LoginUser loginUser = getLoginUser();
             String avatar = FileUploadUtils.upload(PlatformConfig.getAvatarPath(), file);
-            // String avatar = minIOService.uploadFile(file.getOriginalFilename() + "." + suffix, file.getInputStream());
-            // minIOService.deleteFile(avatar);
             if (userService.updateUserAvatar(loginUser.getUsername(), avatar)) {
                 AjaxResult ajax = AjaxResult.success();
                 ajax.put("imgUrl", avatar);

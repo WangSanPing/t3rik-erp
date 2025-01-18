@@ -1,6 +1,6 @@
 package com.t3rik.config;
 
-import com.t3rik.OSSTypeEnum;
+import com.t3rik.enums.OssTypeEnum;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -14,16 +14,16 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "t3rik-platform.oss")
-public class OSSProperties {
+public class OssProperties {
     /**
      * oss类型
      */
-    private OSSTypeEnum type;
-    private String accessKey;
-    private String secretKey;
+    private OssTypeEnum ossType = OssTypeEnum.MinIO;
+    private String accessKey = "minIO";
+    private String secretKey = "minIO";
     /**
      * 桶名称
      */
-    private String buket;
-    private String endPoint;
+    private String buket = "minIO";
+    private String endPoint = "http://127.0.0.1:9000";
 }

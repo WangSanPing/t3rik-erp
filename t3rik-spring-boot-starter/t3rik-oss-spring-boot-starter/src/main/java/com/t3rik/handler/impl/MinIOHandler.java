@@ -1,7 +1,8 @@
-package com.t3rik.service;
+package com.t3rik.handler.impl;
 
 import com.t3rik.config.MinIOConfig;
-import com.t3rik.config.OSSProperties;
+import com.t3rik.config.OssProperties;
+import com.t3rik.handler.IOSSHandler;
 import com.t3rik.utils.CommonUtils;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
@@ -21,14 +22,14 @@ import java.io.InputStream;
  * @date 2025/1/16 22:34
  */
 @Slf4j
-@Service
+@Service("minIOService")
 @Import(MinIOConfig.class)
-public class MinIOService {
+public class MinIOHandler implements IOSSHandler {
 
     @Resource
     private MinioClient minioClient;
     @Resource
-    private OSSProperties ossProperties;
+    private OssProperties ossProperties;
 
     /**
      * 上传文件
@@ -61,7 +62,7 @@ public class MinIOService {
             // 拼接访问路径
             return ossProperties.getEndPoint() + CommonUtils.separator + ossProperties.getBuket() + CommonUtils.separator + filePath;
         } catch (Exception e) {
-            log.error("上传文件失败，请确认是否已经在配置文件中正确配置了minIO,异常信息: {}", e.getMessage());
+            log.error("minIO上传文件失败，请确认是否已经在配置文件中正确配置了minIO,异常信息: {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -83,7 +84,7 @@ public class MinIOService {
                             .build()
             );
         } catch (Exception e) {
-            log.error("删除文件失败，请确认是否已经在配置文件中正确配置了minIO,异常信息: {}", e.getMessage());
+            log.error("minIO删除文件失败，请确认是否已经在配置文件中正确配置了minIO,异常信息: {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }

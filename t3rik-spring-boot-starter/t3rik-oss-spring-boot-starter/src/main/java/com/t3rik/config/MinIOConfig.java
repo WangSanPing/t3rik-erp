@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 public class MinIOConfig {
 
     @Bean
-    public MinioClient minioClient(OSSProperties ossProperties) {
+    public MinioClient minioClient(OssProperties ossProperties) {
         return MinioClient.builder()
                 .endpoint(ossProperties.getEndPoint())
                 .credentials(ossProperties.getAccessKey(), ossProperties.getSecretKey())

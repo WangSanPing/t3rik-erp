@@ -21,4 +21,4 @@ t3rik-platform:
     buket: your_buket
     access-key: your_key
     secret-key: your_key
-    type: minio
+    oss-type: minio
