@@ -1,6 +1,7 @@
 package com.t3rik.system.controller;
 
 import com.t3rik.common.annotation.Log;
+import com.t3rik.common.config.PlatformConfig;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
@@ -9,6 +10,7 @@ import com.t3rik.common.core.domain.model.LoginUser;
 import com.t3rik.common.enums.BusinessType;
 import com.t3rik.common.utils.SecurityUtils;
 import com.t3rik.common.utils.StringUtils;
+import com.t3rik.common.utils.file.FileUploadUtils;
 import com.t3rik.framework.web.service.TokenService;
 import com.t3rik.service.MinIOService;
 import com.t3rik.system.service.ISysUserService;
@@ -112,9 +114,9 @@ public class SysProfileController extends BaseController {
     public AjaxResult avatar(@RequestParam("avatarfile") MultipartFile file, @RequestParam("suffix") String suffix) throws IOException {
         if (!file.isEmpty()) {
             LoginUser loginUser = getLoginUser();
-            // String avatar = FileUploadUtils.upload(PlatformConfig.getAvatarPath(), file);
-            String avatar = minIOService.uploadFile(file.getOriginalFilename() + "." + suffix, file.getInputStream());
-            minIOService.deleteFile(avatar);
+            String avatar = FileUploadUtils.upload(PlatformConfig.getAvatarPath(), file);
+            // String avatar = minIOService.uploadFile(file.getOriginalFilename() + "." + suffix, file.getInputStream());
+            // minIOService.deleteFile(avatar);
             if (userService.updateUserAvatar(loginUser.getUsername(), avatar)) {
                 AjaxResult ajax = AjaxResult.success();
                 ajax.put("imgUrl", avatar);
