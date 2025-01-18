@@ -8,7 +8,7 @@ import com.t3rik.common.utils.file.FileUtils;
 import com.t3rik.mes.wm.domain.WmBarcode;
 import com.t3rik.mes.wm.mapper.WmBarcodeMapper;
 import com.t3rik.mes.wm.service.IWmBarcodeService;
-import com.t3rik.service.MinIOService;
+import com.t3rik.processor.OssProcessor;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class WmBarcodeServiceImpl implements IWmBarcodeService {
     @Resource
     private WmBarcodeMapper wmBarcodeMapper;
     @Resource
-    private MinIOService minIOService;
+    private OssProcessor ossProcessor;
 
     /**
      * 查询条码清单
@@ -116,7 +116,7 @@ public class WmBarcodeServiceImpl implements IWmBarcodeService {
                 "./tmp/barcode/" + wmBarcode.getBarcodeContent() + ".png");
         String fileName = null;
         try {
-            fileName = minIOService.uploadFile(file.getName(), new FileInputStream(file));
+            fileName = ossProcessor.uploadFile(file.getName(), new FileInputStream(file));
         } catch (IOException e) {
             log.error(e.getMessage());
         } finally {

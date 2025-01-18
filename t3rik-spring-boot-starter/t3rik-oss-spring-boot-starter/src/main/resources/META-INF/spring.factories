@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.t3rik.service.MinIOService
+  com.t3rik.processor.OssProcessor
