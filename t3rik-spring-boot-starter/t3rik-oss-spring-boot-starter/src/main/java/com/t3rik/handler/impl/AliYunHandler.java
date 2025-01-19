@@ -8,6 +8,7 @@ import com.t3rik.utils.CommonUtils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ import java.io.InputStream;
 @Import(AliYunConfig.class)
 public class AliYunHandler implements IOSSHandler {
 
-    @Resource
+    @Autowired(required = false)
     private OSS aliYunClient;
     @Resource
     private OssProperties ossProperties;
