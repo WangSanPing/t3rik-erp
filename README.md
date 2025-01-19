@@ -115,12 +115,12 @@ t3rik-erp项目是在苦糖果开源MES系统基础上进行二次开发的ERP�
 - **t3rik-erp-ui**
   - **后台管理前端**
   - **地址：https://gitee.com/wangsanping/t3rik-erp-ui**
-- **t3rik-erp-pad**
-  - **pad前端**
-  - **https://gitee.com/wangsanping/t3rik-erp-pad**
 - **t3rik-app**
   - **app前端**
   - **https://gitee.com/wangsanping/t3rik-app**
+- **t3rik-erp-pad**
+  - **pad前端**
+  - **https://gitee.com/wangsanping/t3rik-erp-pad**
 
 #### 部分功能截图
 
