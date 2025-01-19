@@ -82,7 +82,9 @@ class MesMobileCommonController : BaseController() {
     @GetMapping("/materialStockList")
     fun materialStockList(): AjaxResult {
         return AjaxResult.success(
-            materialStockService.lambdaQuery().notIn(
+            materialStockService.lambdaQuery()
+                .eq(WmMaterialStock::getItemTypeId,DefaultDataEnum.MATERIAL.code)
+                .notIn(
                 WmMaterialStock::getWarehouseCode,
                 mutableListOf(DefaultDataEnum.WASTE_VIRTUAL_WH.code, DefaultDataEnum.VIRTUAL_WH.code)
             ).list()
