@@ -26,11 +26,4 @@ public class ERPApplication {
                 "             '|'                                                                         \n" +
                 ".:*~*:._.:*~*:._.:*~*:._.:*~*:._._.:.ERP服务 启动成功.:._.:*~*:.._.:*~*:.._.:*~*:.._.:*~*:.");
     }
-
-    // @Bean
-    // public ServletRegistrationBean urportServlet() {
-    //     ServletRegistrationBean bean = new ServletRegistrationBean(new UReportServlet());
-    //     bean.addUrlMappings("/ureport/*");
-    //     return bean;
-    // }
 }
