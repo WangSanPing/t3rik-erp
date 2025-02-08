@@ -17,6 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <minio.version>8.5.14</minio.version>
         <aliyun.sdk.oss>3.18.1</aliyun.sdk.oss>
+        <esdk.obs.java>3.23.9</esdk.obs.java>
     </properties>
 
     <dependencyManagement>
@@ -30,6 +31,11 @@
                 <groupId>com.aliyun.oss</groupId>
                 <artifactId>aliyun-sdk-oss</artifactId>
                 <version>${aliyun.sdk.oss}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.huaweicloud</groupId>
+                <artifactId>esdk-obs-java</artifactId>
+                <version>${esdk.obs.java}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
