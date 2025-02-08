@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 @Getter
 public enum OssTypeEnum {
-    Default("minIOService"), MinIO("minIOService"), AliYun("aliYunService");
+    Default("minIOService"), MinIO("minIOService"), AliYun("aliYunService"),HuaWeiObs("huaWeiObsService");
 
     private final String type;
 
