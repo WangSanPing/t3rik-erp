@@ -5,6 +5,7 @@ import com.obs.services.model.ObsObject;
 import com.obs.services.model.PutObjectRequest;
 import com.t3rik.config.HuaWeiObsConfig;
 import com.t3rik.config.OssProperties;
+import com.t3rik.exception.T3rikOssException;
 import com.t3rik.handler.IOSSHandler;
 import com.t3rik.utils.CommonUtils;
 import jakarta.annotation.Resource;
@@ -39,6 +40,7 @@ public class HuaWeiObsHandler implements IOSSHandler {
 
     @Autowired(required = false)
     private ObsClient obsClient;
+
     /**
      * 上传文件
      *
@@ -61,11 +63,11 @@ public class HuaWeiObsHandler implements IOSSHandler {
      */
     @Override
     public String uploadFileWithPrefix(String prefix, String fileName, InputStream inputStream) {
-        String filePath = CommonUtils.builderFilePath(prefix, fileName);
+        String filePath = CommonUtils.buildFilePath(prefix, fileName);
         try {
-           obsClient.putObject(new PutObjectRequest(ossProperties.getBuket(),filePath,inputStream));
+            obsClient.putObject(new PutObjectRequest(ossProperties.getBuket(), filePath, inputStream));
         } catch (Exception e) {
-            log.error("huaWeiObs，请确认是否已经在配置文件中正确配置了huaWeiObs,异常信息: {}", e.getMessage());
+            throw new T3rikOssException("huaWeiObs，请确认是否已经在配置文件中正确配置了huaWeiObs", e);
         }
         // 文件访问路径规则 https://BucketName.Endpoint/ObjectName
         return "https://" +
@@ -84,38 +86,34 @@ public class HuaWeiObsHandler implements IOSSHandler {
     @Override
     public void deleteFile(String url) {
         if (StringUtils.isBlank(url)) {
-            throw new RuntimeException("文件不能为空!");
+            throw new T3rikOssException("文件不能为空!");
         }
         try {
-            String objectName = CommonUtils.builderUrlPath(url,ossProperties.getBuket(),ossProperties.getEndPoint());
+            String objectName = CommonUtils.buildUrlPath(url, ossProperties.getBuket(), ossProperties.getEndPoint());
             obsClient.deleteObject(ossProperties.getBuket(), objectName);
         } catch (Exception e) {
-            log.error("huaWeiObs删除文件失败，请确认是否已经在配置文件中正确配置了huaWeiObs,异常信息: {}", e.getMessage());
-            throw new RuntimeException(e);
+            throw new T3rikOssException("huaWeiObs删除文件失败，请确认是否已经在配置文件中正确配置了huaWeiObs", e);
         }
     }
 
     @Override
     public void downLoadFile(String url, HttpServletResponse response) {
         if (StringUtils.isBlank(url)) {
-            throw new RuntimeException("文件url不能为空!");
+            throw new T3rikOssException("文件不能为空!");
         }
         try {
-            String objectName = CommonUtils.builderUrlPath(url,ossProperties.getBuket(),ossProperties.getEndPoint());
-            //判断文件是否存在
+            String objectName = CommonUtils.buildUrlPath(url, ossProperties.getBuket(), ossProperties.getEndPoint());
+            // 判断文件是否存在
             boolean doesObjectExist = obsClient.doesObjectExist(ossProperties.getBuket(), objectName);
-            if (!doesObjectExist){
-                log.error("文件名称不存在！");
-                return;
+            if (!doesObjectExist) {
+                throw new T3rikOssException("文件名称不存在!");
             }
             // 流式下载
             ObsObject obsObject = obsClient.getObject(ossProperties.getBuket(), objectName);
-            // 读取对象内容
-            log.info("正在读取对象内容");
             InputStream input = obsObject.getObjectContent();
             byte[] b = new byte[1024];
             response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(objectName, "UTF-8"));
-           OutputStream outputStream = response.getOutputStream();
+            OutputStream outputStream = response.getOutputStream();
             int len;
             while ((len = input.read(b)) != -1) {
                 outputStream.write(b, 0, len);
@@ -123,8 +121,7 @@ public class HuaWeiObsHandler implements IOSSHandler {
             outputStream.close();
             input.close();
         } catch (Exception e) {
-            log.error("huaWeiObs下载文件失败，请确认是否已经在配置文件中正确配置了huaWeiObs,异常信息: {}", e.getMessage());
+            throw new T3rikOssException("huaWeiObs下载文件失败，请确认是否已经在配置文件中正确配置了huaWeiObs", e);
         }
-
     }
 }

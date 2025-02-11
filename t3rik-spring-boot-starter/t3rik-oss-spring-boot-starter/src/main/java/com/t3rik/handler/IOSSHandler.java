@@ -1,6 +1,8 @@
 package com.t3rik.handler;
 
+import com.t3rik.exception.T3rikOssException;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.InputStream;
 
 /**
@@ -31,13 +33,13 @@ public interface IOSSHandler {
     /**
      * 删除文件
      */
-    void deleteFile(String url);
+    void deleteFile(String url) ;
 
     /**
      * 下载文件
      *
      * @param url 文件服务器存放地址
      */
-    default void downLoadFile(String url, HttpServletResponse response) throws Exception {
+    default void downLoadFile(String url, HttpServletResponse response) {
     }
 }
