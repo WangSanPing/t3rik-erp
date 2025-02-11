@@ -1,6 +1,7 @@
 package com.t3rik.utils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
@@ -36,5 +37,18 @@ public class CommonUtils {
         stringBuilder.append(todayStr).append(separator).append(fileName);
         byte[] bytes = stringBuilder.toString().getBytes(StandardCharsets.UTF_8);
         return new String(bytes, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * 构建oss obs的前缀url
+     * @param url 下载地址
+     * @param buket 桶名称
+     * @param endPoint 地址
+     * @return objectName 重新构建的文件地址
+     */
+    public static @NotNull String builderUrlPath(String url, String buket, String endPoint) {
+        String prefix = buket + "." + endPoint;
+        int start = url.indexOf(prefix);
+        return url.substring(start + prefix.length() + 1);
     }
 }

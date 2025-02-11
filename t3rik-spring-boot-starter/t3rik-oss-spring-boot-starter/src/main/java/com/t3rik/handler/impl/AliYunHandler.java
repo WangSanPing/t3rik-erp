@@ -1,6 +1,7 @@
 package com.t3rik.handler.impl;
 
 import com.aliyun.oss.OSS;
+import com.aliyun.oss.model.GetObjectRequest;
 import com.t3rik.config.AliYunConfig;
 import com.t3rik.config.OssProperties;
 import com.t3rik.handler.IOSSHandler;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 
 /**
@@ -76,13 +78,35 @@ public class AliYunHandler implements IOSSHandler {
             throw new RuntimeException("文件不能为空!");
         }
         try {
-            String prefix = ossProperties.getBuket() + "." + ossProperties.getEndPoint();
-            int start = url.indexOf(prefix);
-            String objectName = url.substring(start + prefix.length() + 1);
+            String objectName = CommonUtils.builderUrlPath(url,ossProperties.getBuket(),ossProperties.getEndPoint());
             aliYunClient.deleteObject(ossProperties.getBuket(), objectName);
         } catch (Exception e) {
             log.error("aliYun删除文件失败，请确认是否已经在配置文件中正确配置了aliYun,异常信息: {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * 下载文件
+     * @param url 文件服务器存放地址
+     * @return 返回值提示
+     */
+
+    @Override
+    public void downLoadFile(String url, HttpServletResponse response) {
+        try {
+            String objectName = CommonUtils.builderUrlPath(url,ossProperties.getBuket(),ossProperties.getEndPoint());
+            // 下载Object到本地文件，并保存到指定的本地路径中。如果指定的本地文件存在会覆盖，不存在则新建。
+            // 如果未指定本地路径，则下载后的文件默认保存到示例程序所属项目对应本地路径中。
+            aliYunClient.getObject(new GetObjectRequest(ossProperties.getBuket(), objectName));
+        }  catch (Exception e) {
+            log.error("aliYun下载文件失败，请确认是否已经在配置文件中正确配置了aliYun,异常信息: {}", e.getMessage());
+        } finally {
+            if (aliYunClient != null) {
+                aliYunClient.shutdown();
+            }
+        }
+    }
+
+
 }

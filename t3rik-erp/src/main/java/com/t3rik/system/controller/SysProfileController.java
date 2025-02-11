@@ -12,12 +12,14 @@ import com.t3rik.common.utils.SecurityUtils;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.file.FileUploadUtils;
 import com.t3rik.framework.web.service.TokenService;
+import com.t3rik.processor.OssProcessor;
 import com.t3rik.system.service.ISysUserService;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 
 /**
  * 个人信息 业务处理
@@ -101,15 +103,15 @@ public class SysProfileController extends BaseController {
         return AjaxResult.error("修改密码异常，请联系管理员");
     }
 
-    // @Resource
-    // private OssProcessor ossProcessor;
+    @Resource
+    private OssProcessor ossProcessor;
 
     /**
      * 头像上传
      */
     @Log(title = "用户头像", businessType = BusinessType.UPDATE)
     @PostMapping("/avatar")
-    public AjaxResult avatar(@RequestParam("avatarfile") MultipartFile file, @RequestParam("suffix") String suffix) throws IOException {
+    public AjaxResult avatar(@RequestParam("avatarfile") MultipartFile file, @RequestParam("suffix") String suffix) throws Exception {
         if (!file.isEmpty()) {
             LoginUser loginUser = getLoginUser();
             String avatar = FileUploadUtils.upload(PlatformConfig.getAvatarPath(), file);
@@ -123,5 +125,14 @@ public class SysProfileController extends BaseController {
             }
         }
         return AjaxResult.error("上传图片异常，请联系管理员");
+    }
+
+    /**
+     * 头像上传
+     */
+    @Log(title = "用户头像", businessType = BusinessType.UPDATE)
+    @PostMapping("/test")
+    public void avatar(HttpServletResponse response) throws Exception {
+        ossProcessor.downLoadFile("https://test-obs-ac60.obs.cn-east-3.myhuaweicloud.com/2025/02/08/blob.jpeg", response);
     }
 }

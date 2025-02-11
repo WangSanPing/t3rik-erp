@@ -5,6 +5,7 @@ import com.t3rik.handler.IOSSHandler;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.util.Map;
 
@@ -51,5 +52,13 @@ public class OssProcessor {
      */
     public void deleteFile(String url) {
         ossService.get(ossProperties.getOssType().getType()).deleteFile(url);
+    }
+
+    /**
+     * 下载文件
+     * @param url 文件服务器存放地址
+     */
+    public void downLoadFile(String url, HttpServletResponse response) throws Exception {
+        ossService.get(ossProperties.getOssType().getType()).downLoadFile(url,response);
     }
 }
