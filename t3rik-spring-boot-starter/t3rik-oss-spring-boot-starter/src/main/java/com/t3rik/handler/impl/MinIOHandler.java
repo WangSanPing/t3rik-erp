@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Service;
 
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 
 /**
@@ -88,6 +89,16 @@ public class MinIOHandler implements IOSSHandler {
             log.error("minIO删除文件失败，请确认是否已经在配置文件中正确配置了minIO,异常信息: {}", e.getMessage());
             throw new RuntimeException(e);
         }
+    }
+
+
+    /**
+     * 文件下载
+     * @param url 文件服务器存放地址
+     * @return
+     */
+    @Override
+    public void downLoadFile(String url, HttpServletResponse response) {
     }
 
 }
