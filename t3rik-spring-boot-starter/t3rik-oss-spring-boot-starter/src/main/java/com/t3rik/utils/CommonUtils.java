@@ -27,7 +27,7 @@ public class CommonUtils {
      * @param fileName 文件名称
      * @return yyyy/mm/dd/fileName.jpg
      */
-    public static String builderFilePath(String prefix, String fileName) {
+    public static String buildFilePath(String prefix, String fileName) {
         StringBuilder stringBuilder = new StringBuilder();
         if (StringUtils.isNotBlank(prefix)) {
             stringBuilder.append(prefix).append(separator);
@@ -41,12 +41,13 @@ public class CommonUtils {
 
     /**
      * 构建oss obs的前缀url
-     * @param url 下载地址
-     * @param buket 桶名称
+     *
+     * @param url      下载地址
+     * @param buket    桶名称
      * @param endPoint 地址
      * @return objectName 重新构建的文件地址
      */
-    public static @NotNull String builderUrlPath(String url, String buket, String endPoint) {
+    public static @NotNull String buildUrlPath(String url, String buket, String endPoint) {
         String prefix = buket + "." + endPoint;
         int start = url.indexOf(prefix);
         return url.substring(start + prefix.length() + 1);

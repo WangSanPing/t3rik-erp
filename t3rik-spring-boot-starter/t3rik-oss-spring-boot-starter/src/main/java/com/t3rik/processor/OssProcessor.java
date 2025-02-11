@@ -1,11 +1,12 @@
 package com.t3rik.processor;
 
 import com.t3rik.config.OssProperties;
+import com.t3rik.exception.T3rikOssException;
 import com.t3rik.handler.IOSSHandler;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Service;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public class OssProcessor {
      * @param inputStream 文件
      * @return oss访问路径
      */
-    public String uploadFile(String fileName, InputStream inputStream) {
+    public String uploadFile(String fileName, InputStream inputStream)  {
         return ossService.get(ossProperties.getOssType().getType()).uploadFile(fileName, inputStream);
     }
 
@@ -56,9 +57,10 @@ public class OssProcessor {
 
     /**
      * 下载文件
+     *
      * @param url 文件服务器存放地址
      */
-    public void downLoadFile(String url, HttpServletResponse response) throws Exception {
-        ossService.get(ossProperties.getOssType().getType()).downLoadFile(url,response);
+    public void downLoadFile(String url, HttpServletResponse response)  {
+        ossService.get(ossProperties.getOssType().getType()).downLoadFile(url, response);
     }
 }

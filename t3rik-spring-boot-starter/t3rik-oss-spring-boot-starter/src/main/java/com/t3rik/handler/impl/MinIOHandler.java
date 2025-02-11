@@ -2,19 +2,20 @@ package com.t3rik.handler.impl;
 
 import com.t3rik.config.MinIOConfig;
 import com.t3rik.config.OssProperties;
+import com.t3rik.exception.T3rikOssException;
 import com.t3rik.handler.IOSSHandler;
 import com.t3rik.utils.CommonUtils;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Service;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 
 /**
@@ -53,7 +54,7 @@ public class MinIOHandler implements IOSSHandler {
      * @return oss访问路径
      */
     public String uploadFileWithPrefix(String prefix, String fileName, InputStream inputStream) {
-        String filePath = CommonUtils.builderFilePath(prefix, fileName);
+        String filePath = CommonUtils.buildFilePath(prefix, fileName);
         try {
             PutObjectArgs putObjectArgs = PutObjectArgs.builder()
                     .object(filePath)
@@ -64,8 +65,7 @@ public class MinIOHandler implements IOSSHandler {
             // 拼接访问路径
             return ossProperties.getEndPoint() + CommonUtils.separator + ossProperties.getBuket() + CommonUtils.separator + filePath;
         } catch (Exception e) {
-            log.error("minIO上传文件失败，请确认是否已经在配置文件中正确配置了minIO,异常信息: {}", e.getMessage());
-            throw new RuntimeException(e);
+            throw new T3rikOssException("minIO上传文件失败，请确认是否已经在配置文件中正确配置了minIO", e);
         }
     }
 
@@ -74,7 +74,7 @@ public class MinIOHandler implements IOSSHandler {
      */
     public void deleteFile(String url) {
         if (StringUtils.isBlank(url)) {
-            throw new RuntimeException("文件不能为空!");
+            throw new T3rikOssException("文件不能为空!");
         }
         try {
             int start = url.indexOf(ossProperties.getBuket());
@@ -86,14 +86,14 @@ public class MinIOHandler implements IOSSHandler {
                             .build()
             );
         } catch (Exception e) {
-            log.error("minIO删除文件失败，请确认是否已经在配置文件中正确配置了minIO,异常信息: {}", e.getMessage());
-            throw new RuntimeException(e);
+            throw new T3rikOssException("minIO删除文件失败，请确认是否已经在配置文件中正确配置了minIO", e);
         }
     }
 
 
     /**
      * 文件下载
+     *
      * @param url 文件服务器存放地址
      * @return
      */
