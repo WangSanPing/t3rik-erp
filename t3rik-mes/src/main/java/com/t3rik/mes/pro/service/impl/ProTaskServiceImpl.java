@@ -6,12 +6,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.t3rik.common.constant.MsgConstants;
 import com.t3rik.common.enums.mes.OrderStatusEnum;
+import com.t3rik.common.enums.mes.StatisticsTypeEnum;
+import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.DateUtils;
 import com.t3rik.mes.pro.domain.ProTask;
 import com.t3rik.mes.pro.dto.TaskDTO;
 import com.t3rik.mes.pro.mapper.ProTaskMapper;
 import com.t3rik.mes.pro.service.IProTaskService;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +29,12 @@ import static java.util.stream.Collectors.groupingBy;
 /**
  * 生产任务Service业务层处理
  *
- * @author yinjinlu
- * @date 2022-05-14
+ * @author t3rik
+ * @date 2024-10-14
  */
 @Service
 public class ProTaskServiceImpl extends ServiceImpl<ProTaskMapper, ProTask> implements IProTaskService {
-    @Autowired
+    @Resource
     private ProTaskMapper proTaskMapper;
 
     /**
@@ -201,14 +205,25 @@ public class ProTaskServiceImpl extends ServiceImpl<ProTaskMapper, ProTask> impl
     }
 
     /**
-     * 查询任务，根据工单分组展示数据，并统计领料次数
+     * 查询任务，根据工单分组展示数据，并统计相关类型的次数
      *
      * @param page
      * @param query 查询条件
+     * @param type  类型
      */
     @Override
-    public Page<TaskDTO> getTaskListAndIssueCount(IPage<TaskDTO> page, Wrapper<TaskDTO> query) {
-        return this.proTaskMapper.getTaskListAndIssueCount(page, query);
+    public Page<TaskDTO> getTaskListAndSelectTypeCount(IPage<TaskDTO> page, Wrapper<TaskDTO> query, StatisticsTypeEnum type) {
+        switch (type) {
+            case ISSUED_QUANTITY -> {
+                return this.proTaskMapper.getTaskListAndIssueCount(page, query);
+            }
+            case RT_ISSUED_QUANTITY -> {
+                return this.proTaskMapper.getTaskListAndRtIssueCount(page, query);
+            }
+            case WASTE_QUANTITY -> {
+                return this.proTaskMapper.getTaskListAndWasteCount(page, query);
+            }
+            default -> throw new BusinessException(MsgConstants.PARAM_ERROR);
+        }
     }
-
 }

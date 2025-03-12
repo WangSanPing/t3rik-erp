@@ -8,6 +8,7 @@ import com.t3rik.common.constant.UserConstants
 import com.t3rik.common.core.controller.BaseController
 import com.t3rik.common.core.domain.AjaxResult
 import com.t3rik.common.core.page.TableDataInfo
+import com.t3rik.common.enums.mes.StatisticsTypeEnum
 import com.t3rik.common.exception.BusinessException
 import com.t3rik.common.utils.SecurityUtils
 import com.t3rik.common.utils.StringUtils
@@ -48,7 +49,13 @@ class IssueController : BaseController() {
         val queryWrapper = QueryWrapper<TaskDTO>()
         queryWrapper.likeRight(StringUtils.isNotBlank(task.taskName), "task_name", task.taskName)
         queryWrapper.eq("task_user_id", SecurityUtils.getUserId())
-        return getDataTableWithPage(this.proTaskService.getTaskListAndIssueCount(page, queryWrapper))
+        return getDataTableWithPage(
+            this.proTaskService.getTaskListAndSelectTypeCount(
+                page,
+                queryWrapper,
+                StatisticsTypeEnum.ISSUED_QUANTITY
+            )
+        )
     }
 
     @ApiOperation("领料申请")

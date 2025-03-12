@@ -3,6 +3,7 @@ package com.t3rik.mobile.mes.service.impl
 import com.baomidou.mybatisplus.core.conditions.Wrapper
 import com.baomidou.mybatisplus.core.metadata.IPage
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
+import com.t3rik.common.enums.mes.StatisticsTypeEnum
 import com.t3rik.mes.pro.domain.ProTask
 import com.t3rik.mes.pro.dto.TaskDTO
 import com.t3rik.mes.pro.service.IProTaskService
@@ -33,10 +34,10 @@ class RtIssueServiceImpl : IRtIssueService {
     }
 
     /**
-     * 查询任务，根据工单分组展示数据，并统计领料次数
+     * 查询任务，根据工单分组展示数据，并统计领料和退料次数
      * @param query 查询条件
      */
     override fun getTaskListAndIssueCount(page: IPage<TaskDTO>, query: Wrapper<TaskDTO>): Page<TaskDTO> {
-        return this.proTaskService.getTaskListAndIssueCount(page, query)
+        return this.proTaskService.getTaskListAndSelectTypeCount(page, query, StatisticsTypeEnum.RT_ISSUED_QUANTITY)
     }
 }

@@ -345,8 +345,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="getTaskListAndIssueCount" resultType="com.t3rik.mes.pro.dto.TaskDTO">
-        SELECT
-            pw.workorder_id,
+        SELECT pw.workorder_id,
+               pw.workorder_code,
+               pw.client_order_code,
+               pw.request_date,
+               pw.status,
+               pw.unit_of_measure,
+               pt.task_user_id,
+               pt.task_name,
+               sum(pt.quantity_quanlify)    as quantityQuanlify,
+               COUNT(DISTINCT wih.issue_id) AS issueCount
+        FROM pro_workorder pw
+                 LEFT JOIN
+             pro_task pt ON pt.workorder_code = pw.workorder_code
+                 LEFT JOIN
+             wm_issue_header wih ON pw.workorder_code = wih.workorder_code
+                 LEFT JOIN
+             wm_issue_line wil ON wih.issue_id = wil.issue_id
+            ${ew.customSqlSegment}
+        GROUP BY
             pw.workorder_code,
             pw.client_order_code,
             pw.request_date,
@@ -354,17 +371,68 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             pw.unit_of_measure,
             pt.task_user_id,
             pt.task_name,
-            sum(pt.quantity_quanlify) as quantityQuanlify,
-            COUNT(DISTINCT wil.issue_id) AS issueCount
-        FROM
-            pro_workorder pw
-                LEFT JOIN
-            pro_task pt ON pt.workorder_code = pw.workorder_code
-                LEFT JOIN
-            wm_issue_header wih ON pw.workorder_code = wih.workorder_code
-                LEFT JOIN
-            wm_issue_line wil ON wih.issue_id = wil.issue_id
-        ${ew.customSqlSegment}
+            pw.workorder_id
+    </select>
+
+    <select id="getTaskListAndRtIssueCount" resultType="com.t3rik.mes.pro.dto.TaskDTO">
+        SELECT pw.workorder_id,
+               pw.workorder_code,
+               pw.client_order_code,
+               pw.request_date,
+               pw.status,
+               pw.unit_of_measure,
+               pt.task_user_id,
+               pt.task_name,
+               sum(pt.quantity_quanlify)    as quantityQuanlify,
+               COUNT(DISTINCT wih.issue_id) AS issueCount,
+               COUNT(DISTINCT wri.rt_id)    AS rtIssueCount
+        FROM pro_workorder pw
+                 LEFT JOIN
+             pro_task pt ON pt.workorder_code = pw.workorder_code
+                 LEFT JOIN
+             wm_issue_header wih ON pw.workorder_code = wih.workorder_code
+                 LEFT JOIN
+             wm_issue_line wil ON wih.issue_id = wil.issue_id
+                 LEFT JOIN
+             wm_rt_issue wri ON pw.workorder_code = wri.workorder_code
+                 LEFT JOIN
+             wm_rt_issue_line wril ON wri.rt_id = wril.rt_id
+            ${ew.customSqlSegment}
+        GROUP BY
+            pw.workorder_code,
+            pw.client_order_code,
+            pw.request_date,
+            pw.status,
+            pw.unit_of_measure,
+            pt.task_user_id,
+            pt.task_name,
+            pw.workorder_id
+    </select>
+
+    <select id="getTaskListAndWasteCount" resultType="com.t3rik.mes.pro.dto.TaskDTO">
+        SELECT pw.workorder_id,
+               pw.workorder_code,
+               pw.client_order_code,
+               pw.request_date,
+               pw.status,
+               pw.unit_of_measure,
+               pt.task_user_id,
+               pt.task_name,
+               sum(pt.quantity_quanlify)    as quantityQuanlify,
+               COUNT(DISTINCT wil.issue_id) AS issueCount,
+               COUNT(DISTINCT wwh.waste_id) AS wasteCount
+        FROM pro_workorder pw
+                 LEFT JOIN
+             pro_task pt ON pt.workorder_code = pw.workorder_code
+                 LEFT JOIN
+             wm_issue_header wih ON pw.workorder_code = wih.workorder_code
+                 LEFT JOIN
+             wm_issue_line wil ON wih.issue_id = wil.issue_id
+                 LEFT JOIN
+             wm_waste_header wwh ON pw.workorder_code = wwh.workorder_code
+                 LEFT JOIN
+             wm_waste_line wwl ON wwh.waste_id = wwl.waste_id
+            ${ew.customSqlSegment}
         GROUP BY
             pw.workorder_code,
             pw.client_order_code,
