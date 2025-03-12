@@ -20,7 +20,7 @@ public class MessageUtils
      */
     public static String message(String code, Object... args)
     {
-        MessageSource messageSource = SpringUtils.getBean(MessageSource.class);
+        MessageSource messageSource = SpringUtils.getBean("messageSource");
         return messageSource.getMessage(code, args, LocaleContextHolder.getLocale());
     }
 }
