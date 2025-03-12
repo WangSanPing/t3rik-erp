@@ -1,16 +1,17 @@
 package com.t3rik.mes.pro.service;
 
-import java.util.List;
-
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.t3rik.common.enums.mes.StatisticsTypeEnum;
 import com.t3rik.mes.pro.domain.ProTask;
 import com.t3rik.mes.pro.dto.TaskDTO;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 生产任务Service接口
@@ -18,8 +19,7 @@ import org.apache.ibatis.annotations.Param;
  * @author yinjinlu
  * @date 2022-05-14
  */
-public interface IProTaskService  extends IService<ProTask>
-{
+public interface IProTaskService extends IService<ProTask> {
     /**
      * 查询生产任务
      *
@@ -39,6 +39,7 @@ public interface IProTaskService  extends IService<ProTask>
 
     /**
      * 查询某个工单的各个工序生产进度
+     *
      * @param workorderId
      * @return
      */
@@ -84,12 +85,12 @@ public interface IProTaskService  extends IService<ProTask>
      * @param taskBy     指派用户名称
      * @return
      */
-    public String addAssignUsers(List<String> taskIds,Long taskUserId, String taskBy);
+    public String addAssignUsers(List<String> taskIds, Long taskUserId, String taskBy);
 
     /**
      * 根据工单分组展示
      *
-     * @param page      分页对象
+     * @param page         分页对象
      * @param queryWrapper 条件
      * @return
      */
@@ -97,14 +98,18 @@ public interface IProTaskService  extends IService<ProTask>
 
     /**
      * 查询任务，同时获取任务下的报工数量
+     *
      * @param query 查询条件
      * @return
      */
     Page<TaskDTO> getTaskListAndFeedbackCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query);
 
+
     /**
-     * 查询任务，根据工单分组展示数据，并统计领料次数
+     * 查询任务，根据工单分组展示数据，并统计相关类型的次数
+     *
      * @param query 查询条件
+     * @param type  类型
      */
-    Page<TaskDTO> getTaskListAndIssueCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query);
+    Page<TaskDTO> getTaskListAndSelectTypeCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query, StatisticsTypeEnum type);
 }

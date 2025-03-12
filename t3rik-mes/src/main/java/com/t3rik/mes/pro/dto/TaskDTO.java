@@ -25,4 +25,14 @@ public class TaskDTO extends ProTask {
      * 已领料次数
      */
     private Integer issueCount;
+
+    /**
+     * 退料次数
+     */
+    private Integer rtIssueCount;
+
+    /**
+     * 废料次数
+     */
+    private Integer WasteCount;
 }
