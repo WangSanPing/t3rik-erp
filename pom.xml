@@ -39,8 +39,8 @@
         <jasypt.version>3.0.5</jasypt.version>
         <tinyPinyin.version>2.0.3.RELEASE</tinyPinyin.version>
         <redisson.version>3.40.1</redisson.version>
-        <jimureport.version>1.8.1</jimureport.version>
-        <jimudashboard.version>1.8.1-beta</jimudashboard.version>
+        <jimureport.version>1.9.4</jimureport.version>
+        <jimunosql.version>1.9.4.1</jimunosql.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -211,8 +211,14 @@
 
             <dependency>
                 <groupId>org.jeecgframework.jimureport</groupId>
-                <artifactId>jimureport-dashboard-spring-boot3-starter</artifactId>
-                <version>${jimudashboard.version}</version>
+                <artifactId>jimureport-nosql-starter</artifactId>
+                <version>${jimunosql.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jeecgframework.jimureport</groupId>
+                <artifactId>jimubi-spring-boot3-starter</artifactId>
+                <version>${jimureport.version}</version>
             </dependency>
 
             <!-- 定时任务-->
