@@ -13,4 +13,6 @@ import lombok.NoArgsConstructor
  * @author t3rik
  * @date 2024/8/30 15:31
  */
-data class IssueRequestDTO @JsonCreator constructor(@JsonProperty("issueLineList") val issueLineList: MutableList<WmIssueLine>)  : WmIssueHeader()
+data class IssueRequestDTO @JsonCreator constructor(
+    @JsonProperty("issueLineList") val issueLineList: MutableList<WmIssueLine>
+) : WmIssueHeader()
