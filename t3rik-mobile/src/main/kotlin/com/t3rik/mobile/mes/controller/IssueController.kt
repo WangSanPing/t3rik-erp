@@ -84,16 +84,15 @@ class IssueController : BaseController() {
      * 参数校验
      */
     private fun check(issueRequestDTO: IssueRequestDTO) {
+        issueRequestDTO.taskId.isNonPositive { MsgConstants.PARAM_ERROR }
         if (issueRequestDTO.workorderCode.isNullOrBlank()) {
             throw BusinessException(MsgConstants.PARAM_ERROR)
         }
         issueRequestDTO.workorderId.isNonPositive { MsgConstants.PARAM_ERROR }
-        val tasks = this.proTaskService.lambdaQuery()
-            .eq(ProTask::getWorkorderId, issueRequestDTO.workorderId)
-            .eq(ProTask::getWorkorderCode, issueRequestDTO.workorderCode)
-            .eq(ProTask::getTaskUserId, SecurityUtils.getUserId())
-            .list()
-        if (CollectionUtils.isEmpty(tasks)) {
+        val task = this.proTaskService.lambdaQuery()
+            .eq(ProTask::getTaskId, issueRequestDTO.taskId).one() ?: throw BusinessException(MsgConstants.NO_OPERATION_AUTH)
+        // 如果查询到的任务和当前登录用户不匹配，会认为没有领料权限
+        if (!task.taskUserId.equals(SecurityUtils.getUserId())) {
             throw BusinessException(MsgConstants.NO_OPERATION_AUTH)
         }
         if (issueRequestDTO.issueLineList.isEmpty()) {
