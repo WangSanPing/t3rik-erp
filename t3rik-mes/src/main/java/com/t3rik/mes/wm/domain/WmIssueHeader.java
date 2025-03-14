@@ -77,6 +77,12 @@ public class WmIssueHeader extends BaseEntity {
     private String taskCode;
 
     /**
+     * 生产任务名称
+     */
+    @Excel(name = "生产任务名称")
+    private String taskName;
+
+    /**
      * 客户ID
      */
     @Excel(name = "客户ID")

@@ -111,5 +111,12 @@ public interface IProTaskService extends IService<ProTask> {
      * @param query 查询条件
      * @param type  类型
      */
-    Page<TaskDTO> getTaskListAndSelectTypeCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query, StatisticsTypeEnum type);
+    Page<TaskDTO> getWorkOrderGroupAndSelectTypeCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query, StatisticsTypeEnum type);
+
+    /**
+     * 查询任务，并统计退料次数
+     * @param query 查询条件
+     */
+    Page<TaskDTO> getTaskListAndRtIssueCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query);
+
 }

@@ -1,7 +1,6 @@
 package com.t3rik.mobile.mes.controller
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils
 import com.t3rik.common.annotation.RepeatSubmit
 import com.t3rik.common.constant.MsgConstants
 import com.t3rik.common.constant.UserConstants
@@ -50,7 +49,7 @@ class IssueController : BaseController() {
         queryWrapper.likeRight(StringUtils.isNotBlank(task.taskName), "task_name", task.taskName)
         queryWrapper.eq("task_user_id", SecurityUtils.getUserId())
         return getDataTableWithPage(
-            this.proTaskService.getTaskListAndSelectTypeCount(
+            this.proTaskService.getWorkOrderGroupAndSelectTypeCount(
                 page,
                 queryWrapper,
                 StatisticsTypeEnum.ISSUED_QUANTITY
