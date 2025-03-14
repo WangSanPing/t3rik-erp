@@ -26,5 +26,11 @@ interface IRtIssueService {
      * 查询任务，根据工单分组展示数据，并统计领料次数
      * @param query 查询条件
      */
-    fun getTaskListAndIssueCount(page: IPage<TaskDTO>,@Param(Constants.WRAPPER) query: Wrapper<TaskDTO>): Page<TaskDTO>
+    fun getWorkOrderGroupAndSelectTypeCount(page: IPage<TaskDTO>,@Param(Constants.WRAPPER) query: Wrapper<TaskDTO>): Page<TaskDTO>
+
+    /**
+     * 查询任务，并统计退料次数
+     * @param query 查询条件
+     */
+    fun getTaskListAndRtIssueCount(page: IPage<TaskDTO>,@Param(Constants.WRAPPER) query: Wrapper<TaskDTO>): Page<TaskDTO>
 }

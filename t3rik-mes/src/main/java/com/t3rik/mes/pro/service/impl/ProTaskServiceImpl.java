@@ -16,7 +16,6 @@ import com.t3rik.mes.pro.dto.TaskDTO;
 import com.t3rik.mes.pro.mapper.ProTaskMapper;
 import com.t3rik.mes.pro.service.IProTaskService;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -212,18 +211,29 @@ public class ProTaskServiceImpl extends ServiceImpl<ProTaskMapper, ProTask> impl
      * @param type  类型
      */
     @Override
-    public Page<TaskDTO> getTaskListAndSelectTypeCount(IPage<TaskDTO> page, Wrapper<TaskDTO> query, StatisticsTypeEnum type) {
+    public Page<TaskDTO> getWorkOrderGroupAndSelectTypeCount(IPage<TaskDTO> page, Wrapper<TaskDTO> query, StatisticsTypeEnum type) {
         switch (type) {
             case ISSUED_QUANTITY -> {
-                return this.proTaskMapper.getTaskListAndIssueCount(page, query);
+                return this.proTaskMapper.getWorkOrderGroupAndIssueCount(page, query);
             }
             case RT_ISSUED_QUANTITY -> {
-                return this.proTaskMapper.getTaskListAndRtIssueCount(page, query);
+                return this.proTaskMapper.getWorkOrderGroupAndRtIssueCount(page, query);
             }
             case WASTE_QUANTITY -> {
-                return this.proTaskMapper.getTaskListAndWasteCount(page, query);
+                return this.proTaskMapper.getWorkOrderGroupAndWasteCount(page, query);
             }
             default -> throw new BusinessException(MsgConstants.PARAM_ERROR);
         }
+    }
+
+    /**
+     * 查询任务，并统计退料次数
+     *
+     * @param page
+     * @param query 查询条件
+     */
+    @Override
+    public Page<TaskDTO> getTaskListAndRtIssueCount(IPage<TaskDTO> page, Wrapper<TaskDTO> query) {
+        return this.proTaskMapper.getTaskListAndRtIssueCount(page, query);
     }
 }

@@ -144,6 +144,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="workorderCode != null">workorder_code,</if>
             <if test="taskId != null">task_id,</if>
             <if test="taskCode != null">task_code,</if>
+            <if test="taskName != null">task_name,</if>
             <if test="clientId != null">client_id,</if>
             <if test="clientCode != null">client_code,</if>
             <if test="clientName != null">client_name,</if>
@@ -179,6 +180,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="workorderCode != null">#{workorderCode},</if>
             <if test="taskId != null">#{taskId},</if>
             <if test="taskCode != null">#{taskCode},</if>
+            <if test="taskName != null">#{taskName},</if>
             <if test="clientId != null">#{clientId},</if>
             <if test="clientCode != null">#{clientCode},</if>
             <if test="clientName != null">#{clientName},</if>
@@ -218,6 +220,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="workorderCode != null">workorder_code = #{workorderCode},</if>
             <if test="taskId != null">task_id = #{taskId},</if>
             <if test="taskCode != null">task_code = #{taskCode},</if>
+            <if test="taskName != null">task_name = #{taskName},</if>
             <if test="clientId != null">client_id = #{clientId},</if>
             <if test="clientCode != null">client_code = #{clientCode},</if>
             <if test="clientName != null">client_name = #{clientName},</if>

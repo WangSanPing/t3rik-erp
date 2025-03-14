@@ -344,7 +344,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ${ew.customSqlSegment}
     </select>
 
-    <select id="getTaskListAndIssueCount" resultType="com.t3rik.mes.pro.dto.TaskDTO">
+    <select id="getWorkOrderGroupAndIssueCount" resultType="com.t3rik.mes.pro.dto.TaskDTO">
         SELECT pw.workorder_id,
                pw.workorder_code,
                pw.client_order_code,
@@ -374,7 +374,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             pw.workorder_id
     </select>
 
-    <select id="getTaskListAndRtIssueCount" resultType="com.t3rik.mes.pro.dto.TaskDTO">
+    <select id="getWorkOrderGroupAndRtIssueCount" resultType="com.t3rik.mes.pro.dto.TaskDTO">
         SELECT pw.workorder_id,
                pw.workorder_code,
                pw.client_order_code,
@@ -409,7 +409,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             pw.workorder_id
     </select>
 
-    <select id="getTaskListAndWasteCount" resultType="com.t3rik.mes.pro.dto.TaskDTO">
+    <select id="getWorkOrderGroupAndWasteCount" resultType="com.t3rik.mes.pro.dto.TaskDTO">
         SELECT pw.workorder_id,
                pw.workorder_code,
                pw.client_order_code,
@@ -442,5 +442,66 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             pt.task_user_id,
             pt.task_name,
             pw.workorder_id
+    </select>
+
+    <select id="getTaskListAndRtIssueCount" resultType="com.t3rik.mes.pro.dto.TaskDTO">
+        SELECT count(wri.task_id) as rtIssueCount,
+               pt.task_id,
+               pt.task_code,
+               pt.task_name,
+               pt.workorder_id,
+               pt.workorder_code,
+               pt.workorder_name,
+               pt.workstation_id,
+               pt.workstation_code,
+               pt.workstation_name,
+               pt.route_id,
+               pt.route_code,
+               pt.process_id,
+               pt.process_code,
+               pt.process_name,
+               pt.item_id,
+               pt.item_code,
+               pt.item_name,
+               pt.specification,
+               pt.unit_of_measure,
+               pt.quantity,
+               pt.quantity_produced,
+               pt.quantity_quanlify,
+               pt.quantity_unquanlify,
+               pt.quantity_changed,
+               pt.client_id,
+               pt.client_code,
+               pt.client_name,
+               pt.client_nick,
+               pt.start_time,
+               pt.duration,
+               pt.end_time,
+               pt.color_code,
+               pt.request_date,
+               pt.status,
+               pt.remark,
+               pt.attr1,
+               pt.attr2,
+               pt.attr3,
+               pt.attr4,
+               pt.create_by,
+               pt.create_time,
+               pt.update_by,
+               pt.update_time,
+               pt.create_user_id,
+               pt.update_user_id,
+               pt.task_user_id,
+               pt.task_by,
+               pt.is_check,
+               pt.client_order_code,
+               pt.deleted,
+               pt.deleteAt,
+               pt.version
+        FROM pro_task pt
+                 left join wm_rt_issue wri on pt.task_id = wri.task_id
+            ${ew.customSqlSegment}
+        group by pt.task_id, pt.status, pt.end_time
+        ORDER BY pt.status ASC, pt.end_time ASC
     </select>
 </mapper>

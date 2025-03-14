@@ -88,17 +88,23 @@ public interface ProTaskMapper extends BaseMapper<ProTask> {
      * 查询任务，根据工单分组展示数据，并统计领料次数
      * @param query 查询条件
      */
-    Page<TaskDTO> getTaskListAndIssueCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query);
+    Page<TaskDTO> getWorkOrderGroupAndIssueCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query);
 
     /**
      * 查询任务，根据工单分组展示数据，并统计领料和退料次数
      * @param query 查询条件
      */
-    Page<TaskDTO> getTaskListAndRtIssueCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query);
+    Page<TaskDTO> getWorkOrderGroupAndRtIssueCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query);
 
     /**
      * 查询任务，根据工单分组展示数据，并统计领料和废料次数
      * @param query 查询条件
      */
-    Page<TaskDTO> getTaskListAndWasteCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query);
+    Page<TaskDTO> getWorkOrderGroupAndWasteCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query);
+
+    /**
+     * 查询任务，根据工单分组展示数据，并统计领料和废料次数
+     * @param query 查询条件
+     */
+    Page<TaskDTO> getTaskListAndRtIssueCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query);
 }

@@ -8,9 +8,7 @@ import com.t3rik.common.utils.SecurityUtils
 import com.t3rik.common.utils.StringUtils
 import com.t3rik.mes.pro.domain.ProTask
 import com.t3rik.mes.pro.dto.TaskDTO
-import com.t3rik.mobile.mes.service.IFeedbackService
 import com.t3rik.mobile.mes.service.IRtIssueService
-import com.t3rik.mobile.mes.service.impl.RtIssueServiceImpl
 import io.swagger.annotations.ApiOperation
 import jakarta.annotation.Resource
 import org.springframework.web.bind.annotation.GetMapping
@@ -28,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController
 class RtIssueController : BaseController() {
     @Resource
     lateinit var rtIssueService: IRtIssueService
+
     /**
      * 查询任务列表
      */
@@ -38,6 +37,8 @@ class RtIssueController : BaseController() {
         val queryWrapper = QueryWrapper<TaskDTO>()
         queryWrapper.likeRight(StringUtils.isNotBlank(task.taskName), "task_name", task.taskName)
         queryWrapper.eq("task_user_id", SecurityUtils.getUserId())
-        return getDataTableWithPage(this.rtIssueService.getTaskListAndIssueCount(page, queryWrapper))
+        return getDataTableWithPage(
+            this.rtIssueService.getTaskListAndRtIssueCount(page, queryWrapper)
+        )
     }
 }
