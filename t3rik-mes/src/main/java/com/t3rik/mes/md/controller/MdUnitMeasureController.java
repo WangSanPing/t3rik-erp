@@ -7,16 +7,18 @@ import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
+import com.t3rik.common.enums.mes.DefaultDataEnum;
 import com.t3rik.common.exception.BusinessException;
+import com.t3rik.common.utils.SecurityUtils;
 import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.mes.common.service.IAsyncService;
 import com.t3rik.mes.md.domain.MdUnitMeasure;
 import com.t3rik.mes.md.service.IMdUnitMeasureService;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,6 +103,10 @@ public class MdUnitMeasureController extends BaseController {
     @Log(title = "单位", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody MdUnitMeasure mdUnitMeasure) {
+        // 非管理员不允许操作
+        if (!DefaultDataEnum.ADMIN.getCode().equals(SecurityUtils.getUserId().toString())) {
+            throw new BusinessException(MsgConstants.NO_OPERATION_AUTH);
+        }
         MdUnitMeasure unitMeasure = this.mdUnitMeasureService.getById(mdUnitMeasure.getMeasureId());
         Optional.ofNullable(unitMeasure).orElseThrow(() -> new BusinessException(MsgConstants.PARAM_ERROR));
         int i = mdUnitMeasureService.updateMdUnitMeasure(mdUnitMeasure);
@@ -116,6 +122,10 @@ public class MdUnitMeasureController extends BaseController {
     @Log(title = "单位", businessType = BusinessType.DELETE)
     @DeleteMapping("/{measureIds}")
     public AjaxResult remove(@PathVariable Long[] measureIds) {
+        // 非管理员不允许操作
+        if (!DefaultDataEnum.ADMIN.getCode().equals(SecurityUtils.getUserId().toString())) {
+            throw new BusinessException(MsgConstants.NO_OPERATION_AUTH);
+        }
         List<MdUnitMeasure> mdUnitMeasures = this.mdUnitMeasureService.listByIds(List.of(measureIds));
         if (CollectionUtils.isEmpty(mdUnitMeasures)) {
             return AjaxResult.error(MsgConstants.PARAM_ERROR);
