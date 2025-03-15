@@ -65,6 +65,7 @@ class IssueServiceImpl : IIssueService {
     override fun getIssueDetail(query: IssueHeaderAndLineDTO): MutableList<IssueHeaderAndLineDTO> {
         val wrapper = QueryWrapper<IssueHeaderAndLineDTO>()
         wrapper.eq("workorder_code", query.workorderCode)
+        wrapper.eq("task_id", query.taskId)
         return this.issueHeaderService.getIssueDetail(wrapper)
     }
 
