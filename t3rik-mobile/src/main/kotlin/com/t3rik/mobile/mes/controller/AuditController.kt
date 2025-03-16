@@ -16,7 +16,7 @@ import com.t3rik.mes.pro.dto.TaskDTO
 import com.t3rik.mes.pro.service.IProFeedbackService
 import com.t3rik.mes.pro.service.IProTaskService
 import com.t3rik.mobile.common.enums.CurrentIndexEnum
-import com.t3rik.mobile.common.ktextend.isNonPositive
+import com.t3rik.mobile.common.ktextend.requireNotNullOrPositive
 import com.t3rik.mobile.mes.service.IFeedbackService
 import io.swagger.annotations.ApiOperation
 import jakarta.annotation.Resource
@@ -50,7 +50,7 @@ class AuditController : BaseController() {
     @GetMapping("/getTaskAndAudit/{taskId}")
     fun getTaskAndFeedback(@PathVariable taskId: Long): AjaxResult {
         // 小于等于0 抛异常
-        taskId.isNonPositive { MsgConstants.PARAM_ERROR }
+        taskId.requireNotNullOrPositive()
         val taskAndFeedback = runBlocking { feedbackService.getTaskAndFeedback(taskId, OrderStatusEnum.APPROVING) }
         return AjaxResult.success(taskAndFeedback)
     }
