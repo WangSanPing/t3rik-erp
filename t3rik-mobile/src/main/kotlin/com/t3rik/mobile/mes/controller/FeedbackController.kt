@@ -11,7 +11,7 @@ import com.t3rik.common.utils.SecurityUtils
 import com.t3rik.mes.pro.domain.ProFeedback
 import com.t3rik.mes.pro.domain.ProTask
 import com.t3rik.mes.pro.service.IProTaskService
-import com.t3rik.mobile.common.ktextend.isNonPositive
+import com.t3rik.mobile.common.ktextend.requireNotNullOrPositive
 import com.t3rik.mobile.mes.service.IFeedbackService
 import io.swagger.annotations.ApiOperation
 import isZero
@@ -51,7 +51,7 @@ class FeedbackController : BaseController() {
     @GetMapping("/{taskId}")
     fun getTaskInfo(@PathVariable taskId: Long): AjaxResult {
         // 小于等于0 抛异常
-        taskId.isNonPositive { MsgConstants.PARAM_ERROR }
+        taskId.requireNotNullOrPositive()
         val task = this.taskService.lambdaQuery()
             .eq(ProTask::getTaskId, taskId)
             .eq(ProTask::getTaskUserId, SecurityUtils.getUserId())
@@ -66,7 +66,7 @@ class FeedbackController : BaseController() {
     @GetMapping("/getTaskAndFeedback/{taskId}")
     fun getTaskAndFeedback(@PathVariable taskId: Long): AjaxResult {
         // 小于等于0 抛异常
-        taskId.isNonPositive { MsgConstants.PARAM_ERROR }
+        taskId.requireNotNullOrPositive()
         val taskAndFeedback = runBlocking { feedbackService.getTaskAndFeedback(taskId) }
         return AjaxResult.success(taskAndFeedback)
     }

@@ -15,7 +15,8 @@ import com.t3rik.mes.pro.domain.ProTask
 import com.t3rik.mes.pro.dto.TaskDTO
 import com.t3rik.mes.pro.service.IProTaskService
 import com.t3rik.mes.wm.dto.IssueHeaderAndLineDTO
-import com.t3rik.mobile.common.ktextend.isNonPositive
+import com.t3rik.mobile.common.ktextend.requireNotNullOrBlank
+import com.t3rik.mobile.common.ktextend.requireNotNullOrPositive
 import com.t3rik.mobile.mes.dto.IssueRequestDTO
 import com.t3rik.mobile.mes.service.IIssueService
 import io.swagger.annotations.ApiOperation
@@ -71,9 +72,8 @@ class IssueController : BaseController() {
     @ApiOperation("领料申请详情")
     @GetMapping("/getIssueDetail")
     fun getIssueDetail(query: IssueHeaderAndLineDTO): AjaxResult {
-        if (query.workorderCode.isNullOrBlank()) {
-            throw BusinessException(MsgConstants.PARAM_ERROR)
-        }
+        query.workorderCode.requireNotNullOrBlank()
+        query.taskId.requireNotNullOrPositive()
         return AjaxResult.success(
             this.issueService.getIssueDetail(query)
         )
@@ -83,11 +83,9 @@ class IssueController : BaseController() {
      * 参数校验
      */
     private fun check(issueRequestDTO: IssueRequestDTO) {
-        issueRequestDTO.taskId.isNonPositive { MsgConstants.PARAM_ERROR }
-        if (issueRequestDTO.workorderCode.isNullOrBlank()) {
-            throw BusinessException(MsgConstants.PARAM_ERROR)
-        }
-        issueRequestDTO.workorderId.isNonPositive { MsgConstants.PARAM_ERROR }
+        issueRequestDTO.taskId.requireNotNullOrPositive()
+        issueRequestDTO.workorderCode.requireNotNullOrBlank()
+        issueRequestDTO.workorderId.requireNotNullOrPositive()
         val task = this.proTaskService.lambdaQuery()
             .eq(ProTask::getTaskId, issueRequestDTO.taskId).one() ?: throw BusinessException(MsgConstants.NO_OPERATION_AUTH)
         // 如果查询到的任务和当前登录用户不匹配，会认为没有领料权限
