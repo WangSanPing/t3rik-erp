@@ -1,11 +1,14 @@
 package com.t3rik.mes.wm.mapper;
 
-import java.util.List;
-
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.t3rik.mes.wm.domain.WmRtIssue;
-import com.t3rik.mes.wm.domain.WmWasteHeader;
 import com.t3rik.mes.wm.domain.tx.RtIssueTxBean;
+import com.t3rik.mes.wm.dto.RtIssueHeaderAndLineDTO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 生产退料单头Mapper接口
@@ -13,8 +16,7 @@ import com.t3rik.mes.wm.domain.tx.RtIssueTxBean;
  * @author yinjinlu
  * @date 2022-09-15
  */
-public interface WmRtIssueMapper extends BaseMapper<WmRtIssue>
-{
+public interface WmRtIssueMapper extends BaseMapper<WmRtIssue> {
     /**
      * 查询生产退料单头
      *
@@ -32,7 +34,6 @@ public interface WmRtIssueMapper extends BaseMapper<WmRtIssue>
     public List<WmRtIssue> selectWmRtIssueList(WmRtIssue wmRtIssue);
 
     /**
-     *
      * @param rtId
      * @return
      */
@@ -40,6 +41,7 @@ public interface WmRtIssueMapper extends BaseMapper<WmRtIssue>
 
     /**
      * 检查编号是否重复
+     *
      * @param wmRtIssue
      * @return
      */
@@ -76,4 +78,9 @@ public interface WmRtIssueMapper extends BaseMapper<WmRtIssue>
      * @return 结果
      */
     public int deleteWmRtIssueByRtIds(Long[] rtIds);
+
+    /**
+     * 查询退料详情
+     */
+    List<RtIssueHeaderAndLineDTO> getRtIssueDetail(@Param(Constants.WRAPPER) Wrapper<RtIssueHeaderAndLineDTO> query);
 }

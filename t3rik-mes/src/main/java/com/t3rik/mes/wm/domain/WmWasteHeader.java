@@ -17,15 +17,16 @@ import com.t3rik.common.annotation.Excel;
 import com.t3rik.common.enums.StatusEnum;
 
 /**
-* 生产废料单头对象 wm_waste_header
-*
-* @author t3rik
-* @date 2024-05-11
-*/
-@TableName(value = "wm_waste_header")
+ * 生产废料单头对象 wm_waste_header
+ *
+ * @author t3rik
+ * @date 2024-05-11
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@TableName(value = "wm_waste_header")
 public class WmWasteHeader extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -44,6 +45,11 @@ public class WmWasteHeader extends BaseEntity
     @Excel(name = "废料单名称")
     @TableField("waste_name")
     private String wasteName;
+
+    /**
+     * 领料单ID
+     */
+    private Long issueId;
 
     /** 报工记录ID */
     @Excel(name = "报工记录ID")
@@ -136,4 +142,22 @@ public class WmWasteHeader extends BaseEntity
     @TableField("attr4")
     private Long attr4;
 
+    /**
+     * 生产任务ID
+     */
+    @Excel(name = "生产任务ID")
+    private Long taskId;
+
+    /**
+     * 生产任务编码
+     */
+    @Excel(name = "生产任务编码")
+    private String taskCode;
+
+    /**
+     * 生产任务名称
+     */
+    @Excel(name = "生产任务名称")
+    private String taskName;
 }
+
