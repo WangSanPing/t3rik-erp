@@ -1,19 +1,19 @@
 package com.t3rik.mes.wm.service.impl;
 
-import java.util.List;
-
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.utils.DateUtils;
 import com.t3rik.common.utils.StringUtils;
-import com.t3rik.mes.wm.domain.WmWasteHeader;
-import com.t3rik.mes.wm.domain.tx.RtIssueTxBean;
-import com.t3rik.mes.wm.mapper.WmWasteHeaderMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.t3rik.mes.wm.mapper.WmRtIssueMapper;
 import com.t3rik.mes.wm.domain.WmRtIssue;
+import com.t3rik.mes.wm.domain.tx.RtIssueTxBean;
+import com.t3rik.mes.wm.dto.RtIssueHeaderAndLineDTO;
+import com.t3rik.mes.wm.mapper.WmRtIssueMapper;
 import com.t3rik.mes.wm.service.IWmRtIssueService;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 生产退料单头Service业务层处理
@@ -22,9 +22,9 @@ import com.t3rik.mes.wm.service.IWmRtIssueService;
  * @date 2022-09-15
  */
 @Service
-public class WmRtIssueServiceImpl extends ServiceImpl<WmRtIssueMapper, WmRtIssue> implements IWmRtIssueService
-{
-    @Autowired
+public class WmRtIssueServiceImpl extends ServiceImpl<WmRtIssueMapper, WmRtIssue> implements IWmRtIssueService {
+
+    @Resource
     private WmRtIssueMapper wmRtIssueMapper;
 
     /**
@@ -34,8 +34,7 @@ public class WmRtIssueServiceImpl extends ServiceImpl<WmRtIssueMapper, WmRtIssue
      * @return 生产退料单头
      */
     @Override
-    public WmRtIssue selectWmRtIssueByRtId(Long rtId)
-    {
+    public WmRtIssue selectWmRtIssueByRtId(Long rtId) {
         return wmRtIssueMapper.selectWmRtIssueByRtId(rtId);
     }
 
@@ -46,18 +45,17 @@ public class WmRtIssueServiceImpl extends ServiceImpl<WmRtIssueMapper, WmRtIssue
      * @return 生产退料单头
      */
     @Override
-    public List<WmRtIssue> selectWmRtIssueList(WmRtIssue wmRtIssue)
-    {
+    public List<WmRtIssue> selectWmRtIssueList(WmRtIssue wmRtIssue) {
         return wmRtIssueMapper.selectWmRtIssueList(wmRtIssue);
     }
 
     @Override
     public String checkUnique(WmRtIssue wmRtIssue) {
-       WmRtIssue issue = wmRtIssueMapper.checkUnique(wmRtIssue);
-       Long rtId = wmRtIssue.getRtId() == null? -1L: wmRtIssue.getRtId();
-       if(StringUtils.isNotNull(issue) && issue.getRtId().longValue() != rtId.longValue()){
-           return UserConstants.NOT_UNIQUE;
-       }
+        WmRtIssue issue = wmRtIssueMapper.checkUnique(wmRtIssue);
+        Long rtId = wmRtIssue.getRtId() == null ? -1L : wmRtIssue.getRtId();
+        if (StringUtils.isNotNull(issue) && issue.getRtId().longValue() != rtId.longValue()) {
+            return UserConstants.NOT_UNIQUE;
+        }
         return UserConstants.UNIQUE;
     }
 
@@ -68,8 +66,7 @@ public class WmRtIssueServiceImpl extends ServiceImpl<WmRtIssueMapper, WmRtIssue
      * @return 结果
      */
     @Override
-    public int insertWmRtIssue(WmRtIssue wmRtIssue)
-    {
+    public int insertWmRtIssue(WmRtIssue wmRtIssue) {
         wmRtIssue.setCreateTime(DateUtils.getNowDate());
         return wmRtIssueMapper.insertWmRtIssue(wmRtIssue);
     }
@@ -81,8 +78,7 @@ public class WmRtIssueServiceImpl extends ServiceImpl<WmRtIssueMapper, WmRtIssue
      * @return 结果
      */
     @Override
-    public int updateWmRtIssue(WmRtIssue wmRtIssue)
-    {
+    public int updateWmRtIssue(WmRtIssue wmRtIssue) {
         wmRtIssue.setUpdateTime(DateUtils.getNowDate());
         return wmRtIssueMapper.updateWmRtIssue(wmRtIssue);
     }
@@ -94,8 +90,7 @@ public class WmRtIssueServiceImpl extends ServiceImpl<WmRtIssueMapper, WmRtIssue
      * @return 结果
      */
     @Override
-    public int deleteWmRtIssueByRtIds(Long[] rtIds)
-    {
+    public int deleteWmRtIssueByRtIds(Long[] rtIds) {
         return wmRtIssueMapper.deleteWmRtIssueByRtIds(rtIds);
     }
 
@@ -106,13 +101,22 @@ public class WmRtIssueServiceImpl extends ServiceImpl<WmRtIssueMapper, WmRtIssue
      * @return 结果
      */
     @Override
-    public int deleteWmRtIssueByRtId(Long rtId)
-    {
+    public int deleteWmRtIssueByRtId(Long rtId) {
         return wmRtIssueMapper.deleteWmRtIssueByRtId(rtId);
     }
 
     @Override
     public List<RtIssueTxBean> getTxBeans(Long rtId) {
         return wmRtIssueMapper.getTxBeans(rtId);
+    }
+
+    /**
+     * 查询退料详情
+     *
+     * @param query
+     */
+    @Override
+    public List<RtIssueHeaderAndLineDTO> getRtIssueDetail(Wrapper<RtIssueHeaderAndLineDTO> query) {
+        return this.wmRtIssueMapper.getRtIssueDetail(query);
     }
 }

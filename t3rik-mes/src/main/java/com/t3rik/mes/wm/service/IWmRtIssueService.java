@@ -1,11 +1,12 @@
 package com.t3rik.mes.wm.service;
 
-import java.util.List;
-
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.wm.domain.WmRtIssue;
-import com.t3rik.mes.wm.domain.WmWasteHeader;
 import com.t3rik.mes.wm.domain.tx.RtIssueTxBean;
+import com.t3rik.mes.wm.dto.RtIssueHeaderAndLineDTO;
+
+import java.util.List;
 
 /**
  * 生产退料单头Service接口
@@ -13,8 +14,7 @@ import com.t3rik.mes.wm.domain.tx.RtIssueTxBean;
  * @author yinjinlu
  * @date 2022-09-15
  */
-public interface IWmRtIssueService extends IService<WmRtIssue>
-{
+public interface IWmRtIssueService extends IService<WmRtIssue> {
     /**
      * 查询生产退料单头
      *
@@ -33,6 +33,7 @@ public interface IWmRtIssueService extends IService<WmRtIssue>
 
     /**
      * 检查编号是否重复
+     *
      * @param wmRtIssue
      * @return
      */
@@ -71,10 +72,15 @@ public interface IWmRtIssueService extends IService<WmRtIssue>
     public int deleteWmRtIssueByRtId(Long rtId);
 
     /**
-     *
      * @param rtId
      * @return
      */
     public List<RtIssueTxBean> getTxBeans(Long rtId);
+
+    /**
+     * 查询退料详情
+     */
+    List<RtIssueHeaderAndLineDTO> getRtIssueDetail(Wrapper<RtIssueHeaderAndLineDTO> query);
+
 
 }
