@@ -464,6 +464,7 @@
                wil.item_name,
                wil.item_code,
                wil.quantity_issued,
+               wil.material_stock_id,
                COUNT(wril.line_id)              AS rtCount,
                IFNULL(sum(wril.quantity_rt), 0) AS returnedQty
         FROM wm_issue_line wil

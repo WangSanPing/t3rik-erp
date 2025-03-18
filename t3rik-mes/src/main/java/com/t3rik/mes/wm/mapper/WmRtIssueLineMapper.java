@@ -1,19 +1,23 @@
 package com.t3rik.mes.wm.mapper;
 
-import java.util.List;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.t3rik.mes.wm.domain.WmRtIssueLine;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * 生产退料单行Mapper接口
- * 
+ *
  * @author yinjinlu
  * @date 2022-09-15
  */
-public interface WmRtIssueLineMapper 
-{
+@Mapper
+public interface WmRtIssueLineMapper extends BaseMapper<WmRtIssueLine> {
     /**
      * 查询生产退料单行
-     * 
+     *
      * @param lineId 生产退料单行主键
      * @return 生产退料单行
      */
@@ -21,7 +25,7 @@ public interface WmRtIssueLineMapper
 
     /**
      * 查询生产退料单行列表
-     * 
+     *
      * @param wmRtIssueLine 生产退料单行
      * @return 生产退料单行集合
      */
@@ -29,7 +33,7 @@ public interface WmRtIssueLineMapper
 
     /**
      * 新增生产退料单行
-     * 
+     *
      * @param wmRtIssueLine 生产退料单行
      * @return 结果
      */
@@ -37,7 +41,7 @@ public interface WmRtIssueLineMapper
 
     /**
      * 修改生产退料单行
-     * 
+     *
      * @param wmRtIssueLine 生产退料单行
      * @return 结果
      */
@@ -45,7 +49,7 @@ public interface WmRtIssueLineMapper
 
     /**
      * 删除生产退料单行
-     * 
+     *
      * @param lineId 生产退料单行主键
      * @return 结果
      */
@@ -53,7 +57,7 @@ public interface WmRtIssueLineMapper
 
     /**
      * 批量删除生产退料单行
-     * 
+     *
      * @param lineIds 需要删除的数据主键集合
      * @return 结果
      */
@@ -61,6 +65,7 @@ public interface WmRtIssueLineMapper
 
     /**
      * 根据退料单ID删除所有行
+     *
      * @param rtId
      * @return
      */

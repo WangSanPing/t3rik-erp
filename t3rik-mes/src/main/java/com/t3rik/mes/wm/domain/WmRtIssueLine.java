@@ -1,5 +1,6 @@
 package com.t3rik.mes.wm.domain;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.t3rik.common.annotation.Excel;
 import com.t3rik.common.core.domain.BaseEntity;
@@ -27,6 +28,7 @@ public class WmRtIssueLine extends BaseEntity {
     /**
      * 行ID
      */
+    @TableId
     private Long lineId;
 
     /**

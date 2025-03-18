@@ -63,7 +63,7 @@ class IssueController : BaseController() {
     @PostMapping
     fun issue(@RequestBody issueRequestDTO: IssueRequestDTO): AjaxResult {
         // 参数校验
-        check(issueRequestDTO)
+        checkParam(issueRequestDTO)
         // 领料申请
         this.issueService.issue(issueRequestDTO)
         return AjaxResult.success()
@@ -82,7 +82,7 @@ class IssueController : BaseController() {
     /**
      * 参数校验
      */
-    private fun check(issueRequestDTO: IssueRequestDTO) {
+    private fun checkParam(issueRequestDTO: IssueRequestDTO) {
         issueRequestDTO.taskId.requireNotNullOrPositive()
         issueRequestDTO.workorderCode.requireNotNullOrBlank()
         issueRequestDTO.workorderId.requireNotNullOrPositive()

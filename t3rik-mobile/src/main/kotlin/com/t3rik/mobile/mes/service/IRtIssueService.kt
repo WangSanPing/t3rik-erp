@@ -4,8 +4,9 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper
 import com.baomidou.mybatisplus.core.metadata.IPage
 import com.baomidou.mybatisplus.core.toolkit.Constants
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
+import com.t3rik.mes.pro.domain.ProTask
 import com.t3rik.mes.pro.dto.TaskDTO
-import com.t3rik.mes.wm.dto.IssueHeaderAndLineDTO
+import com.t3rik.mes.wm.domain.WmIssueHeader
 import com.t3rik.mes.wm.dto.RtIssueHeaderAndLineDTO
 import com.t3rik.mobile.mes.dto.RtIssueRequestDTO
 import org.apache.ibatis.annotations.Param
@@ -21,7 +22,7 @@ interface IRtIssueService {
     /**
      * 新增退料
      */
-    fun rtIssue(rtIssueRequestDTO: RtIssueRequestDTO)
+    fun rtIssue(rtIssueRequestDTO: RtIssueRequestDTO, proTask: ProTask)
 
     /**
      * 查询任务，根据工单分组展示数据，并统计领料次数
