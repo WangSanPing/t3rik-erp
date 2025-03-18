@@ -130,43 +130,7 @@ public class WmTransactionServiceImpl implements IWmTransactionService {
             // 查询物料产品根据事务中存取得id
             MdItem item = mdItemMapper.selectMdItemById(transaction.getItemId());
             stock.setItemTypeId(item.getItemTypeId());// 物料类型ID
-            stock.setItemId(transaction.getItemId());
-            stock.setItemCode(transaction.getItemCode());
-            stock.setItemName(transaction.getItemName());
-            stock.setSpecification(transaction.getSpecification());
-            stock.setUnitOfMeasure(transaction.getUnitOfMeasure());
-            stock.setBatchCode(transaction.getBatchCode());
-            stock.setWarehouseId(transaction.getWarehouseId());
-            stock.setWarehouseCode(transaction.getWarehouseCode());
-            stock.setWarehouseName(transaction.getWarehouseName());
-            stock.setLocationId(transaction.getLocationId());
-            stock.setLocationCode(transaction.getLocationCode());
-            stock.setLocationName(transaction.getLocationName());
-            if (StringUtils.isNotNull(transaction.getAreaId())) {
-                stock.setAreaId(transaction.getAreaId());
-                stock.setAreaCode(transaction.getAreaCode());
-                stock.setAreaName(transaction.getAreaName());
-            }
-            if (StringUtils.isNotNull(transaction.getVendorId())) {// 供应商ID
-                stock.setVendorId(transaction.getVendorId());
-                stock.setVendorCode(transaction.getVendorCode());
-                stock.setVendorName(transaction.getVendorName());
-                stock.setVendorNick(transaction.getVendorNick());
-            }
-            // 使用库存事务日期初始化入库日期
-            // 一般在入库的时候才会涉及到materialStock的新增，出库的时候都是出的现有库存
-            if (StringUtils.isNotNull(transaction.getRecptDate())) {
-                stock.setRecptDate(transaction.getRecptDate());
-            } else {
-                stock.setRecptDate(new Date());
-            }
-
-            // 使用库存事务上的生产工单初始化库存记录上的生产工单，以支持某些情况下库存需要标记生产工单的情况
-            if (StringUtils.isNotNull(transaction.getWorkorderId())) {
-                stock.setWorkorderId(transaction.getWorkorderId());
-                stock.setWorkorderCode(transaction.getWorkorderCode());
-            }
-            stock.setExpireDate(transaction.getExpireDate());// 库存有效期
+            BeanUtils.copyProperties(transaction, stock);
         }
     }
 

@@ -44,7 +44,7 @@ class IssueServiceImpl : IIssueService {
     /**
      * 领料申请
      */
-    @Transactional
+    @Transactional(rollbackFor = [Exception::class])
     override fun issue(issueRequestDTO: IssueRequestDTO) {
         // 查询生产工单
         val workorder = this.workorderService.getById(issueRequestDTO.workorderId) ?: throw BusinessException(
@@ -87,6 +87,7 @@ class IssueServiceImpl : IIssueService {
             clientName = workorder.clientName
             // 订单状态
             status = OrderStatusEnum.PREPARE.code
+
         }
     }
 }

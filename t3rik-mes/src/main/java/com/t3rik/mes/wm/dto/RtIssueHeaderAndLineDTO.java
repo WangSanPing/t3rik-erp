@@ -21,6 +21,10 @@ public class RtIssueHeaderAndLineDTO extends WmRtIssueLine {
     /**
      * 领料单编号
      */
+    private String issueId;
+    /**
+     * 领料单编号
+     */
     private String issueCode;
 
     /**
