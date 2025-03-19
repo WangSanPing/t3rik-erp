@@ -17,13 +17,13 @@ import com.t3rik.mes.pro.domain.ProWorkorderBom;
 import com.t3rik.mes.pro.service.IProTaskService;
 import com.t3rik.mes.pro.service.IProWorkorderBomService;
 import com.t3rik.mes.pro.service.IProWorkorderService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -38,16 +38,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/mes/pro/workorder")
 public class ProWorkorderController extends BaseController {
-    @Autowired
+    @Resource
     private IProWorkorderService proWorkorderService;
 
-    @Autowired
+    @Resource
     private IProWorkorderBomService proWorkorderBomService;
 
-    @Autowired
+    @Resource
     private IMdProductBomService mdProductBomService;
 
-    @Autowired
+    @Resource
     private IProTaskService proTaskService;
 
     /**
@@ -226,8 +226,7 @@ public class ProWorkorderController extends BaseController {
         if (CollUtil.isNotEmpty(boms)) {
             // 最多20层依赖
             count++;
-            for (MdProductBom bomItem : boms
-            ) {
+            for (MdProductBom bomItem : boms) {
                 bomItem.setQuantity(quantity.multiply(bomItem.getQuantity()));
                 results.addAll(getBoms(bomItem, bomItem.getQuantity(), count));
             }
@@ -240,9 +239,6 @@ public class ProWorkorderController extends BaseController {
 
     /**
      * 完成工单
-     *
-     * @param workorderId
-     * @return
      */
     @PreAuthorize("@ss.hasPermi('mes:pro:workorder:edit')")
     @Log(title = "生产工单", businessType = BusinessType.UPDATE)
@@ -255,7 +251,7 @@ public class ProWorkorderController extends BaseController {
         ProTask param = new ProTask();
         param.setWorkorderId(workorderId);
         List<ProTask> tasks = proTaskService.selectProTaskList(param);
-        if(!CollectionUtils.isEmpty(tasks)) {
+        if (!CollectionUtils.isEmpty(tasks)) {
             for (ProTask task : tasks) {
                 task.setStatus(UserConstants.ORDER_STATUS_FINISHED);
                 proTaskService.updateProTask(task);
@@ -272,9 +268,12 @@ public class ProWorkorderController extends BaseController {
      */
     @GetMapping(value = "/getWorkTaskStatus/{workorderIds}")
     public AjaxResult getWorkTaskStatus(@PathVariable Long[] workorderIds) {
+        if (workorderIds == null || workorderIds.length == 0) {
+            return AjaxResult.success(0); // 直接返回 0，避免无意义查询
+        }
         return AjaxResult.success(proTaskService.lambdaQuery()
                 .in(ProTask::getWorkorderId, workorderIds)
-                .ne(ProTask::getStatus,OrderStatusEnum.FINISHED.getCode())
+                .ne(ProTask::getStatus, OrderStatusEnum.FINISHED.getCode())
                 .count()
         );
     }
