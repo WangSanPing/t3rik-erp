@@ -13,7 +13,6 @@ import com.t3rik.mes.pro.domain.ProTask
 import com.t3rik.mes.pro.dto.TaskDTO
 import com.t3rik.mes.pro.service.IProTaskService
 import com.t3rik.mes.wm.dto.RtIssueHeaderAndLineDTO
-import com.t3rik.mes.wm.service.IWmIssueHeaderService
 import com.t3rik.mobile.common.ktextend.requireNotNullOrBlank
 import com.t3rik.mobile.common.ktextend.requireNotNullOrPositive
 import com.t3rik.mobile.mes.dto.RtIssueRequestDTO
@@ -38,9 +37,6 @@ class RtIssueController : BaseController() {
     @Resource
     lateinit var proTaskService: IProTaskService
 
-    @Resource
-    lateinit var wmIssueHeaderService: IWmIssueHeaderService
-
     /**
      * 新增退料
      */
@@ -53,6 +49,51 @@ class RtIssueController : BaseController() {
         return AjaxResult.success()
     }
 
+    /**
+     * 查询退料详情
+     */
+    @ApiOperation("查询退料详情")
+    @GetMapping("/getRtIssueDetail")
+    fun getRtIssueDetail(query: RtIssueHeaderAndLineDTO): AjaxResult {
+        query.workorderCode.requireNotNullOrBlank()
+        query.taskId.requireNotNullOrPositive()
+        return AjaxResult.success(
+            this.rtIssueService.getRtIssueDetail(query)
+        )
+    }
+
+    /**
+     * 查询退料详情
+     */
+    @ApiOperation("查询退料详情列表")
+    @GetMapping("/getRtIssueDetailList")
+    fun getRtIssueDetailList(query: RtIssueHeaderAndLineDTO): AjaxResult {
+        query.workorderCode.requireNotNullOrBlank()
+        query.taskId.requireNotNullOrPositive()
+        return AjaxResult.success(
+            this.rtIssueService.getRtIssueDetailList(query)
+        )
+    }
+
+
+    /**
+     * 查询任务列表
+     */
+    @ApiOperation("查询报工列表")
+    @GetMapping("/list")
+    fun getTaskList(task: ProTask): TableDataInfo {
+        val page = getMPPage(TaskDTO())
+        val queryWrapper = QueryWrapper<TaskDTO>()
+        queryWrapper.likeRight(StringUtils.isNotBlank(task.taskName), "task_name", task.taskName)
+        queryWrapper.eq("task_user_id", SecurityUtils.getUserId())
+        return getDataTableWithPage(
+            this.rtIssueService.getTaskListAndRtIssueCount(page, queryWrapper)
+        )
+    }
+
+    /**
+     * 参数校验
+     */
     private fun checkParam(rtIssueRequestDTO: RtIssueRequestDTO): ProTask {
         rtIssueRequestDTO.taskId.requireNotNullOrPositive()
         rtIssueRequestDTO.workorderCode.requireNotNullOrBlank()
@@ -71,34 +112,5 @@ class RtIssueController : BaseController() {
             throw BusinessException("所有退料数量都为 0，请检查数据")
         }
         return task
-    }
-
-    /**
-     * 查询退料详情
-     */
-    @ApiOperation("查询退料详情")
-    @GetMapping("/getRtIssueDetail")
-    fun getRtIssueDetail(query: RtIssueHeaderAndLineDTO): AjaxResult {
-        query.workorderCode.requireNotNullOrBlank()
-        query.taskId.requireNotNullOrPositive()
-        return AjaxResult.success(
-            this.rtIssueService.getRtIssueDetail(query)
-        )
-    }
-
-
-    /**
-     * 查询任务列表
-     */
-    @ApiOperation("查询报工列表")
-    @GetMapping("/list")
-    fun getTaskList(task: ProTask): TableDataInfo {
-        val page = getMPPage(TaskDTO())
-        val queryWrapper = QueryWrapper<TaskDTO>()
-        queryWrapper.likeRight(StringUtils.isNotBlank(task.taskName), "task_name", task.taskName)
-        queryWrapper.eq("task_user_id", SecurityUtils.getUserId())
-        return getDataTableWithPage(
-            this.rtIssueService.getTaskListAndRtIssueCount(page, queryWrapper)
-        )
     }
 }

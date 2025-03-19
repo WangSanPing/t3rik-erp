@@ -83,4 +83,9 @@ public interface WmRtIssueMapper extends BaseMapper<WmRtIssue> {
      * 查询退料详情
      */
     List<RtIssueHeaderAndLineDTO> getRtIssueDetail(@Param(Constants.WRAPPER) Wrapper<RtIssueHeaderAndLineDTO> query);
+
+    /**
+     * 查询退料列表
+     */
+    List<RtIssueHeaderAndLineDTO> getRtIssueDetailList(@Param(Constants.WRAPPER) Wrapper<RtIssueHeaderAndLineDTO> query);
 }

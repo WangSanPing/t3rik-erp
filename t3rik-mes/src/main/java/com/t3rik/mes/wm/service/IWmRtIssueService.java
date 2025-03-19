@@ -82,5 +82,8 @@ public interface IWmRtIssueService extends IService<WmRtIssue> {
      */
     List<RtIssueHeaderAndLineDTO> getRtIssueDetail(Wrapper<RtIssueHeaderAndLineDTO> query);
 
-
+    /**
+     * 查询退料详情列表
+     */
+    List<RtIssueHeaderAndLineDTO> getRtIssueDetailList(Wrapper<RtIssueHeaderAndLineDTO> query);
 }

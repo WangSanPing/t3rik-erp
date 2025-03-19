@@ -1,7 +1,6 @@
 package com.t3rik.mes.wm.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.t3rik.common.annotation.Excel;
 import com.t3rik.mes.wm.domain.WmRtIssueLine;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,6 +17,19 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class RtIssueHeaderAndLineDTO extends WmRtIssueLine {
+
+
+
+    /**
+     * 退料单编码
+     */
+    private String rtCode;
+
+    /**
+     * 退料单名称
+     */
+    private String rtName;
+
     /**
      * 领料单编号
      */
@@ -77,6 +89,12 @@ public class RtIssueHeaderAndLineDTO extends WmRtIssueLine {
      */
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date issueDate;
+
+    /**
+     * 退料日期
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date rtDate;
 
     /**
      * 退料次数

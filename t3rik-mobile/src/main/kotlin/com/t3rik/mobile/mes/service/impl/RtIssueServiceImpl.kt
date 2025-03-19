@@ -95,7 +95,7 @@ class RtIssueServiceImpl : IRtIssueService {
             // copy前端属性
             BeanUtil.copyProperties(rtIssueRequestDTO, this)
             // 退料单 编码
-            rtCode = autoCodeUtil.genSerialCode(UserConstants.ISSUE_CODE, null)
+            rtCode = autoCodeUtil.genSerialCode(UserConstants.RTISSUE_CODE, null)
             // 退料单 名称
             rtName = "${workorder.productName}---退料单"
             rtDate = DateUtils.getNowDate()
@@ -166,5 +166,15 @@ class RtIssueServiceImpl : IRtIssueService {
         wrapper.eq("workorder_code", query.workorderCode)
         wrapper.eq("task_id", query.taskId)
         return this.rtIssueHeaderService.getRtIssueDetail(wrapper)
+    }
+
+    /**
+     * 查询退料详情
+     */
+    override fun getRtIssueDetailList(query: RtIssueHeaderAndLineDTO): MutableList<RtIssueHeaderAndLineDTO> {
+        val wrapper = QueryWrapper<RtIssueHeaderAndLineDTO>()
+        wrapper.eq("workorder_code", query.workorderCode)
+        wrapper.eq("task_id", query.taskId)
+        return this.rtIssueHeaderService.getRtIssueDetailList(wrapper)
     }
 }

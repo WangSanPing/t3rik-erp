@@ -478,4 +478,19 @@
         ORDER BY
             wih.issue_date DESC
     </select>
+
+    <select id="getRtIssueDetailList" resultType="com.t3rik.mes.wm.dto.RtIssueHeaderAndLineDTO">
+        SELECT wri.rt_id,
+               wri.rt_code,
+               wri.rt_name,
+               wri.rt_date,
+               wril.*
+        FROM wm_rt_issue wri
+                 LEFT JOIN wm_rt_issue_line wril ON
+            wri.rt_id = wril.rt_id
+            ${ew.customSqlSegment}
+        ORDER BY
+            wril.item_name,
+            rt_date
+    </select>
 </mapper>
