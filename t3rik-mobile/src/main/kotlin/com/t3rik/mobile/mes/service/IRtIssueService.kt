@@ -40,4 +40,9 @@ interface IRtIssueService {
      * 查询退料详情
      */
     fun getRtIssueDetail(query: RtIssueHeaderAndLineDTO): MutableList<RtIssueHeaderAndLineDTO>
+
+    /**
+     * 查询退料详情列表
+     */
+    fun getRtIssueDetailList(query: RtIssueHeaderAndLineDTO): MutableList<RtIssueHeaderAndLineDTO>
 }

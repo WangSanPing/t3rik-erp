@@ -119,4 +119,14 @@ public class WmRtIssueServiceImpl extends ServiceImpl<WmRtIssueMapper, WmRtIssue
     public List<RtIssueHeaderAndLineDTO> getRtIssueDetail(Wrapper<RtIssueHeaderAndLineDTO> query) {
         return this.wmRtIssueMapper.getRtIssueDetail(query);
     }
+
+    /**
+     * 查询退料详情列表
+     *
+     * @param query
+     */
+    @Override
+    public List<RtIssueHeaderAndLineDTO> getRtIssueDetailList(Wrapper<RtIssueHeaderAndLineDTO> query) {
+        return this.wmRtIssueMapper.getRtIssueDetailList(query);
+    }
 }
