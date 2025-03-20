@@ -34,5 +34,5 @@ public class TaskDTO extends ProTask {
     /**
      * 废料次数
      */
-    private Integer WasteCount;
+    private Integer wasteIssueCount;
 }

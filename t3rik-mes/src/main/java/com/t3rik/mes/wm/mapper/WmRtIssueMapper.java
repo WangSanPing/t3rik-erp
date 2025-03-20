@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.t3rik.mes.wm.domain.WmRtIssue;
 import com.t3rik.mes.wm.domain.tx.RtIssueTxBean;
 import com.t3rik.mes.wm.dto.RtIssueHeaderAndLineDTO;
+import com.t3rik.mes.wm.dto.WasteHeaderAndLineDTO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -88,4 +89,5 @@ public interface WmRtIssueMapper extends BaseMapper<WmRtIssue> {
      * 查询退料列表
      */
     List<RtIssueHeaderAndLineDTO> getRtIssueDetailList(@Param(Constants.WRAPPER) Wrapper<RtIssueHeaderAndLineDTO> query);
+
 }

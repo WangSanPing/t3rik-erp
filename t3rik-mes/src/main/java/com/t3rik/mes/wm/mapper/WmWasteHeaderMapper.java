@@ -1,7 +1,10 @@
 package com.t3rik.mes.wm.mapper;
 import java.util.Collection;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.t3rik.mes.wm.domain.tx.WmWasteTxBean;
+import com.t3rik.mes.wm.dto.WasteHeaderAndLineDTO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -32,4 +35,15 @@ public interface WmWasteHeaderMapper extends BaseMapper<WmWasteHeader> {
      * @return
      */
     List<WmWasteTxBean> getTxBeans(Long wasteId);
+
+
+    /**
+     * 查询退料详情
+     */
+    List<WasteHeaderAndLineDTO> getWasteIssueDetail(@Param(Constants.WRAPPER) Wrapper<WasteHeaderAndLineDTO> query);
+
+    /**
+     * 查询退料列表
+     */
+    List<WasteHeaderAndLineDTO> getWasteIssueDetailList(@Param(Constants.WRAPPER) Wrapper<WasteHeaderAndLineDTO> query);
 }

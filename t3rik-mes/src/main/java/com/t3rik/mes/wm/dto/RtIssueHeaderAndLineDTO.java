@@ -18,8 +18,6 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 public class RtIssueHeaderAndLineDTO extends WmRtIssueLine {
 
-
-
     /**
      * 退料单编码
      */

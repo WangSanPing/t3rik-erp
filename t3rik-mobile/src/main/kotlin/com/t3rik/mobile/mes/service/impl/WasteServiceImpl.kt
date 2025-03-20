@@ -16,17 +16,11 @@ import com.t3rik.mes.pro.domain.ProWorkorder
 import com.t3rik.mes.pro.dto.TaskDTO
 import com.t3rik.mes.pro.service.IProTaskService
 import com.t3rik.mes.pro.service.IProWorkorderService
-import com.t3rik.mes.wm.domain.WmIssueLine
-import com.t3rik.mes.wm.domain.WmRtIssue
-import com.t3rik.mes.wm.domain.WmRtIssueLine
-import com.t3rik.mes.wm.domain.WmWarehouse
-import com.t3rik.mes.wm.dto.RtIssueHeaderAndLineDTO
-import com.t3rik.mes.wm.service.IWmIssueLineService
-import com.t3rik.mes.wm.service.IWmRtIssueLineService
-import com.t3rik.mes.wm.service.IWmRtIssueService
-import com.t3rik.mes.wm.service.IWmWarehouseService
-import com.t3rik.mobile.mes.dto.RtIssueRequestDTO
-import com.t3rik.mobile.mes.service.IRtIssueService
+import com.t3rik.mes.wm.domain.*
+import com.t3rik.mes.wm.dto.WasteHeaderAndLineDTO
+import com.t3rik.mes.wm.service.*
+import com.t3rik.mobile.mes.dto.WasteIssueRequestDTO
+import com.t3rik.mobile.mes.service.IWasteIssueService
 import com.t3rik.system.strategy.AutoCodeUtil
 import jakarta.annotation.Resource
 import org.slf4j.Logger
@@ -37,12 +31,12 @@ import java.math.BigDecimal
 
 
 /**
- * 退料Service
+ * 领料申请
  * @author t3rik
- * @date 2025/3/9 22:45
+ * @date 2024/9/1 13:30
  */
 @Service
-class RtIssueServiceImpl : IRtIssueService {
+class WasteServiceImpl : IWasteIssueService {
 
     companion object {
         private val log: Logger = LoggerFactory.getLogger(RtIssueServiceImpl::class.java)
@@ -52,7 +46,7 @@ class RtIssueServiceImpl : IRtIssueService {
     lateinit var proTaskService: IProTaskService
 
     @Resource
-    lateinit var rtIssueHeaderService: IWmRtIssueService
+    lateinit var wasteHeaderService: IWmWasteHeaderService
 
     @Resource
     lateinit var workorderService: IProWorkorderService
@@ -64,51 +58,64 @@ class RtIssueServiceImpl : IRtIssueService {
     lateinit var wmWarehouseService: IWmWarehouseService
 
     @Resource
-    lateinit var wmRtIssueLineService: IWmRtIssueLineService
+    lateinit var wmWasteLineService: IWmWasteLineService
 
     @Resource
     lateinit var wmIssueLineService: IWmIssueLineService
+
+    @Resource
+    lateinit var wmRtIssueLineService: IWmRtIssueLineService
 
     /**
      * 新增退料
      */
     @Transactional(rollbackFor = [Exception::class])
-    override fun rtIssue(rtIssueRequestDTO: RtIssueRequestDTO, proTask: ProTask) {
+    override fun addWasteIssue(wasteIssueRequestDTO: WasteIssueRequestDTO, proTask: ProTask) {
         // 查询生产工单
-        val workorder = this.workorderService.getById(rtIssueRequestDTO.workorderId) ?: throw BusinessException(MsgConstants.PARAM_ERROR)
+        val workorder = this.workorderService.getById(wasteIssueRequestDTO.workorderId) ?: throw BusinessException(MsgConstants.PARAM_ERROR)
         // 查询默认仓库信息
-        // 退料全部退到默认仓库
-        val warehouse = this.wmWarehouseService.lambdaQuery().eq(WmWarehouse::getWarehouseCode, DefaultDataEnum.WH00_DEFAULT.code).one()
+        // 废料全部退到废料库
+        val warehouse = this.wmWarehouseService.lambdaQuery().eq(WmWarehouse::getWarehouseCode, DefaultDataEnum.WASTE_VIRTUAL_WH.code).one()
         // 构造退料申请主单
-        val header = this.buildHeader(rtIssueRequestDTO, workorder, proTask, warehouse)
+        val header = this.buildHeader(wasteIssueRequestDTO, workorder, proTask, warehouse)
         // 保存退料申请主单
-        this.rtIssueHeaderService.save(header)
+        this.wasteHeaderService.save(header)
         log.info(header.toString())
         // 新增退料行
-        // 构造退料行集合
-        val rtIssueLines = this.buildLine(header.rtId, rtIssueRequestDTO, warehouse)
-        // 校验数量
-        checkQuantityRt(rtIssueLines)
-        this.wmRtIssueLineService.saveBatch(rtIssueLines)
+        // 构造废料行集合
+        val wasteLineList = this.buildLine(header.wasteId, wasteIssueRequestDTO, warehouse)
+        // 校验废料数量
+        checkWasteQt(wasteLineList)
+        this.wmWasteLineService.saveBatch(wasteLineList)
     }
 
     /**
      * 校验退料数量是否合规
      */
-    fun checkQuantityRt(rtIssueLines: MutableList<WmRtIssueLine>) {
-        // 退料数量分组
-        val groupRtIssue = rtIssueLines.groupBy { it.itemCode }
+    fun checkWasteQt(wasteLineList: MutableList<WmWasteLine>) {
+        // 废料
+        val groupWaste = wasteLineList.groupBy { it.itemCode }
         // 获取领料数量
         val groupIssueLines = this.wmIssueLineService.lambdaQuery()
-            .`in`(WmIssueLine::getLineId, rtIssueLines.map { it.issueLineId })
+            .`in`(WmIssueLine::getLineId, wasteLineList.map { it.issueLineId })
+            .list()
+            .groupBy { it.itemCode }
+        // 获取退料数量
+        val groupRtIssueLines = this.wmRtIssueLineService.lambdaQuery()
+            .`in`(WmRtIssueLine::getLineId, wasteLineList.map { it.issueLineId })
             .list()
             .groupBy { it.itemCode }
 
-        for ((itemCode, rtRecords) in groupRtIssue) {
-            val totalReturned = rtRecords.sumOf { it.quantityRt }
+        for ((itemCode, wasteRecords) in groupWaste) {
+            // 废料
+            val totalWaste = wasteRecords.sumOf { it.quantityWaste }
+            // 退料
+            val totalReturned = groupRtIssueLines[itemCode]?.sumOf { it.quantityRt } ?: BigDecimal.ZERO
+            // 领料
             val totalIssued = groupIssueLines[itemCode]?.sumOf { it.quantityIssued } ?: BigDecimal.ZERO
-            if (totalReturned > totalIssued) {
-                throw BusinessException("物料: ${rtRecords.first().itemName}, 退料总数: $totalReturned, 超过了领料总数: $totalIssued！")
+
+            if (totalWaste > totalReturned + totalIssued) {
+                throw BusinessException("物料: ${wasteRecords.first().itemName}, 废料总数: $totalReturned, 超过了领料总数: $totalIssued！+ 退料总数: $totalReturned")
             }
         }
     }
@@ -116,15 +123,15 @@ class RtIssueServiceImpl : IRtIssueService {
     /**
      * 构造领料申请主单
      */
-    fun buildHeader(rtIssueRequestDTO: RtIssueRequestDTO, workorder: ProWorkorder, proTask: ProTask, warehouse: WmWarehouse): WmRtIssue {
-        val wmRtIssue = WmRtIssue().apply {
+    fun buildHeader(wasteIssueRequestDTO: WasteIssueRequestDTO, workorder: ProWorkorder, proTask: ProTask, warehouse: WmWarehouse): WmWasteHeader {
+        val wmWasteHeader = WmWasteHeader().apply {
             // copy前端属性
-            BeanUtil.copyProperties(rtIssueRequestDTO, this)
-            // 退料单 编码
-            rtCode = autoCodeUtil.genSerialCode(UserConstants.RTISSUE_CODE, null)
+            BeanUtil.copyProperties(wasteIssueRequestDTO, this)
+            // 废料单 编码
+            wasteCode = autoCodeUtil.genSerialCode(UserConstants.PWASTE_CODE, null)
             // 退料单 名称
-            rtName = "${workorder.productName}---退料单"
-            rtDate = DateUtils.getNowDate()
+            wasteName = "${workorder.productName}---废料单"
+            wasteDate = DateUtils.getNowDate()
             // 订单状态
             status = OrderStatusEnum.PREPARE.code
             // 任务信息
@@ -136,22 +143,22 @@ class RtIssueServiceImpl : IRtIssueService {
             warehouseCode = warehouse.warehouseCode
             warehouseName = warehouse.warehouseName
         }
-        return wmRtIssue
+        return wmWasteHeader
     }
 
 
     /**
      * 构造退料子单
      */
-    fun buildLine(rtIssueHeaderId: Long, rtIssueRequestDTO: RtIssueRequestDTO, warehouse: WmWarehouse): MutableList<WmRtIssueLine> {
+    fun buildLine(rtIssueHeaderId: Long, wasteIssueRequestDTO: WasteIssueRequestDTO, warehouse: WmWarehouse): MutableList<WmWasteLine> {
         // 只处理本次退料数量大于0的数据
-        return rtIssueRequestDTO.issueLineList
-            .filter { (it.quantityRt ?: BigDecimal.ZERO) > BigDecimal.ZERO }
+        return wasteIssueRequestDTO.issueLineList
+            .filter { (it.quantityWaste ?: BigDecimal.ZERO) > BigDecimal.ZERO }
             .map {
                 it.apply {
                     issueLineId = lineId
                     lineId = null
-                    rtId = rtIssueHeaderId
+                    wasteId = rtIssueHeaderId
                     // 仓库信息
                     // 退到默认仓库
                     warehouseId = warehouse.warehouseId
@@ -172,27 +179,27 @@ class RtIssueServiceImpl : IRtIssueService {
      * 查询任务，并统计退料次数
      * @param query 查询条件
      */
-    override fun getTaskListAndRtIssueCount(page: IPage<TaskDTO>, query: Wrapper<TaskDTO>): Page<TaskDTO> {
-        return this.proTaskService.getTaskListAndRtIssueCount(page, query)
+    override fun getTaskListAndWasteIssueCount(page: IPage<TaskDTO>, query: Wrapper<TaskDTO>): Page<TaskDTO> {
+        return this.proTaskService.getTaskListAndWasteIssueCount(page, query)
     }
 
     /**
      * 查询退料详情
      */
-    override fun getRtIssueDetail(query: RtIssueHeaderAndLineDTO): MutableList<RtIssueHeaderAndLineDTO> {
-        val wrapper = QueryWrapper<RtIssueHeaderAndLineDTO>()
+    override fun getWasteIssueDetail(query: WasteHeaderAndLineDTO): MutableList<WasteHeaderAndLineDTO> {
+        val wrapper = QueryWrapper<WasteHeaderAndLineDTO>()
         wrapper.eq("workorder_code", query.workorderCode)
         wrapper.eq("task_id", query.taskId)
-        return this.rtIssueHeaderService.getRtIssueDetail(wrapper)
+        return this.wasteHeaderService.getWasteIssueDetail(wrapper)
     }
 
     /**
      * 查询退料详情
      */
-    override fun getRtIssueDetailList(query: RtIssueHeaderAndLineDTO): MutableList<RtIssueHeaderAndLineDTO> {
-        val wrapper = QueryWrapper<RtIssueHeaderAndLineDTO>()
+    override fun getWasteIssueDetailList(query: WasteHeaderAndLineDTO): MutableList<WasteHeaderAndLineDTO> {
+        val wrapper = QueryWrapper<WasteHeaderAndLineDTO>()
         wrapper.eq("workorder_code", query.workorderCode)
         wrapper.eq("task_id", query.taskId)
-        return this.rtIssueHeaderService.getRtIssueDetailList(wrapper)
+        return this.wasteHeaderService.getWasteIssueDetailList(wrapper)
     }
 }

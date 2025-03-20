@@ -2,9 +2,11 @@ package com.t3rik.mes.wm.service;
 
 import java.util.List;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.wm.domain.WmWasteHeader;
 import com.t3rik.mes.wm.domain.tx.WmWasteTxBean;
+import com.t3rik.mes.wm.dto.WasteHeaderAndLineDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -36,4 +38,14 @@ public interface IWmWasteHeaderService extends IService<WmWasteHeader> {
      * @return
      */
     List<WmWasteTxBean> getTxBeans(Long wasteId);
+
+    /**
+     * 查询废料详情
+     */
+    List<WasteHeaderAndLineDTO> getWasteIssueDetail(Wrapper<WasteHeaderAndLineDTO> query);
+
+    /**
+     * 查询废料详情列表
+     */
+    List<WasteHeaderAndLineDTO> getWasteIssueDetailList(Wrapper<WasteHeaderAndLineDTO> query);
 }

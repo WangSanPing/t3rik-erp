@@ -236,4 +236,15 @@ public class ProTaskServiceImpl extends ServiceImpl<ProTaskMapper, ProTask> impl
     public Page<TaskDTO> getTaskListAndRtIssueCount(IPage<TaskDTO> page, Wrapper<TaskDTO> query) {
         return this.proTaskMapper.getTaskListAndRtIssueCount(page, query);
     }
+
+    /**
+     * 查询任务，并统计废料次数
+     *
+     * @param page
+     * @param query 查询条件
+     */
+    @Override
+    public Page<TaskDTO> getTaskListAndWasteIssueCount(IPage<TaskDTO> page, Wrapper<TaskDTO> query) {
+        return this.proTaskMapper.getTaskListAndWasteIssueCount(page, query);
+    }
 }

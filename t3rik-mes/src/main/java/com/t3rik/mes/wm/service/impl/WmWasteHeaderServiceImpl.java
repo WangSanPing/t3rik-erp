@@ -1,11 +1,14 @@
 package com.t3rik.mes.wm.service.impl;
 
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.mes.wm.domain.WmRtIssue;
 import com.t3rik.mes.wm.domain.tx.WmWasteTxBean;
+import com.t3rik.mes.wm.dto.WasteHeaderAndLineDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.t3rik.mes.wm.mapper.WmWasteHeaderMapper;
@@ -58,6 +61,27 @@ public class WmWasteHeaderServiceImpl  extends ServiceImpl<WmWasteHeaderMapper, 
      */
     @Override
     public List<WmWasteTxBean> getTxBeans(Long wasteId) {
+
         return wmWasteHeaderMapper.getTxBeans(wasteId);
+    }
+
+    /**
+     * 查询废料详情
+     *
+     * @param query
+     */
+    @Override
+    public List<WasteHeaderAndLineDTO> getWasteIssueDetail(Wrapper<WasteHeaderAndLineDTO> query) {
+        return this.wmWasteHeaderMapper.getWasteIssueDetail(query);
+    }
+
+    /**
+     * 查询废料详情列表
+     *
+     * @param query
+     */
+    @Override
+    public List<WasteHeaderAndLineDTO> getWasteIssueDetailList(Wrapper<WasteHeaderAndLineDTO> query) {
+        return this.wmWasteHeaderMapper.getWasteIssueDetailList(query);
     }
 }

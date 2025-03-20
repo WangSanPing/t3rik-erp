@@ -476,7 +476,8 @@
         GROUP BY
             wil.line_id
         ORDER BY
-            wih.issue_date DESC
+            wih.issue_date
+        DESC
     </select>
 
     <select id="getRtIssueDetailList" resultType="com.t3rik.mes.wm.dto.RtIssueHeaderAndLineDTO">
@@ -493,4 +494,6 @@
             wril.item_name,
             rt_date
     </select>
+
+
 </mapper>
