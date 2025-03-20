@@ -103,8 +103,14 @@ public interface ProTaskMapper extends BaseMapper<ProTask> {
     Page<TaskDTO> getWorkOrderGroupAndWasteCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query);
 
     /**
-     * 查询任务，根据工单分组展示数据，并统计领料和废料次数
+     * 查询任务，根据工单数据，并统计领料和退料次数
      * @param query 查询条件
      */
     Page<TaskDTO> getTaskListAndRtIssueCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query);
+
+    /**
+     * 查询任务，根据工单示数据，并统计领料和废料次数
+     * @param query 查询条件
+     */
+    Page<TaskDTO> getTaskListAndWasteIssueCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query);
 }

@@ -133,4 +133,55 @@
                  LEFT JOIN wm_material_stock ms ON wml.material_stock_id = ms.material_stock_id
         where wmh.waste_id = #{wasteId}
     </select>
+
+    <select id="getWasteIssueDetail" resultType="com.t3rik.mes.wm.dto.WasteHeaderAndLineDTO">
+        SELECT wih.issue_id,
+               wih.issue_code,
+               wih.issue_date,
+               wih.issue_name,
+               wih.workorder_code,
+               wih.workorder_id,
+               wih.task_id,
+               wil.line_id,
+               wil.unit_of_measure,
+               wil.location_id,
+               wil.location_code,
+               wil.location_name,
+               wil.warehouse_id,
+               wil.warehouse_code,
+               wil.warehouse_name,
+               wil.area_id,
+               wil.area_code,
+               wil.area_name,
+               wil.item_id,
+               wil.item_name,
+               wil.item_code,
+               wil.quantity_issued,
+               wil.material_stock_id,
+               COUNT(wwl.line_id)                 AS wasteIssueCount,
+               IFNULL(sum(wwl.quantity_waste), 0) AS wasteIssueQty
+        FROM wm_issue_line wil
+                 LEFT JOIN wm_issue_header wih ON wih.issue_id = wil.issue_id
+                 LEFT JOIN wm_waste_line wwl ON wil.line_id = wwl.issue_line_id
+            ${ew.customSqlSegment}
+        GROUP BY
+            wil.line_id
+        ORDER BY
+            wih.issue_date
+        DESC
+    </select>
+
+    <select id="getWasteIssueDetailList" resultType="com.t3rik.mes.wm.dto.WasteHeaderAndLineDTO">
+        SELECT wwh.waste_id,
+               wwh.waste_code,
+               wwh.waste_name,
+               wwh.waste_date,
+               wwl.*
+        FROM wm_waste_header wwh
+                 LEFT JOIN wm_waste_line wwl ON
+            wwh.waste_id = wwl.waste_id
+            ${ew.customSqlSegment}
+        ORDER BY wwl.item_name,
+            wwh.waste_date
+    </select>
 </mapper>

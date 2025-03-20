@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.mes.wm.domain.WmRtIssue;
 import com.t3rik.mes.wm.domain.tx.RtIssueTxBean;
 import com.t3rik.mes.wm.dto.RtIssueHeaderAndLineDTO;
+import com.t3rik.mes.wm.dto.WasteHeaderAndLineDTO;
 
 import java.util.List;
 
@@ -86,4 +87,6 @@ public interface IWmRtIssueService extends IService<WmRtIssue> {
      * 查询退料详情列表
      */
     List<RtIssueHeaderAndLineDTO> getRtIssueDetailList(Wrapper<RtIssueHeaderAndLineDTO> query);
+
+
 }

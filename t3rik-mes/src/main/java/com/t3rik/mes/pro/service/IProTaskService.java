@@ -119,4 +119,9 @@ public interface IProTaskService extends IService<ProTask> {
      */
     Page<TaskDTO> getTaskListAndRtIssueCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query);
 
+    /**
+     * 查询任务，并统计废料次数
+     * @param query 查询条件
+     */
+    Page<TaskDTO> getTaskListAndWasteIssueCount(IPage<TaskDTO> page, @Param(Constants.WRAPPER) Wrapper<TaskDTO> query);
 }

@@ -8,6 +8,7 @@ import com.t3rik.common.utils.StringUtils;
 import com.t3rik.mes.wm.domain.WmRtIssue;
 import com.t3rik.mes.wm.domain.tx.RtIssueTxBean;
 import com.t3rik.mes.wm.dto.RtIssueHeaderAndLineDTO;
+import com.t3rik.mes.wm.dto.WasteHeaderAndLineDTO;
 import com.t3rik.mes.wm.mapper.WmRtIssueMapper;
 import com.t3rik.mes.wm.service.IWmRtIssueService;
 import jakarta.annotation.Resource;
@@ -129,4 +130,6 @@ public class WmRtIssueServiceImpl extends ServiceImpl<WmRtIssueMapper, WmRtIssue
     public List<RtIssueHeaderAndLineDTO> getRtIssueDetailList(Wrapper<RtIssueHeaderAndLineDTO> query) {
         return this.wmRtIssueMapper.getRtIssueDetailList(query);
     }
+
+
 }
