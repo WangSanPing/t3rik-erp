@@ -82,6 +82,7 @@ public class HrmEmploymentApplicationServiceImpl implements IHrmEmploymentApplic
         HrmStaff staff = this.hrmStaffService.getById(staffId);
         String account = PinyinUtil.getFirstLetter(staff.getStaffName(), "") + StringUtils.right(staff.getContactPhone(), 4);
         SysUser user = new SysUser();
+        user.setUserId(staffId);
         user.setUserName(account);
         user.setNickName(staff.getStaffName());
         user.setPassword(SecurityUtils.encryptPassword(UserConstants.DEFAULT_PASSWORD));
