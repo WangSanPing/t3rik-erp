@@ -6,14 +6,14 @@
 
     <groupId>com.t3rik</groupId>
     <artifactId>t3rik-erp-parent</artifactId>
-    <version>0.0.1</version>
+    <version>1.0.0</version>
 
     <name>t3rik-erp</name>
     <description>erp管理平台</description>
 
     <properties>
-        <t3rik.version>0.0.1</t3rik.version>
-        <t3rik.starter.version>0.0.1</t3rik.starter.version>
+        <t3rik.version>1.0.0</t3rik.version>
+        <t3rik.starter.version>1.0.0</t3rik.starter.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>17</java.version>
