@@ -27,7 +27,8 @@ public class ProClientOrderItemServiceImpl extends ServiceImpl<ProClientOrderIte
     @Override
     public Integer getClientOrderItemLevel(Long clientOrderId) {
         Integer maxLevel = this.proClientOrderItemMapper.selectLevelByClientOrderId(clientOrderId);
-        return maxLevel == null ? 1 : maxLevel + 1;
+        // 当前客户订单没有任意添加任意材料需求时，层级会返回0，代表需要添加的层级是第一层
+        return maxLevel == 0 ? 1 : maxLevel + 1;
     }
 
     /**
