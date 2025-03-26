@@ -1,4 +1,4 @@
-package com.t3rik.common.sensitive;
+package com.t3rik.common.mybatis.plugin.sensitive;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

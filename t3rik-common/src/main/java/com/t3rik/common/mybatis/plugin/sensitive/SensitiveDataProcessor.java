@@ -1,4 +1,4 @@
-package com.t3rik.common.sensitive;
+package com.t3rik.common.mybatis.plugin.sensitive;
 
 /**
  * 脱敏处理

@@ -1,4 +1,4 @@
-package com.t3rik.common.sensitive;
+package com.t3rik.common.mybatis.plugin.sensitive;
 
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import org.apache.ibatis.executor.resultset.ResultSetHandler;
