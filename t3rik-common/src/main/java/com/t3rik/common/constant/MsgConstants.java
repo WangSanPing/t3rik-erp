@@ -24,6 +24,10 @@ public class MsgConstants {
 
     public static final String NOT_EXIST_ISSUE = "对应的领料单不存在,请联系管理员!";
 
+    public static final String NOT_EXIST_USER = "员工不存在,请联系管理员!";
+
+    public static final String NOT_EXIST_TASK = "任务不存在,请联系管理员!";
+
     public static final String ERROR_ROUTE = "当前任务对应的工艺和工序配置无效!";
 
     public static final String NO_OPERATION_AUTH = "当前用户没有操作该数据的权限!";

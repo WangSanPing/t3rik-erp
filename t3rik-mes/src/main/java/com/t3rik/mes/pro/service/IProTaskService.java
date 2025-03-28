@@ -85,7 +85,7 @@ public interface IProTaskService extends IService<ProTask> {
      * @param taskBy     指派用户名称
      * @return
      */
-    public String addAssignUsers(List<String> taskIds, Long taskUserId, String taskBy);
+    public String addAssignUsers(List<ProTask> proTaskList, Long taskUserId, String taskBy);
 
     /**
      * 根据工单分组展示

@@ -124,38 +124,24 @@ public class ProTaskServiceImpl extends ServiceImpl<ProTaskMapper, ProTask> impl
      * @return
      */
     @Override
-    public String addAssignUsers(List<String> taskIds, Long taskUserId, String taskBy) {
-        Date nowDate = DateUtils.getNowDate();
-        // 符合条件的任务id
-        List<Long> taskIdList = this.lambdaQuery()
-                .in(ProTask::getTaskId, taskIds)
-                .list()
-                .stream()
-                .filter(proTask -> !(proTask.getTaskUserId() != null && proTask.getEndTime().compareTo(nowDate) < 1))
-                .map(ProTask::getTaskId)
-                .toList();
-        // 更新任务指派用户
-        if (!taskIdList.isEmpty()) {
-            ////派单已确认
-            this.lambdaUpdate()
-                    .in(ProTask::getTaskId, taskIdList)
-                    .set(ProTask::getTaskUserId, taskUserId)
-                    .set(ProTask::getTaskBy, taskBy)
-                    .set(ProTask::getStatus, OrderStatusEnum.CONFIRMED.getCode())
-                    .update(new ProTask());
-        }
+    public String addAssignUsers(List<ProTask> proTaskList, Long taskUserId, String taskBy) {
+        // 派单已确认
+        this.lambdaUpdate()
+                .in(ProTask::getTaskId, proTaskList.stream().map(ProTask::getTaskId).toList())
+                .set(ProTask::getTaskUserId, taskUserId)
+                .set(ProTask::getTaskBy, taskBy)
+                .set(ProTask::getStatus, OrderStatusEnum.CONFIRMED.getCode())
+                .update(new ProTask());
         // 任务已超过设定完成生产时间编号
-        List<String> codeList = this.lambdaQuery()
-                .in(ProTask::getTaskId, taskIds)
-                .list()
+        List<String> codeList = proTaskList
                 .stream()
-                .filter(proTask -> proTask.getTaskUserId() != null && proTask.getEndTime().compareTo(nowDate) < 1)
+                .filter(proTask -> proTask.getEndTime().compareTo(new Date()) < 1)
                 .map(ProTask::getTaskCode)
                 .toList();
         // 返回提示信息
         StringBuilder sb = new StringBuilder();
         if (!codeList.isEmpty()) {
-            sb.append("编号为：").append(String.join(",", codeList)).append("的任务已超过设定完成生产时间，不能再指派！");
+            sb.append("编号为：").append(String.join(",", codeList)).append("的任务已超过设定完成生产时间，请留意！");
         }
         return sb.toString();
     }
