@@ -80,7 +80,7 @@ public interface IProTaskService extends IService<ProTask> {
     /**
      * 批量新增/修改分配用户
      *
-     * @param taskIds    主键id
+     * @param proTaskList    任务列表
      * @param taskUserId 指派用户id
      * @param taskBy     指派用户名称
      * @return
