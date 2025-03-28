@@ -1,11 +1,15 @@
 package com.t3rik.mes.pro.dto;
 
+import com.t3rik.common.constant.MsgConstants;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 
-import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -20,18 +24,19 @@ import java.util.List;
  */
 @AllArgsConstructor
 @Data
-@Validated
 @NoArgsConstructor
 public class AssignUsersDTO {
     // 任务id
-    @NotNull
+    @NotNull(message = MsgConstants.PARAM_ERROR)
+    @Size(min = 1, message = MsgConstants.PARAM_ERROR)
     private List<String> taskIds;
 
     // 任务负责人id
-    @NotNull
+    @NotNull(message = MsgConstants.PARAM_ERROR)
+    @Min(value = 1, message = MsgConstants.PARAM_ERROR)
     private Long taskUserId;
 
     // 任务负责人姓名
-    @NotNull
+    @NotBlank(message = MsgConstants.PARAM_ERROR)
     private String taskBy;
 }

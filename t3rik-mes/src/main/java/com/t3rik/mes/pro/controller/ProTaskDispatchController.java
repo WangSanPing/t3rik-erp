@@ -1,28 +1,30 @@
 package com.t3rik.mes.pro.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.t3rik.common.annotation.Log;
+import com.t3rik.common.constant.MsgConstants;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
+import com.t3rik.common.core.domain.entity.SysUser;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.BusinessType;
+import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.poi.ExcelUtil;
-import com.t3rik.mes.pro.domain.*;
+import com.t3rik.mes.pro.domain.ProTask;
 import com.t3rik.mes.pro.dto.AssignUsersDTO;
-import com.t3rik.mes.pro.service.*;
+import com.t3rik.mes.pro.service.IProTaskService;
+import com.t3rik.system.service.ISysUserService;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-
-import static java.util.stream.Collectors.groupingBy;
 
 /**
  * 生产派单Controller
@@ -36,6 +38,8 @@ import static java.util.stream.Collectors.groupingBy;
 public class ProTaskDispatchController extends BaseController {
     @Resource
     private IProTaskService proTaskService;
+    @Resource
+    private ISysUserService sysUserService;
 
     /**
      * 查询生产派单列表
@@ -47,7 +51,7 @@ public class ProTaskDispatchController extends BaseController {
         LambdaQueryWrapper<ProTask> queryWrapper = getQueryWrapper(proTask);
         // 组装分页
         Page<ProTask> page = getMPPage(proTask);
-        //根据工单分组展示
+        // 根据工单分组展示
         proTaskService.listGroupByWorkOrder(queryWrapper, page);
         return getDataTableWithPage(page);
     }
@@ -82,8 +86,17 @@ public class ProTaskDispatchController extends BaseController {
     @PreAuthorize("@ss.hasPermi('pro:taskdispatch:addAssignUsers')")
     @Log(title = "生产派单", businessType = BusinessType.UPDATE)
     @PostMapping("/addAssignUsers")
-    public AjaxResult addAssignUsers(@RequestBody AssignUsersDTO assignUsersDto) {
-        return AjaxResult.success(proTaskService.addAssignUsers(assignUsersDto.getTaskIds(), assignUsersDto.getTaskUserId(), assignUsersDto.getTaskBy()));
+    public AjaxResult addAssignUsers(@RequestBody @Validated AssignUsersDTO assignUsersDto) {
+        List<ProTask> proTasks = this.proTaskService.lambdaQuery().in(ProTask::getTaskId, assignUsersDto.getTaskIds()).list();
+        if (CollectionUtils.isEmpty(proTasks)) {
+            throw new BusinessException(MsgConstants.NOT_EXIST_TASK);
+        }
+        SysUser sysUser = this.sysUserService.selectUserById(assignUsersDto.getTaskUserId());
+        if (sysUser == null) {
+            throw new BusinessException(MsgConstants.NOT_EXIST_USER);
+        }
+        String result = proTaskService.addAssignUsers(proTasks, assignUsersDto.getTaskUserId(), assignUsersDto.getTaskBy());
+        return AjaxResult.success(result);
     }
 
     /**
