@@ -69,7 +69,7 @@ public class TranOrderController extends BaseController {
         // 获取查询条件
         LambdaQueryWrapper<TranOrder> queryWrapper = getQueryWrapper(tranOrder);
         List<TranOrder> list = this.tranOrderService.list(queryWrapper);
-        ExcelUtil<TranOrder> util = new ExcelUtil<TranOrder>(TranOrder. class);
+        ExcelUtil<TranOrder> util = new ExcelUtil<TranOrder>(TranOrder.class);
         util.exportExcel(response, list, "销售送货单数据");
     }
 
@@ -111,11 +111,11 @@ public class TranOrderController extends BaseController {
     @Log(title = "销售送货单", businessType = BusinessType.DELETE)
     @DeleteMapping("/{tranOrderIds}")
     public AjaxResult remove(@PathVariable List<Long> tranOrderIds) {
-        StringBuffer sb=this.tranOrderService.deleteByIds(tranOrderIds);
-        if(sb.length()>0){
+        StringBuffer sb = this.tranOrderService.deleteByIds(tranOrderIds);
+        if (!sb.isEmpty()) {
             return AjaxResult.error(sb.toString());
-        }else{
-            return  AjaxResult.success();
+        } else {
+            return AjaxResult.success();
         }
     }
 
@@ -126,7 +126,7 @@ public class TranOrderController extends BaseController {
     @Log(title = "销售订单", businessType = BusinessType.DELETE)
     @DeleteMapping("/delOrderItem/{itemIds}")
     public AjaxResult delOrderItem(@PathVariable List<Long> itemIds) {
-        return  AjaxResult.success(this.tranOrderLineService.removeByIds(itemIds));
+        return AjaxResult.success(this.tranOrderLineService.removeByIds(itemIds));
     }
 
     /**
@@ -136,7 +136,7 @@ public class TranOrderController extends BaseController {
     @Log(title = "销售订单审批", businessType = BusinessType.UPDATE)
     @Transactional
     @PutMapping("/refuse/{tranOrderId},{status}")
-    public AjaxResult refuse(@PathVariable("tranOrderId") Long tranOrderId,@PathVariable("status") String status) {
+    public AjaxResult refuse(@PathVariable("tranOrderId") Long tranOrderId, @PathVariable("status") String status) {
         TranOrder tranOrder = getItemList(tranOrderId);
         Optional.ofNullable(tranOrder).orElseThrow(() -> new BusinessException(MsgConstants.PARAM_ERROR));
         if (CollectionUtils.isEmpty(tranOrder.getTranOrderLineList())) {
@@ -144,6 +144,7 @@ public class TranOrderController extends BaseController {
         }
         return AjaxResult.success(this.tranOrderService.refuse(tranOrder));
     }
+
     /**
      * 审批通过并执行相关操作
      */
@@ -161,14 +162,15 @@ public class TranOrderController extends BaseController {
     }
 
     // 查询是否已经添加列
-    private TranOrder getItemList(Long tranOrderId){
-        TranOrder tranOrder=this.tranOrderService.getById(tranOrderId);
+    private TranOrder getItemList(Long tranOrderId) {
+        TranOrder tranOrder = this.tranOrderService.getById(tranOrderId);
         List<TranOrderLine> itemList = this.tranOrderLineService.lambdaQuery()
                 .eq(TranOrderLine::getTranOrderId, tranOrderId)
                 .list();
         tranOrder.setTranOrderLineList(itemList);
         return tranOrder;
     }
+
     /**
      * 单据数据校验方法
      */
@@ -185,7 +187,7 @@ public class TranOrderController extends BaseController {
         if (CollectionUtil.isEmpty(itemList)) {
             checkInfo.setMsg("此单据下没有送货列,请添加相关送货数据");
             return checkInfo;
-        }else{
+        } else {
             // 校验通过
             checkInfo.setIsCheckPassed(Boolean.TRUE);
         }
@@ -200,7 +202,7 @@ public class TranOrderController extends BaseController {
         queryWrapper.eq(tranOrde.getTranOrderCode() != null, TranOrder::getTranOrderCode, tranOrde.getTranOrderCode());
         queryWrapper.eq(tranOrde.getWarehouseId() != null, TranOrder::getWarehouseId, tranOrde.getWarehouseId());
         queryWrapper.eq(tranOrde.getTranOrderType() != null, TranOrder::getTranOrderType, tranOrde.getTranOrderType());
-        queryWrapper.eq(tranOrde.getStatus() != null ,TranOrder::getStatus, tranOrde.getStatus());
+        queryWrapper.eq(tranOrde.getStatus() != null, TranOrder::getStatus, tranOrde.getStatus());
         queryWrapper.eq(tranOrde.getClientId() != null, TranOrder::getClientId, tranOrde.getClientId());
         queryWrapper.eq(tranOrde.getClientCode() != null, TranOrder::getClientCode, tranOrde.getClientCode());
         queryWrapper.like(StringUtils.isNotEmpty(tranOrde.getClientName()), TranOrder::getClientName, tranOrde.getClientName());
@@ -218,7 +220,7 @@ public class TranOrderController extends BaseController {
         // 默认创建时间倒序
         queryWrapper.orderByDesc(TranOrder::getCreateTime);
         Map<String, Object> params = tranOrde.getParams();
-        queryWrapper.between(params.get("beginTime") != null && params.get("endTime") != null,TranOrder::getCreateTime, params.get("beginTime"), params.get("endTime"));
+        queryWrapper.between(params.get("beginTime") != null && params.get("endTime") != null, TranOrder::getCreateTime, params.get("beginTime"), params.get("endTime"));
         return queryWrapper;
     }
 }
