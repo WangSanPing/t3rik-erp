@@ -1,33 +1,32 @@
 package com.t3rik.mes.sales.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.t3rik.common.constant.UserConstants;
+import com.t3rik.common.enums.mes.OrderStatusEnum;
+import com.t3rik.common.exception.BusinessException;
+import com.t3rik.mes.sales.domain.SalesOrderItem;
+import com.t3rik.mes.sales.domain.TranOrder;
+import com.t3rik.mes.sales.domain.TranOrderLine;
+import com.t3rik.mes.sales.mapper.TranOrderMapper;
+import com.t3rik.mes.sales.service.ISalesOrderItemService;
+import com.t3rik.mes.sales.service.ITranOrderLineService;
+import com.t3rik.mes.sales.service.ITranOrderService;
+import com.t3rik.mes.wm.domain.WmMaterialStock;
+import com.t3rik.mes.wm.domain.WmTransaction;
+import com.t3rik.mes.wm.service.IWmMaterialStockService;
+import com.t3rik.mes.wm.service.IWmTransactionService;
+import com.t3rik.system.strategy.AutoCodeUtil;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import cn.hutool.core.collection.CollectionUtil;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.t3rik.common.constant.UserConstants;
-import com.t3rik.common.enums.mes.OrderStatusEnum;
-import com.t3rik.common.exception.BusinessException;
-import com.t3rik.mes.sales.domain.SalesOrderItem;
-import com.t3rik.mes.sales.domain.TranOrderLine;
-import com.t3rik.mes.sales.service.ISalesOrderItemService;
-import com.t3rik.mes.sales.service.ITranOrderLineService;
-import com.t3rik.mes.wm.domain.WmMaterialStock;
-import com.t3rik.mes.wm.domain.WmTransaction;
-import com.t3rik.mes.wm.service.IWmMaterialStockService;
-import com.t3rik.mes.wm.service.IWmTransactionService;
-import com.t3rik.system.strategy.AutoCodeUtil;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.t3rik.mes.sales.mapper.TranOrderMapper;
-import com.t3rik.mes.sales.domain.TranOrder;
-import com.t3rik.mes.sales.service.ITranOrderService;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 销售送货单Service业务层处理
@@ -37,33 +36,29 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class TranOrderServiceImpl extends ServiceImpl<TranOrderMapper, TranOrder> implements ITranOrderService {
-    @Autowired
-    private TranOrderMapper TranOrderMapper;
-    @Autowired
-    private ITranOrderLineService tranOrderLineService;
-    @Autowired
-    private AutoCodeUtil autoCodeUtil;
-    @Autowired
-    private ISalesOrderItemService salesOrderItemService;
-    @Autowired
-    private IWmTransactionService wmTransactionService;
-    @Autowired
-    private IWmMaterialStockService wmMaterialStockService;
 
+    @Resource
+    private ITranOrderLineService tranOrderLineService;
+    @Resource
+    private AutoCodeUtil autoCodeUtil;
+    @Resource
+    private ISalesOrderItemService salesOrderItemService;
+    @Resource
+    private IWmTransactionService wmTransactionService;
+    @Resource
+    private IWmMaterialStockService wmMaterialStockService;
 
 
     @Transactional
     @Override
     public void saveTranOrder(TranOrder tranOrder) {
-        if (tranOrder.getTranOrderLineList().size() > 0) {
-            this.save(tranOrder);
+        this.save(tranOrder);
+        if (CollectionUtils.isNotEmpty(tranOrder.getTranOrderLineList())) {
             this.saveLine(tranOrder);
-        } else {
-            this.save(tranOrder);
         }
     }
 
-    //保存子项
+    // 保存子项
     private void saveLine(TranOrder tranOrder) {
         for (TranOrderLine obj : tranOrder.getTranOrderLineList()) {
             obj.setTranCode(autoCodeUtil.genSerialCode("TRAN_CODE", null));
@@ -81,17 +76,17 @@ public class TranOrderServiceImpl extends ServiceImpl<TranOrderMapper, TranOrder
     @Transactional
     @Override
     public StringBuffer execute(TranOrder tranOrder) throws Exception {
-        List<Long> orderIds = tranOrder.getTranOrderLineList().stream().map(o -> o.getSalesOrderId()).collect(Collectors.toList());
+        List<Long> orderIds = tranOrder.getTranOrderLineList().stream().map(TranOrderLine::getSalesOrderId).collect(Collectors.toList());
         List<TranOrderLine> tranOrderLineList = tranOrder.getTranOrderLineList();
         List<SalesOrderItem> salesOrderItems = salesOrderItemService.listByIds(orderIds);
         Map<Long, SalesOrderItem> salesOrderMap = salesOrderItems.stream().collect
                 ((Collectors.toMap(SalesOrderItem::getSalesOrderItemId, salesOrderItem -> salesOrderItem)));
         List<SalesOrderItem> salesOrderItemList = new ArrayList<>();
         StringBuffer sb = new StringBuffer();
-        //校验是否全部生成
+        // 校验是否全部生成
         List<TranOrderLine> newLineList = new ArrayList<>();
-        //更新销售订单明细列
-        tranOrderLineList.stream().forEach(f -> {
+        // 更新销售订单明细列
+        tranOrderLineList.forEach(f -> {
             try {
                 if (f.getStatus().equals(OrderStatusEnum.APPROVED.getCode())) {
                     sb.append(MessageFormat.format("单据已经执行过了(订单的编号为:{0})", f.getTranCode()));
@@ -113,60 +108,60 @@ public class TranOrderServiceImpl extends ServiceImpl<TranOrderMapper, TranOrder
 
         // 校验子单是否全部通过审批
         List<TranOrderLine> nullWorkList = tranOrderLineList.stream().filter(f -> !f.getStatus().equals(OrderStatusEnum.APPROVED.getCode())).toList();
-        if (CollectionUtil.isEmpty(nullWorkList)) {
+        if (CollectionUtils.isEmpty(nullWorkList)) {
             tranOrder.setStatus(OrderStatusEnum.APPROVED.getCode());
             this.updateById(tranOrder);
         }
 
-        if (CollectionUtil.isEmpty(newLineList)) {
+        if (CollectionUtils.isEmpty(newLineList)) {
             sb.append("失败！没有可送货的单据");
-        }else{
-            //扣除库存
+        } else {
+            // 扣除库存
             this.processTranOrder(newLineList);
             salesOrderItemService.updateBatchById(salesOrderItemList);
-            sb.append("成功" + newLineList.size() + "条数据");
+            sb.append("成功").append(newLineList.size()).append("条数据");
         }
-        //更新送货单状态
+        // 更新送货单状态
         tranOrderLineService.updateBatchById(newLineList);
         return sb;
     }
 
-    //库存
-    private void processTranOrder(List<TranOrderLine>lines){
+    // 库存
+    private void processTranOrder(List<TranOrderLine> lines) {
         String transactionType = UserConstants.TRANSACTION_TYPE_TRAN_SALES;
 //        List<WmTransaction> list=new ArrayList<>();
-        lines.forEach(f->{
-            //查询库存记录
+        lines.forEach(f -> {
+            // 查询库存记录
             // 查询库存
             WmMaterialStock wmMaterialStock = wmMaterialStockService.lambdaQuery()
-                    .eq(WmMaterialStock::getItemId,f.getProductId())
-                    .eq(WmMaterialStock::getWarehouseId,f.getWarehouseId())
+                    .eq(WmMaterialStock::getItemId, f.getProductId())
+                    .eq(WmMaterialStock::getWarehouseId, f.getWarehouseId())
                     .one();
-            if(wmMaterialStock==null){
-                 throw new BusinessException("仓库未查询到该产品数据，请检查各环节！"+f.getProductCode()+"/"+f.getProductName());
+            if (wmMaterialStock == null) {
+                throw new BusinessException("仓库未查询到该产品数据，请检查各环节！" + f.getProductCode() + "/" + f.getProductName());
             }
             WmTransaction transaction = new WmTransaction();
-            //产品
+            // 产品
             transaction.setItemId(f.getProductId());
             transaction.setItemCode(f.getProductCode());
             transaction.setItemName(f.getProductName());
             transaction.setSpecification(f.getProductSpec());
             transaction.setUnitOfMeasure(f.getUnitOfMeasure());
-            //仓库
+            // 仓库
             transaction.setWarehouseId(f.getWarehouseId());
             transaction.setWarehouseCode(f.getWarehouseCode());
             transaction.setWarehouseName(f.getWarehouseName());
-            //库区(未做)
+            // 库区(未做)
             transaction.setLocationId(null);
             transaction.setLocationCode(null);
             transaction.setLocationName(null);
-            //库位(未做)
+            // 库位(未做)
             transaction.setAreaId(null);
             transaction.setAreaCode(null);
             transaction.setAreaName(null);
-            //数量
+            // 数量
             transaction.setTransactionQuantity(f.getSaleSgqty());
-            //工单
+            // 工单
             transaction.setWorkorderId(f.getWorkorderId());
             transaction.setWorkorderCode(f.getWorkorderCode());
 
@@ -190,9 +185,9 @@ public class TranOrderServiceImpl extends ServiceImpl<TranOrderMapper, TranOrder
             tranOrder.setStatus(OrderStatusEnum.APPROVING.getCode());
         }
         this.updateById(tranOrder);
-        if (tranOrder.getTranOrderLineList().size() > 0) {
+        if (CollectionUtils.isNotEmpty(tranOrder.getTranOrderLineList())) {
             List<TranOrderLine> itemList = tranOrderLineService.lambdaQuery().eq(TranOrderLine::getTranOrderId, tranOrder.getTranOrderId()).list();
-            //删除原来的数据
+            // 删除原来的数据
             this.tranOrderLineService.removeByIds(itemList);
             this.saveLine(tranOrder);
             return true;
@@ -206,9 +201,9 @@ public class TranOrderServiceImpl extends ServiceImpl<TranOrderMapper, TranOrder
         StringBuffer sb = new StringBuffer();
         for (TranOrder li : tranOrders) {
             List<TranOrderLine> lineList = tranOrderLineService.lambdaQuery().eq(TranOrderLine::getTranOrderId, li.getTranOrderId()).list();
-            if (lineList.size() > 0) {
-                sb.append("销售送货单" + li.getTranOrderCode() + "下还有未删除的清单，不允许删除" + "\n");
-                tranOrders.remove(li.getTranOrderId());
+            if (CollectionUtils.isNotEmpty(lineList)) {
+                sb.append("销售送货单").append(li.getTranOrderCode()).append("下还有未删除的清单，不允许删除").append("\n");
+                tranOrderIds.remove(li.getTranOrderId());
             }
         }
         this.removeByIds(tranOrderIds);
