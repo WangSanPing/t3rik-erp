@@ -307,7 +307,7 @@
         <if test="createBy != null and createBy != ''">
             create_by,
         </if>
-        create_time)values(
+        create_time,update_time)values(
         <if test="tableName != null">
             #{tableName},
         </if>
@@ -350,7 +350,7 @@
         <if test="createBy != null and createBy != ''">
             #{createBy},
         </if>
-        sysdate())
+        sysdate(),sysdate())
     </insert>
 
     <update id="updateGenTable" parameterType="GenTable">
