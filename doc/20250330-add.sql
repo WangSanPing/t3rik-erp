@@ -29,24 +29,24 @@ CREATE TABLE `wm_material_stock_log` (
                                          PRIMARY KEY (`log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='库存变化日志表';
 
-CREATE TABLE `wm_material_stock_log_failure` (
-                                                 `failure_id` bigint NOT NULL AUTO_INCREMENT COMMENT '失败记录ID',
-                                                 `log_id` bigint DEFAULT NULL COMMENT '原始日志ID（若有）',
-                                                 `material_stock_id` bigint NOT NULL COMMENT '关联库存ID',
-                                                 `failure_reason` varchar(500) DEFAULT NULL COMMENT '日志写入失败原因',
-                                                 `failure_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '失败时间',
-                                                 `log_data` text COMMENT '失败时的原始日志数据',
-                                                 `create_user_id` bigint DEFAULT NULL COMMENT '创建人ID',
-                                                 `create_by` varchar(64) DEFAULT '' COMMENT '创建人',
-                                                 `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-                                                 `update_user_id` bigint DEFAULT NULL COMMENT '更新人ID',
-                                                 `update_by` varchar(64) DEFAULT '' COMMENT '更新人',
-                                                 `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-                                                 `remark` varchar(500) DEFAULT NULL COMMENT '备注',
-                                                 `deleted` int DEFAULT '0' COMMENT '逻辑删除字段 0:未删除 1:已删除',
-                                                 `deleteAt` datetime DEFAULT '1000-01-01 00:00:00' COMMENT '逻辑删除辅助字段',
-                                                 `version` int DEFAULT '1' COMMENT '乐观锁',
-                                                 PRIMARY KEY (`failure_id`)
+CREATE TABLE `wm_log_failure` (
+                                  `failure_id` bigint NOT NULL AUTO_INCREMENT COMMENT '失败记录ID',
+                                  `log_id` bigint DEFAULT NULL COMMENT '原始日志ID（若有）',
+                                  `material_stock_id` bigint NOT NULL COMMENT '关联库存ID',
+                                  `failure_reason` varchar(500) DEFAULT NULL COMMENT '日志写入失败原因',
+                                  `failure_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '失败时间',
+                                  `log_data` text COMMENT '失败时的原始日志数据',
+                                  `create_user_id` bigint DEFAULT NULL COMMENT '创建人ID',
+                                  `create_by` varchar(64) DEFAULT '' COMMENT '创建人',
+                                  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                  `update_user_id` bigint DEFAULT NULL COMMENT '更新人ID',
+                                  `update_by` varchar(64) DEFAULT '' COMMENT '更新人',
+                                  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                  `remark` varchar(500) DEFAULT NULL COMMENT '备注',
+                                  `deleted` int DEFAULT '0' COMMENT '逻辑删除字段 0:未删除 1:已删除',
+                                  `deleteAt` datetime DEFAULT '1000-01-01 00:00:00' COMMENT '逻辑删除辅助字段',
+                                  `version` int DEFAULT '1' COMMENT '乐观锁',
+                                  PRIMARY KEY (`failure_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='库存日志写入失败表';
 
 
