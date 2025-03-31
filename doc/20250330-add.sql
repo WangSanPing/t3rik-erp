@@ -47,7 +47,7 @@ CREATE TABLE `wm_log_failure` (
                                   `deleteAt` datetime DEFAULT '1000-01-01 00:00:00' COMMENT '逻辑删除辅助字段',
                                   `version` int DEFAULT '1' COMMENT '乐观锁',
                                   PRIMARY KEY (`failure_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='库存日志写入失败表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='日志写入失败记录表';
 
 
 ALTER TABLE wm_material_stock_log
