@@ -31,6 +31,11 @@ public class WasteHeaderAndLineDTO extends WmWasteLine {
     /**
      * 领料单编号
      */
+    private Long issueId;
+
+    /**
+     * 领料单编号
+     */
     private String issueCode;
 
     /**
