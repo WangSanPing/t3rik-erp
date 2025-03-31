@@ -14,11 +14,14 @@ import com.t3rik.mes.md.domain.MdUnitMeasure;
 import com.t3rik.mes.md.service.IMdProductBomService;
 import com.t3rik.mes.md.service.IMdUnitMeasureService;
 import com.t3rik.mes.pro.domain.ProClientOrderItem;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +65,7 @@ public class AsyncServiceImpl implements IAsyncService {
      *
      * @param delete true代表需要先删除指定的key
      */
+    @Async
     @Override
     public void updateUnitMeasuresToRedis(Boolean delete, List<String> keys) {
         // 如果需要删除
@@ -73,8 +77,9 @@ public class AsyncServiceImpl implements IAsyncService {
     }
 
     /**
-     * 删除redis种的单位
+     * 删除redis中的单位
      */
+    @Async
     @Override
     public void deleteUnitMeasuresToRedis(List<String> keys) {
         // 转为可变集合
@@ -82,6 +87,25 @@ public class AsyncServiceImpl implements IAsyncService {
         // 添加单位集合列表的key，一起删除
         list.add(RedisConstants.UNITS_MEASURES_LIST_KEY);
         this.redisCache.deleteObject(list);
+    }
+
+    /**
+     * 记录库存变化日志
+     * 加入重试机制，重试3次，每次间隔1秒
+     */
+    @Async
+    @Retryable(retryFor = RuntimeException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
+    @Override
+    public void recordStockLog(String message) {
+
+    }
+
+    /**
+     * 重试失败补偿
+     */
+    @Recover
+    public void recordStockLogRecover(RuntimeException e, String message) {
+        System.err.println("重试失败，执行恢复操作：" + message);
     }
 
     @Async

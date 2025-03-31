@@ -35,4 +35,9 @@ public interface IAsyncService {
      * 删除redis种的单位
      */
     void deleteUnitMeasuresToRedis(List<String> keys);
+
+    /**
+     * 记录库存变化日志
+     */
+    void recordStockLog(String message);
 }
