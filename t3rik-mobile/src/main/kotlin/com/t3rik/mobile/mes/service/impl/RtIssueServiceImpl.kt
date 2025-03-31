@@ -16,15 +16,9 @@ import com.t3rik.mes.pro.domain.ProWorkorder
 import com.t3rik.mes.pro.dto.TaskDTO
 import com.t3rik.mes.pro.service.IProTaskService
 import com.t3rik.mes.pro.service.IProWorkorderService
-import com.t3rik.mes.wm.domain.WmIssueLine
-import com.t3rik.mes.wm.domain.WmRtIssue
-import com.t3rik.mes.wm.domain.WmRtIssueLine
-import com.t3rik.mes.wm.domain.WmWarehouse
+import com.t3rik.mes.wm.domain.*
 import com.t3rik.mes.wm.dto.RtIssueHeaderAndLineDTO
-import com.t3rik.mes.wm.service.IWmIssueLineService
-import com.t3rik.mes.wm.service.IWmRtIssueLineService
-import com.t3rik.mes.wm.service.IWmRtIssueService
-import com.t3rik.mes.wm.service.IWmWarehouseService
+import com.t3rik.mes.wm.service.*
 import com.t3rik.mobile.mes.dto.RtIssueRequestDTO
 import com.t3rik.mobile.mes.service.IRtIssueService
 import com.t3rik.system.strategy.AutoCodeUtil
@@ -69,6 +63,9 @@ class RtIssueServiceImpl : IRtIssueService {
     @Resource
     lateinit var wmIssueLineService: IWmIssueLineService
 
+    @Resource
+    lateinit var wmWasteLineService: IWmWasteLineService
+
     /**
      * 新增退料
      */
@@ -103,12 +100,22 @@ class RtIssueServiceImpl : IRtIssueService {
             .`in`(WmIssueLine::getLineId, rtIssueLines.map { it.issueLineId })
             .list()
             .groupBy { it.itemCode }
+        // 获取废料数量
+        val groupWasteLines = this.wmWasteLineService.lambdaQuery()
+            .`in`(WmWasteLine::getIssueLineId, rtIssueLines.map { it.issueLineId })
+            .list()
+            .groupBy { it.itemCode }
 
         for ((itemCode, rtRecords) in groupRtIssue) {
+            // 退料
             val totalReturned = rtRecords.sumOf { it.quantityRt }
+            // 废料
+            val totalWaste = groupWasteLines[itemCode]?.sumOf { it.quantityWaste } ?: BigDecimal.ZERO
+            // 领料
             val totalIssued = groupIssueLines[itemCode]?.sumOf { it.quantityIssued } ?: BigDecimal.ZERO
-            if (totalReturned > totalIssued) {
-                throw BusinessException("物料: ${rtRecords.first().itemName}, 退料总数: $totalReturned, 超过了领料总数: $totalIssued！")
+
+            if ((totalWaste + totalReturned) > totalIssued) {
+                throw BusinessException("物料: ${rtRecords.first().itemName}, 退料总数: $totalReturned + 废料总数: $totalWaste, 超过了领料总数: $totalIssued！")
             }
         }
     }
@@ -183,6 +190,7 @@ class RtIssueServiceImpl : IRtIssueService {
         val wrapper = QueryWrapper<RtIssueHeaderAndLineDTO>()
         wrapper.eq("workorder_code", query.workorderCode)
         wrapper.eq("task_id", query.taskId)
+        wrapper.eq("wih.status", OrderStatusEnum.FINISHED.code)
         return this.rtIssueHeaderService.getRtIssueDetail(wrapper)
     }
 
