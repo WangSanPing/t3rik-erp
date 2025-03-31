@@ -115,7 +115,7 @@ class WasteServiceImpl : IWasteIssueService {
             val totalIssued = groupIssueLines[itemCode]?.sumOf { it.quantityIssued } ?: BigDecimal.ZERO
 
             if ((totalWaste + totalReturned) > totalIssued) {
-                throw BusinessException("物料: ${wasteRecords.first().itemName}, 废料总数: $totalWaste + 退料总数: $totalReturned, 超过了领料总数: $totalIssued！")
+                throw BusinessException("物料: ${wasteRecords.first().itemName}, 废料总数: $totalWaste + 退料总数: $totalReturned {共计: ${totalReturned + totalWaste}}, 超过了领料总数: $totalIssued！")
             }
         }
     }
