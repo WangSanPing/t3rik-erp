@@ -102,7 +102,7 @@ class WasteServiceImpl : IWasteIssueService {
             .groupBy { it.itemCode }
         // 获取退料数量
         val groupRtIssueLines = this.wmRtIssueLineService.lambdaQuery()
-            .`in`(WmRtIssueLine::getLineId, wasteLineList.map { it.issueLineId })
+            .`in`(WmRtIssueLine::getIssueLineId, wasteLineList.map { it.issueLineId })
             .list()
             .groupBy { it.itemCode }
 
@@ -114,14 +114,14 @@ class WasteServiceImpl : IWasteIssueService {
             // 领料
             val totalIssued = groupIssueLines[itemCode]?.sumOf { it.quantityIssued } ?: BigDecimal.ZERO
 
-            if (totalWaste > totalReturned + totalIssued) {
-                throw BusinessException("物料: ${wasteRecords.first().itemName}, 废料总数: $totalReturned, 超过了领料总数: $totalIssued！+ 退料总数: $totalReturned")
+            if ((totalWaste + totalReturned) > totalIssued) {
+                throw BusinessException("物料: ${wasteRecords.first().itemName}, 废料总数: $totalWaste + 退料总数: $totalReturned, 超过了领料总数: $totalIssued！")
             }
         }
     }
 
     /**
-     * 构造领料申请主单
+     * 构造废料申请主单
      */
     fun buildHeader(wasteIssueRequestDTO: WasteIssueRequestDTO, workorder: ProWorkorder, proTask: ProTask, warehouse: WmWarehouse): WmWasteHeader {
         val wmWasteHeader = WmWasteHeader().apply {
@@ -148,7 +148,7 @@ class WasteServiceImpl : IWasteIssueService {
 
 
     /**
-     * 构造退料子单
+     * 构造废料子单
      */
     fun buildLine(rtIssueHeaderId: Long, wasteIssueRequestDTO: WasteIssueRequestDTO, warehouse: WmWarehouse): MutableList<WmWasteLine> {
         // 只处理本次退料数量大于0的数据
@@ -184,12 +184,13 @@ class WasteServiceImpl : IWasteIssueService {
     }
 
     /**
-     * 查询退料详情
+     * 查询废料详情
      */
     override fun getWasteIssueDetail(query: WasteHeaderAndLineDTO): MutableList<WasteHeaderAndLineDTO> {
         val wrapper = QueryWrapper<WasteHeaderAndLineDTO>()
         wrapper.eq("workorder_code", query.workorderCode)
         wrapper.eq("task_id", query.taskId)
+        wrapper.eq("wih.status", OrderStatusEnum.FINISHED.code)
         return this.wasteHeaderService.getWasteIssueDetail(wrapper)
     }
 
