@@ -5,7 +5,7 @@ import java.util.Map;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,7 +38,7 @@ import com.t3rik.common.core.page.TableDataInfo;
 @RestController
 @RequestMapping("/${moduleName}/${businessName}")
 public class ${ClassName}Controller extends BaseController {
-    @Autowired
+    @Resource
     private I${ClassName}Service ${className}Service;
 
     /**
@@ -136,7 +136,7 @@ public class ${ClassName}Controller extends BaseController {
 #if($column.queryType == 'LIKE')
         queryWrapper.like(StringUtils.isNotEmpty(${className}.get${AttrName}()), ${ClassName}::get${AttrName}, ${className}.get${AttrName}());
 #else
-        queryWrapper.eq(${className}.get${AttrName}() != null, ${ClassName}::get${AttrName}, ${className}.get${AttrName}());
+        queryWrapper.eq(StringUtils.isNotEmpty(${className}.get${AttrName}()), ${ClassName}::get${AttrName}, ${className}.get${AttrName}());
 #end
 #else
         queryWrapper.eq(${className}.get${AttrName}() != null, ${ClassName}::get${AttrName}, ${className}.get${AttrName}());
