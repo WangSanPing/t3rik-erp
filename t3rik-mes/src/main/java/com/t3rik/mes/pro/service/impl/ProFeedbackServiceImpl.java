@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 生产报工记录Service业务层处理
@@ -152,13 +153,25 @@ public class ProFeedbackServiceImpl extends ServiceImpl<ProFeedbackMapper, ProFe
         ProWorkorder workorder = proWorkorderService.selectProWorkorderByWorkorderId(feedback.getWorkorderId());
 
         // 更新生产任务的生产数量
-        BigDecimal quantityProduced, quantityQuanlify, quantityUnquanlify;
-        quantityQuanlify = task.getQuantityQuanlify() == null ? new BigDecimal(0) : task.getQuantityQuanlify();
-        quantityUnquanlify = task.getQuantityUnquanlify() == null ? new BigDecimal(0) : task.getQuantityUnquanlify();
-        quantityProduced = task.getQuantityProduced() == null ? new BigDecimal(0) : task.getQuantityProduced();
-        task.setQuantityProduced(quantityProduced.add(feedback.getQuantityFeedback()));
-        task.setQuantityQuanlify(quantityQuanlify.add(feedback.getQuantityQualified()));
-        task.setQuantityUnquanlify(quantityUnquanlify.add(feedback.getQuantityUnquanlified()));
+        BigDecimal quantityProduced = Optional.ofNullable(task.getQuantityProduced()).orElse(BigDecimal.ZERO);
+        BigDecimal quantityQuanlify = Optional.ofNullable(task.getQuantityQuanlify()).orElse(BigDecimal.ZERO);
+        BigDecimal quantityUnquanlify = Optional.ofNullable(task.getQuantityUnquanlify()).orElse(BigDecimal.ZERO);
+
+        BigDecimal quantityFeedback = Optional.ofNullable(feedback.getQuantityFeedback()).orElse(BigDecimal.ZERO);
+        BigDecimal quantityQualified = Optional.ofNullable(feedback.getQuantityQualified()).orElse(BigDecimal.ZERO);
+        BigDecimal quantityUnquanlified = Optional.ofNullable(feedback.getQuantityUnquanlified()).orElse(BigDecimal.ZERO);
+
+        task.setQuantityProduced(quantityProduced.add(quantityFeedback));
+        task.setQuantityQuanlify(quantityQuanlify.add(quantityQualified));
+        task.setQuantityUnquanlify(quantityUnquanlify.add(quantityUnquanlified));
+
+        // BigDecimal quantityProduced, quantityQuanlify, quantityUnquanlify;
+        // quantityQuanlify = task.getQuantityQuanlify() == null ? new BigDecimal(0) : task.getQuantityQuanlify();
+        // quantityUnquanlify = task.getQuantityUnquanlify() == null ? new BigDecimal(0) : task.getQuantityUnquanlify();
+        // quantityProduced = task.getQuantityProduced() == null ? new BigDecimal(0) : task.getQuantityProduced();
+        // task.setQuantityProduced(quantityProduced.add(feedback.getQuantityFeedback() == null ? new BigDecimal(0) : feedback.getQuantityFeedback()));
+        // task.setQuantityQuanlify(quantityQuanlify.add(feedback.getQuantityQualified() == null ? new BigDecimal(0) : feedback.getQuantityQualified()));
+        // task.setQuantityUnquanlify(quantityUnquanlify.add(feedback.getQuantityUnquanlified() == null ? new BigDecimal(0) : feedback.getQuantityUnquanlified()));
 
         proTaskService.updateProTask(task);
 
