@@ -21,6 +21,10 @@ import com.t3rik.mes.pro.domain.ProTask
 import com.t3rik.mes.pro.service.IProFeedbackService
 import com.t3rik.mes.pro.service.IProRouteProcessService
 import com.t3rik.mes.pro.service.IProTaskService
+import com.t3rik.mes.wm.domain.WmRtIssue
+import com.t3rik.mes.wm.domain.WmWasteHeader
+import com.t3rik.mes.wm.service.IWmRtIssueService
+import com.t3rik.mes.wm.service.IWmWasteHeaderService
 import com.t3rik.mobile.common.enums.CurrentIndexEnum
 import com.t3rik.mobile.mes.dto.TaskAndFeedbackDTO
 import com.t3rik.mobile.mes.service.IFeedbackService
@@ -71,6 +75,18 @@ class FeedbackServiceImpl : IFeedbackService {
     @Resource
     lateinit var proRouteProcessService: IProRouteProcessService
 
+    /**
+     * 退料
+     */
+    @Resource
+    lateinit var wmRtIssueService: IWmRtIssueService
+
+    /**
+     * 废料
+     */
+    @Resource
+    lateinit var wmWasteHeaderService: IWmWasteHeaderService
+
 
     /**
      * 根据传入的前端页码，返回数据
@@ -90,7 +106,7 @@ class FeedbackServiceImpl : IFeedbackService {
     /**
      * 新增报工
      */
-    @Transactional
+    @Transactional(rollbackFor = [Exception::class])
     override fun addFeedback(proFeedback: ProFeedback): String {
         // 工作站信息
         val (workstation, routeProcess) = this.validateWorkstationAndProcess(proFeedback)
@@ -131,6 +147,25 @@ class FeedbackServiceImpl : IFeedbackService {
         }
         // 更新任务数据
         this.taskService.updateById(task)
+        // 查询是否有退料以及废料，更新报工id
+        // 查询退料
+        val rtIssueMutableList = this.wmRtIssueService.lambdaQuery().eq(WmRtIssue::getTaskId, task.taskId).list()
+        if (CollectionUtils.isNotEmpty(rtIssueMutableList)) {
+            // 不为空需要把报工id更新到退料表中
+            this.wmRtIssueService.lambdaUpdate()
+                .set(WmRtIssue::getRecordId, proFeedback.recordId)
+                .`in`(WmRtIssue::getRtId, rtIssueMutableList.map { it.rtId }.toMutableList())
+                .update(WmRtIssue())
+        }
+        // 查询废料
+        val wasteHeaderMutableList = this.wmWasteHeaderService.lambdaQuery().eq(WmWasteHeader::getTaskId, task.taskId).list()
+        if (CollectionUtils.isNotEmpty(rtIssueMutableList)) {
+            // 不为空需要把报工id更新到退料表中
+            this.wmWasteHeaderService.lambdaUpdate()
+                .set(WmWasteHeader::getRecordId, proFeedback.recordId)
+                .`in`(WmWasteHeader::getWasteId, wasteHeaderMutableList.map { it.wasteId }.toMutableList())
+                .update(WmWasteHeader())
+        }
         return msg
     }
 
