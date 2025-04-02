@@ -1,10 +1,11 @@
+drop table if exists wm_material_stock_log;
 CREATE TABLE `wm_material_stock_log` (
                                          `log_id` bigint NOT NULL AUTO_INCREMENT COMMENT '日志ID',
                                          `material_stock_id` bigint NOT NULL COMMENT '关联库存ID',
                                          `item_id` bigint NOT NULL COMMENT '物料ID',
                                          `item_code` varchar(64) DEFAULT NULL COMMENT '产品物料编码',
                                          `item_name` varchar(255) DEFAULT NULL COMMENT '产品物料名称',
-                                         `change_type` TINYINT NOT NULL COMMENT '变化类型（1:入库, 2:出库, 3:盘点等）',
+                                         `change_type` TINYINT NOT NULL COMMENT '变化类型（10:入库, 20:出库, 30:盘点等）',
                                          `before_quantity` double(12,2) DEFAULT NULL COMMENT '变化前库存数量',
                                          `after_quantity` double(12,2) DEFAULT NULL COMMENT '变化后库存数量',
                                          `change_quantity` double(12,2) DEFAULT NULL COMMENT '库存变化数量',
@@ -31,6 +32,7 @@ CREATE TABLE `wm_material_stock_log` (
                                          PRIMARY KEY (`log_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='库存变化日志表';
 
+drop table if exists wm_log_failure;
 CREATE TABLE `wm_log_failure` (
                                   `failure_id` bigint NOT NULL AUTO_INCREMENT COMMENT '失败记录ID',
                                   `log_id` bigint DEFAULT NULL COMMENT '原始日志ID（若有）',
@@ -54,5 +56,6 @@ CREATE TABLE `wm_log_failure` (
 
 ALTER TABLE wm_material_stock_log
     ADD INDEX idx_item_id (item_id),
+    ADD INDEX idx_workorder_id (workorder_id),
     ADD INDEX idx_change_type (change_type),
     ADD INDEX idx_operation_time (operation_time);
