@@ -38,6 +38,7 @@ import com.t3rik.common.core.page.TableDataInfo;
 @RestController
 @RequestMapping("/${moduleName}/${businessName}")
 public class ${ClassName}Controller extends BaseController {
+
     @Resource
     private I${ClassName}Service ${className}Service;
 
