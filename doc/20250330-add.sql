@@ -5,16 +5,17 @@ CREATE TABLE `wm_material_stock_log` (
                                          `item_id` bigint NOT NULL COMMENT '物料ID',
                                          `item_code` varchar(64) DEFAULT NULL COMMENT '产品物料编码',
                                          `item_name` varchar(255) DEFAULT NULL COMMENT '产品物料名称',
-                                         `change_type` TINYINT NOT NULL COMMENT '变化类型（10:入库, 20:出库, 30:盘点等）',
+                                         `change_type` tinyint NOT NULL COMMENT '变化类型（10:入库, 20:出库, 30:盘点等）',
                                          `before_quantity` double(12,2) DEFAULT NULL COMMENT '变化前库存数量',
                                          `after_quantity` double(12,2) DEFAULT NULL COMMENT '变化后库存数量',
                                          `change_quantity` double(12,2) DEFAULT NULL COMMENT '库存变化数量',
+                                         `source_doc_id` bigint DEFAULT NULL COMMENT '被消耗单据ID',
+                                         `source_doc_code` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '被消耗单据编号',
+                                         `source_doc_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '被消耗单据名称',
+                                         `source_doc_type` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '被消耗单据类型',
                                          `workorder_id` bigint DEFAULT NULL COMMENT '生产工单ID',
                                          `workorder_code` varchar(64) DEFAULT NULL COMMENT '生产工单编号',
                                          `workorder_name` varchar(255) DEFAULT NULL COMMENT '生产工单名称',
-                                         `task_id` bigint DEFAULT NULL COMMENT '任务ID',
-                                         `task_code` varchar(64) DEFAULT NULL COMMENT '任务编号',
-                                         `task_name` varchar(255) DEFAULT NULL COMMENT '任务名称',
                                          `operation_user_id` bigint DEFAULT NULL COMMENT '操作人ID',
                                          `operation_by` varchar(64) DEFAULT '' COMMENT '操作人姓名',
                                          `operation_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '操作时间',
@@ -29,7 +30,12 @@ CREATE TABLE `wm_material_stock_log` (
                                          `deleted` int DEFAULT '0' COMMENT '逻辑删除字段 0:未删除 1:已删除',
                                          `deleteAt` datetime DEFAULT '1000-01-01 00:00:00' COMMENT '逻辑删除辅助字段',
                                          `version` int DEFAULT '1' COMMENT '乐观锁',
-                                         PRIMARY KEY (`log_id`)
+                                         `source_line_id` bigint DEFAULT NULL COMMENT '被消耗单据行ID',
+                                         PRIMARY KEY (`log_id`),
+                                         KEY `idx_item_id` (`item_id`),
+                                         KEY `idx_workorder_id` (`workorder_id`),
+                                         KEY `idx_change_type` (`change_type`),
+                                         KEY `idx_operation_time` (`operation_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='库存变化日志表';
 
 drop table if exists wm_log_failure;
@@ -53,9 +59,3 @@ CREATE TABLE `wm_log_failure` (
                                   PRIMARY KEY (`failure_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='日志写入失败记录表';
 
-
-ALTER TABLE wm_material_stock_log
-    ADD INDEX idx_item_id (item_id),
-    ADD INDEX idx_workorder_id (workorder_id),
-    ADD INDEX idx_change_type (change_type),
-    ADD INDEX idx_operation_time (operation_time);
