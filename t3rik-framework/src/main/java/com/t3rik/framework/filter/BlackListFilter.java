@@ -1,6 +1,6 @@
 package com.t3rik.framework.filter;
 
-import com.t3rik.common.exception.BusinessException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.t3rik.common.utils.ip.IpUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.FilterChain;
@@ -8,11 +8,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import redis.clients.jedis.Jedis;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -26,32 +28,62 @@ import java.util.concurrent.TimeUnit;
 public class BlackListFilter extends OncePerRequestFilter {
 
     @Resource
-    private Jedis jedis;
+    private RedisTemplate<String, Object> redisTemplate;
+
+    @Resource
+    private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        if (!isControllerRequest(request)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         String ipAddr = IpUtils.getIpAddr(request);
         String BLACK_LIST_KEY = "ip:blacklist";
         String ipKey = "ip:count:" + ipAddr;
 
-        // 1. 检查是否在黑名单中
-        if (jedis.sismember(BLACK_LIST_KEY, ipAddr)) {
-            System.out.println("当前ip已被限制黑名单访问 : " + ipAddr);
-            throw new BusinessException("短时间内访问次数过多，已被限制访问");
+        // 先检查是否在黑名单中
+        if (Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(BLACK_LIST_KEY, ipAddr))) {
+            log.warn("当前ip已被限制黑名单访问 : {}", ipAddr);
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setContentType("application/json;charset=UTF-8");
+
+            String json = new ObjectMapper().writeValueAsString(
+                    Map.of("code", 403, "msg", "短时间内访问次数过多，已被限制访问")
+            );
+            response.getWriter().write(json);
+            return;
         }
 
-        // 2. 自增访问次数
-        Long count = jedis.incr(ipKey);  // 自增访问次数
-        if (count == 1) {
+        // 自增访问次数，如果是第一次访问，设置过期时间为1分钟
+        Long count = redisTemplate.opsForValue().increment(ipKey);
+        if (count != null && count == 1) {
             // 设置访问计数键 1 分钟后过期
-            jedis.expire(ipKey, (int) TimeUnit.MINUTES.toSeconds(1));  // 转换为秒
+            redisTemplate.expire(ipKey, 1, TimeUnit.MINUTES);
         }
 
-        // 3. 超过15次访问，则加入黑名单
-        if (count > 15) {
-            jedis.sadd(BLACK_LIST_KEY, ipAddr);  // 将 IP 地址加入黑名单集合
+        // 超过30次访问，则加入黑名单
+        if (count != null && count > 30) {
+            redisTemplate.opsForSet().add(BLACK_LIST_KEY, ipAddr);
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    /**
+     * 判断是否是controller处理
+     */
+    private boolean isControllerRequest(HttpServletRequest request) {
+        try {
+            // 使用 RequestMappingHandlerMapping 来检查请求是否能匹配到一个控制器方法
+            if (requestMappingHandlerMapping.getHandler(request) != null) {
+                return true;  // 请求是由控制器处理的
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;  // 请求没有匹配到控制器方法
     }
 }
