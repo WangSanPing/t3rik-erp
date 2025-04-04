@@ -36,10 +36,6 @@ public class BlackListFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        if (!isControllerRequest(request)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
         String ipAddr = IpUtils.getIpAddr(request);
         String BLACK_LIST_KEY = "ip:blacklist";
         String ipKey = "ip:count:" + ipAddr;
@@ -64,8 +60,8 @@ public class BlackListFilter extends OncePerRequestFilter {
             redisTemplate.expire(ipKey, 1, TimeUnit.MINUTES);
         }
 
-        // 超过30次访问，则加入黑名单
-        if (count != null && count > 30) {
+        // 超过100次访问，则加入黑名单
+        if (count != null && count > 100) {
             redisTemplate.opsForSet().add(BLACK_LIST_KEY, ipAddr);
         }
 
