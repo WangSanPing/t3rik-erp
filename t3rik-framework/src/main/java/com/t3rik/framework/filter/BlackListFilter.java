@@ -47,11 +47,11 @@ public class BlackListFilter extends OncePerRequestFilter {
         // 先检查是否在黑名单中
         if (Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(BLACK_LIST_KEY, ipAddr))) {
             log.warn("当前ip已被限制黑名单访问 : {}", ipAddr);
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("application/json;charset=UTF-8");
 
             String json = new ObjectMapper().writeValueAsString(
-                    Map.of("code", 403, "msg", "短时间内访问次数过多，已被限制访问")
+                    Map.of("code", 500, "msg", "短时间内访问次数过多，已被限制访问")
             );
             response.getWriter().write(json);
             return;
