@@ -8,9 +8,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class BlackListFilter extends OncePerRequestFilter {
 
     @Resource
-    private RedisTemplate<String, Object> redisTemplate;
+    private Jedis jedis;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -34,22 +34,22 @@ public class BlackListFilter extends OncePerRequestFilter {
         String BLACK_LIST_KEY = "ip:blacklist";
         String ipKey = "ip:count:" + ipAddr;
 
-        // 先检查是否在黑名单中
-        if (Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(BLACK_LIST_KEY, ipAddr))) {
-            log.warn("当前ip已被限制黑名单访问 : {}", ipAddr);
+        // 1. 检查是否在黑名单中
+        if (jedis.sismember(BLACK_LIST_KEY, ipAddr)) {
+            System.out.println("当前ip已被限制黑名单访问 : " + ipAddr);
             throw new BusinessException("短时间内访问次数过多，已被限制访问");
         }
 
-        // 自增访问次数，如果是第一次访问，设置过期时间为1分钟
-        Long count = redisTemplate.opsForValue().increment(ipKey);
-        if (count != null && count == 1) {
+        // 2. 自增访问次数
+        Long count = jedis.incr(ipKey);  // 自增访问次数
+        if (count == 1) {
             // 设置访问计数键 1 分钟后过期
-            redisTemplate.expire(ipKey, 1, TimeUnit.MINUTES);
+            jedis.expire(ipKey, (int) TimeUnit.MINUTES.toSeconds(1));  // 转换为秒
         }
 
-        // 超过15次访问，则加入黑名单
-        if (count != null && count > 15) {
-            redisTemplate.opsForSet().add(BLACK_LIST_KEY, ipAddr);
+        // 3. 超过15次访问，则加入黑名单
+        if (count > 15) {
+            jedis.sadd(BLACK_LIST_KEY, ipAddr);  // 将 IP 地址加入黑名单集合
         }
 
         filterChain.doFilter(request, response);
