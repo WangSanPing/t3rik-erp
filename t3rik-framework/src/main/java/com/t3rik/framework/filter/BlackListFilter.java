@@ -1,16 +1,18 @@
-package com.t3rik.framework.interceptor;
+package com.t3rik.framework.filter;
 
 import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.ip.IpUtils;
 import jakarta.annotation.Resource;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.filter.OncePerRequestFilter;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,13 +23,13 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
-public class BlackListInterceptor implements HandlerInterceptor {
+public class BlackListFilter extends OncePerRequestFilter {
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String ipAddr = IpUtils.getIpAddr(request);
         String BLACK_LIST_KEY = "ip:blacklist";
         String ipKey = "ip:count:" + ipAddr;
@@ -49,11 +51,5 @@ public class BlackListInterceptor implements HandlerInterceptor {
         if (count != null && count > 15) {
             redisTemplate.opsForSet().add(BLACK_LIST_KEY, ipAddr);
         }
-        return HandlerInterceptor.super.preHandle(request, response, handler);
-    }
-
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
     }
 }
