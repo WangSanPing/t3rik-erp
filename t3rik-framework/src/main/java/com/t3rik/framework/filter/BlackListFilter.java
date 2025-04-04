@@ -51,5 +51,7 @@ public class BlackListFilter extends OncePerRequestFilter {
         if (count != null && count > 15) {
             redisTemplate.opsForSet().add(BLACK_LIST_KEY, ipAddr);
         }
+
+        filterChain.doFilter(request, response);
     }
 }
