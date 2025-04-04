@@ -1,6 +1,7 @@
 package com.t3rik.framework.config;
 
 import com.t3rik.common.constant.UserConstants;
+import com.t3rik.framework.filter.BlackListFilter;
 import com.t3rik.framework.security.filter.JwtAuthenticationTokenFilter;
 import com.t3rik.framework.security.handle.AuthenticationEntryPointImpl;
 import com.t3rik.framework.security.handle.LogoutSuccessHandlerImpl;
@@ -60,6 +61,12 @@ public class SecurityConfig {
     private JwtAuthenticationTokenFilter authenticationTokenFilter;
 
     /**
+     * 黑名单过滤
+     */
+    @Resource
+    private BlackListFilter blackListFilter;
+
+    /**
      * 跨域过滤器
      */
     @Resource
@@ -90,7 +97,7 @@ public class SecurityConfig {
                                                 "/**/*.js",
                                                 "/profile/**"
                                         ).permitAll()
-                                        .requestMatchers("/jmreport/**","/drag/**","/favicon.ico").permitAll()
+                                        .requestMatchers("/jmreport/**", "/drag/**", "/favicon.ico").permitAll()
                                         .requestMatchers("/error").permitAll()
                                         .requestMatchers("/swagger-ui.html").anonymous()
                                         .requestMatchers("/swagger-resources/**").anonymous()
@@ -109,6 +116,8 @@ public class SecurityConfig {
         httpSecurity.userDetailsService(userDetailsService);
         // 退出配置
         httpSecurity.logout(o -> o.logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler));
+        // 黑名单过滤
+        httpSecurity.addFilterBefore(blackListFilter, UsernamePasswordAuthenticationFilter.class);
         // 添加JWT filter
         httpSecurity.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         // 添加CORS filter
