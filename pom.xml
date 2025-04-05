@@ -23,7 +23,7 @@
         <bitwalker.version>1.21</bitwalker.version>
         <swagger.version>3.0.0</swagger.version>
         <kaptcha.version>2.3.2</kaptcha.version>
-        <mybatis-spring-boot.version>2.2.2</mybatis-spring-boot.version>
+        <mybatis-plus-spring-boot.version>3.5.5</mybatis-plus-spring-boot.version>
         <pagehelper.version>5.3.0</pagehelper.version>
         <fastjson2.version>2.0.52</fastjson2.version>
         <oshi.version>6.1.2</oshi.version>
@@ -41,6 +41,9 @@
         <redisson.version>3.40.1</redisson.version>
         <jimureport.version>1.9.4</jimureport.version>
         <jimunosql.version>1.9.4.1</jimunosql.version>
+        <hutool.version>5.8.36</hutool.version>
+        <barcode4j-light.version>2.0</barcode4j-light.version>
+        <zxing.core.version>3.3.3</zxing.core.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -83,12 +86,6 @@
                 <version>${bitwalker.version}</version>
             </dependency>
 
-            <!-- SpringBoot集成mybatis框架 -->
-            <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-spring-boot-starter</artifactId>
-                <version>${mybatis-spring-boot.version}</version>
-            </dependency>
 
             <!-- pagehelper 分页插件 -->
             <dependency>
@@ -119,7 +116,27 @@
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-                <version>3.5.5</version>
+                <version>${mybatis-plus-spring-boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
+            <!-- 条码 -->
+            <dependency>
+                <groupId>net.sf.barcode4j</groupId>
+                <artifactId>barcode4j-light</artifactId>
+                <version>${barcode4j-light.version}</version>
+            </dependency>
+
+            <!-- 二维码 -->
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>core</artifactId>
+                <version>${zxing.core.version}</version>
             </dependency>
 
             <!-- Swagger3依赖 -->

@@ -162,7 +162,6 @@
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
 
-
         <!--mybatis-plus-->
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -174,36 +173,21 @@
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
 
-
-        <!--        <dependency>-->
-<!--            <groupId>com.baomidou</groupId>-->
-<!--            <artifactId>mybatis-plus-boot-starter</artifactId>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.0.M3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.minio</groupId>
-            <artifactId>minio</artifactId>
-            <version>8.2.1</version>
         </dependency>
 
         <!-- 条码 -->
         <dependency>
             <groupId>net.sf.barcode4j</groupId>
             <artifactId>barcode4j-light</artifactId>
-            <version>2.0</version>
         </dependency>
 
         <!-- 二维码 -->
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
-            <version>3.3.3</version>
         </dependency>
 
         <dependency>
