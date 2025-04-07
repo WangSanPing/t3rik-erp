@@ -179,43 +179,36 @@ public class UserConstants {
 
 
     /**
-     * 报表相关
-     */
-    public static final String REPORT_PRINT_TYPE = "print";
-    public static final String REPORT_PDF_TYPE = "pdf";
-    public static final String REPORT_EXCEL_TYPE = "excel";
-    public static final String REPORT_WORD_TYPE = "word";
-    public static final String REPORT_JASPER_PATH = "reports/jasper/";
-
-
-    /**
      * 库存事务类型
      */
+    public static final String TRANSACTION_TYPE_ITEM_ISSUE = "ISSUE"; // 生产领料
+    public static final String TRANSACTION_TYPE_ITEM_RT_ISSUE = "RTISSUE"; // 生产退料
+    public static final String TRANSACTION_TYPE_ITEM_WM_WASTE = "WMWASTE"; // 生产废料
     public static final String TRANSACTION_TYPE_ITEM_RECPT = "ITEM_RECPT"; // 原材料接收入库
+    public static final String TRANSACTION_TYPE_ITEM_CONSUME = "ITEM_CONSUME";// 物料生产消耗
+    public static final String TRANSACTION_TYPE_PRODUCT_RECPT = "PRODUCT_RECPT"; // 产品入库
+    public static final String TRANSACTION_TYPE_PRODUCT_ISSUE = "PRODUCT_SALE"; // 销售出库
+    public static final String TRANSACTION_TYPE_PRODUCT_PRODUCE = "PRODUCT_PRODUCE";// 产品生产
+    public static final String TRANSACTION_TYPE_WAREHOUSE_TRANS = "TRANSFER"; // 转移单
+    public static final String TRANSACTION_TYPE_PRODUCT_RS = "PRODUCT_RT"; // 销售退货
+    public static final String TRANSACTION_TYPE_TRAN_SALES = "TRAN_SALES"; // 销售送货出库
     public static final String TRANSACTION_TYPE_ITEM_RTV = "ITEM_RTV"; // 原材料退回供应商
+    public static final String TRANSACTION_TYPE_ITEM_OUTSOURCE_ISSUE = "OUTSOURCE_ISSUE"; // 外协领料
+
 
     public static final String TRANSACTION_TYPE_ITEM_ISSUE_OUT = "ITEM_ISSUE_OUT"; // 生产领用-出库事务
     public static final String TRANSACTION_TYPE_ITEM_ISSUE_IN = "ITEM_ISSUE_IN"; // 生产领用-入库事务
-
     public static final String TRANSACTION_TYPE_OUTSOURCE_ISSUE_OUT = "OUTSOURCE_ISSUE_OUT"; // 外协领用-出库事务
     public static final String TRANSACTION_TYPE_OUTSOURCE_RECPT_IN = "OUTSOURCE_RECPT_IN"; // 外协入库-入库事务
-
+    public static final String TRANSACTION_TYPE_OUTSOURCE_RECPT = "OUTSOURCE_RECPT"; // 外协入库
     public static final String TRANSACTION_TYPE_ITEM_RT_ISSUE_OUT = "ITEM_RT_ISSUE_OUT"; // 生产退料-出库事务
     public static final String TRANSACTION_TYPE_ITEM_RT_ISSUE_IN = "ITEM_RT_ISSUE_IN"; // 生产退料-入库事务
-
+    public static final String TRANSACTION_TYPE_ITEM_WM_WASTE_OUT = "ITEM_WM_WASTE_IN"; // 生产废料-出库事务
+    public static final String TRANSACTION_TYPE_ITEM_WM_WASTE_IN = "ITEM_WM_WASTE_OUT"; // 生产废料-入库事务
     public static final String TRANSACTION_TYPE_WAREHOUSE_TRANS_OUT = "TRANS_OUT"; // 移库,移出
     public static final String TRANSACTION_TYPE_WAREHOUSE_TRANS_IN = "TRANS_IN"; // 移库,移入
-
-    public static final String TRANSACTION_TYPE_ITEM_CONSUME = "ITEM_CONSUME";// 物料生产消耗
-    public static final String TRANSACTION_TYPE_PRODUCT_PRODUCE = "PRODUCT_PRODUCE";// 产品生产
-
     public static final String TRANSACTION_TYPE_PRODUCT_RECPT_OUT = "PRODUCT_RECPT_OUT"; // 产品入库-出库事务
     public static final String TRANSACTION_TYPE_PRODUCT_RECPT_IN = "PRODUCT_RECPT_IN"; // 产品入库-入库事务
-
-    public static final String TRANSACTION_TYPE_PRODUCT_ISSUE = "PRODUCT_SALSE"; // 销售出库
-    public static final String TRANSACTION_TYPE_PRODUCT_RS = "PRODUCT_RT"; // 销售退货
-
-    public static final String TRANSACTION_TYPE_TRAN_SALES = "TRAN_SALES"; // 销售送货出库
 
 
     /**

@@ -176,6 +176,7 @@
                'RTISSUE'       AS source_doc_type,
                ir.`rt_id`      AS source_doc_id,
                ir.`rt_code`    AS source_doc_code,
+               ir.rt_name    AS sourceDocName,
                irl.`line_id`   AS source_doc_line_id,
                irl.quantity_rt AS transaction_quantity,
                ir.rt_date      as recptDate
