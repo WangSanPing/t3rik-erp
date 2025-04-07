@@ -24,7 +24,7 @@ public class ThreadPoolConfig {
     private ThreadPoolProperties threadPoolProperties;
 
 
-    @Bean(name = "threadPoolTaskExecutor")
+    @Bean(name = "taskExecutor")
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setMaxPoolSize(threadPoolProperties.getMaxPoolSize());
