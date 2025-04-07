@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.t3rik.mes.wm.mapper.WmMaterialStockLogMapper">
+    <resultMap type="com.t3rik.mes.wm.domain.WmMaterialStockLog" id="BaseResultMap">
+        <!--@Table wm_material_stock_log-->
+        <result property="logId" column="log_id"/>
+        <result property="materialStockId" column="material_stock_id"/>
+        <result property="itemId" column="item_id"/>
+        <result property="itemCode" column="item_code"/>
+        <result property="itemName" column="item_name"/>
+        <result property="changeType" column="change_type"/>
+        <result property="beforeQuantity" column="before_quantity"/>
+        <result property="afterQuantity" column="after_quantity"/>
+        <result property="changeQuantity" column="change_quantity"/>
+        <result property="sourceDocId" column="source_doc_id"/>
+        <result property="sourceDocCode" column="source_doc_code"/>
+        <result property="sourceDocName" column="source_doc_name"/>
+        <result property="sourceDocType" column="source_doc_type"/>
+        <result property="sourceLineId" column="source_line_id"/>
+        <result property="workorderId" column="workorder_id"/>
+        <result property="workorderCode" column="workorder_code"/>
+        <result property="workorderName" column="workorder_name"/>
+        <result property="operationUserId" column="operation_user_id"/>
+        <result property="operationBy" column="operation_by"/>
+        <result property="operationTime" column="operation_time"/>
+        <result property="warehouseId"    column="warehouse_id"    />
+        <result property="warehouseCode"    column="warehouse_code"    />
+        <result property="warehouseName"    column="warehouse_name"    />
+        <result property="locationId"    column="location_id"    />
+        <result property="locationCode"    column="location_code"    />
+        <result property="locationName"    column="location_name"    />
+        <result property="areaId"    column="area_id"    />
+        <result property="areaCode"    column="area_code"    />
+        <result property="areaName"    column="area_name"    />
+        <result property="description" column="description"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateUserId" column="update_user_id"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+        <result property="deleted" column="deleted"/>
+        <result property="deleteat" column="deleteAt"/>
+        <result property="version" column="version"/>
+    </resultMap>
+
+    <sql id="selectWmMaterialStockLogVo">
+        select log_id,
+               warehouse_id,
+               warehouse_code,
+               warehouse_name,
+               location_id,
+               location_code,
+               location_name,
+               area_id,
+               area_code,
+               area_name,
+               material_stock_id,
+               item_id,
+               item_code,
+               item_name,
+               change_type,
+               before_quantity,
+               after_quantity,
+               change_quantity,
+               source_doc_id,
+               source_doc_code,
+               source_doc_name,
+               source_doc_type,
+               source_line_id,
+               workorder_id,
+               workorder_code,
+               workorder_name,
+               operation_user_id,
+               operation_by,
+               operation_time,
+               description,
+               create_user_id,
+               create_by,
+               create_time,
+               update_user_id,
+               update_by,
+               update_time,
+               remark,
+               deleted,
+               deleteAt,
+               version
+        from wm_material_stock_log
+    </sql>
+</mapper>

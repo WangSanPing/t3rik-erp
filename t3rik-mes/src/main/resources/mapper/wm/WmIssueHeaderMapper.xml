@@ -224,6 +224,7 @@
                'ISSUE'               AS source_doc_type,
                ir.`issue_id`         AS source_doc_id,
                ir.`issue_code`       AS source_doc_code,
+               ir.issue_name       AS sourceDocName,
                irl.`line_id`         AS source_doc_line_id,
                irl.`quantity_issued` AS transaction_quantity,
                ir.workorder_id,

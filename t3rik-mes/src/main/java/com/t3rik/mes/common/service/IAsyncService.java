@@ -1,7 +1,11 @@
 package com.t3rik.mes.common.service;
 
+import com.t3rik.common.enums.mes.LogChangeTypeEnum;
+import com.t3rik.mes.common.dto.RecordStockLogDTO;
 import com.t3rik.mes.pro.domain.ProClientOrderItem;
+import com.t3rik.mes.wm.domain.WmMaterialStock;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -39,5 +43,5 @@ public interface IAsyncService {
     /**
      * 记录库存变化日志
      */
-    void recordStockLog(String message);
+    void recordStockLog(RecordStockLogDTO recordStockLogDTO);
 }

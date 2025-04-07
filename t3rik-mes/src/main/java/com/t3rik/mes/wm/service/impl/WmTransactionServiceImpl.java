@@ -1,9 +1,12 @@
 package com.t3rik.mes.wm.service.impl;
 
 import com.t3rik.common.core.redis.RedissonUtil;
+import com.t3rik.common.enums.mes.LogChangeTypeEnum;
 import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.DateUtils;
 import com.t3rik.common.utils.StringUtils;
+import com.t3rik.mes.common.dto.RecordStockLogDTO;
+import com.t3rik.mes.common.service.IAsyncService;
 import com.t3rik.mes.md.domain.MdItem;
 import com.t3rik.mes.md.mapper.MdItemMapper;
 import com.t3rik.mes.wm.domain.WmMaterialStock;
@@ -31,7 +34,9 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class WmTransactionServiceImpl implements IWmTransactionService {
+
     public static final String PREFIX_LOCK = "lock:";
+
     @Resource
     private WmTransactionMapper wmTransactionMapper;
 
@@ -44,10 +49,15 @@ public class WmTransactionServiceImpl implements IWmTransactionService {
     @Resource
     private RedissonUtil redissonUtil;
 
+    @Resource
+    private IAsyncService asyncService;
+
     @Override
     public synchronized WmTransaction processTransaction(WmTransaction wmTransaction) {
         // 声明库存记录
         WmMaterialStock stock = new WmMaterialStock();
+        // 当前库存
+        BigDecimal oldQuantity = BigDecimal.ZERO;
         // 校验传参数是否为空
         validate(wmTransaction);
         // 初始化赋值声明库存记录信息
@@ -60,6 +70,8 @@ public class WmTransactionServiceImpl implements IWmTransactionService {
         try {
             if (redissonUtil.tryLock(key)) {
                 if (StringUtils.isNotNull(ms)) {
+                    // 已存在，记录旧库存
+                    oldQuantity = ms.getQuantityOnhand();
                     // MS已存在扣减库存/添加库存
                     BigDecimal resultQuantity = ms.getQuantityOnhand().add(quantity);
                     // 检查库存量是否充足
@@ -71,7 +83,6 @@ public class WmTransactionServiceImpl implements IWmTransactionService {
                     stock.setMaterialStockId(ms.getMaterialStockId());
                     wmMaterialStockMapper.updateWmMaterialStock(stock);
                 } else {
-                    // MS不存在
                     stock.setQuantityOnhand(quantity);
                     wmMaterialStockMapper.insertWmMaterialStock(stock);// 新增库存记录
                 }
@@ -86,7 +97,27 @@ public class WmTransactionServiceImpl implements IWmTransactionService {
             // 释放锁
             redissonUtil.releaseLock(key);
         }
+        // 日志记录
+        recordLog(wmTransaction, stock, oldQuantity);
         return wmTransaction;
+    }
+
+    /**
+     * 异步记录日志
+     */
+    private void recordLog(WmTransaction wmTransaction, WmMaterialStock ms, BigDecimal oldQuantity) {
+        RecordStockLogDTO dto = new RecordStockLogDTO();
+        dto.setWmMaterialStock(ms);
+        dto.setChangeQuantity(wmTransaction.getTransactionQuantity());
+        dto.setSourceDocCode(wmTransaction.getSourceDocCode());
+        dto.setSourceDocId(wmTransaction.getSourceDocId());
+        dto.setSourceDocType(wmTransaction.getSourceDocType());
+        dto.setSourceLineId(wmTransaction.getSourceDocLineId());
+        dto.setSourceDocName(wmTransaction.getSourceDocName());
+        dto.setOldQuantity(oldQuantity);
+        dto.setLogChangeTypeEnum(wmTransaction.getTransactionFlag() > 0 ? LogChangeTypeEnum.INBOUND : LogChangeTypeEnum.OUTBOUND);
+        // flag，正数：入库，负数：出库
+        this.asyncService.recordStockLog(dto);
     }
 
 

@@ -1,29 +1,41 @@
 package com.t3rik.mes.common.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.t3rik.common.constant.RedisConstants;
 import com.t3rik.common.core.redis.RedisCache;
 import com.t3rik.common.enums.EnableFlagEnum;
 import com.t3rik.common.enums.mes.ItemTypeEnum;
+import com.t3rik.common.enums.mes.SourceDocTypeEnum;
 import com.t3rik.common.exception.BusinessException;
+import com.t3rik.common.utils.SecurityUtils;
+import com.t3rik.mes.common.dto.RecordStockLogDTO;
 import com.t3rik.mes.common.service.IAsyncService;
 import com.t3rik.mes.md.domain.MdProductBom;
 import com.t3rik.mes.md.domain.MdUnitMeasure;
 import com.t3rik.mes.md.service.IMdProductBomService;
 import com.t3rik.mes.md.service.IMdUnitMeasureService;
 import com.t3rik.mes.pro.domain.ProClientOrderItem;
+import com.t3rik.mes.pro.service.IProTaskService;
+import com.t3rik.mes.pro.service.IProWorkorderService;
+import com.t3rik.mes.wm.domain.WmLogFailure;
+import com.t3rik.mes.wm.domain.WmMaterialStockLog;
+import com.t3rik.mes.wm.service.IWmLogFailureService;
+import com.t3rik.mes.wm.service.IWmMaterialStockLogService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
-import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 异步共通实现类
@@ -40,6 +52,14 @@ public class AsyncServiceImpl implements IAsyncService {
     private RedisCache redisCache;
     @Resource
     private IMdUnitMeasureService unitMeasureService;
+    @Resource
+    private IWmMaterialStockLogService materialStockLogService;
+    @Resource
+    private IWmLogFailureService logFailureService;
+    @Resource
+    private IProWorkorderService workorderService;
+    @Resource
+    private IProTaskService taskService;
 
     @PostConstruct
     void initData() {
@@ -91,21 +111,64 @@ public class AsyncServiceImpl implements IAsyncService {
 
     /**
      * 记录库存变化日志
-     * 加入重试机制，重试3次，每次间隔1秒
+     * 加入失败补偿
      */
     @Async
-    @Retryable(retryFor = RuntimeException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
+    @Retryable(retryFor = RuntimeException.class, maxAttempts = 1)
     @Override
-    public void recordStockLog(String message) {
-
+    public void recordStockLog(RecordStockLogDTO dto) {
+        WmMaterialStockLog log = new WmMaterialStockLog();
+        BeanUtil.copyProperties(dto.getWmMaterialStock(), log, "createBy", "createTime", "updateBy", "updateTime");
+        // 变化类型（10:入库, 20:出库, 30:盘点）
+        log.setChangeType(dto.getLogChangeTypeEnum().getCode());
+        // 变化前库存数量
+        log.setBeforeQuantity(dto.getOldQuantity());
+        // 变化后库存数量
+        log.setAfterQuantity(dto.getWmMaterialStock().getQuantityOnhand());
+        // 库存变化数量
+        log.setChangeQuantity(dto.getChangeQuantity().abs());
+        log.setSourceDocId(dto.getSourceDocId());
+        log.setSourceDocCode(dto.getSourceDocCode());
+        log.setSourceDocName(dto.getSourceDocName());
+        log.setSourceDocType(dto.getSourceDocType());
+        log.setSourceLineId(dto.getSourceLineId());
+        // 生产工单信息
+        if (log.getWorkorderId() != null) {
+            Optional.ofNullable(this.workorderService.getById(log.getWorkorderId()))
+                    .ifPresent(w -> log.setWorkorderName(w.getWorkorderName()));
+        }
+        // 单据类型
+        SourceDocTypeEnum typeEnum = SourceDocTypeEnum.getEnumByCode(dto.getSourceDocType());
+        switch (typeEnum) {
+            // 查询责任人
+            case ISSUE, RTISSUE, WMWASTE -> {
+                Optional.ofNullable(this.taskService.getById(dto.getSourceDocId()))
+                        .ifPresent(i -> {
+                            log.setOperationUserId(i.getTaskUserId());
+                            log.setOperationBy(i.getTaskBy());
+                            log.setOperationTime(new Date());
+                        });
+            }
+            default -> {
+                log.setOperationUserId(SecurityUtils.getUserId());
+                log.setOperationBy(SecurityUtils.getUsername());
+                log.setOperationTime(new Date());
+            }
+        }
+        this.materialStockLogService.save(log);
     }
 
     /**
-     * 重试失败补偿
+     * 失败补偿
      */
     @Recover
-    public void recordStockLogRecover(RuntimeException e, String message) {
-        System.err.println("重试失败，执行恢复操作：" + message);
+    public void recordStockLogRecover(RuntimeException e, RecordStockLogDTO dto) {
+        WmLogFailure wmLogFailure = new WmLogFailure();
+        wmLogFailure.setMaterialStockId(dto.getWmMaterialStock().getMaterialStockId());
+        wmLogFailure.setFailureReason(e.getMessage());
+        wmLogFailure.setFailureTime(new Date());
+        wmLogFailure.setLogData(JSON.toJSONString(dto));
+        this.logFailureService.save(wmLogFailure);
     }
 
     @Async
@@ -120,7 +183,6 @@ public class AsyncServiceImpl implements IAsyncService {
                     mdProductBom.setItemId(itemId);
                     mdProductBom.setBomItemId(orderItem.getItemId());
                     mdProductBom.setLevel(orderItem.getLevel());
-
                     mdProductBom.setBomItemCode(orderItem.getItemCode());
                     mdProductBom.setBomItemName(orderItem.getItemName());
                     mdProductBom.setBomItemSpec(orderItem.getSpecification());

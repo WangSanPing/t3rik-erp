@@ -73,10 +73,10 @@ public interface IWmItemRecptService extends IService<WmItemRecpt> {
     /**
      * 组装当前入库单对应的库存事务传入bean
      *
-     * @param receptId
+     * @param recptId
      * @return
      */
-    public List<ItemRecptTxBean> getTxBeans(Long receptId);
+    public List<ItemRecptTxBean> getTxBeans(Long recptId);
 
 
     /**
