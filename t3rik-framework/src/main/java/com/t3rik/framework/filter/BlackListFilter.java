@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -36,6 +37,13 @@ public class BlackListFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
+        AntPathMatcher antPathMatcher = new AntPathMatcher();
+        // 积木报表请求过多，过滤掉不计算到黑名单访问中
+        boolean match = antPathMatcher.match("/jmreport/**", request.getRequestURI());
+        if(match){
+            filterChain.doFilter(request, response);
+            return;
+        }
         String ipAddr = IpUtils.getIpAddr(request);
         String BLACK_LIST_KEY = "ip:blacklist";
         String ipKey = "ip:count:" + ipAddr;
