@@ -34,13 +34,15 @@ public class BlackListFilter extends OncePerRequestFilter {
     @Resource
     private RequestMappingHandlerMapping requestMappingHandlerMapping;
 
+    private final AntPathMatcher antPathMatcher = new AntPathMatcher();
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        AntPathMatcher antPathMatcher = new AntPathMatcher();
+
         // 积木报表请求过多，过滤掉不计算到黑名单访问中
         boolean match = antPathMatcher.match("/jmreport/**", request.getRequestURI());
-        if(match){
+        if (match) {
             filterChain.doFilter(request, response);
             return;
         }
