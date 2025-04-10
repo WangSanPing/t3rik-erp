@@ -7,7 +7,7 @@ import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.t3rik.common.constant.RedisConstants;
 import com.t3rik.common.core.redis.RedisCache;
-import com.t3rik.common.enums.EnableFlagEnum;
+import com.t3rik.common.enums.system.EnableFlagEnum;
 import com.t3rik.common.enums.mes.ItemTypeEnum;
 import com.t3rik.common.enums.mes.SourceDocTypeEnum;
 import com.t3rik.common.exception.BusinessException;

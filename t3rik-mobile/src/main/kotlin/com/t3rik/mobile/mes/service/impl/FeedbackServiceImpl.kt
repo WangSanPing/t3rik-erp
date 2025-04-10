@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.toolkit.CollectionUtils
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import com.t3rik.common.constant.MsgConstants
 import com.t3rik.common.constant.UserConstants
-import com.t3rik.common.enums.ModuleTypeEnum
-import com.t3rik.common.enums.YesOrNoEnum
+import com.t3rik.common.enums.system.ModuleTypeEnum
+import com.t3rik.common.enums.system.YesOrNoEnum
 import com.t3rik.common.enums.mes.DefaultDataEnum
 import com.t3rik.common.enums.mes.FeedbackTypeEnum
 import com.t3rik.common.enums.mes.OrderStatusEnum

@@ -8,7 +8,7 @@ import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.domain.entity.SysRole;
 import com.t3rik.common.core.domain.entity.SysUser;
 import com.t3rik.common.core.page.TableDataInfo;
-import com.t3rik.common.enums.BusinessType;
+import com.t3rik.common.enums.system.BusinessType;
 import com.t3rik.common.enums.mes.DefaultDataEnum;
 import com.t3rik.common.utils.SecurityUtils;
 import com.t3rik.common.utils.StringUtils;

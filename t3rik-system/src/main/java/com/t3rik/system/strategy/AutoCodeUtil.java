@@ -6,8 +6,8 @@ import com.t3rik.common.annotation.Log;
 import com.t3rik.common.core.domain.entity.SysAutoCodePart;
 import com.t3rik.common.core.domain.entity.SysAutoCodeResult;
 import com.t3rik.common.core.domain.entity.SysAutoCodeRule;
-import com.t3rik.common.enums.BusinessType;
-import com.t3rik.common.enums.PartTypeEnum;
+import com.t3rik.common.enums.system.BusinessType;
+import com.t3rik.common.enums.system.PartTypeEnum;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.system.service.IAutoCodePartService;
 import com.t3rik.system.service.IAutoCodeResultService;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AutoCodeUtil {

@@ -4,8 +4,8 @@ import com.t3rik.common.constant.MsgConstants
 import com.t3rik.common.constant.UserConstants
 import com.t3rik.common.core.controller.BaseController
 import com.t3rik.common.core.domain.AjaxResult
-import com.t3rik.common.enums.EnableFlagEnum
-import com.t3rik.common.enums.YesOrNoEnum
+import com.t3rik.common.enums.system.EnableFlagEnum
+import com.t3rik.common.enums.system.YesOrNoEnum
 import com.t3rik.common.enums.mes.DefaultDataEnum
 import com.t3rik.common.exception.BusinessException
 import com.t3rik.common.support.ItemTypeSupport
