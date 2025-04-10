@@ -1,4 +1,4 @@
-package com.t3rik.common.enums;
+package com.t3rik.common.enums.system;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

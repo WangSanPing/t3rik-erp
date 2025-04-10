@@ -18,7 +18,6 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,7 +32,7 @@ import com.t3rik.common.annotation.Log;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.utils.StringUtils;
-import com.t3rik.common.enums.BusinessType;
+import com.t3rik.common.enums.system.BusinessType;
 import com.t3rik.mes.sales.domain.SalesOrderItem;
 import com.t3rik.mes.sales.service.ISalesOrderItemService;
 import com.t3rik.common.utils.poi.ExcelUtil;

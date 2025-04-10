@@ -3,7 +3,7 @@ package com.t3rik.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.t3rik.common.core.domain.TreeSelect;
 import com.t3rik.common.core.domain.entity.SysMenu;
-import com.t3rik.common.enums.ModuleTypeEnum;
+import com.t3rik.common.enums.system.ModuleTypeEnum;
 import com.t3rik.system.domain.vo.RouterVo;
 
 import java.util.List;

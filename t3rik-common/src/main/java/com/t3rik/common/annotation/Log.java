@@ -5,8 +5,8 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import com.t3rik.common.enums.BusinessType;
-import com.t3rik.common.enums.OperatorType;
+import com.t3rik.common.enums.system.BusinessType;
+import com.t3rik.common.enums.system.OperatorType;
 
 /**
  * 自定义操作日志记录注解

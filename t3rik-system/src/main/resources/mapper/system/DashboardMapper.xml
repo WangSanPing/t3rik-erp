@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.t3rik.system.mapper.DashboardMapper">
+    <select id="getLoginDataByTimeRange" resultType="com.t3rik.system.domain.dto.XYChartDTO$XYSeries">
+        SELECT DATE_FORMAT(login_time, '%m-%d') AS name,
+               COUNT(*)         AS count
+        FROM sys_logininfor
+        WHERE deleted = 0
+          AND status = 0
+          AND msg != '退出成功'
+        <choose>
+            <when test="timeRange.code == 'week'">
+                AND login_time >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)
+            </when>
+            <when test="timeRange.code == 'month'">
+                AND login_time >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+            </when>
+            <when test="timeRange.code == 'last7'">
+                AND login_time >= CURDATE() - INTERVAL 6 DAY
+            </when>
+            <when test="timeRange.code == 'last30'">
+                AND login_time >= CURDATE() - INTERVAL 29 DAY
+            </when>
+        </choose>
+        AND login_time &lt; CURDATE() + INTERVAL 1 DAY
+        GROUP BY DATE_FORMAT(login_time, '%m-%d')
+        ORDER BY DATE_FORMAT(login_time, '%m-%d');
+    </select>
+</mapper>

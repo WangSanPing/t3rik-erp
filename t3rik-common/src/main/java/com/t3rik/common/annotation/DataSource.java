@@ -6,7 +6,7 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import com.t3rik.common.enums.DataSourceType;
+import com.t3rik.common.enums.system.DataSourceType;
 
 /**
  * 自定义多数据源切换注解

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.t3rik.common.enums.StatusEnum;
+import com.t3rik.common.enums.system.StatusEnum;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,7 +23,7 @@ import com.t3rik.common.annotation.Log;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.utils.StringUtils;
-import com.t3rik.common.enums.BusinessType;
+import com.t3rik.common.enums.system.BusinessType;
 import com.t3rik.mes.md.domain.MdProductColor;
 import com.t3rik.mes.md.service.IMdProductColorService;
 import com.t3rik.common.utils.poi.ExcelUtil;

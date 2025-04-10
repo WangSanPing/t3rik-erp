@@ -1,4 +1,4 @@
-package com.t3rik.common.enums;
+package com.t3rik.common.enums.system;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import com.fasterxml.jackson.annotation.JsonValue;
