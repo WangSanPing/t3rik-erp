@@ -31,7 +31,8 @@ t3rik-erp项目是在苦糖果开源MES系统基础上进行二次开发的ERP�
 - 后台管理：http://www.t3rik.top/
 
 - 移动端：
-  - 微信小程序，请微信扫描二维码
+  - 微信小程序，请微信扫描二维码体验
+
 ![](https://pic1.imgdb.cn/item/67fa0f1a88c538a9b5cbf9da.jpg)
   - h5模式，请打开浏览器的调试工具选择移动设备模式查看
     - 地址：http://www.t3rik.top:8000/
