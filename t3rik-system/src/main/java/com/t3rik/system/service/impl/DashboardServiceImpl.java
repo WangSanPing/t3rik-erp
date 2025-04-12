@@ -1,14 +1,13 @@
 package com.t3rik.system.service.impl;
 
 import com.t3rik.common.enums.system.TimeRangeEnum;
+import com.t3rik.common.utils.DateUtils;
 import com.t3rik.system.domain.dto.XYChartDTO;
 import com.t3rik.system.mapper.DashboardMapper;
 import com.t3rik.system.service.IDashboardService;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -32,32 +31,9 @@ public class DashboardServiceImpl implements IDashboardService {
         // 从数据库查询登录数据
         List<XYChartDTO.XYSeries> dbResult = dashboardMapper.getLoginDataByTimeRange(timeRangeEnum);
         // 获取范围内的所有日期
-        List<String> allDates = getAllDates(timeRangeEnum);
+        List<String> allDates = DateUtils.getAllDates(timeRangeEnum);
 
         return getXyChartDTO(dbResult, allDates);
-    }
-
-    /**
-     * 获取范围内的所有日期
-     */
-    private List<String> getAllDates(TimeRangeEnum timeRangeEnum) {
-        // 获取当前日期，并计算日期范围
-        LocalDate today = LocalDate.now();
-        int days = switch (timeRangeEnum) {
-            case WEEK -> 6;
-            case MONTH -> today.lengthOfMonth();
-            case LAST_7_DAYS -> 6; // 近7天
-            case LAST_30_DAYS -> 29; // 近30天
-        };
-
-        // 创建日期范围内的所有日期
-        List<String> allDates = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd");
-        for (int i = days; i >= 0; i--) {
-            LocalDate day = today.minusDays(i);
-            allDates.add(day.format(formatter)); // 格式化日期为 "yyyy-MM-dd"
-        }
-        return allDates;
     }
 
     /**
