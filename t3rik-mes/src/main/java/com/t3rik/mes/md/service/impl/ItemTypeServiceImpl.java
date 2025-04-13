@@ -8,10 +8,10 @@ import com.t3rik.common.enums.mes.DefaultDataEnum;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.mes.md.mapper.ItemTypeMapper;
 import com.t3rik.mes.md.service.IItemTypeService;
-import org.springframework.stereotype.Service;
-
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -158,13 +158,22 @@ public class ItemTypeServiceImpl extends ServiceImpl<ItemTypeMapper, ItemType> i
     @Override
     public boolean checkHasChild(Long itemTypeId) {
         int num = itemTypeMapper.hasChildByItemTypeId(itemTypeId);
-        return num > 0 ? true : false;
+        return num > 0;
     }
 
     @Override
     public boolean checkHasItem(Long itemTypeId) {
         int num = itemTypeMapper.hasItemByItemTypeId(itemTypeId);
-        return num > 0 ? true : false;
+        return num > 0;
+    }
+
+    /**
+     * 查询所有子类
+     *
+     */
+    @Override
+    public List<ItemType> selectChildrenByAncestor(Long ancestorId) {
+        return this.itemTypeMapper.selectChildrenByAncestor(ancestorId);
     }
 
 }

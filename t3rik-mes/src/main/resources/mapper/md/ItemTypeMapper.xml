@@ -168,4 +168,17 @@
              , (10000003, 'BCP_DEFAULT', '半成品', 10000002, '0,10000000,10000002', 'PRODUCT', 1, 'Y', '', NULL, NULL, 0, 0, 'admin', sysdate(), '', NULL, NULL, NULL)
              , (10000004, 'CCP_DEFAULT', '产成品', 10000002, '0,10000000,10000002', 'PRODUCT', 2, 'Y', '', NULL, NULL, 0, 0, 'admin', sysdate(), '', NULL, NULL, NULL)
     </insert>
+
+    <select id="selectChildrenByAncestor" resultMap="ItemTypeResult">
+        SELECT *
+        FROM md_item_type AS t1
+        WHERE NOT EXISTS (SELECT 1
+                          FROM md_item_type AS t2
+                          WHERE t2.parent_type_id = t1.item_type_id)
+        <if test="ancestorId != null">
+            AND t1.ancestors LIKE CONCAT('%,', #{ancestorId}, ',%')
+        </if>
+        AND t1.deleted = 0
+        ORDER BY t1.order_num
+    </select>
 </mapper>
