@@ -1,4 +1,4 @@
-package com.t3rik.mes.analytics;
+package com.t3rik.mes.analytics.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
