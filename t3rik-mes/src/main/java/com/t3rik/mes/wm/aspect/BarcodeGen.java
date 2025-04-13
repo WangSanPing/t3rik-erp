@@ -1,4 +1,4 @@
-package com.t3rik.mes.aspect;
+package com.t3rik.mes.wm.aspect;
 
 import java.lang.annotation.*;
 

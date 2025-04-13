@@ -1,4 +1,4 @@
-package com.t3rik.mes.aspect;
+package com.t3rik.mes.wm.aspect;
 
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.mes.wm.domain.WmBarcodeConfig;
