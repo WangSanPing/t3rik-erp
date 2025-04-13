@@ -1,46 +1,37 @@
 package com.t3rik.mes.sales.controller;
 
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.lang.Assert;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.t3rik.common.annotation.Log;
+import com.t3rik.common.constant.MsgConstants;
+import com.t3rik.common.core.controller.BaseController;
+import com.t3rik.common.core.domain.AjaxResult;
+import com.t3rik.common.core.domain.CheckInfo;
+import com.t3rik.common.core.page.TableDataInfo;
+import com.t3rik.common.enums.system.BusinessType;
+import com.t3rik.common.exception.BusinessException;
+import com.t3rik.common.utils.StringUtils;
+import com.t3rik.common.utils.poi.ExcelUtil;
+import com.t3rik.mes.pro.domain.ProClientOrderItem;
+import com.t3rik.mes.pro.service.IProClientOrderItemService;
+import com.t3rik.mes.sales.domain.SalesOrder;
+import com.t3rik.mes.sales.domain.SalesOrderItem;
+import com.t3rik.mes.sales.service.ISalesOrderItemService;
+import com.t3rik.mes.sales.service.ISalesOrderService;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.lang.Assert;
-import com.t3rik.common.constant.MsgConstants;
-import com.t3rik.common.core.domain.CheckInfo;
-import com.t3rik.common.exception.BusinessException;
-import com.t3rik.mes.api.service.IMesWorkOrderService;
-import com.t3rik.mes.pro.domain.*;
-import com.t3rik.mes.pro.service.IProClientOrderItemService;
-import com.t3rik.mes.sales.domain.SalesOrderItem;
-import com.t3rik.mes.sales.service.ISalesOrderItemService;
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletResponse;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.t3rik.common.annotation.Log;
-import com.t3rik.common.core.controller.BaseController;
-import com.t3rik.common.core.domain.AjaxResult;
-import com.t3rik.common.utils.StringUtils;
-import com.t3rik.common.enums.system.BusinessType;
-import com.t3rik.mes.sales.domain.SalesOrder;
-import com.t3rik.mes.sales.service.ISalesOrderService;
-import com.t3rik.common.utils.poi.ExcelUtil;
-import com.t3rik.common.core.page.TableDataInfo;
 
 /**
  * 销售订单Controller
@@ -59,8 +50,6 @@ public class SalesOrderController extends BaseController {
 
     @Resource
     private IProClientOrderItemService proClientOrderItemService;
-    @Resource
-    private IMesWorkOrderService mesWorkOrderService;
 
     /**
      * 查询销售订单列表
@@ -150,10 +139,10 @@ public class SalesOrderController extends BaseController {
         // 获取查询条件
         LambdaQueryWrapper<SalesOrder> queryWrapper = getQueryWrapper(salesOrder);
         List<SalesOrder> salesOrderList = this.salesOrderService.list(queryWrapper);
-        if(CollectionUtils.isEmpty(salesOrderList)){
+        if (CollectionUtils.isEmpty(salesOrderList)) {
             return getDataTable(salesOrderList);
         }
-        return getDataTable(this.salesOrderItemService.getItemList(salesOrderList,salesOrder.getWarehouseId()));
+        return getDataTable(this.salesOrderItemService.getItemList(salesOrderList, salesOrder.getWarehouseId()));
     }
 
     /**
@@ -164,7 +153,7 @@ public class SalesOrderController extends BaseController {
     @Transactional
     @PutMapping("/refuse/{salesOrderId}")
     public AjaxResult refuse(@PathVariable("salesOrderId") Long salesOrderId) {
-        SalesOrder salesOrder =getSalesOrderItem(salesOrderId);
+        SalesOrder salesOrder = getSalesOrderItem(salesOrderId);
         Optional.ofNullable(salesOrder).orElseThrow(() -> new BusinessException(MsgConstants.PARAM_ERROR));
         if (CollectionUtils.isEmpty(salesOrder.getSalesOrderItemList())) {
             return AjaxResult.error("销售订单下未添加产品数据!");
@@ -179,7 +168,7 @@ public class SalesOrderController extends BaseController {
     @Log(title = "销售订单", businessType = BusinessType.INSERT)
     @PostMapping("/execute/{salesOrderId}")
     public AjaxResult generateWorkOrder(@PathVariable("salesOrderId") Long salesOrderId) throws Exception {
-        SalesOrder salesOrder =getSalesOrderItem(salesOrderId);
+        SalesOrder salesOrder = getSalesOrderItem(salesOrderId);
         // 数据校验
         CheckInfo check = this.check(salesOrder);
         // 未通过校验
@@ -195,16 +184,17 @@ public class SalesOrderController extends BaseController {
     @Log(title = "客户订单", businessType = BusinessType.INSERT)
     @PostMapping("/push/{salesOrderId}")
     public AjaxResult push(@PathVariable("salesOrderId") Long salesOrderId) throws Exception {
-        SalesOrder salesOrder =getSalesOrderItem(salesOrderId);
+        SalesOrder salesOrder = getSalesOrderItem(salesOrderId);
         // 数据校验
         CheckInfo check = this.check(salesOrder);
         // 未通过校验
         Assert.isTrue(check.getIsCheckPassed(), () -> new BusinessException(check.getMsg()));
-        return AjaxResult.success(mesWorkOrderService.pushMesWorkOrder(salesOrder));
+        // return AjaxResult.success(mesWorkOrderService.pushMesWorkOrder(salesOrder));
+        return AjaxResult.success("推送功能开发中~");
     }
 
-    //获取销售订单数据和填充子项
-    private SalesOrder getSalesOrderItem(Long salesOrderId){
+    // 获取销售订单数据和填充子项
+    private SalesOrder getSalesOrderItem(Long salesOrderId) {
         SalesOrder salesOrder = this.salesOrderService.getById(salesOrderId);
         // 查询是否已经添加销售列
         List<SalesOrderItem> itemList = this.salesOrderItemService.lambdaQuery()
