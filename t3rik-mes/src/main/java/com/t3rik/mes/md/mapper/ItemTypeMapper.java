@@ -121,4 +121,9 @@ public interface ItemTypeMapper extends BaseMapper<ItemType> {
      * 初始化默认数据
      */
     void initDefaultItemType();
+
+    /**
+     * 查询所有子类
+     */
+     List<ItemType> selectChildrenByAncestor(@Param("ancestorId") Long ancestorId);
 }
