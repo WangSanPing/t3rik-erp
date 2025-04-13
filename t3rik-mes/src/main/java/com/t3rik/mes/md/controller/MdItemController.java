@@ -14,7 +14,7 @@ import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.support.ItemTypeSupport;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.poi.ExcelUtil;
-import com.t3rik.mes.aspect.BarcodeGen;
+import com.t3rik.mes.wm.aspect.BarcodeGen;
 import com.t3rik.mes.md.domain.MdItem;
 import com.t3rik.mes.md.service.IItemTypeService;
 import com.t3rik.mes.md.service.IMdItemService;
