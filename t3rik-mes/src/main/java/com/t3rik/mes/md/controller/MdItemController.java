@@ -6,7 +6,7 @@ import com.t3rik.common.constant.MsgConstants;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
-import com.t3rik.common.core.domain.entity.ItemType;
+import com.t3rik.common.core.domain.entity.MdItemType;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.system.BusinessType;
 import com.t3rik.common.enums.system.EnableFlagEnum;
@@ -14,10 +14,10 @@ import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.support.ItemTypeSupport;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.poi.ExcelUtil;
-import com.t3rik.mes.wm.aspect.BarcodeGen;
 import com.t3rik.mes.md.domain.MdItem;
 import com.t3rik.mes.md.service.IItemTypeService;
 import com.t3rik.mes.md.service.IMdItemService;
+import com.t3rik.mes.wm.aspect.BarcodeGen;
 import com.t3rik.mes.wm.utils.WmBarCodeUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +85,7 @@ public class MdItemController extends BaseController {
             return AjaxResult.error("新增物料" + mdItem.getItemCode() + "失败，物料名称已存在");
         }
 
-        ItemType type = iItemTypeService.selectItemTypeById(mdItem.getItemTypeId());
+        MdItemType type = iItemTypeService.selectItemTypeById(mdItem.getItemTypeId());
         if (StringUtils.isNotNull(type)) {
             mdItem.setItemTypeCode(type.getItemTypeCode());
             mdItem.setItemTypeName(type.getItemTypeName());
@@ -147,7 +147,7 @@ public class MdItemController extends BaseController {
         if (UserConstants.NOT_UNIQUE.equals(mdItemService.checkItemNameUnique(mdItem))) {
             return AjaxResult.error("新增物料" + mdItem.getItemCode() + "失败，物料名称已存在");
         }
-        ItemType type = iItemTypeService.selectItemTypeById(mdItem.getItemTypeId());
+        MdItemType type = iItemTypeService.selectItemTypeById(mdItem.getItemTypeId());
         if (StringUtils.isNotNull(type)) {
             mdItem.setItemTypeCode(type.getItemTypeCode());
             mdItem.setItemTypeName(type.getItemTypeName());
@@ -171,8 +171,7 @@ public class MdItemController extends BaseController {
 
 
     @PostMapping("/importTemplate")
-    public void importTemplate(HttpServletResponse response)
-    {
+    public void importTemplate(HttpServletResponse response) {
         ExcelUtil<MdItem> util = new ExcelUtil<MdItem>(MdItem.class);
         util.importTemplateExcel(response, "产品数据");
     }
@@ -180,8 +179,7 @@ public class MdItemController extends BaseController {
     @Log(title = "物料管理", businessType = BusinessType.IMPORT)
     @PreAuthorize("@ss.hasPermi('system:user:import')")
     @PostMapping("/importData")
-    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
-    {
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
         ExcelUtil<MdItem> util = new ExcelUtil<MdItem>(MdItem.class);
         List<MdItem> mdItemList = util.importExcel(file.getInputStream());
         String operName = getUsername();
