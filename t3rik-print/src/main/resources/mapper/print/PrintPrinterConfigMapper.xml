@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.t3rik.print.mapper.PrintPrinterConfigMapper">
+    <resultMap type="PrintPrinterConfig" id="PrintPrinterConfigResult">
+        <result property="printerId"    column="printer_id"    />
+        <result property="clientId" column="client_id" />
+        <result property="printerCode"    column="printer_code"    />
+        <result property="printerType"    column="printer_type"    />
+        <result property="printerName"    column="printer_name"    />
+        <result property="brand"    column="brand"    />
+        <result property="printerModel"    column="printer_model"    />
+        <result property="connectionType"    column="connection_type"    />
+        <result property="printerUrl"    column="printer_url"    />
+        <result property="printerIp"    column="printer_ip"    />
+        <result property="printerPort"    column="printer_port"    />
+        <result property="enableFlag"    column="enable_flag"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="attr1"    column="attr1"    />
+        <result property="attr2"    column="attr2"    />
+        <result property="attr3"    column="attr3"    />
+        <result property="attr4"    column="attr4"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="defaultFlag" column="default_flag" />
+    </resultMap>
+
+    <sql id="selectPrintPrinterConfigVo">
+        select printer_id, client_id, printer_code, printer_type, printer_name, brand, printer_model, connection_type, printer_url, printer_ip, printer_port, enable_flag, status, remark, attr1, attr2, attr3, attr4, create_by, create_time, update_by, update_time, default_flag from print_printer_config
+    </sql>
+
+    <select id="selectPrintPrinterConfigList" parameterType="PrintPrinterConfig" resultMap="PrintPrinterConfigResult">
+        <include refid="selectPrintPrinterConfigVo"/>
+        <where>
+            <if test="clientId != null "> and client_id = #{clientId}</if>
+            <if test="printerType != null  and printerType != ''"> and printer_type = #{printerType}</if>
+            <if test="printerCode != null  and printerCode != ''"> and printer_code = #{printerCode}</if>
+            <if test="printerName != null  and printerName != ''"> and printer_name like concat('%', #{printerName}, '%')</if>
+            <if test="brand != null  and brand != ''"> and brand = #{brand}</if>
+            <if test="printerModel != null  and printerModel != ''"> and printer_model = #{printerModel}</if>
+            <if test="connectionType != null  and connectionType != ''"> and connection_type = #{connectionType}</if>
+            <if test="printerUrl != null  and printerUrl != ''"> and printer_url = #{printerUrl}</if>
+            <if test="printerIp != null  and printerIp != ''"> and printer_ip = #{printerIp}</if>
+            <if test="printerPort != null "> and printer_port = #{printerPort}</if>
+            <if test="enableFlag != null  and enableFlag != ''"> and enable_flag = #{enableFlag}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectPrintPrinterConfigByPrinterId" parameterType="Long" resultMap="PrintPrinterConfigResult">
+        <include refid="selectPrintPrinterConfigVo"/>
+        where printer_id = #{printerId}
+    </select>
+
+    <select id="selectPrintPrinterConfigByPrinterCode" parameterType="String" resultMap="PrintPrinterConfigResult">
+        <include refid="selectPrintPrinterConfigVo"/>
+        where printer_code = #{printerCode} limit 1
+    </select>
+
+    <select id="checkPrinterCodeUnique" parameterType="PrintPrinterConfig" resultMap="PrintPrinterConfigResult">
+        <include refid="selectPrintPrinterConfigVo"/>
+        where printer_code = #{printerCode} limit 1
+    </select>
+    <select id="getDefaultPrint" resultType="com.t3rik.print.domain.PrintPrinterConfig" resultMap="PrintPrinterConfigResult">
+        <include refid="selectPrintPrinterConfigVo"/>
+        where default_flag = "Y" and client_id = #{clientId}
+    </select>
+
+
+    <insert id="insertPrintPrinterConfig" parameterType="PrintPrinterConfig" useGeneratedKeys="true" keyProperty="printerId">
+        insert into print_printer_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="clientId != null">client_id,</if>
+            <if test="printerCode != null">printer_code,</if>
+            <if test="printerType != null">printer_type,</if>
+            <if test="printerName != null and printerName != ''">printer_name,</if>
+            <if test="brand != null">brand,</if>
+            <if test="printerModel != null">printer_model,</if>
+            <if test="connectionType != null">connection_type,</if>
+            <if test="printerUrl != null">printer_url,</if>
+            <if test="printerIp != null">printer_ip,</if>
+            <if test="printerPort != null">printer_port,</if>
+            <if test="enableFlag != null">enable_flag,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="attr1 != null">attr1,</if>
+            <if test="attr2 != null">attr2,</if>
+            <if test="attr3 != null">attr3,</if>
+            <if test="attr4 != null">attr4,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="defaultFlag != null">default_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="clientId != null">#{clientId},</if>
+            <if test="printerCode != null">#{printerCode},</if>
+            <if test="printerType != null">#{printerType},</if>
+            <if test="printerName != null and printerName != ''">#{printerName},</if>
+            <if test="brand != null">#{brand},</if>
+            <if test="printerModel != null">#{printerModel},</if>
+            <if test="connectionType != null">#{connectionType},</if>
+            <if test="printerUrl != null">#{printerUrl},</if>
+            <if test="printerIp != null">#{printerIp},</if>
+            <if test="printerPort != null">#{printerPort},</if>
+            <if test="enableFlag != null">#{enableFlag},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="attr1 != null">#{attr1},</if>
+            <if test="attr2 != null">#{attr2},</if>
+            <if test="attr3 != null">#{attr3},</if>
+            <if test="attr4 != null">#{attr4},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="defaultFlag != null">#{defaultFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePrintPrinterConfig" parameterType="PrintPrinterConfig">
+        update print_printer_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="printerCode != null">printer_code = #{printerCode},</if>
+            <if test="clientId != null">client_id = #{clientId},</if>
+            <if test="printerType != null">printer_type = #{printerType},</if>
+            <if test="printerName != null and printerName != ''">printer_name = #{printerName},</if>
+            <if test="brand != null">brand = #{brand},</if>
+            <if test="printerModel != null">printer_model = #{printerModel},</if>
+            <if test="connectionType != null">connection_type = #{connectionType},</if>
+            <if test="printerUrl != null">printer_url = #{printerUrl},</if>
+            <if test="printerIp != null">printer_ip = #{printerIp},</if>
+            <if test="printerPort != null">printer_port = #{printerPort},</if>
+            <if test="enableFlag != null">enable_flag = #{enableFlag},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="attr1 != null">attr1 = #{attr1},</if>
+            <if test="attr2 != null">attr2 = #{attr2},</if>
+            <if test="attr3 != null">attr3 = #{attr3},</if>
+            <if test="attr4 != null">attr4 = #{attr4},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="defaultFlag != null">default_flag = #{defaultFlag}</if>
+        </trim>
+        where printer_id = #{printerId}
+    </update>
+
+    <delete id="deletePrintPrinterConfigByPrinterId" parameterType="Long">
+        delete from print_printer_config where printer_id = #{printerId}
+    </delete>
+
+    <delete id="deletePrintPrinterConfigByPrinterIds" parameterType="String">
+        delete from print_printer_config where printer_id in
+        <foreach item="printerId" collection="array" open="(" separator="," close=")">
+            #{printerId}
+        </foreach>
+    </delete>
+</mapper>
