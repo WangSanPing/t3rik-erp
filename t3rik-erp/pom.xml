@@ -75,7 +75,11 @@
             <groupId>com.t3rik</groupId>
             <artifactId>t3rik-report</artifactId>
         </dependency>
-
+        <!-- 打印模块 -->
+        <dependency>
+            <groupId>com.t3rik</groupId>
+            <artifactId>t3rik-print</artifactId>
+        </dependency>
         <!-- 定时任务-->
         <dependency>
             <groupId>com.t3rik</groupId>

@@ -1,0 +1,130 @@
+syntax = "proto3";
+
+package com.t3rik.print.protocol;
+
+option java_package = "com.t3rik.print.protocol";
+
+option java_outer_classname = "PrintMessageProto";
+
+message Printer{
+
+  enum DataType{
+    IQC_PrintMessage = 0;//proto3枚举enum编号从0开始
+    PQC_PrintMessage = 1;
+    OQC_PrintMessage = 2;
+    Print_ClientInfoMessage = 3;
+    Printing_OfCirculation = 4;
+    Material_Products = 5;
+    Warehouse_=6;
+    Warehouse_Location=7;
+    Warehouse_Area=8;
+    Equipment_=9;
+    Workstation_=10;
+      TestPrinter_=11;
+  }
+
+  //用data_type来识别哪个枚举类型(DataType是People的第一个属性，属性名是data_type)
+  DataType data_type = 1;
+  PrintInfo printInfo = 14;
+  //每次枚举类型最多只能出现其中一个，节省空间
+  oneof dataBody{
+    IQCPrintMessage iqcPrintMessage = 2;
+    PQCPrintMessage pqcPrintMessage = 3;
+    OQCPrintMessage oqPrintMessage = 4;
+    PrintClientInfoMessage printClientInfoMessage = 5;
+    PrintingOfCirculation printingOfCirculation = 6;
+    MaterialProducts materialProducts = 7;
+    Warehouse warehouse = 8;
+    WarehouseLocation warehouseLocation = 9;
+    WarehouseArea warehouseArea = 10;
+    Equipment equipment = 11;
+    Workstation workstation = 12;
+      TestPrinter testPrinter = 13;
+  }
+
+  message IQCPrintMessage {
+    string sampleCode = 1;
+    string qcObject = 2;
+    string sampleTime = 3;
+    string batchCode = 4;
+  }
+
+  message PQCPrintMessage {
+    string sampleCode = 1;
+    string qcObject = 2;
+    string sampleTime = 3;
+    string sampleLocation = 4;
+  }
+
+  message OQCPrintMessage {
+    string sampleCode = 1;
+    string qcObject = 2;
+    string sampleTime = 3;
+    string batchCode = 4;
+    string packageType = 5;
+  }
+
+  //客户端信息
+  message PrintClientInfoMessage {
+    string ip = 1;
+    string location = 2;
+    string sid = 3;
+  }
+
+  message PrintingOfCirculation{
+    string workOrderNumber = 1;
+    string materialCode = 2;
+    string materialName = 3;
+    string specificationAndModel = 4;
+    string processingProcedure = 5;
+    string param = 6;
+  }
+
+  message MaterialProducts{
+    string materialCode = 1;
+    string materialName = 2;
+    string specificationAndModel = 3;
+    string param = 4;
+  }
+  message Warehouse{
+    string warehouseCode = 1;
+    string warehouseName = 2;
+    string personInCharge = 3;
+    string param = 4;
+  }
+  message WarehouseLocation{
+    string warehouseLocationCode = 1;
+    string warehouseLocationName = 2;
+    string position = 3;
+    string param = 4;
+  }
+  message WarehouseArea{
+    string warehouseAreaCode = 1;
+    string warehouseAreaName = 2;
+    string param = 3;
+  }
+  message Equipment{
+    string equipmentCode = 1;
+    string equipmentName = 2;
+    string specificationAndModel = 3;
+    string param = 4;
+  }
+  message Workstation{
+    string workstationCode = 1;
+    string workstationName = 2;
+    string belongingProcess = 3;
+    string param = 4;
+  }
+  message TestPrinter{
+    string title = 1;
+    string text = 2;
+  }
+
+  //打印机信息
+  message PrintInfo {
+    string ip = 1;
+    string code = 2;
+    string name = 3;
+    string port = 4;
+  }
+}

@@ -315,6 +315,13 @@
                 <version>${t3rik.version}</version>
             </dependency>
 
+            <!-- 打印模块 -->
+            <dependency>
+                <groupId>com.t3rik</groupId>
+                <artifactId>t3rik-print</artifactId>
+                <version>${t3rik.version}</version>
+            </dependency>
+
             <!--kotlin相关-->
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -360,7 +367,7 @@
         <module>t3rik-generator</module>
         <module>t3rik-common</module>
         <module>t3rik-mes</module>
-        <!--        <module>t3rik-print</module>-->
+        <module>t3rik-print</module>
         <module>t3rik-mobile</module>
         <module>t3rik-hrm</module>
         <module>t3rik-report</module>
