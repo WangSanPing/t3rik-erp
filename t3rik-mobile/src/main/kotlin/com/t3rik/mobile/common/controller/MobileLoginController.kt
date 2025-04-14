@@ -6,7 +6,7 @@ import com.t3rik.common.constant.MsgConstants
 import com.t3rik.common.constant.UserConstants
 import com.t3rik.common.core.domain.AjaxResult
 import com.t3rik.common.core.domain.model.LoginBody
-import com.t3rik.common.enums.ModuleTypeEnum
+import com.t3rik.common.enums.system.ModuleTypeEnum
 import com.t3rik.common.utils.SecurityUtils
 import com.t3rik.framework.web.service.SysLoginService
 import com.t3rik.framework.web.service.SysPermissionService

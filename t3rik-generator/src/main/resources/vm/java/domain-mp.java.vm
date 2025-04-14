@@ -6,7 +6,7 @@ import ${import};
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.t3rik.common.annotation.Excel;
-import com.t3rik.common.enums.EnableFlagEnum;
+import com.t3rik.common.enums.system.EnableFlagEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 #if($table.crud || $table.sub)

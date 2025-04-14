@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import jakarta.servlet.http.HttpServletResponse;
 
-import com.t3rik.hrm.sm.domain.HrmStaff;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +21,7 @@ import com.t3rik.common.annotation.Log;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.utils.StringUtils;
-import com.t3rik.common.enums.BusinessType;
+import com.t3rik.common.enums.system.BusinessType;
 import com.t3rik.hrm.md.domain.HrmRank;
 import com.t3rik.hrm.md.service.IHrmRankService;
 import com.t3rik.common.utils.poi.ExcelUtil;

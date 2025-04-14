@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.t3rik.common.annotation.Excel;
 import com.t3rik.common.core.domain.BaseEntity;
-import com.t3rik.common.enums.EnableFlagEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -44,7 +43,5 @@ public class SysConfigJasypt extends BaseEntity
     /** 系统内置（Y是 N否） */
     @Excel(name = "系统内置", readConverterExp = "Y=是,N=否")
     private String configType;
-
-
 
 }

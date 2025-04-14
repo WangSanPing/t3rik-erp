@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.t3rik.common.core.domain.entity.SysUser;
 import com.t3rik.common.core.domain.model.LoginUser;
-import com.t3rik.common.enums.UserStatus;
+import com.t3rik.common.enums.system.UserStatus;
 import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.system.service.ISysUserService;

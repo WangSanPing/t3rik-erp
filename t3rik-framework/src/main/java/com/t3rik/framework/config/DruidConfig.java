@@ -4,7 +4,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceBuilder;
 import com.alibaba.druid.spring.boot3.autoconfigure.properties.DruidStatProperties;
 import com.alibaba.druid.util.Utils;
-import com.t3rik.common.enums.DataSourceType;
+import com.t3rik.common.enums.system.DataSourceType;
 import com.t3rik.common.utils.spring.SpringUtils;
 import com.t3rik.framework.config.properties.DruidProperties;
 import com.t3rik.framework.datasource.DynamicDataSource;
