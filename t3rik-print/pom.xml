@@ -30,17 +30,6 @@
 
         <dependency>
             <groupId>com.t3rik</groupId>
-            <artifactId>t3rik-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-            <version>1.6.2</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.t3rik</groupId>
             <artifactId>t3rik-mes</artifactId>
         </dependency>
     </dependencies>
