@@ -296,6 +296,12 @@ public class UserConstants {
     public static final String BARCODE_TYPE_CLIENT = "CLIENT"; // 客户
     public static final String BARCODE_TYPE_VENDOR = "VENDOR"; // 供应商
     public static final String BARCODE_TYPE_SN = "SN";
+    public static final String BARCODE_TYPE_PROCARD ="PROCARD";
+    public static final String TEST_TYPE_PRINTER = "TEST";
+    public static final String BARCODE_TYPE_BATCH = "BATCH"; //批次
+    public static final String BARCODE_TYPE_WORKSHOP = "WORKSHOP";
+    public static final String BARCODE_TYPE_WORKORDER = "WORKORDER";
+    public static final String BARCODE_TYPE_TOOL = "TOOL";
 
     /**
      * 消息状态
