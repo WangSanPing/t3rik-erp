@@ -1,7 +1,7 @@
 package com.t3rik.common.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.t3rik.common.core.domain.entity.ItemType;
+import com.t3rik.common.core.domain.entity.MdItemType;
 import com.t3rik.common.core.domain.entity.SysDept;
 import com.t3rik.common.core.domain.entity.SysMenu;
 
@@ -40,7 +40,7 @@ public class TreeSelect implements Serializable
         this.children = dept.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
-    public TreeSelect(ItemType dept)
+    public TreeSelect(MdItemType dept)
     {
         this.id = dept.getItemTypeId();
         this.label = dept.getItemTypeName();

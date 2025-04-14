@@ -3,33 +3,48 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.t3rik.mes.md.mapper.ItemTypeMapper">
-
-    <resultMap type="com.t3rik.common.core.domain.entity.ItemType" id="ItemTypeResult">
-        <id     property="itemTypeId"     column="item_type_id"     />
-        <result property="itemTypeCode"     column="item_type_code"     />
-        <result property="itemTypeName"     column="item_type_name"     />
-        <result property="parentTypeId"   column="parent_type_id"   />
-        <result property="ancestors"   column="ancestors"   />
-        <result property="itemOrProduct"  column="item_or_product"   />
-        <result property="orderNum"   column="order_num"   />
-        <result property="enableFlag"     column="enable_flag"      />
-        <result property="remark"      column="remark"       />
-        <result property="attr1"      column="attr1"       />
-        <result property="attr2"      column="attr2"       />
-        <result property="attr3"      column="attr3"       />
-        <result property="attr4"      column="attr4"       />
-        <result property="createBy"   column="create_by"   />
-        <result property="createTime" column="create_time" />
-        <result property="updateBy"   column="update_by"   />
-        <result property="updateTime" column="update_time" />
+    <resultMap type="com.t3rik.common.core.domain.entity.MdItemType" id="ItemTypeResult">
+        <id property="itemTypeId" column="item_type_id"/>
+        <result property="itemTypeCode" column="item_type_code"/>
+        <result property="itemTypeName" column="item_type_name"/>
+        <result property="parentTypeId" column="parent_type_id"/>
+        <result property="ancestors" column="ancestors"/>
+        <result property="itemOrProduct" column="item_or_product"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="enableFlag" column="enable_flag"/>
+        <result property="remark" column="remark"/>
+        <result property="attr1" column="attr1"/>
+        <result property="attr2" column="attr2"/>
+        <result property="attr3" column="attr3"/>
+        <result property="attr4" column="attr4"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result column="version" property="version"/>
     </resultMap>
 
     <sql id="selectItemTypeVo">
-        select d.item_type_id,d.item_type_code,d.item_type_name,d.parent_type_id,d.ancestors, d.item_or_product, d.order_num, d.enable_flag, d.remark,d.attr1,d.attr2,d.attr3,d.attr4, d.create_by, d.create_time
+        select d.item_type_id,
+               d.item_type_code,
+               d.item_type_name,
+               d.parent_type_id,
+               d.ancestors,
+               d.item_or_product,
+               d.order_num,
+               d.enable_flag,
+               d.remark,
+               d.attr1,
+               d.attr2,
+               d.attr3,
+               d.attr4,
+               d.create_by,
+               d.create_time,
+               d.version
         from md_item_type d
     </sql>
 
-    <select id="selectItemTypeList" parameterType="com.t3rik.common.core.domain.entity.ItemType" resultMap="ItemTypeResult">
+    <select id="selectItemTypeList" parameterType="com.t3rik.common.core.domain.entity.MdItemType" resultMap="ItemTypeResult">
         <include refid="selectItemTypeVo"/>
         where 1 = 1
         <if test="itemTypeId != null and itemTypeId != 0">
@@ -62,78 +77,160 @@
 
 
     <select id="hasChildByItemTypeId" parameterType="Long" resultType="int">
-		select count(1) from md_item_type
-		where  parent_type_id = #{parentTypeId} limit 1
-	</select>
+        select count(1)
+        from md_item_type
+        where parent_type_id = #{parentTypeId}
+        limit 1
+    </select>
 
     <select id="hasItemByItemTypeId" parameterType="Long" resultType="int">
-        select count(1) from md_item
-        where item_type_id = #{itemTypeId} limit 1
+        select count(1)
+        from md_item
+        where item_type_id = #{itemTypeId}
+        limit 1
     </select>
 
     <select id="selectChildrenItemTypeById" parameterType="Long" resultMap="ItemTypeResult">
-		select * from md_item_type where parent_type_id = #{parentTypeId} order by orderNum asc
-	</select>
+        select *
+        from md_item_type
+        where parent_type_id = #{parentTypeId}
+        order by orderNum asc
+    </select>
 
     <select id="selectNormalChildrenItemTypeById" parameterType="Long" resultType="int">
-		select count(*) from md_item_type where enable_flag = 'Y'  and parent_type_id = #{parentTypeId}
-	</select>
+        select count(*)
+        from md_item_type
+        where enable_flag = 'Y'
+          and parent_type_id = #{parentTypeId}
+    </select>
 
     <select id="checkItemTypeNameUnique" resultMap="ItemTypeResult">
         <include refid="selectItemTypeVo"/>
-        where item_type_name=#{itemTypeName} and parent_type_id = #{parentTypeId} limit 1
+        where item_type_name = #{itemTypeName}
+          and parent_type_id = #{parentTypeId}
+        limit 1
     </select>
     <select id="checkItemTypeCodeUnique" resultMap="ItemTypeResult">
         <include refid="selectItemTypeVo"/>
-        where item_type_code=#{itemTypeCode} and parent_type_id = #{parentTypeId} limit 1
+        where item_type_code = #{itemTypeCode}
+          and parent_type_id = #{parentTypeId}
+        limit 1
     </select>
 
-    <insert id="insertItemType" parameterType="com.t3rik.common.core.domain.entity.ItemType">
+    <insert id="insertItemType" parameterType="com.t3rik.common.core.domain.entity.MdItemType">
         insert into md_item_type(
-        <if test="itemTypeId != null and itemTypeId != 0">item_type_id,</if>
-        <if test="parentTypeId != null and parentTypeId != 0">parent_type_id,</if>
-        <if test="ancestors != null and ancestors != ''">ancestors,</if>
-        <if test="itemTypeCode != null and itemTypeCode != ''">item_type_code,</if>
-        <if test="itemTypeName != null and itemTypeName != ''">item_type_name,</if>
-        <if test="orderNum != null and orderNum != ''">order_num,</if>
-        <if test="itemOrProduct != null and itemOrProduct != ''">item_or_product,</if>
-        <if test="enableFlag != null and enableFlag != ''">enable_flag,</if>
-        <if test="attr1 != null and attr1 != ''">attr1,</if>
-        <if test="attr2 != null and attr2 != ''">attr2,</if>
-        <if test="attr3 != null and attr3 != 0">attr3,</if>
-        <if test="attr4 != null and attr4 != 0">attr4,</if>
-        <if test="createBy != null and createBy != ''">create_by,</if>
-        create_time
-        )values(
-        <if test="itemTypeId != null and itemTypeId != 0">#{itemTypeId},</if>
-        <if test="parentTypeId != null and parentTypeId != 0">#{parentTypeId},</if>
-        <if test="ancestors != null and ancestors != ''">#{ancestors},</if>
-        <if test="itemTypeCode != null and itemTypeCode != ''">#{itemTypeCode},</if>
-        <if test="itemTypeName != null and itemTypeName != ''">#{itemTypeName},</if>
-        <if test="orderNum != null and orderNum != 0">#{orderNum},</if>
-        <if test="itemOrProduct != null and itemOrProduct != ''">#{itemOrProduct},</if>
-        <if test="enableFlag != null and enableFlag != ''">#{enableFlag},</if>
-        <if test="remark != null and remark != ''">#{remark},</if>
-        <if test="attr1 != null and attr1 != ''">#{attr1},</if>
-        <if test="attr2 != null and attr2 != ''">#{attr2},</if>
-        <if test="attr3 != null and attr3 != 0">#{attr3},</if>
-        <if test="attr4 != null and attr4 != 0">#{attr4},</if>
-        <if test="createBy != null and createBy != ''">#{createBy},</if>
-        sysdate()
-        )
+        <if test="itemTypeId != null and itemTypeId != 0">
+            item_type_id,
+        </if>
+        <if test="parentTypeId != null and parentTypeId != 0">
+            parent_type_id,
+        </if>
+        <if test="ancestors != null and ancestors != ''">
+            ancestors,
+        </if>
+        <if test="itemTypeCode != null and itemTypeCode != ''">
+            item_type_code,
+        </if>
+        <if test="itemTypeName != null and itemTypeName != ''">
+            item_type_name,
+        </if>
+        <if test="orderNum != null and orderNum != ''">
+            order_num,
+        </if>
+        <if test="itemOrProduct != null and itemOrProduct != ''">
+            item_or_product,
+        </if>
+        <if test="enableFlag != null and enableFlag != ''">
+            enable_flag,
+        </if>
+        <if test="attr1 != null and attr1 != ''">
+            attr1,
+        </if>
+        <if test="attr2 != null and attr2 != ''">
+            attr2,
+        </if>
+        <if test="attr3 != null and attr3 != 0">
+            attr3,
+        </if>
+        <if test="attr4 != null and attr4 != 0">
+            attr4,
+        </if>
+        <if test="createBy != null and createBy != ''">
+            create_by,
+        </if>
+        create_time)values(
+        <if test="itemTypeId != null and itemTypeId != 0">
+            #{itemTypeId},
+        </if>
+        <if test="parentTypeId != null and parentTypeId != 0">
+            #{parentTypeId},
+        </if>
+        <if test="ancestors != null and ancestors != ''">
+            #{ancestors},
+        </if>
+        <if test="itemTypeCode != null and itemTypeCode != ''">
+            #{itemTypeCode},
+        </if>
+        <if test="itemTypeName != null and itemTypeName != ''">
+            #{itemTypeName},
+        </if>
+        <if test="orderNum != null and orderNum != 0">
+            #{orderNum},
+        </if>
+        <if test="itemOrProduct != null and itemOrProduct != ''">
+            #{itemOrProduct},
+        </if>
+        <if test="enableFlag != null and enableFlag != ''">
+            #{enableFlag},
+        </if>
+        <if test="remark != null and remark != ''">
+            #{remark},
+        </if>
+        <if test="attr1 != null and attr1 != ''">
+            #{attr1},
+        </if>
+        <if test="attr2 != null and attr2 != ''">
+            #{attr2},
+        </if>
+        <if test="attr3 != null and attr3 != 0">
+            #{attr3},
+        </if>
+        <if test="attr4 != null and attr4 != 0">
+            #{attr4},
+        </if>
+        <if test="createBy != null and createBy != ''">
+            #{createBy},
+        </if>
+        sysdate())
     </insert>
 
-    <update id="updateItemType" parameterType="com.t3rik.common.core.domain.entity.ItemType">
+    <update id="updateItemType" parameterType="com.t3rik.common.core.domain.entity.MdItemType">
         update md_item_type
         <set>
-            <if test="parentTypeId != null and parentTypeId != 0">parent_type_id = #{parentTypeId},</if>
-            <if test="itemTypeName != null and itemTypeName != ''">item_type_name = #{itemTypeName},</if>
-            <if test="itemTypeCode != null and itemTypeCode != ''">item_type_code = #{itemTypeCode},</if>
-            <if test="itemOrProduct != null and itemOrProduct != ''">item_or_product = #{itemOrProduct},</if>
-            <if test="orderNum != null and orderNum != ''">order_num = #{orderNum},</if>
-            <if test="remark != null and remark !=''">remark = #{remark},</if>
-            <if test="enableFlag != null and enableFlag != ''">enable_flag = #{enableFlag},</if>
-            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="parentTypeId != null and parentTypeId != 0">
+                parent_type_id = #{parentTypeId},
+            </if>
+            <if test="itemTypeName != null and itemTypeName != ''">
+                item_type_name = #{itemTypeName},
+            </if>
+            <if test="itemTypeCode != null and itemTypeCode != ''">
+                item_type_code = #{itemTypeCode},
+            </if>
+            <if test="itemOrProduct != null and itemOrProduct != ''">
+                item_or_product = #{itemOrProduct},
+            </if>
+            <if test="orderNum != null and orderNum != ''">
+                order_num = #{orderNum},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark},
+            </if>
+            <if test="enableFlag != null and enableFlag != ''">
+                enable_flag = #{enableFlag},
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                update_by = #{updateBy},
+            </if>
             update_time = sysdate()
         </set>
         where item_type_id = #{itemTypeId}
@@ -141,36 +238,50 @@
 
 
     <update id="updateItemTypeStatusNormal" parameterType="Long">
-        update md_item_type set enable_flag = 'N' where item_type_id in
+        update md_item_type
+        set enable_flag = 'N' where item_type_id in
         <foreach collection="array" item="itemTypeId" open="(" separator="," close=")">
             #{itemTypeId}
         </foreach>
     </update>
 
     <delete id="deleteItemTypeById" parameterType="Long">
-		delete from  md_item_type  where item_type_id = #{itemTypeId}
-	</delete>
+        delete
+        from md_item_type
+        where item_type_id = #{itemTypeId}
+    </delete>
 
     <delete id="deleteItemTypeByIds" parameterType="Long">
-        delete from md_item_type where item_type_id in
+        delete
+        from md_item_type where item_type_id in
         <foreach collection="array" item="itemTypeId" open="(" separator="," close=")">
             #{itemTypeId}
         </foreach>
     </delete>
 
-    <insert id="initDefaultItemType" >
-        INSERT INTO
-            `md_item_type`(`item_type_id`, `item_type_code`, `item_type_name`, `parent_type_id`, `ancestors`, `item_or_product`, `order_num`, `enable_flag`, `remark`, `attr1`, `attr2`, `attr3`, `attr4`, `create_by`, `create_time`, `update_by`, `update_time`, `create_user_id`, `update_user_id`)
-        VALUES
-        (10000000, 'WLCPFL_DEFAULT', '物料产品分类', 0, '0', 'PRODUCT', 1, 'Y', '', NULL, NULL, 0, 0, 'admin', sysdate(), 'admin', sysdate(), NULL, NULL)
+    <insert id="initDefaultItemType">
+        INSERT INTO `md_item_type`(`item_type_id`, `item_type_code`, `item_type_name`, `parent_type_id`, `ancestors`, `item_or_product`, `order_num`,
+                                   `enable_flag`, `remark`, `attr1`, `attr2`, `attr3`, `attr4`, `create_by`, `create_time`, `update_by`, `update_time`,
+                                   `create_user_id`, `update_user_id`)
+        VALUES (10000000, 'WLCPFL_DEFAULT', '物料产品分类', 0, '0', 'PRODUCT', 1, 'Y', '', NULL, NULL, 0, 0, 'admin', sysdate(), 'admin', sysdate(), NULL, NULL)
              , (10000001, 'YCL_DEFAULT', '原材料', 10000000, '0,10000000', 'ITEM', 1, 'Y', '', NULL, NULL, 0, 0, 'admin', sysdate(), '', NULL, NULL, NULL)
              , (10000002, 'CP_DEFAULT', '产品', 10000000, '0,10000000', 'PRODUCT', 2, 'Y', '', NULL, NULL, 0, 0, 'admin', sysdate(), '', NULL, NULL, NULL)
-             , (10000003, 'BCP_DEFAULT', '半成品', 10000002, '0,10000000,10000002', 'PRODUCT', 1, 'Y', '', NULL, NULL, 0, 0, 'admin', sysdate(), '', NULL, NULL, NULL)
-             , (10000004, 'CCP_DEFAULT', '产成品', 10000002, '0,10000000,10000002', 'PRODUCT', 2, 'Y', '', NULL, NULL, 0, 0, 'admin', sysdate(), '', NULL, NULL, NULL)
+             , (10000003, 'BCP_DEFAULT', '半成品', 10000002, '0,10000000,10000002', 'PRODUCT', 1, 'Y', '', NULL, NULL, 0, 0, 'admin', sysdate(), '', NULL, NULL,
+                NULL)
+             , (10000004, 'CCP_DEFAULT', '产成品', 10000002, '0,10000000,10000002', 'PRODUCT', 2, 'Y', '', NULL, NULL, 0, 0, 'admin', sysdate(), '', NULL, NULL,
+                NULL)
     </insert>
 
     <select id="selectChildrenByAncestor" resultMap="ItemTypeResult">
-        SELECT *
+        SELECT t1.item_type_id,
+               item_type_code,
+               item_type_name,
+               parent_type_id,
+               ancestors,
+               item_or_product,
+               order_num,
+               enable_flag,
+               version
         FROM md_item_type AS t1
         WHERE NOT EXISTS (SELECT 1
                           FROM md_item_type AS t2
@@ -179,6 +290,7 @@
             AND t1.ancestors LIKE CONCAT('%,', #{ancestorId}, ',%')
         </if>
         AND t1.deleted = 0
+        and enable_flag = 'Y'
         ORDER BY t1.order_num
     </select>
 </mapper>

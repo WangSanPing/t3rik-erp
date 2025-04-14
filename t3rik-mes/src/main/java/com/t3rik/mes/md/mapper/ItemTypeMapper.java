@@ -1,14 +1,14 @@
 package com.t3rik.mes.md.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.t3rik.common.core.domain.entity.ItemType;
+import com.t3rik.common.core.domain.entity.MdItemType;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 @Mapper
-public interface ItemTypeMapper extends BaseMapper<ItemType> {
+public interface ItemTypeMapper extends BaseMapper<MdItemType> {
 
     /**
      * 根据条件查询物料分类
@@ -16,7 +16,7 @@ public interface ItemTypeMapper extends BaseMapper<ItemType> {
      * @param itemType
      * @return
      */
-    public List<ItemType> selectItemTypeList(ItemType itemType);
+    public List<MdItemType> selectItemTypeList(MdItemType itemType);
 
     /**
      * 根据主键查询物料分类
@@ -24,7 +24,7 @@ public interface ItemTypeMapper extends BaseMapper<ItemType> {
      * @param itemTypeId
      * @return
      */
-    public ItemType selectItemTypeById(Long itemTypeId);
+    public MdItemType selectItemTypeById(Long itemTypeId);
 
     /**
      * 根据父类ID查询是否有子类
@@ -49,7 +49,7 @@ public interface ItemTypeMapper extends BaseMapper<ItemType> {
      * @param parentTypeId
      * @return
      */
-    public List<ItemType> selectChildrenItemTypeById(Long parentTypeId);
+    public List<MdItemType> selectChildrenItemTypeById(Long parentTypeId);
 
 
     /**
@@ -67,7 +67,7 @@ public interface ItemTypeMapper extends BaseMapper<ItemType> {
      * @param parentTypeId
      * @return
      */
-    public ItemType checkItemTypeNameUnique(@Param("itemTypeName") String itemTypeName, @Param("parentTypeId") Long parentTypeId);
+    public MdItemType checkItemTypeNameUnique(@Param("itemTypeName") String itemTypeName, @Param("parentTypeId") Long parentTypeId);
 
     /**
      * 检查同一个父类下子类编码是否重复
@@ -76,7 +76,7 @@ public interface ItemTypeMapper extends BaseMapper<ItemType> {
      * @param parentTypeId
      * @return
      */
-    public ItemType checkItemTypeCodeUnique(@Param("itemTypeCode") String itemTypeCode, @Param("parentTypeId") Long parentTypeId);
+    public MdItemType checkItemTypeCodeUnique(@Param("itemTypeCode") String itemTypeCode, @Param("parentTypeId") Long parentTypeId);
 
     /**
      * 新增物料分类
@@ -84,7 +84,7 @@ public interface ItemTypeMapper extends BaseMapper<ItemType> {
      * @param itemType
      * @return
      */
-    public Integer insertItemType(ItemType itemType);
+    public Integer insertItemType(MdItemType itemType);
 
     /**
      * 更新物料分类
@@ -92,7 +92,7 @@ public interface ItemTypeMapper extends BaseMapper<ItemType> {
      * @param itemType
      * @return
      */
-    public Integer updateItemType(ItemType itemType);
+    public Integer updateItemType(MdItemType itemType);
 
     /**
      * 设置物料分类不可用
@@ -125,5 +125,5 @@ public interface ItemTypeMapper extends BaseMapper<ItemType> {
     /**
      * 查询所有子类
      */
-     List<ItemType> selectChildrenByAncestor(@Param("ancestorId") Long ancestorId);
+    List<MdItemType> selectChildrenByAncestor(@Param("ancestorId") Long ancestorId);
 }

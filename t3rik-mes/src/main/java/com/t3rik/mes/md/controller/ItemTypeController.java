@@ -5,7 +5,7 @@ import com.t3rik.common.constant.MsgConstants;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
-import com.t3rik.common.core.domain.entity.ItemType;
+import com.t3rik.common.core.domain.entity.MdItemType;
 import com.t3rik.common.enums.system.BusinessType;
 import com.t3rik.common.enums.mes.DefaultDataEnum;
 import com.t3rik.common.exception.BusinessException;
@@ -35,8 +35,8 @@ public class ItemTypeController extends BaseController {
      * @return
      */
     @GetMapping("/list")
-    public AjaxResult list(ItemType itemType) {
-        List<ItemType> list = iItemTypeService.selectItemTypeList(itemType);
+    public AjaxResult list(MdItemType itemType) {
+        List<MdItemType> list = iItemTypeService.selectItemTypeList(itemType);
         return AjaxResult.success(list);
     }
 
@@ -45,7 +45,7 @@ public class ItemTypeController extends BaseController {
      */
     @GetMapping("/list/exclude/{itemTypeId}")
     public AjaxResult excludeChild(@PathVariable(value = "itemTypeId", required = false) Long itemTypeId) {
-        List<ItemType> list = iItemTypeService.selectItemTypeList(new ItemType());
+        List<MdItemType> list = iItemTypeService.selectItemTypeList(new MdItemType());
         return AjaxResult.success(list);
     }
 
@@ -69,8 +69,8 @@ public class ItemTypeController extends BaseController {
      * @return
      */
     @GetMapping("/treeselect")
-    public AjaxResult treeSelect(ItemType itemType) {
-        List<ItemType> list = iItemTypeService.selectItemTypeList(itemType);
+    public AjaxResult treeSelect(MdItemType itemType) {
+        List<MdItemType> list = iItemTypeService.selectItemTypeList(itemType);
         return AjaxResult.success(iItemTypeService.buildTreeSelect(list));
     }
 
@@ -78,7 +78,7 @@ public class ItemTypeController extends BaseController {
     @PreAuthorize("@ss.hasPermi('mes:md:itemtype:add')")
     @Log(title = "新增物料产品分类信息", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody ItemType itemType) {
+    public AjaxResult add(@Validated @RequestBody MdItemType itemType) {
 
         if (UserConstants.NOT_UNIQUE.equals(iItemTypeService.checkItemTypeCodeUnique(itemType))) {
             return AjaxResult.error("分类" + itemType.getItemTypeCode() + "编码已存在");
@@ -98,7 +98,7 @@ public class ItemTypeController extends BaseController {
     @PreAuthorize("@ss.hasPermi('mes:md:itemtype:update')")
     @Log(title = "更新物料产品分类", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult update(@Validated @RequestBody ItemType itemType) {
+    public AjaxResult update(@Validated @RequestBody MdItemType itemType) {
         if (UserConstants.NOT_UNIQUE.equals(iItemTypeService.checkItemTypeCodeUnique(itemType))) {
             return AjaxResult.error("分类" + itemType.getItemTypeCode() + "编码已存在");
         }
@@ -130,6 +130,14 @@ public class ItemTypeController extends BaseController {
 
         // 权限数据检查？
         return AjaxResult.success(iItemTypeService.removeItemType(itemTypeId));
+    }
+
+    /**
+     * 查询物料分类
+     */
+    @GetMapping("/selectChildrenByAncestor")
+    public AjaxResult selectChildrenByAncestor(@RequestParam(required = false) Long itemTypeId) {
+        return AjaxResult.success(this.iItemTypeService.selectChildrenByAncestor(itemTypeId));
     }
 
 }
