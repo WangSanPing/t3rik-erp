@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import com.t3rik.common.constant.Constants;
-import com.t3rik.common.enums.LimitType;
+import com.t3rik.common.enums.system.LimitType;
 
 /**
  * 限流注解

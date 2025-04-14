@@ -18,7 +18,7 @@ import com.t3rik.common.constant.Constants;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.page.TableDataInfo;
-import com.t3rik.common.enums.BusinessType;
+import com.t3rik.common.enums.system.BusinessType;
 import com.t3rik.common.exception.job.TaskException;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.poi.ExcelUtil;

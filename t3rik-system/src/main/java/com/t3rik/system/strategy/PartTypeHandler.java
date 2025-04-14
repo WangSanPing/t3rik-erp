@@ -1,7 +1,7 @@
 package com.t3rik.system.strategy;
 
 import com.t3rik.common.core.domain.entity.SysAutoCodePart;
-import com.t3rik.common.enums.PartTypeEnum;
+import com.t3rik.common.enums.system.PartTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

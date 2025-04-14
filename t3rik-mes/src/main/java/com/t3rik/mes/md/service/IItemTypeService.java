@@ -28,4 +28,8 @@ public interface IItemTypeService extends IService<ItemType> {
 
     public boolean checkHasItem(Long itemTypeId);
 
+    /**
+     * 查询所有子类
+     */
+    List<ItemType> selectChildrenByAncestor(Long ancestorId);
 }

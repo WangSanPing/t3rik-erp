@@ -14,7 +14,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
 import com.t3rik.common.annotation.RateLimiter;
-import com.t3rik.common.enums.LimitType;
+import com.t3rik.common.enums.system.LimitType;
 import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.ServletUtils;
 import com.t3rik.common.utils.StringUtils;

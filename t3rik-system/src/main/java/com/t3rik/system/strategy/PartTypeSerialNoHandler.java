@@ -3,7 +3,7 @@ package com.t3rik.system.strategy;
 import cn.hutool.core.collection.CollectionUtil;
 import com.t3rik.common.core.domain.entity.SysAutoCodePart;
 import com.t3rik.common.core.domain.entity.SysAutoCodeResult;
-import com.t3rik.common.enums.CycleMethodMnum;
+import com.t3rik.common.enums.system.CycleMethodMnum;
 import com.t3rik.system.service.IAutoCodeResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;

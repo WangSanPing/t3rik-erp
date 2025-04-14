@@ -5,7 +5,7 @@ import com.t3rik.common.constant.Constants;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.core.redis.RedisCache;
 import com.t3rik.common.core.text.Convert;
-import com.t3rik.common.enums.DataSourceType;
+import com.t3rik.common.enums.system.DataSourceType;
 import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.system.domain.SysConfig;

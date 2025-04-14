@@ -8,7 +8,7 @@ import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.domain.model.LoginUser;
 import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.core.redis.RedisCache;
-import com.t3rik.common.enums.BusinessType;
+import com.t3rik.common.enums.system.BusinessType;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.system.domain.SysUserOnline;
 import com.t3rik.system.service.ISysUserOnlineService;
