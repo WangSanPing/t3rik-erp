@@ -7,7 +7,7 @@ import com.t3rik.common.utils.StringUtils;
 import com.t3rik.common.utils.file.FileUploadUtils;
 import com.t3rik.common.utils.file.FileUtils;
 import com.t3rik.framework.config.ServerConfig;
-import com.t3rik.handler.impl.MinIOHandler;
+import com.t3rik.processor.OssProcessor;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,7 +36,7 @@ public class CommonController {
     @Resource
     private ServerConfig serverConfig;
     @Resource
-    private MinIOHandler minIOService;
+    private OssProcessor ossProcessor;
     private static final String FILE_DELIMETER = ",";
 
     /**
@@ -146,7 +146,7 @@ public class CommonController {
     @PostMapping("/uploadMinio")
     public AjaxResult uploadFileMinio(MultipartFile file) throws Exception {
         try {
-            String fileName = minIOService.uploadFile(file.getOriginalFilename(), file.getInputStream());
+            String fileName = ossProcessor.uploadFile(file.getOriginalFilename(), file.getInputStream());
             AjaxResult rt = AjaxResult.success();
             rt.put("url", fileName);
             rt.put("fileName", fileName);
