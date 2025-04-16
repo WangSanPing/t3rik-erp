@@ -1,10 +1,11 @@
 package com.t3rik.mes.wm.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.t3rik.common.constant.UserConstants;
-import com.t3rik.common.enums.system.YesOrNoEnum;
 import com.t3rik.common.enums.mes.DefaultDataEnum;
+import com.t3rik.common.enums.system.YesOrNoEnum;
 import com.t3rik.common.utils.DateUtils;
 import com.t3rik.common.utils.StringUtils;
 import com.t3rik.mes.wm.domain.WmStorageArea;
@@ -14,11 +15,11 @@ import com.t3rik.mes.wm.mapper.WmWarehouseMapper;
 import com.t3rik.mes.wm.service.IWmStorageAreaService;
 import com.t3rik.mes.wm.service.IWmStorageLocationService;
 import com.t3rik.mes.wm.service.IWmWarehouseService;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -146,7 +147,7 @@ public class WmWarehouseServiceImpl extends ServiceImpl<WmWarehouseMapper, WmWar
                 .list()
                 .stream().map(WmStorageLocation::getLocationId)
                 .toList();
-        if(locationIds!=null&&!locationIds.isEmpty()){
+        if (CollectionUtils.isNotEmpty(locationIds)) {
             this.wmStorageAreaService.remove(
                     new LambdaQueryWrapper<WmStorageArea>()
                             .in(WmStorageArea::getLocationId, locationIds));
@@ -157,6 +158,15 @@ public class WmWarehouseServiceImpl extends ServiceImpl<WmWarehouseMapper, WmWar
                         .in(WmStorageLocation::getWarehouseId, Arrays.asList(warehouseIds)));
 
         return wmWarehouseMapper.deleteWmWarehouseByWarehouseIds(warehouseIds);
+    }
+
+
+    /**
+     * 获取仓库列表(下拉框使用)
+     */
+    @Override
+    public List<WmWarehouse> getWarehouseForCombobox() {
+        return this.wmWarehouseMapper.getWarehouseForCombobox();
     }
 
     /**

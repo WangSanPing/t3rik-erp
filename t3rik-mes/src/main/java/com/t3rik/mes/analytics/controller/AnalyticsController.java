@@ -1,11 +1,10 @@
 package com.t3rik.mes.analytics.controller;
 
 import com.t3rik.common.core.domain.AjaxResult;
-import com.t3rik.mes.md.service.IItemTypeService;
+import com.t3rik.mes.wm.service.IWmWarehouseService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -19,8 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AnalyticsController {
 
     @Resource
-    private IItemTypeService iItemTypeService;
-
+    private IWmWarehouseService wmWarehouseService;
 
     @GetMapping("/getStock")
     public AjaxResult getStock() {
@@ -36,6 +34,7 @@ public class AnalyticsController {
     public AjaxResult getItem() {
         return AjaxResult.success();
     }
+
 
 
 }
