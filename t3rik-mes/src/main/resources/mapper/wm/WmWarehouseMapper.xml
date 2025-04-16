@@ -157,4 +157,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{warehouseId}
         </foreach>
     </delete>
+
+    <select id="getWarehouseForCombobox" resultMap="WmWarehouseResult">
+        SELECT
+            ww.warehouse_id ,
+            ww.warehouse_code ,
+            CASE
+                WHEN ww.warehouse_name = '线边库仓库-虚拟' THEN '已出库使用'
+                WHEN ww.warehouse_name = '废料线边库仓库-虚拟' THEN '废料库'
+                ELSE ww.warehouse_name
+                END as warehouse_name
+        FROM
+            wm_warehouse ww
+        ORDER BY ww.create_time
+    </select>
 </mapper>

@@ -8,18 +8,18 @@ import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
 import com.t3rik.common.core.page.TableDataInfo;
-import com.t3rik.common.enums.system.BusinessType;
 import com.t3rik.common.enums.mes.DefaultDataEnum;
+import com.t3rik.common.enums.system.BusinessType;
 import com.t3rik.common.exception.BusinessException;
 import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.mes.wm.domain.WmWarehouse;
 import com.t3rik.mes.wm.service.IWmWarehouseService;
 import com.t3rik.mes.wm.utils.WmBarCodeUtil;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.annotation.Resource;
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.List;
 
@@ -130,5 +130,14 @@ public class WmWarehouseController extends BaseController {
             Assert.isNull(defaultDataEnum, () -> new BusinessException(MsgConstants.CAN_NOT_BE_DELETE));
         });
         return toAjax(wmWarehouseService.deleteWmWarehouseByWarehouseIds(warehouseIds));
+    }
+
+    /**
+     * 获取仓库下拉列表
+     */
+    @PreAuthorize("@ss.hasPermi('mes:wm:warehouse:query')")
+    @GetMapping("/getWarehouseForCombobox")
+    public AjaxResult getWarehouseForCombobox() {
+        return AjaxResult.success(wmWarehouseService.getWarehouseForCombobox());
     }
 }

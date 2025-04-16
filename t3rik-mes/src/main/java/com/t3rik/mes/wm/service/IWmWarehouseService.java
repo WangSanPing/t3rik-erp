@@ -88,8 +88,11 @@ public interface IWmWarehouseService extends IService<WmWarehouse> {
 
     /**
      * 初始化虚拟的线边库
-     *
-     * @return
      */
     public WmWarehouse initVirtualWarehouse();
+
+    /**
+     * 获取仓库列表(下拉框使用)
+     */
+    List<WmWarehouse> getWarehouseForCombobox();
 }

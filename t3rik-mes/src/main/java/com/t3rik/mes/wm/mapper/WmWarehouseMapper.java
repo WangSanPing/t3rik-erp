@@ -77,4 +77,8 @@ public interface WmWarehouseMapper extends BaseMapper<WmWarehouse> {
      */
     public int deleteWmWarehouseByWarehouseIds(Long[] warehouseIds);
 
+    /**
+     * 获取仓库列表(下拉框使用)
+     */
+    List<WmWarehouse> getWarehouseForCombobox();
 }
