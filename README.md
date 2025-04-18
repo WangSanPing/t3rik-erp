@@ -155,9 +155,8 @@ t3rik-erp项目是在苦糖果开源MES系统基础上进行二次开发的ERP�
 
 ![](https://pic.imgdb.cn/item/66b0ec5cd9c307b7e99c0a4d.png) ![](https://pic.imgdb.cn/item/66b0ec5cd9c307b7e99c0a61.png)
 
-![](https://pic.imgdb.cn/item/66c58db3d9c307b7e9fdc24f.png) ![](https://pic.imgdb.cn/item/66c58d62d9c307b7e9fd7993.png)
-
-![](https://pic.imgdb.cn/item/66c58d62d9c307b7e9fd7946.png)
+如果项目对你有用，也可以请我喝杯咖啡～
+![](https://free4.yunpng.top/2025/04/18/68022857a759e.jpg)  ![](https://free4.yunpng.top/2025/04/18/680228581c5fc.png)
 
 
 感谢 苦糖果mes：https://gitee.com/kutangguo/ktg-mes.git，若依：https://gitee.com/y_project/RuoYi-Vue.git
