@@ -156,9 +156,7 @@ t3rik-erp项目是在苦糖果开源MES系统基础上进行二次开发的ERP�
 ![](https://pic.imgdb.cn/item/66b0ec5cd9c307b7e99c0a4d.png) ![](https://pic.imgdb.cn/item/66b0ec5cd9c307b7e99c0a61.png)
 
 如果项目对你有用，也可以请我喝杯咖啡～
- <img src="https://free4.yunpng.top/2025/04/18/68022857a759e.jpg" width="300">
-     
- <img src="https://free4.yunpng.top/2025/04/18/680228581c5fc.png" width="300">
+ <img src="https://free4.yunpng.top/2025/04/18/68022857a759e.jpg" width="300"> <img src="https://free4.yunpng.top/2025/04/18/680228581c5fc.png" width="300">
 
 ###  感谢💖💖💖捐赠
 夏*宇 ￥100
