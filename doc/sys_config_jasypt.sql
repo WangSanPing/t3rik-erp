@@ -1,9 +1,7 @@
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
--- ----------------------------
--- Table structure for sys_config_jasypt
--- ----------------------------
+
 DROP TABLE IF EXISTS `sys_config_jasypt`;
 CREATE TABLE `sys_config_jasypt` (
   `config_id` int NOT NULL AUTO_INCREMENT COMMENT '参数主键',
