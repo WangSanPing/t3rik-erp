@@ -2,24 +2,15 @@ package com.t3rik.mes.wm.domain.tx;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.t3rik.common.core.domain.BaseEntity;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
 public class RtIssueTxBean extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
     private Long materialStockId;
-
-    /**
-     * 单据名称
-     */
-    private String sourceDocName;
 
     /** 物料ID */
     private Long itemId;
@@ -97,4 +88,243 @@ public class RtIssueTxBean extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private Date recptDate;
 
+    public Long getMaterialStockId() {
+        return materialStockId;
+    }
+
+    public void setMaterialStockId(Long materialStockId) {
+        this.materialStockId = materialStockId;
+    }
+
+    public Long getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
+    }
+
+    public String getItemCode() {
+        return itemCode;
+    }
+
+    public void setItemCode(String itemCode) {
+        this.itemCode = itemCode;
+    }
+
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
+
+    public String getSpecification() {
+        return specification;
+    }
+
+    public void setSpecification(String specification) {
+        this.specification = specification;
+    }
+
+    public String getUnitOfMeasure() {
+        return unitOfMeasure;
+    }
+
+    public void setUnitOfMeasure(String unitOfMeasure) {
+        this.unitOfMeasure = unitOfMeasure;
+    }
+
+    public String getBatchCode() {
+        return batchCode;
+    }
+
+    public void setBatchCode(String batchCode) {
+        this.batchCode = batchCode;
+    }
+
+    public Long getWarehouseId() {
+        return warehouseId;
+    }
+
+    public void setWarehouseId(Long warehouseId) {
+        this.warehouseId = warehouseId;
+    }
+
+    public String getWarehouseCode() {
+        return warehouseCode;
+    }
+
+    public void setWarehouseCode(String warehouseCode) {
+        this.warehouseCode = warehouseCode;
+    }
+
+    public String getWarehouseName() {
+        return warehouseName;
+    }
+
+    public void setWarehouseName(String warehouseName) {
+        this.warehouseName = warehouseName;
+    }
+
+    public Long getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(Long locationId) {
+        this.locationId = locationId;
+    }
+
+    public String getLocationCode() {
+        return locationCode;
+    }
+
+    public void setLocationCode(String locationCode) {
+        this.locationCode = locationCode;
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public void setLocationName(String locationName) {
+        this.locationName = locationName;
+    }
+
+    public Long getAreaId() {
+        return areaId;
+    }
+
+    public void setAreaId(Long areaId) {
+        this.areaId = areaId;
+    }
+
+    public String getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
+
+    public Long getVendorId() {
+        return vendorId;
+    }
+
+    public void setVendorId(Long vendorId) {
+        this.vendorId = vendorId;
+    }
+
+    public String getVendorCode() {
+        return vendorCode;
+    }
+
+    public void setVendorCode(String vendorCode) {
+        this.vendorCode = vendorCode;
+    }
+
+    public String getVendorName() {
+        return vendorName;
+    }
+
+    public void setVendorName(String vendorName) {
+        this.vendorName = vendorName;
+    }
+
+    public String getVendorNick() {
+        return vendorNick;
+    }
+
+    public void setVendorNick(String vendorNick) {
+        this.vendorNick = vendorNick;
+    }
+
+    public String getSourceDocType() {
+        return sourceDocType;
+    }
+
+    public void setSourceDocType(String sourceDocType) {
+        this.sourceDocType = sourceDocType;
+    }
+
+    public Long getSourceDocId() {
+        return sourceDocId;
+    }
+
+    public void setSourceDocId(Long sourceDocId) {
+        this.sourceDocId = sourceDocId;
+    }
+
+    public String getSourceDocCode() {
+        return sourceDocCode;
+    }
+
+    public void setSourceDocCode(String sourceDocCode) {
+        this.sourceDocCode = sourceDocCode;
+    }
+
+    public Long getSourceDocLineId() {
+        return sourceDocLineId;
+    }
+
+    public void setSourceDocLineId(Long sourceDocLineId) {
+        this.sourceDocLineId = sourceDocLineId;
+    }
+
+    public BigDecimal getTransactionQuantity() {
+        return transactionQuantity;
+    }
+
+    public void setTransactionQuantity(BigDecimal transactionQuantity) {
+        this.transactionQuantity = transactionQuantity;
+    }
+
+    public Date getRecptDate() {
+        return recptDate;
+    }
+
+    public void setRecptDate(Date recptDate) {
+        this.recptDate = recptDate;
+    }
+
+    @Override
+    public String toString() {
+        return "RtIssueTxBean{" +
+                "materialStockId=" + materialStockId +
+                ", itemId=" + itemId +
+                ", itemCode='" + itemCode + '\'' +
+                ", itemName='" + itemName + '\'' +
+                ", specification='" + specification + '\'' +
+                ", unitOfMeasure='" + unitOfMeasure + '\'' +
+                ", batchCode='" + batchCode + '\'' +
+                ", warehouseId=" + warehouseId +
+                ", warehouseCode='" + warehouseCode + '\'' +
+                ", warehouseName='" + warehouseName + '\'' +
+                ", locationId=" + locationId +
+                ", locationCode='" + locationCode + '\'' +
+                ", locationName='" + locationName + '\'' +
+                ", areaId=" + areaId +
+                ", areaCode='" + areaCode + '\'' +
+                ", areaName='" + areaName + '\'' +
+                ", vendorId=" + vendorId +
+                ", vendorCode='" + vendorCode + '\'' +
+                ", vendorName='" + vendorName + '\'' +
+                ", vendorNick='" + vendorNick + '\'' +
+                ", sourceDocType='" + sourceDocType + '\'' +
+                ", sourceDocId=" + sourceDocId +
+                ", sourceDocCode='" + sourceDocCode + '\'' +
+                ", sourceDocLineId=" + sourceDocLineId +
+                ", transactionQuantity=" + transactionQuantity +
+                ", recptDate=" + recptDate +
+                '}';
+    }
 }

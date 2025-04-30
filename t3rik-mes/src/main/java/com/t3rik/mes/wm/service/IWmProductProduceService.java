@@ -1,21 +1,22 @@
 package com.t3rik.mes.wm.service;
 
+import java.util.List;
+
 import com.t3rik.mes.pro.domain.ProFeedback;
 import com.t3rik.mes.wm.domain.WmProductProduce;
 import com.t3rik.mes.wm.domain.tx.ProductProductTxBean;
 
-import java.util.List;
-
 /**
  * 产品产出记录Service接口
- *
+ * 
  * @author yinjinlu
  * @date 2022-09-21
  */
-public interface IWmProductProduceService {
+public interface IWmProductProduceService 
+{
     /**
      * 查询产品产出记录
-     *
+     * 
      * @param recordId 产品产出记录主键
      * @return 产品产出记录
      */
@@ -23,7 +24,7 @@ public interface IWmProductProduceService {
 
     /**
      * 查询产品产出记录列表
-     *
+     * 
      * @param wmProductProduce 产品产出记录
      * @return 产品产出记录集合
      */
@@ -31,7 +32,7 @@ public interface IWmProductProduceService {
 
     /**
      * 新增产品产出记录
-     *
+     * 
      * @param wmProductProduce 产品产出记录
      * @return 结果
      */
@@ -39,7 +40,7 @@ public interface IWmProductProduceService {
 
     /**
      * 修改产品产出记录
-     *
+     * 
      * @param wmProductProduce 产品产出记录
      * @return 结果
      */
@@ -47,7 +48,7 @@ public interface IWmProductProduceService {
 
     /**
      * 批量删除产品产出记录
-     *
+     * 
      * @param recordIds 需要删除的产品产出记录主键集合
      * @return 结果
      */
@@ -55,7 +56,7 @@ public interface IWmProductProduceService {
 
     /**
      * 删除产品产出记录信息
-     *
+     * 
      * @param recordId 产品产出记录主键
      * @return 结果
      */
@@ -63,7 +64,6 @@ public interface IWmProductProduceService {
 
     /**
      * 根据报工记录生成对应的产品产出记录
-     *
      * @param feedback
      */
     public WmProductProduce generateProductProduce(ProFeedback feedback);

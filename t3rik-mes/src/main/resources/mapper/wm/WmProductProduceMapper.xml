@@ -90,37 +90,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="getTxBeans" parameterType="Long" resultMap="ProductProductTxBeanResult">
-        SELECT irl.`item_id`,
-               irl.`item_code`,
-               irl.`item_name`,
-               irl.`specification`,
-               irl.`unit_of_measure`,
-               irl.`batch_code`,
-               irl.`warehouse_id`,
-               irl.`warehouse_code`,
-               irl.`warehouse_name`,
-               irl.`location_id`,
-               irl.`location_code`,
-               irl.`location_name`,
-               irl.`area_id`,
-               irl.`area_code`,
-               irl.`area_name`,
-               'PRODUCT_PRODUCE'      AS source_doc_type,
-               ir.`record_id`         AS source_doc_id,
-               ""                     AS source_doc_code,
-               ""                     AS sourceDocName,
-               irl.`line_id`          AS source_doc_line_id,
-               irl.`quantity_produce` AS transaction_quantity,
-               ir.workorder_id,
-               ir.workorder_code,
-               ir.`create_by`,
-               ir.`create_time`,
-               ir.`update_by`,
-               ir.`update_time`
+        SELECT  irl.`item_id`,irl.`item_code`,irl.`item_name`,irl.`specification`,irl.`unit_of_measure`,irl.`batch_code`,
+                irl.`warehouse_id`,irl.`warehouse_code`,irl.`warehouse_name`,irl.`location_id`,irl.`location_code`,irl.`location_name`,irl.`area_id`,irl.`area_code`,irl.`area_name`,
+                'PRODUCT_PRODUCT' AS source_doc_type,ir.`record_id` AS source_doc_id,"" AS source_doc_code,irl.`line_id` AS source_doc_line_id,
+                irl.`quantity_produce` AS transaction_quantity,ir.workorder_id,ir.workorder_code,
+                ir.`create_by`,ir.`create_time`,ir.`update_by`,ir.`update_time`
         FROM wm_product_produce ir
                  LEFT JOIN wm_product_produce_line irl
                            ON ir.record_id = irl.`record_id`
-        WHERE ir.`record_id` = #{recordId}
+        WHERE ir.`record_id` =  #{recordId}
     </select>
 
     <insert id="insertWmProductProduce" parameterType="WmProductProduce" useGeneratedKeys="true" keyProperty="recordId">

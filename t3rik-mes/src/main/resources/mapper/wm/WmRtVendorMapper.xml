@@ -91,39 +91,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="getTxBeans" parameterType="Long" resultMap="RtVendorTxBeanResult">
-        SELECT irl.material_stock_id,
-               irl.`item_id`,
-               irl.`item_code`,
-               irl.`item_name`,
-               irl.`specification`,
-               irl.`unit_of_measure`,
-               irl.`batch_code`,
-               irl.`warehouse_id`,
-               irl.`warehouse_code`,
-               irl.`warehouse_name`,
-               irl.`location_id`,
-               irl.`location_code`,
-               irl.`location_name`,
-               irl.`area_id`,
-               irl.`area_code`,
-               irl.`area_name`,
-               ir.`vendor_id`,
-               ir.`vendor_code`,
-               ir.`vendor_name`,
-               ir.`vendor_nick`,
-               'ITEM_RTV'          AS source_doc_type,
-               ir.`rt_id`          AS source_doc_id,
-               ir.`rt_code`        AS source_doc_code,
-               ir.`rt_name`        AS sourceDocName,
-               irl.`line_id`       AS source_doc_line_id,
-               irl.`quantity_rted` AS transaction_quantity,
-               ir.`create_by`,
-               ir.`create_time`,
-               ir.`update_by`,
-               ir.`update_time`
+        SELECT irl.material_stock_id,irl.`item_id`,irl.`item_code`,irl.`item_name`,irl.`specification`,irl.`unit_of_measure`,irl.`batch_code`,
+            irl.`warehouse_id`,irl.`warehouse_code`,irl.`warehouse_name`,irl.`location_id`,irl.`location_code`,irl.`location_name`,irl.`area_id`,irl.`area_code`,irl.`area_name`,
+            ir.`vendor_id`,ir.`vendor_code`,ir.`vendor_name`,ir.`vendor_nick`,
+            'RTV' AS source_doc_type,ir.`rt_id` AS source_doc_id,ir.`rt_code` AS source_doc_code,irl.`line_id` AS source_doc_line_id,
+            irl.`quantity_rted` AS transaction_quantity,
+            ir.`create_by`,ir.`create_time`,ir.`update_by`,ir.`update_time`
         FROM wm_rt_vendor ir
-                 LEFT JOIN wm_rt_vendor_line irl
-                           ON ir.rt_id = irl.`rt_id`
+           LEFT JOIN wm_rt_vendor_line irl
+           ON ir.rt_id = irl.`rt_id`
         WHERE ir.`rt_id` = #{rtId}
     </select>
 

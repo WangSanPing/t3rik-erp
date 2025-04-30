@@ -467,9 +467,9 @@ public class StorageCoreServiceImpl implements IStorageCoreService {
             throw new BusinessException("没有需要处理废料的单行！");
 
         //废料退料-入库事务
-        String transactionType_in = UserConstants.TRANSACTION_TYPE_ITEM_WM_WASTE_IN;
+        String transactionType_in = DefaultDataEnum.TRANSACTION_TYPE_ITEM_WM_WASTE_IN.getCode();
         //生产退料-出库事务
-        String transactionType_out = UserConstants.TRANSACTION_TYPE_ITEM_RT_ISSUE_OUT;
+        String transactionType_out = DefaultDataEnum.TRANSACTION_TYPE_ITEM_RT_ISSUE_OUT.getCode();
         beans.forEach(a -> {
             //构造信息 将信息存入线边库
             //校验 取出来的数量不超过领料数量

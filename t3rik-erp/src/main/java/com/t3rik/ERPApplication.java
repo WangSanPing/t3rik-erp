@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class}, scanBasePackages = {"org.jeecg", "com.t3rik"})
 public class ERPApplication {
     public static void main(String[] args) {
+        // System.setProperty("spring.devtools.restart.enabled", "false");
         SpringApplication.run(ERPApplication.class, args);
         System.out.println(".:*~*:._.:*~*:._.:*~*:._.:*~*:._.:*~*:._.:*~*:._.:*~*:._.:*~*:._.:*~*:.._.:*~*:.._.:*~*:.\n" +
                 "            .-\"-.                                                     .----.\"\"\".         \n" +

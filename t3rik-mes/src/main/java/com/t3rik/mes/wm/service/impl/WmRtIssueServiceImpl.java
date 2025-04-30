@@ -8,6 +8,7 @@ import com.t3rik.common.utils.StringUtils;
 import com.t3rik.mes.wm.domain.WmRtIssue;
 import com.t3rik.mes.wm.domain.tx.RtIssueTxBean;
 import com.t3rik.mes.wm.dto.RtIssueHeaderAndLineDTO;
+import com.t3rik.mes.wm.dto.WasteHeaderAndLineDTO;
 import com.t3rik.mes.wm.mapper.WmRtIssueMapper;
 import com.t3rik.mes.wm.service.IWmRtIssueService;
 import jakarta.annotation.Resource;

@@ -125,7 +125,6 @@
                'WMWASTE'          AS source_doc_type,
                wmh.`waste_id`     AS source_doc_id,
                wmh.`waste_code`   AS source_doc_code,
-               wmh.`waste_name`   AS sourceDocName,
                wml.`line_id`      AS source_doc_line_id,
                wml.quantity_waste AS transaction_quantity,
                wmh.waste_date     AS recptDate

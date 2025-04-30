@@ -71,22 +71,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                irl.`specification`,
                irl.`unit_of_measure`,
                irl.`batch_code`,
-               irl.`warehouse_id`,
-               irl.`warehouse_code`,
-               irl.`warehouse_name`,
-               irl.`location_id`,
-               irl.`location_code`,
-               irl.`location_name`,
-               irl.`area_id`,
-               irl.`area_code`,
-               irl.`area_name`,
-               'PRODUCT_RT'      AS source_doc_type,
-               ir.`rt_id`        AS source_doc_id,
-               ir.`rt_code`      AS source_doc_code,
-               ir.`rt_name`      AS sourceDocName,
-               irl.`line_id`     AS source_doc_line_id,
+               irl.`warehouse_id`,irl.`warehouse_code`,irl.`warehouse_name`,
+               irl.`location_id`,irl.`location_code`,irl.`location_name`,
+               irl.`area_id`,irl.`area_code`,irl.`area_name`,
+               'RTSALSE' AS source_doc_type,ir.`rt_id` AS source_doc_id,
+               ir.`rt_code` AS source_doc_code,
+               irl.`line_id` AS source_doc_line_id,
                irl.quantity_rted AS transaction_quantity,
-               ir.rt_date        as recptDate
+               ir.rt_date as recptDate
         FROM wm_rt_salse ir
                  LEFT JOIN wm_rt_salse_line irl
                            ON ir.rt_id = irl.rt_id

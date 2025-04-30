@@ -62,6 +62,7 @@ public class WmWasteHeaderServiceImpl extends ServiceImpl<WmWasteHeaderMapper, W
      */
     @Override
     public List<WmWasteTxBean> getTxBeans(Long wasteId) {
+
         return wmWasteHeaderMapper.getTxBeans(wasteId);
     }
 

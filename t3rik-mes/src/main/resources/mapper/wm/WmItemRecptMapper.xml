@@ -116,40 +116,15 @@
     </select>
 
     <select id="getTxBeans" parameterType="Long" resultMap="ItemRecptTxBeanResult">
-        SELECT irl.`item_id`,
-               irl.`item_code`,
-               irl.`item_name`,
-               irl.`specification`,
-               irl.`unit_of_measure`,
-               irl.`batch_code`,
-               irl.`warehouse_id`,
-               irl.`warehouse_code`,
-               irl.`warehouse_name`,
-               irl.`location_id`,
-               irl.`location_code`,
-               irl.`location_name`,
-               irl.`area_id`,
-               irl.`area_code`,
-               irl.`area_name`,
-               ir.`vendor_id`,
-               ir.`vendor_code`,
-               ir.`vendor_name`,
-               ir.`vendor_nick`,
-               'ITEM_RECPT'           AS source_doc_type,
-               ir.`recpt_id`          AS source_doc_id,
-               ir.`recpt_code`        AS source_doc_code,
-               ir.`recpt_name`        AS sourceDocName,
-               irl.`line_id`          AS source_doc_line_id,
-               irl.`quantity_recived` AS transaction_quantity,
-               ir.recpt_date,
-               irl.`expire_date`,
-               ir.`create_by`,
-               ir.`create_time`,
-               ir.`update_by`,
-               ir.`update_time`
+        SELECT irl.`item_id`,irl.`item_code`,irl.`item_name`,irl.`specification`,irl.`unit_of_measure`,irl.`batch_code`,
+            irl.`warehouse_id`,irl.`warehouse_code`,irl.`warehouse_name`,irl.`location_id`,irl.`location_code`,irl.`location_name`,irl.`area_id`,irl.`area_code`,irl.`area_name`,
+            ir.`vendor_id`,ir.`vendor_code`,ir.`vendor_name`,ir.`vendor_nick`,
+            'IR' AS source_doc_type,ir.`recpt_id` AS source_doc_id,ir.`recpt_code` AS source_doc_code,irl.`line_id` AS source_doc_line_id,
+            irl.`quantity_recived` AS transaction_quantity,ir.recpt_date, irl.`expire_date`,
+            ir.`create_by`,ir.`create_time`,ir.`update_by`,ir.`update_time`
         FROM wm_item_recpt ir
-                 LEFT JOIN wm_item_recpt_line irl
-                           ON ir.recpt_id = irl.`recpt_id`
+           LEFT JOIN wm_item_recpt_line irl
+           ON ir.recpt_id = irl.`recpt_id`
         WHERE ir.`recpt_id` = #{recptId}
     </select>
 
