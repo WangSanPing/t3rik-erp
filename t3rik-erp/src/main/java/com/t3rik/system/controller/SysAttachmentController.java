@@ -1,36 +1,29 @@
 package com.t3rik.system.controller;
 
-import java.util.List;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.t3rik.common.annotation.Log;
 import com.t3rik.common.core.controller.BaseController;
 import com.t3rik.common.core.domain.AjaxResult;
+import com.t3rik.common.core.page.TableDataInfo;
 import com.t3rik.common.enums.system.BusinessType;
+import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.system.domain.SysAttachment;
 import com.t3rik.system.service.ISysAttachmentService;
-import com.t3rik.common.utils.poi.ExcelUtil;
-import com.t3rik.common.core.page.TableDataInfo;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 附件Controller
- * 
+ *
  * @author yinjinlu
  * @date 2022-07-26
  */
 @RestController
 @RequestMapping("/system/attachment")
-public class SysAttachmentController extends BaseController
-{
+public class SysAttachmentController extends BaseController {
     @Autowired
     private ISysAttachmentService sysAttachmentService;
 
@@ -39,8 +32,7 @@ public class SysAttachmentController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:attachment:list')")
     @GetMapping("/list")
-    public TableDataInfo list(SysAttachment sysAttachment)
-    {
+    public TableDataInfo list(SysAttachment sysAttachment) {
         startPage();
         List<SysAttachment> list = sysAttachmentService.selectSysAttachmentList(sysAttachment);
         return getDataTable(list);
@@ -52,8 +44,7 @@ public class SysAttachmentController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:attachment:export')")
     @Log(title = "附件", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SysAttachment sysAttachment)
-    {
+    public void export(HttpServletResponse response, SysAttachment sysAttachment) {
         List<SysAttachment> list = sysAttachmentService.selectSysAttachmentList(sysAttachment);
         ExcelUtil<SysAttachment> util = new ExcelUtil<SysAttachment>(SysAttachment.class);
         util.exportExcel(response, list, "附件数据");
@@ -64,8 +55,7 @@ public class SysAttachmentController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:attachment:query')")
     @GetMapping(value = "/{attachmentId}")
-    public AjaxResult getInfo(@PathVariable("attachmentId") Long attachmentId)
-    {
+    public AjaxResult getInfo(@PathVariable("attachmentId") Long attachmentId) {
         return AjaxResult.success(sysAttachmentService.selectSysAttachmentByAttachmentId(attachmentId));
     }
 
@@ -75,8 +65,7 @@ public class SysAttachmentController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:attachment:add')")
     @Log(title = "附件", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody SysAttachment sysAttachment)
-    {
+    public AjaxResult add(@RequestBody SysAttachment sysAttachment) {
         return toAjax(sysAttachmentService.insertSysAttachment(sysAttachment));
     }
 
@@ -86,8 +75,7 @@ public class SysAttachmentController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:attachment:edit')")
     @Log(title = "附件", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody SysAttachment sysAttachment)
-    {
+    public AjaxResult edit(@RequestBody SysAttachment sysAttachment) {
         return toAjax(sysAttachmentService.updateSysAttachment(sysAttachment));
     }
 
@@ -96,9 +84,8 @@ public class SysAttachmentController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:attachment:remove')")
     @Log(title = "附件", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{attachmentIds}")
-    public AjaxResult remove(@PathVariable Long[] attachmentIds)
-    {
+    @DeleteMapping("/{attachmentIds}")
+    public AjaxResult remove(@PathVariable Long[] attachmentIds) {
         return toAjax(sysAttachmentService.deleteSysAttachmentByAttachmentIds(attachmentIds));
     }
 }

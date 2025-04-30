@@ -8,23 +8,22 @@ import com.t3rik.common.enums.system.BusinessType;
 import com.t3rik.common.utils.poi.ExcelUtil;
 import com.t3rik.mes.wm.domain.WmBarcodeConfig;
 import com.t3rik.mes.wm.service.IWmBarcodeConfigService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
  * 条码配置Controller
- * 
+ *
  * @author yinjinlu
  * @date 2022-10-22
  */
 @RestController
 @RequestMapping("/mes/wm/barcodeconfig")
-public class WmBarcodeConfigController extends BaseController
-{
+public class WmBarcodeConfigController extends BaseController {
     @Autowired
     private IWmBarcodeConfigService wmBarcodeConfigService;
 
@@ -33,8 +32,7 @@ public class WmBarcodeConfigController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:barcodeconfig:list')")
     @GetMapping("/list")
-    public TableDataInfo list(WmBarcodeConfig wmBarcodeConfig)
-    {
+    public TableDataInfo list(WmBarcodeConfig wmBarcodeConfig) {
         startPage();
         List<WmBarcodeConfig> list = wmBarcodeConfigService.selectWmBarcodeConfigList(wmBarcodeConfig);
         return getDataTable(list);
@@ -46,8 +44,7 @@ public class WmBarcodeConfigController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:barcodeconfig:export')")
     @Log(title = "条码配置", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, WmBarcodeConfig wmBarcodeConfig)
-    {
+    public void export(HttpServletResponse response, WmBarcodeConfig wmBarcodeConfig) {
         List<WmBarcodeConfig> list = wmBarcodeConfigService.selectWmBarcodeConfigList(wmBarcodeConfig);
         ExcelUtil<WmBarcodeConfig> util = new ExcelUtil<WmBarcodeConfig>(WmBarcodeConfig.class);
         util.exportExcel(response, list, "条码配置数据");
@@ -58,8 +55,7 @@ public class WmBarcodeConfigController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:barcodeconfig:query')")
     @GetMapping(value = "/{configId}")
-    public AjaxResult getInfo(@PathVariable("configId") Long configId)
-    {
+    public AjaxResult getInfo(@PathVariable("configId") Long configId) {
         return AjaxResult.success(wmBarcodeConfigService.selectWmBarcodeConfigByConfigId(configId));
     }
 
@@ -69,8 +65,7 @@ public class WmBarcodeConfigController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:barcodeconfig:add')")
     @Log(title = "条码配置", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody WmBarcodeConfig wmBarcodeConfig)
-    {
+    public AjaxResult add(@RequestBody WmBarcodeConfig wmBarcodeConfig) {
         return toAjax(wmBarcodeConfigService.insertWmBarcodeConfig(wmBarcodeConfig));
     }
 
@@ -80,8 +75,7 @@ public class WmBarcodeConfigController extends BaseController
     @PreAuthorize("@ss.hasPermi('mes:wm:barcodeconfig:edit')")
     @Log(title = "条码配置", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody WmBarcodeConfig wmBarcodeConfig)
-    {
+    public AjaxResult edit(@RequestBody WmBarcodeConfig wmBarcodeConfig) {
         return toAjax(wmBarcodeConfigService.updateWmBarcodeConfig(wmBarcodeConfig));
     }
 
@@ -90,9 +84,8 @@ public class WmBarcodeConfigController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('mes:wm:barcodeconfig:remove')")
     @Log(title = "条码配置", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{configIds}")
-    public AjaxResult remove(@PathVariable Long[] configIds)
-    {
+    @DeleteMapping("/{configIds}")
+    public AjaxResult remove(@PathVariable Long[] configIds) {
         return toAjax(wmBarcodeConfigService.deleteWmBarcodeConfigByConfigIds(configIds));
     }
 }
