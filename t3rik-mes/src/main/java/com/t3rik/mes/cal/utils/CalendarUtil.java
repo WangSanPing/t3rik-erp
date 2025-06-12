@@ -183,7 +183,7 @@ public class CalendarUtil {
     /**
      * 获取日期时间字符串
      *
-     * @param date   需要转化的日期时间
+     * @param date    需要转化的日期时间
      * @param pattern 时间格式
      * @return String 日期时间字符串，例如 2015-08-11 09:51:53
      */
@@ -215,7 +215,7 @@ public class CalendarUtil {
      * 获取指定日期num周数之后的日期.
      *
      * @param date 日期
-     * @param num 周数(负数表示之前)
+     * @param num  周数(负数表示之前)
      * @return Date 新的日期
      */
     public static Date addWeeks(Date date, int num) {
@@ -226,7 +226,7 @@ public class CalendarUtil {
      * 获取指定日期num天数之后的日期.
      *
      * @param date 日期
-     * @param num 天数(负数表示之前)
+     * @param num  天数(负数表示之前)
      * @return Date 新的日期
      */
     public static Date addDays(Date date, int num) {
@@ -237,7 +237,7 @@ public class CalendarUtil {
      * 获取指定日期num小时之后的日期.
      *
      * @param date 日期
-     * @param num 小时数(负数表示之前)
+     * @param num  小时数(负数表示之前)
      * @return Date 新的日期
      */
     public static Date addHours(Date date, int num) {
@@ -248,7 +248,7 @@ public class CalendarUtil {
      * 获取指定日期num分钟之后的日期.
      *
      * @param date 日期
-     * @param num 分钟数(负数表示之前)
+     * @param num  分钟数(负数表示之前)
      * @return Date 新的日期
      */
     public static Date addMinutes(Date date, int num) {
@@ -259,7 +259,7 @@ public class CalendarUtil {
      * 获取指定日期num秒钟之后的日期.
      *
      * @param date 日期
-     * @param num 秒钟数(负数表示之前)
+     * @param num  秒钟数(负数表示之前)
      * @return Date 新的日期
      */
     public static Date addSeconds(Date date, int num) {
@@ -270,7 +270,7 @@ public class CalendarUtil {
      * 获取当前日期指定数量日期时间单位之后的日期.
      *
      * @param date 日期
-     * @param num 数量
+     * @param num  数量
      * @param unit 日期时间单位
      * @return Date 新的日期
      */
@@ -339,6 +339,7 @@ public class CalendarUtil {
 
     /**
      * 获取指定日期所在月份的开始日期
+     *
      * @param date
      * @return
      */
@@ -352,6 +353,7 @@ public class CalendarUtil {
 
     /**
      * 获取指定日期所在月份的最后一天
+     *
      * @param date
      * @return
      */
@@ -366,6 +368,7 @@ public class CalendarUtil {
 
     /**
      * 获取指定日期对应月份第一天
+     *
      * @param date
      * @return
      */
@@ -379,6 +382,7 @@ public class CalendarUtil {
 
     /**
      * 获取指定日期对应月份最后一天
+     *
      * @param date
      * @return
      */
@@ -394,15 +398,16 @@ public class CalendarUtil {
 
     /**
      * 获取指定日期对应季度的第一天
+     *
      * @param theDay
      * @return
      */
-    public static String getQuarterStartStr(Date theDay){
+    public static String getQuarterStartStr(Date theDay) {
         LocalDate resDate = null;
         if (theDay == null) {
-            resDate  = LocalDate.now();
-        }else{
-            resDate = LocalDate.parse(sdf.format(theDay),formatter);
+            resDate = LocalDate.now();
+        } else {
+            resDate = LocalDate.parse(sdf.format(theDay), formatter);
         }
         Month month = resDate.getMonth();
         Month firstMonthOfQuarter = month.firstMonthOfQuarter();
@@ -414,15 +419,16 @@ public class CalendarUtil {
 
     /**
      * 获取指定日期对应季度的最后一天
+     *
      * @param theDay
      * @return
      */
-    public static String getQuarterEandStr(Date theDay){
+    public static String getQuarterEandStr(Date theDay) {
         LocalDate resDate = LocalDate.now();
         if (theDay == null) {
             resDate = LocalDate.now();
-        }else {
-            resDate = LocalDate.parse(sdf.format(theDay),formatter);
+        } else {
+            resDate = LocalDate.parse(sdf.format(theDay), formatter);
         }
         Month month = resDate.getMonth();
         Month firstMonthOfQuarter = month.firstMonthOfQuarter();
@@ -439,38 +445,39 @@ public class CalendarUtil {
         return calendar.getTime();
     }
 
-    public static Long getDateDiff(Date start,Date end){
-        LocalDate sdate = LocalDate.parse(sdf.format(start),formatter);
-        LocalDate edate = LocalDate.parse(sdf.format(end),formatter);
-        return sdate.until(edate,ChronoUnit.DAYS);
+    public static Long getDateDiff(Date start, Date end) {
+        LocalDate sdate = LocalDate.parse(sdf.format(start), formatter);
+        LocalDate edate = LocalDate.parse(sdf.format(end), formatter);
+        return sdate.until(edate, ChronoUnit.DAYS);
     }
 
-    public static Long getDateDiff(String  start,Date end){
-        LocalDate sdate = LocalDate.parse(start,formatter);
-        LocalDate edate = LocalDate.parse(sdf.format(end),formatter);
-        return edate.until(sdate,ChronoUnit.DAYS);
+    public static Long getDateDiff(String start, Date end) {
+        LocalDate sdate = LocalDate.parse(start, formatter);
+        LocalDate edate = LocalDate.parse(sdf.format(end), formatter);
+        return edate.until(sdate, ChronoUnit.DAYS);
     }
 
-    public static Long getDateDiff(Date  start,String end){
-        LocalDate sdate = LocalDate.parse(sdf.format(start),formatter);
-        LocalDate edate = LocalDate.parse(sdf.format(end),formatter);
-        return edate.until(sdate,ChronoUnit.DAYS);
+    public static Long getDateDiff(Date start, String end) {
+        LocalDate sdate = LocalDate.parse(sdf.format(start), formatter);
+        LocalDate edate = LocalDate.parse(sdf.format(end), formatter);
+        return edate.until(sdate, ChronoUnit.DAYS);
     }
 
     /**
      * 计算两个日期之间的天数差值
+     *
      * @param start
      * @param end
      * @return
      */
-    public static Long getDateDiff(String  start,String end){
-        LocalDate sdate = LocalDate.parse(start,formatter);
-        LocalDate edate = LocalDate.parse(end,formatter);
-        return edate.until(sdate,ChronoUnit.DAYS);
+    public static Long getDateDiff(String start, String end) {
+        LocalDate sdate = LocalDate.parse(start, formatter);
+        LocalDate edate = LocalDate.parse(end, formatter);
+        return edate.until(sdate, ChronoUnit.DAYS);
     }
 
-    public static Date getDatePlus(Date theDay,Integer count){
-        LocalDate sdate = LocalDate.parse(sdf.format(theDay),formatter);
+    public static Date getDatePlus(Date theDay, Integer count) {
+        LocalDate sdate = LocalDate.parse(sdf.format(theDay), formatter);
         sdate.plusDays(count);
         return Date.from(sdate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
@@ -478,11 +485,12 @@ public class CalendarUtil {
 
     /**
      * 获取指定月份的所有日期
+     *
      * @param d
      * @return
      */
-    public static List<CalCalendar> getDays(Date d){
-        List<CalCalendar> lst=new ArrayList();
+    public static List<CalCalendar> getDays(Date d) {
+        List<CalCalendar> lst = new ArrayList();
         Date date = getMonthStart(d);
         Date monthEnd = getMonthEnd(d);
         while (!date.after(monthEnd)) {
@@ -496,6 +504,7 @@ public class CalendarUtil {
 
     /**
      * 获取指定日期前后N天的所有日期
+     *
      * @param date
      * @param num
      * @param pattern
