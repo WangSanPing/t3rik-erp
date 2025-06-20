@@ -121,7 +121,7 @@ t3rik-erp项目是一个聚焦于制造执行系统（MES）和人力资源管�
   - **地址：https://gitee.com/wangsanping/t3rik-erp-ui**
 - **t3rik-app**
   - **app前端**
-  - app端代码暂未开源，如需获取，请star后通过app端演示项目中的源码下载模块获取
+  - app端代码暂未开源
 
 
 #### 部分功能截图
