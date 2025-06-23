@@ -8,6 +8,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
@@ -33,6 +34,9 @@ public class BlackListFilter extends OncePerRequestFilter {
 
     @Resource
     private RequestMappingHandlerMapping requestMappingHandlerMapping;
+
+    @Value("${t3rik-platform.AccessLimit}")
+    private Integer accessLimit;
 
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
@@ -71,7 +75,7 @@ public class BlackListFilter extends OncePerRequestFilter {
         }
 
         // 超过100次访问，则加入黑名单
-        if (count != null && count > 100) {
+        if (count != null && count > accessLimit) {
             redisTemplate.opsForSet().add(BLACK_LIST_KEY, ipAddr);
         }
 
