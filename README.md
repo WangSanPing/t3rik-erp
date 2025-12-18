@@ -40,10 +40,6 @@ t3rik-erp项目是一个聚焦于制造执行系统（MES）和人力资源管�
 ##### 路过点个star，后续在迭代业务代码的同时，会持续提供高质量代码，可以帮助你更好的学习Java
 
 
-#### 项目介绍视频陆续录制中...
-
- - 01-项目介绍：https://www.bilibili.com/video/BV1ZZ8meeE7U
-
 #### 系统架构图
 
 ![](https://pic1.imgdb.cn/item/678145cfd0e0a243d4f327b7.jpg)
