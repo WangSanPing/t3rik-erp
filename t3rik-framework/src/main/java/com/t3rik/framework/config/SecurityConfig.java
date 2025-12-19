@@ -92,9 +92,6 @@ public class SecurityConfig {
                                                 HttpMethod.GET,
                                                 "/",
                                                 "/*.html",
-                                                "/**/*.html",
-                                                "/**/*.css",
-                                                "/**/*.js",
                                                 "/profile/**"
                                         ).permitAll()
                                         .requestMatchers("/jmreport/**", "/drag/**", "/favicon.ico").permitAll()

@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSON;
 import com.t3rik.common.constant.UserConstants;
 import com.t3rik.common.core.domain.entity.SysUser;
 import com.t3rik.common.utils.StringUtils;
-import com.t3rik.framework.websocket.WebSocketUsers;
 import com.t3rik.system.domain.SysMessage;
 import com.t3rik.system.service.ISysMessageService;
 import com.t3rik.system.service.ISysUserService;
@@ -34,7 +33,7 @@ public class MessageProvider {
             message.setRecipientNick(sender.getNickName());
         }
         message.setDeletedFlag(UserConstants.NO);
-        WebSocketUsers.sendMesssageToUserByName(message.getRecipientName(), JSON.toJSONString(message));
+        // WebSocketUsers.sendMesssageToUserByName(message.getRecipientName(), JSON.toJSONString(message));
         sysMessageService.insertSysMessage(message);
     }
 

@@ -1,16 +1,16 @@
 package com.t3rik.framework.websocket;
 
-import java.util.concurrent.Semaphore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.Semaphore;
+
 /**
  * 信号量相关处理
- * 
+ *
  * @author ruoyi
  */
-public class SemaphoreUtils
-{
+public class SemaphoreUtils {
     /**
      * SemaphoreUtils 日志控制器
      */
@@ -18,20 +18,16 @@ public class SemaphoreUtils
 
     /**
      * 获取信号量
-     * 
+     *
      * @param semaphore
      * @return
      */
-    public static boolean tryAcquire(Semaphore semaphore)
-    {
+    public static boolean tryAcquire(Semaphore semaphore) {
         boolean flag = false;
 
-        try
-        {
+        try {
             flag = semaphore.tryAcquire();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             LOGGER.error("获取信号量异常", e);
         }
 
@@ -40,18 +36,14 @@ public class SemaphoreUtils
 
     /**
      * 释放信号量
-     * 
+     *
      * @param semaphore
      */
-    public static void release(Semaphore semaphore)
-    {
+    public static void release(Semaphore semaphore) {
 
-        try
-        {
+        try {
             semaphore.release();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             LOGGER.error("释放信号量异常", e);
         }
     }
