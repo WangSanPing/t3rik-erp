@@ -15,7 +15,11 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new WebSocketHandler(), "/websocket/meeting")
+        // 一对一聊天
+        registry.addHandler(new OneOnOneWSHandler(), "/websocket/one-on-one")
+                .setAllowedOrigins("*");
+        // 多人会议
+        registry.addHandler(new MeetingWSHandler(), "/websocket/meeting")
                 .setAllowedOrigins("*");
     }
 }

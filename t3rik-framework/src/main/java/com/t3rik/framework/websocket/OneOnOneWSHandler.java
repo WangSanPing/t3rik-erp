@@ -1,6 +1,7 @@
 package com.t3rik.framework.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.CloseStatus;
@@ -15,9 +16,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * WebSocket 处理器
  * 处理WebRTC信令消息的接收和广播
  */
-public class WebSocketHandler extends TextWebSocketHandler {
+public class OneOnOneWSHandler extends TextWebSocketHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(WebSocketHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(OneOnOneWSHandler.class);
     private static final CopyOnWriteArrayList<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -106,43 +107,12 @@ public class WebSocketHandler extends TextWebSocketHandler {
     /**
      * 消息数据结构
      */
+    @Data
     public static class MessageData {
         private String type;
         private Object offer;
         private Object answer;
         private Object candidate;
-
-        // Getters and Setters
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public Object getOffer() {
-            return offer;
-        }
-
-        public void setOffer(Object offer) {
-            this.offer = offer;
-        }
-
-        public Object getAnswer() {
-            return answer;
-        }
-
-        public void setAnswer(Object answer) {
-            this.answer = answer;
-        }
-
-        public Object getCandidate() {
-            return candidate;
-        }
-
-        public void setCandidate(Object candidate) {
-            this.candidate = candidate;
-        }
+        private Long timestamp;
     }
 }
